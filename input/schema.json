@@ -1,0 +1,1286 @@
+{
+  "$id": "https://hashicorp.com/schemas/provider",
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "datasources": {
+      "type": "array",
+      "items": {
+        "$ref": "/datasource"
+      }
+    },
+    "provider": {
+      "$ref": "/provider"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "/resource"
+      }
+    }
+  },
+  "required": [
+    "provider"
+  ],
+  "$defs": {
+    "datasource": {
+      "$id": "/datasource",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "object",
+          "$ref": "/datasource/schema"
+        }
+      },
+      "required": [
+        "name",
+        "schema"
+      ]
+    },
+    "datasource_schema": {
+      "$id": "/datasource/schema",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "/schemas/datasource/bool_attribute"
+              },
+              {
+                "$ref": "/schemas/datasource/list_attribute"
+              },
+              {
+                "$ref": "/schemas/datasource/object_attribute"
+              },
+              {
+                "$ref": "/schemas/datasource/list_nested_attribute"
+              },
+              {
+                "$ref": "/schemas/datasource/single_nested_attribute"
+              }
+            ]
+          }
+        },
+        "blocks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "/schemas/datasource/list_nested_block"
+              },
+              {
+                "$ref": "/schemas/datasource/single_nested_block"
+              }
+            ]
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "attributes"
+          ]
+        },
+        {
+          "required": [
+            "blocks"
+          ]
+        }
+      ]
+    },
+    "provider": {
+      "$id": "/provider",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "object",
+          "$ref": "/provider/schema"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "provider_schema": {
+      "$id": "/provider/schema",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+            ]
+          },
+          "blocks": {
+            "type": "array",
+            "minItems": 1,
+            "oneOf": {
+              "type": [
+              ]
+            }
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "attributes"
+          ]
+        },
+        {
+          "required": [
+            "blocks"
+          ]
+        }
+      ]
+    },
+    "resource": {
+      "$id": "/resource",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "object",
+          "$ref": "/resource/schema"
+        }
+      },
+      "required": [
+        "name",
+        "schema"
+      ]
+    },
+    "resource_schema": {
+      "$id": "/resource/schema",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "/schemas/resource/bool_attribute"
+              }
+            ]
+          }
+        },
+        "blocks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+            ]
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "attributes"
+          ]
+        },
+        {
+          "required": [
+            "blocks"
+          ]
+        }
+      ]
+    },
+    "common": {
+      "$id": "/schemas/common",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "definitions": {
+        "computed_optional_required": {
+          "enum": [
+            "computed",
+            "computed_optional",
+            "optional",
+            "required"
+          ]
+        },
+        "custom_type": {
+          "type": "object",
+          "properties": {
+            "import": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "value_type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "import",
+            "type",
+            "value_type"
+          ]
+        },
+        "bool_element": {
+          "type": "object",
+          "additionalProperties": false
+        },
+        "element_type": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bool": {
+              "$ref": "#/definitions/bool_element"
+            },
+            "list": {
+              "$ref": "#/definitions/list_element"
+            },
+            "map": {
+              "$ref": "#/definitions/map_element"
+            },
+            "object": {
+              "$ref": "#/definitions/object_elements"
+            },
+            "string": {
+              "$ref": "#/definitions/string_element"
+            }
+          },
+          "oneOf": [
+            {
+              "required": [
+                "bool"
+              ]
+            },
+            {
+              "required": [
+                "list"
+              ]
+            },
+            {
+              "required": [
+                "map"
+              ]
+            },
+            {
+              "required": [
+                "object"
+              ]
+            },
+            {
+              "required": [
+                "string"
+              ]
+            }
+          ]
+        },
+        "list_element": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bool": {
+              "$ref": "#/definitions/bool_element"
+            },
+            "list": {
+              "$ref": "#/definitions/list_element"
+            },
+            "map": {
+              "$ref": "#/definitions/map_element"
+            },
+            "object": {
+              "$ref": "#/definitions/object_elements"
+            },
+            "string": {
+              "$ref": "#/definitions/string_element"
+            }
+          },
+          "oneOf": [
+            {
+              "required": [
+                "bool"
+              ]
+            },
+            {
+              "required": [
+                "list"
+              ]
+            },
+            {
+              "required": [
+                "map"
+              ]
+            },
+            {
+              "required": [
+                "object"
+              ]
+            },
+            {
+              "required": [
+                "string"
+              ]
+            }
+          ]
+        },
+        "map_element": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bool": {
+              "$ref": "#/definitions/bool_element"
+            },
+            "list": {
+              "$ref": "#/definitions/list_element"
+            },
+            "map": {
+              "$ref": "#/definitions/map_element"
+            },
+            "object": {
+              "$ref": "#/definitions/object_elements"
+            },
+            "string": {
+              "$ref": "#/definitions/string_element"
+            }
+          },
+          "oneOf": [
+            {
+              "required": [
+                "bool"
+              ]
+            },
+            {
+              "required": [
+                "list"
+              ]
+            },
+            {
+              "required": [
+                "map"
+              ]
+            },
+            {
+              "required": [
+                "object"
+              ]
+            },
+            {
+              "required": [
+                "string"
+              ]
+            }
+          ]
+        },
+        "object_elements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/object_element"
+          }
+        },
+        "object_element": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "bool": {
+              "$ref": "#/definitions/bool_element"
+            },
+            "list": {
+              "$ref": "#/definitions/list_element"
+            },
+            "map": {
+              "$ref": "#/definitions/map_element"
+            },
+            "object": {
+              "$ref": "#/definitions/object_elements"
+            },
+            "string": {
+              "$ref": "#/definitions/string_element"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "oneOf": [
+            {
+              "required": [
+                "bool"
+              ]
+            },
+            {
+              "required": [
+                "list"
+              ]
+            },
+            {
+              "required": [
+                "map"
+              ]
+            },
+            {
+              "required": [
+                "object"
+              ]
+            },
+            {
+              "required": [
+                "string"
+              ]
+            }
+          ]
+        },
+        "string_element": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "datasource_bool_attribute": {
+      "$id": "/schemas/datasource/bool_attribute",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "bool": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "computed_optional_required": {
+              "$ref": "/schemas/common#/definitions/computed_optional_required"
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "deprecation_message": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "sensitive": {
+              "type": "boolean"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }          },
+          "required": [
+            "computed_optional_required"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "bool"
+      ]
+    },
+    "datasource_list_attribute": {
+      "$id": "/schemas/datasource/list_attribute",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "list": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "computed_optional_required": {
+              "$ref": "/schemas/common#/definitions/computed_optional_required"
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "deprecation_message": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "element_type": {
+              "$ref": "/schemas/common#/definitions/element_type"
+            },
+            "sensitive": {
+              "type": "boolean"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "required": [
+            "computed_optional_required",
+            "element_type"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "list"
+      ]
+    },
+    "datasource_list_nested_attribute": {
+      "$id": "/schemas/datasource/list_nested_attribute",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "list_nested": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "computed_optional_required": {
+              "$ref": "/schemas/common#/definitions/computed_optional_required"
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "deprecation_message": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "nested_object": {
+              "$ref": "#/definitions/nested_object"
+            },
+            "sensitive": {
+              "type": "boolean"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "required": [
+            "computed_optional_required",
+            "nested_object"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "list_nested"
+      ],
+      "definitions": {
+        "nested_object": {
+          "type": "object",
+          "properties": {
+            "attributes": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "/schemas/datasource/bool_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/list_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/object_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/list_nested_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/single_nested_attribute"
+                  }
+                ]
+              }
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "required": [
+            "attributes"
+          ]
+        }
+      }
+    },
+    "datasource_list_nested_block": {
+      "$id": "/schemas/datasource/list_nested_block",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[^\\s]*$"
+        },
+        "list_nested": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "deprecation_message": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "nested_object": {
+              "$ref": "#/definitions/nested_object"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "required": [
+            "nested_object"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "list_nested"
+      ],
+      "definitions": {
+        "nested_object": {
+          "type": "object",
+          "properties": {
+            "attributes": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "/schemas/datasource/bool_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/list_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/object_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/list_nested_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/single_nested_attribute"
+                  }
+                ]
+              }
+            },
+            "blocks": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "/schemas/datasource/list_nested_block"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/single_nested_block"
+                  }
+                ]
+              }
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "attributes"
+              ]
+            },
+            {
+              "required": [
+                "blocks"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "datasource_object_attribute": {
+      "$id": "/schemas/datasource/object_attribute",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "object": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "attribute_types": {
+              "$ref": "/schemas/common#/definitions/object_elements"
+            },
+            "computed_optional_required": {
+              "$ref": "/schemas/common#/definitions/computed_optional_required"
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "deprecation_message": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "sensitive": {
+              "type": "boolean"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "required": [
+            "attribute_types",
+            "computed_optional_required"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "object"
+      ]
+    },
+    "datasource_single_nested_attribute": {
+      "$id": "/schemas/datasource/single_nested_attribute",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "single_nested": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "attributes": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "/schemas/datasource/bool_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/list_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/object_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/list_nested_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/single_nested_attribute"
+                  }
+                ]
+              }
+            },
+            "computed_optional_required": {
+              "$ref": "/schemas/common#/definitions/computed_optional_required"
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "deprecation_message": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "sensitive": {
+              "type": "boolean"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "required": [
+            "attributes",
+            "computed_optional_required"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "single_nested"
+      ]
+    },
+    "datasource_single_nested_block": {
+      "$id": "/schemas/datasource/single_nested_block",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[^\\s]*$"
+        },
+        "single_nested": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "attributes": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "/schemas/datasource/bool_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/list_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/object_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/list_nested_attribute"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/single_nested_attribute"
+                  }
+                ]
+              }
+            },
+            "blocks": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "/schemas/datasource/list_nested_block"
+                  },
+                  {
+                    "$ref": "/schemas/datasource/single_nested_block"
+                  }
+                ]
+              }
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "deprecation_message": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "attributes"
+              ]
+            },
+            {
+              "required": [
+                "blocks"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "single_nested"
+      ]
+    },
+    "resource_bool_attribute": {
+      "$id": "/schemas/resource/bool_attribute",
+      "$schema": "https://json-schema.org/draft-07/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "bool": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "computed_optional_required": {
+              "$ref": "/schemas/common#/definitions/computed_optional_required"
+            },
+            "custom_type": {
+              "$ref": "/schemas/common#/definitions/custom_type"
+            },
+            "default": {
+              "type": "object",
+              "properties": {
+                "custom": {
+                  "type": "object",
+                  "properties": {
+                    "import": {
+                      "type": "string"
+                    },
+                    "schema_definition": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "static": {
+                  "type": "boolean"
+                }
+              },
+              "oneOf": [
+                {
+                  "required": [
+                    "custom"
+                  ]
+                },
+                {
+                  "required": [
+                    "static"
+                  ]
+                }
+              ]
+            },
+            "deprecation_message": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "plan_modifiers": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  },
+                  "requires_replace": {
+                    "type": "object",
+                    "additionalProperties": false
+                  },
+                  "use_state_for_unknown": {
+                    "type": "object",
+                    "additionalProperties": false
+                  }
+                },
+                "oneOf": [
+                  {
+                    "required": [
+                      "custom"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "requires_replace"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "use_state_for_unknown"
+                    ]
+                  }
+                ]
+              }
+            },
+            "sensitive": {
+              "type": "boolean"
+            },
+            "validators": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "custom": {
+                    "type": "object",
+                    "properties": {
+                      "import": {
+                        "type": "string"
+                      },
+                      "schema_definition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "import",
+                      "schema_definition"
+                    ]
+                  }
+                },
+                "required": [
+                  "custom"
+                ]
+              }
+            }
+          },
+          "required": [
+            "computed_optional_required"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "bool"
+      ]
+    }
+  }
+}

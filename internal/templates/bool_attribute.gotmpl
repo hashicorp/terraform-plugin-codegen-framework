@@ -1,0 +1,41 @@
+{{define "bool_attribute"}}
+"{{.Name}}": schema.BoolAttribute{
+
+{{- if .Bool.CustomType}}
+CustomType: {{ .Bool.CustomType.Type }},
+{{- end}}
+
+{{- if eq .Bool.ComputedOptionalRequired "computed" }}
+Computed: true,
+{{- else if eq .Bool.ComputedOptionalRequired "computed_optional" }}
+Computed: true,
+Optional: true,
+{{- else if eq .Bool.ComputedOptionalRequired "optional" }}
+Optional: true,
+{{- else if eq .Bool.ComputedOptionalRequired "required" }}
+Required: true,
+{{- end}}
+
+{{- if .Bool.Sensitive }}
+Sensitive: {{ .Bool.Sensitive }},
+{{- end}}
+
+{{- if .Bool.Description }}
+Description: "{{ .Bool.Description }}",
+MarkdownDescription: "{{ .Bool.Description }}",
+{{- end}}
+
+{{- if .Bool.DeprecationMessage }}
+DeprecationMessage: "{{ .Bool.DeprecationMessage }}",
+{{- end}}
+
+{{- if .Bool.Validators }}
+Validators: []validator.Bool{
+{{- range $validator := .Bool.Validators}}
+{{- template "validator" $validator }}
+{{- end}}
+},
+{{- end }}
+
+},
+{{- end}}

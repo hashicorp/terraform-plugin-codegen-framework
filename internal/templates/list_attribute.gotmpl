@@ -1,0 +1,16 @@
+{{define "list_attribute"}}
+"{{.Name}}": schema.ListAttribute{
+
+{{- if eq .List.ComputedOptionalRequired "computed" }}
+Computed: true,
+{{- else if eq .List.ComputedOptionalRequired "computed_optional" }}
+Computed: true,
+Optional: true,
+{{- else if eq .List.ComputedOptionalRequired "optional" }}
+Optional: true,
+{{- else if eq .List.ComputedOptionalRequired "required" }}
+Required: true,
+{{- end}}
+ElementType: {{- template "element_type" .List.ElementType}}
+},
+{{- end}}

@@ -1,0 +1,76 @@
+{
+  "datasources": [
+    {
+      "name": "example",
+      "schema": {
+        "attributes": [
+          {
+            "name": "bool_attribute",
+            "bool": {
+              "computed_optional_required": "optional",
+              "custom_type": {
+                "import": "github.com/",
+                "type": "my_type",
+                "value_type": "my_value_type"
+              },
+              "sensitive": true,
+              "validators": [
+                {
+                  "custom": {
+                    "import": "github.com/.../myvalidator",
+                    "schema_definition": "myvalidator.Validate()"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "list_attribute",
+            "list": {
+              "computed_optional_required": "computed",
+              "element_type": {
+                "list": {
+                  "string": {}
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "provider": {
+    "name": "provider"
+  },
+  "resources": [
+    {
+      "name": "resource",
+      "schema": {
+        "attributes": [
+          {
+            "name": "bool_attribute",
+            "bool": {
+              "computed_optional_required": "computed",
+              "custom_type": {
+                "import": "",
+                "type": "",
+                "value_type": ""
+              },
+              "default": {
+                "static": true
+              },
+              "plan_modifiers": [
+                {
+                  "custom": {
+                    "import": "github.com/.../myplanmodifier",
+                    "schema_definition": "myplanmodifier.Modify()"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
