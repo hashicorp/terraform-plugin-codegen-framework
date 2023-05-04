@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/mitchellh/cli"
 
 	"github/hashicorp/terraform-provider-code-generator/internal/config"
@@ -11,7 +13,6 @@ import (
 	"github/hashicorp/terraform-provider-code-generator/internal/generate"
 	"github/hashicorp/terraform-provider-code-generator/internal/input"
 	"github/hashicorp/terraform-provider-code-generator/internal/output"
-	"github/hashicorp/terraform-provider-code-generator/internal/transform"
 	"github/hashicorp/terraform-provider-code-generator/internal/validate"
 )
 
@@ -80,19 +81,16 @@ func (a SchemaModelsCommand) Run(args []string) int {
 	}
 
 	// validate against IR Schema
-	errs := validate.Schema(conf.Input, conf.Schema)
-	if errs != nil {
+	err = validate.Schema(conf.Input)
+	if err != nil {
 		log.Println("The document is not valid. see errors :")
-
-		for _, e := range errs {
-			log.Println(e)
-		}
-
+		log.Println(err)
 		log.Fatal("The document is not valid. Terminating execution.")
 	}
 
 	// unmarshal JSON
-	ir, err := transform.Unmarshal(src)
+	var ir spec.Specification
+	err = json.Unmarshal(src, &ir)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"text/template"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/transform"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 )
 
 // DataSourcesSchema
@@ -12,7 +12,7 @@ import (
 // TODO: Handle writing of models.
 // TODO: Consider adding writing of imports either with schema or as separate write.
 // TODO: Handle processing of Provider and Resources schema
-func DataSourcesSchema(ir transform.IntermediateRepresentation, output string) (map[string][]byte, error) {
+func DataSourcesSchema(ir spec.Specification, output string) (map[string][]byte, error) {
 	datasourceSchemaTemplate, err := template.ParseFiles(
 		"internal/templates/datasource_schema.gotmpl",
 		"internal/templates/attributes.gotmpl",

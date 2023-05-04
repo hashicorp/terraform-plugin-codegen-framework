@@ -1,11 +1,12 @@
 package validate
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
+	"os"
 
-	"github.com/xeipuuv/gojsonschema"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 )
 
 func JSON(input []byte) error {
@@ -19,23 +20,12 @@ func JSON(input []byte) error {
 // Schema
 // TODO: Check for duplicate keys at same nesting level in JSON.
 // TODO: Handle schema when supplied as URL
-func Schema(inputFile, schemaFile string) []error {
-	var errs []error
+func Schema(inputFile string) error {
+	document, err := os.ReadFile(inputFile)
 
-	documentLoader := gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", inputFile))
-	schemaLoader := gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", schemaFile))
-
-	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		errs = append(errs, err)
-		return errs
+		return err
 	}
 
-	if !result.Valid() {
-		for _, desc := range result.Errors() {
-			errs = append(errs, fmt.Errorf("%s", desc.String()))
-		}
-	}
-
-	return errs
+	return spec.Validate(context.TODO(), document)
 }
