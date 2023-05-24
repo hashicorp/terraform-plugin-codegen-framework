@@ -1,0 +1,22 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.BoolAttribute{
+{{- template "common_attribute" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.Bool{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.Bool{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Default}}
+Default: {{ getBoolDefault $value.Default}},
+{{- end}}
+},
+{{- end }}

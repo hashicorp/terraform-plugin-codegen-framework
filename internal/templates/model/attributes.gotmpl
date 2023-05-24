@@ -1,0 +1,8 @@
+{{define "attributes"}}
+{{- range $attribute := .Attributes}}
+{{- if $attribute.Bool}}{{- template "bool_attribute" $attribute }}
+{{- else if $attribute.List}}{{- template "list_attribute" $attribute }}
+{{- else if $attribute.SingleNested}}{{- template "single_nested_attribute" $attribute }}
+{{- end}}
+{{- end}}
+{{- end}}

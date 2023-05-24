@@ -1,0 +1,22 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.NumberAttribute{
+{{- template "common_attribute" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.Number{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.Number{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Default}}
+Default: {{ getNumberDefault $value.Default}},
+{{- end}}
+},
+{{- end }}

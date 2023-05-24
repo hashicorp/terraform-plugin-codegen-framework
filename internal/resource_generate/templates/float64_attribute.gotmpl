@@ -1,0 +1,22 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.Float64Attribute{
+{{- template "common_attribute" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.Float64{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.Float64{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Default}}
+Default: {{ getFloat64Default $value.Default}},
+{{- end}}
+},
+{{- end }}

@@ -3,7 +3,8 @@ module github/hashicorp/terraform-provider-code-generator
 go 1.20
 
 require (
-	github.com/hashicorp/terraform-plugin-codegen-spec v0.0.0-20230503160914-a2185e3d3d6d
+	github.com/google/go-cmp v0.5.9
+	github.com/hashicorp/terraform-plugin-codegen-spec v0.0.0-20230523185217-138156557de4
 	github.com/hashicorp/terraform-plugin-framework v1.2.0
 	github.com/mitchellh/cli v1.1.5
 )

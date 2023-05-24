@@ -1,0 +1,22 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.Int64Attribute{
+{{- template "common_attribute" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.Int64{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.Int64{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Default}}
+Default: {{ getInt64Default $value.Default}},
+{{- end}}
+},
+{{- end }}

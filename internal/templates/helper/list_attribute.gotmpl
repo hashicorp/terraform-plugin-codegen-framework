@@ -1,0 +1,5 @@
+{{define "list_attribute"}}
+"{{.Name}}": types.ListType{
+ElemType: {{- template "elem_type" .List.ElementType }}
+},
+{{- end}}

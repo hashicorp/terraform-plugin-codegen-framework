@@ -1,0 +1,17 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.MapNestedAttribute{
+NestedObject: schema.NestedAttributeObject{
+Attributes: map[string]schema.Attribute{
+{{- getAttributes $value.NestedObject.Attributes}}
+},
+},
+{{- template "common_attribute" $value }}
+{{- if $value.Validators }}
+Validators: []validator.Map{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end}}
+},
+{{- end }}

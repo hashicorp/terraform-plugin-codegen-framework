@@ -1,0 +1,27 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.ListNestedAttribute{
+NestedObject: schema.NestedAttributeObject{
+Attributes: map[string]schema.Attribute{
+{{- getAttributes $value.NestedObject.Attributes}}
+},
+},
+{{- template "common_attribute" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.List{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.List{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end}}
+{{- if $value.Default}}
+Default: {{ getListDefault $value.Default}},
+{{- end}}
+},
+{{- end }}

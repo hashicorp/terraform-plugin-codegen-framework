@@ -1,0 +1,7 @@
+{{define "bool_attribute"}}
+{{- if .Bool.CustomType}}
+"{{.Name}}": {{ .Bool.CustomType.Type }},
+{{- else}}
+"{{.Name}}": types.BoolType,
+{{- end}}
+{{- end}}

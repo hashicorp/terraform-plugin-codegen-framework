@@ -1,0 +1,9 @@
+{{define "elem_type"}}
+{{- if .List}}
+types.ListType {
+ElemType: {{- template "elem_type" .List }}
+},
+{{- else if .String}}
+types.StringType,
+{{- end}}
+{{- end}}

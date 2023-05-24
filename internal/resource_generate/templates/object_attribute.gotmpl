@@ -1,0 +1,25 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.ObjectAttribute{
+AttributeTypes: map[string]attr.Type{
+{{ getAttrTypes .AttributeTypes}}
+},
+{{- template "common_attribute" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.Object{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.Bool{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end}}
+{{- if $value.Default}}
+Default: {{ getObjectDefault $value.Default}},
+{{- end}}
+},
+{{- end }}

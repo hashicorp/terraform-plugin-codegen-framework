@@ -1,0 +1,206 @@
+
+
+func (m {{.Name}}DataSourceModel) attributeType(ctx context.Context) attr.Type {
+    return types.ObjectType{AttrTypes: m.objectAttributeTypes}
+}
+
+func (m {{.Name}}DataSourceModel) objectAttributeTypes(ctx context.Context) map[string]attr.Type {
+    return map[string]attr.Type{
+        {{- template "attributes" .Schema }}
+    }
+}
+
+func (m {{.Name}}DataSourceModel) objectNull(ctx context.Context) types.Object {
+    return types.ObjectNull(
+        m.objectAttributeTypes(ctx),
+    )
+}
+
+func (m {{.Name}}DataSourceModel) objectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+    return types.ObjectValueFrom(
+        ctx,
+        m.objectAttributeTypes(ctx),
+        data,
+    )
+}
+
+{{- range $attribute := .Schema.Attributes}}
+{{- if $attribute.SingleNested}}
+{{template "single_nested_helper" $attribute }}
+{{- end}}
+{{- end}}
+
+{{- if hasNestedWithAssociatedExternalType .Schema.Attributes}}
+
+func {{snakeCaseToCamelCase .Name}}DataSourceModelFromCreate{{snakeCaseToCamelCase .Name}}Response(ctx context.Context, apiObject apisdk.Create{{snakeCaseToCamelCase .Name}}Response) ({{.Name}}DataSourceModel, diag.Diagnostics) {
+    var diags diag.Diagnostics
+    var model {{.Name}}DataSourceModel
+
+    {{- range $attribute := .Schema.Attributes}}
+	{{- if $attribute.Bool}}
+    if apiObject.{{snakeCaseToCamelCase $attribute.Name}} != nil {
+		{{- if $attribute.Bool.CustomType}}
+        model.{{snakeCaseToCamelCase $attribute.Name}} = {{$attribute.Bool.CustomType.ValueType}}(*apiObject.{{snakeCaseToCamelCase $attribute.Name}})
+		{{- else}}
+        model.{{snakeCaseToCamelCase $attribute.Name}} = types.BoolValue(*apiObject.{{snakeCaseToCamelCase $attribute.Name}})
+		{{- end}}
+	}
+	{{- else if $attribute.List}}
+    if apiObject.{{snakeCaseToCamelCase $attribute.Name}} != nil {
+		// TODO: Handle recursion through lists, maps, sets etc
+		// TODO: *apiObject.{{snakeCaseToCamelCase $attribute.Name}} needs to be converted to []attr.Value before passing to types.ListValue
+        {{- if $attribute.List.ElementType.List.String}}
+        listValue, d := types.ListValue(types.ListType{ElemType: types.StringType}, *apiObject.{{snakeCaseToCamelCase $attribute.Name}})
+        {{- end}}
+        diags.Append(d...)
+
+        if diags.HasError() {
+            return model, diags
+        }
+
+        model.{{snakeCaseToCamelCase $attribute.Name}} = listValue
+    }
+	{{- else if $attribute.SingleNested}}
+
+    {{$.Name}}{{snakeCaseToCamelCase $attribute.Name}}Model, {{$.Name}}{{snakeCaseToCamelCase $attribute.Name}}ModelDiags := {{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}ObjectFrom{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}(ctx, apiObject.{{$.Name}}{{snakeCaseToCamelCase $attribute.Name}})
+
+    diags.Append({{$.Name}}{{snakeCaseToCamelCase $attribute.Name}}ModelDiags...)
+
+    if diags.HasError() {
+        return model, diags
+    }
+
+    model.{{snakeCaseToCamelCase $attribute.Name}} = {{$.Name}}{{snakeCaseToCamelCase $attribute.Name}}Model
+    {{- end}}
+	{{- end}}
+
+    return model, diags
+}
+
+{{- range $attribute := .Schema.Attributes}}
+{{- if $attribute.SingleNested}}
+
+func {{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}ObjectFrom{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}(ctx context.Context, apiObject *apisdk.{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}) (types.Object, diag.Diagnostics) {
+    var diags diag.Diagnostics
+    m := {{snakeCaseToCamelCase $attribute.Name}}Model{}
+
+    if apiObject == nil {
+        return m.objectNull(ctx), diags
+    }
+
+	{{- range $innerAttribute := $attribute.SingleNested.Attributes}}
+	{{- if $innerAttribute.Bool}}
+	m.{{snakeCaseToCamelCase $innerAttribute.Name}} = types.BoolPointerValue(apiObject.{{snakeCaseToCamelCase $innerAttribute.Name}})
+    {{- else if $innerAttribute.List}}
+    // TODO: Handle recursion through lists, maps, sets etc
+    // TODO: *apiObject.{{snakeCaseToCamelCase $innerAttribute.Name}} needs to be converted to []attr.Value before passing to types.ListValue
+    {{- if $innerAttribute.List.ElementType.String}}
+    listValue, d := types.ListValue(types.StringType, *apiObject.{{snakeCaseToCamelCase $innerAttribute.Name}})
+    {{- end}}
+    diags.Append(d...)
+
+    if diags.HasError() {
+        return m, diags
+    }
+
+    m.{{snakeCaseToCamelCase $innerAttribute.Name}} = listValue
+    {{- end}}
+	{{- end}}
+
+    return m.objectValueFrom(ctx, m)
+}
+{{- end}}
+{{- end}}
+
+func (m {{$.Name}}DataSourceModel) ToCreate{{ucFirst $.Name}}Request(ctx context.Context) (apisdk.Create{{ucFirst $.Name}}Request, diag.Diagnostics) {
+    var diags diag.Diagnostics
+    apiObject := apisdk.Create{{ucFirst $.Name}}Request{}
+
+    {{- range $attribute := .Schema.Attributes}}
+    {{if $attribute.Bool}}
+	apiObject.{{snakeCaseToCamelCase $attribute.Name}} = m.{{snakeCaseToCamelCase $attribute.Name}}.ValueBoolPointer()
+    {{else if $attribute.List}}
+    // TODO: Handle recursion through lists, maps, sets etc
+    {{- if $attribute.List.ElementType.List.String}}
+    var {{snakeCaseToCamelCase $attribute.Name}}Elems [][]*string
+    {{- end}}
+	d := m.ListAttribute.ElementsAs(ctx, &{{snakeCaseToCamelCase $attribute.Name}}Elems)
+
+	diags.Append(d...)
+
+	if diags.HasError() {
+	    return m, diags
+    }
+
+	apiObject.{{snakeCaseToCamelCase $attribute.Name}} = {{snakeCaseToCamelCase $attribute.Name}}Elems
+	{{else if $attribute.SingleNested}}
+    tf{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}Model, tf{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}ModelDiags := {{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}FromObject(ctx, m.{{snakeCaseToCamelCase $attribute.Name}})
+
+    diags.Append(tf{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}ModelDiags...)
+
+    if diags.HasError() {
+        return apiObject, diags
+    }
+
+    api{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}, api{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}Diags := tf{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}Model.To{{snakeCaseToCamelCase $attribute.Name}}(ctx)
+
+    diags.Append(api{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}Diags...)
+
+    if diags.HasError() {
+        return apiObject, diags
+    }
+
+    apiObject.{{snakeCaseToCamelCase $attribute.Name}} = api{{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}
+    {{- end}}
+    {{- end}}
+
+    return apiObject, diags
+}
+
+{{- range $attribute := .Schema.Attributes}}
+{{- if $attribute.SingleNested}}
+func {{ucFirst $.Name}}{{snakeCaseToCamelCase $attribute.Name}}FromObject(ctx context.Context, tfObject types.Object) ({{snakeCaseToCamelCase $attribute.Name}}Model, diag.Diagnostics) {
+    var model {{snakeCaseToCamelCase $attribute.Name}}Model
+
+    diags := tfObject.As(ctx, &model, basetypes.ObjectAsOptions{})
+
+    return model, diags
+}
+
+func (m {{snakeCaseToCamelCase $attribute.Name}}Model) To{{snakeCaseToCamelCase $attribute.Name}}(ctx context.Context) (*apisdk.{{snakeCaseToCamelCase $attribute.Name}}, diag.Diagnostics) {
+    var diags diag.Diagnostics
+
+    apiObject := &apisdk.{{snakeCaseToCamelCase $attribute.Name}}{}
+
+    {{- range $innerAttribute := $attribute.SingleNested.Attributes}}
+    {{- if $innerAttribute.Bool}}
+    apiObject.{{snakeCaseToCamelCase $innerAttribute.Name}} = m.{{snakeCaseToCamelCase $innerAttribute.Name}}.ValueBoolPointer()
+    {{- else if $innerAttribute.List}}
+    // TODO: Handle recursion through lists, maps, sets etc
+    {{snakeCaseToCamelCase $innerAttribute.Name}}ElemType := m.{{snakeCaseToCamelCase $innerAttribute.Name}}.ElementType(ctx)
+    {{snakeCaseToCamelCase $innerAttribute.Name}}Elems := m.{{snakeCaseToCamelCase $innerAttribute.Name}}.Elements()
+
+    if {{snakeCaseToCamelCase $innerAttribute.Name}}ElemType == types.BoolType {
+        var apiElems []*bool
+
+        for _, v := range {{snakeCaseToCamelCase $innerAttribute.Name}}Elems {
+            if _, ok := v.(types.Bool); !ok {
+                // add diagnostic and return
+            }
+
+            boolVal := v.(types.Bool)
+
+            apiElems = append(apiElems, boolVal.ValueBoolPointer())
+        }
+
+        apiObject.{{snakeCaseToCamelCase $innerAttribute.Name}} = apiElems
+    }
+    {{- end}}
+    {{- end}}
+
+    return apiObject, diags
+}
+{{- end}}
+{{- end}}
+{{- end}}
+

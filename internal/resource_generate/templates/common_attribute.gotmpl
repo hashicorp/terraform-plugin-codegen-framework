@@ -1,0 +1,30 @@
+{{define "common_attribute"}}
+
+{{- if .CustomType}}
+CustomType: {{.CustomType.Type}},
+{{- end}}
+
+{{- if .Required}}
+Required: {{.Required}},
+{{- end}}
+
+{{- if .Optional}}
+Optional: {{.Optional}},
+{{- end}}
+
+{{- if .Computed}}
+Computed: {{.Computed}},
+{{- end}}
+
+{{- if .Sensitive }}
+Sensitive: {{.Sensitive}},
+{{- end}}
+
+{{- if .Description }}
+Description: "{{.Description}}",
+MarkdownDescription: "{{.Description }}",
+{{- end}}
+
+{{- if .DeprecationMessage }}
+DeprecationMessage: "{{ .DeprecationMessage }}",{{- end}}
+{{- end}}

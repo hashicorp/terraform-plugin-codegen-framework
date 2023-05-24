@@ -1,0 +1,22 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.StringAttribute{
+{{- template "common_attribute" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.String{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.String{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Default}}
+Default: {{ getStringDefault $value.Default}},
+{{- end}}
+},
+{{- end }}

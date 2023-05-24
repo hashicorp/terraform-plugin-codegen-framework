@@ -1,0 +1,3 @@
+{{define "list_attribute"}}
+{{snakeCaseToCamelCase .Name}} types.List `tfsdk:"{{.Name}}"`
+{{- end}}

@@ -1,0 +1,15 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.SingleNestedAttribute{
+Attributes: map[string]schema.Attribute{
+{{- getAttributes $value.Attributes}}
+},
+{{- template "common_attribute" $value }}
+{{- if $value.Validators }}
+Validators: []validator.Bool{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end}}
+},
+{{- end }}

@@ -1,0 +1,154 @@
+
+
+func (m exampleDataSourceModel) attributeType(ctx context.Context) attr.Type {
+	return types.ObjectType{AttrTypes: m.objectAttributeTypes}
+}
+
+func (m exampleDataSourceModel) objectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"single_nested_attribute": types.ObjectType{
+			AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(ctx),
+		},
+	}
+}
+
+func (m exampleDataSourceModel) objectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.objectAttributeTypes(ctx),
+	)
+}
+
+func (m exampleDataSourceModel) objectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.objectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m SingleNestedAttributeModel) attributeType(ctx context.Context) attr.Type {
+	return types.ObjectType{AttrTypes: m.objectAttributeTypes}
+}
+
+func (m SingleNestedAttributeModel) objectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"nested_bool_attribute": types.BoolType,
+		"nested_list_attribute": types.ListType{
+			ElemType: types.StringType,
+		},
+	}
+}
+
+func (m SingleNestedAttributeModel) objectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.objectAttributeTypes(ctx),
+	)
+}
+
+func (m SingleNestedAttributeModel) objectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.objectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func ExampleDataSourceModelFromCreateExampleResponse(ctx context.Context, apiObject apisdk.CreateExampleResponse) (exampleDataSourceModel, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var model exampleDataSourceModel
+
+	exampleSingleNestedAttributeModel, exampleSingleNestedAttributeModelDiags := ExampleSingleNestedAttributeObjectFromExampleSingleNestedAttribute(ctx, apiObject.exampleSingleNestedAttribute)
+
+	diags.Append(exampleSingleNestedAttributeModelDiags...)
+
+	if diags.HasError() {
+		return model, diags
+	}
+
+	model.SingleNestedAttribute = exampleSingleNestedAttributeModel
+
+	return model, diags
+}
+
+func ExampleSingleNestedAttributeObjectFromExampleSingleNestedAttribute(ctx context.Context, apiObject *apisdk.ExampleSingleNestedAttribute) (types.Object, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	m := SingleNestedAttributeModel{}
+
+	if apiObject == nil {
+		return m.objectNull(ctx), diags
+	}
+	m.NestedBoolAttribute = types.BoolPointerValue(apiObject.NestedBoolAttribute)
+	// TODO: Handle recursion through lists, maps, sets etc
+	// TODO: *apiObject.NestedListAttribute needs to be converted to []attr.Value before passing to types.ListValue
+	listValue, d := types.ListValue(types.StringType, *apiObject.NestedListAttribute)
+	diags.Append(d...)
+
+	if diags.HasError() {
+		return m, diags
+	}
+
+	m.NestedListAttribute = listValue
+
+	return m.objectValueFrom(ctx, m)
+}
+
+func (m exampleDataSourceModel) ToCreateExampleRequest(ctx context.Context) (apisdk.CreateExampleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	apiObject := apisdk.CreateExampleRequest{}
+
+	tfExampleSingleNestedAttributeModel, tfExampleSingleNestedAttributeModelDiags := ExampleSingleNestedAttributeFromObject(ctx, m.SingleNestedAttribute)
+
+	diags.Append(tfExampleSingleNestedAttributeModelDiags...)
+
+	if diags.HasError() {
+		return apiObject, diags
+	}
+
+	apiExampleSingleNestedAttribute, apiExampleSingleNestedAttributeDiags := tfExampleSingleNestedAttributeModel.ToSingleNestedAttribute(ctx)
+
+	diags.Append(apiExampleSingleNestedAttributeDiags...)
+
+	if diags.HasError() {
+		return apiObject, diags
+	}
+
+	apiObject.SingleNestedAttribute = apiExampleSingleNestedAttribute
+
+	return apiObject, diags
+}
+func ExampleSingleNestedAttributeFromObject(ctx context.Context, tfObject types.Object) (SingleNestedAttributeModel, diag.Diagnostics) {
+	var model SingleNestedAttributeModel
+
+	diags := tfObject.As(ctx, &model, basetypes.ObjectAsOptions{})
+
+	return model, diags
+}
+
+func (m SingleNestedAttributeModel) ToSingleNestedAttribute(ctx context.Context) (*apisdk.SingleNestedAttribute, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	apiObject := &apisdk.SingleNestedAttribute{}
+	apiObject.NestedBoolAttribute = m.NestedBoolAttribute.ValueBoolPointer()
+	// TODO: Handle recursion through lists, maps, sets etc
+	NestedListAttributeElemType := m.NestedListAttribute.ElementType(ctx)
+	NestedListAttributeElems := m.NestedListAttribute.Elements()
+
+	if NestedListAttributeElemType == types.BoolType {
+		var apiElems []*bool
+
+		for _, v := range NestedListAttributeElems {
+			if _, ok := v.(types.Bool); !ok {
+				// add diagnostic and return
+			}
+
+			boolVal := v.(types.Bool)
+
+			apiElems = append(apiElems, boolVal.ValueBoolPointer())
+		}
+
+		apiObject.NestedListAttribute = apiElems
+	}
+
+	return apiObject, diags
+}
+

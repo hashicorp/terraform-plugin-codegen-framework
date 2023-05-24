@@ -1,0 +1,31 @@
+{
+  "datasources": [
+    {
+      "name": "example",
+      "schema": {
+        "attributes": [
+          {
+            "name": "bool_attribute",
+            "bool": {
+              "computed_optional_required": "optional",
+              "custom_type": {
+                "import": "github.com/",
+                "type": "my_type",
+                "value_type": "my_value_type"
+              },
+              "sensitive": true,
+              "validators": [
+                {
+                  "custom": {
+                    "import": "github.com/.../myvalidator",
+                    "schema_definition": "myvalidator.Validate()"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

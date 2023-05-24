@@ -1,0 +1,10 @@
+
+type {{.Name}}DataSourceModel struct {
+{{- template "attributes" .Schema }}
+}
+
+{{- range $attribute := .Schema.Attributes}}
+{{- if $attribute.SingleNested}}
+{{- template "single_nested_model" $attribute }}
+{{- end}}
+{{- end}}

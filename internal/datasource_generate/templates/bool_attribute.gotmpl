@@ -1,0 +1,12 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.BoolAttribute{
+{{- template "common_attribute" $value }}
+{{- if $value.Validators }}
+Validators: []validator.Bool{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+},
+{{- end }}

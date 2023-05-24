@@ -1,0 +1,29 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.SingleNestedBlock{
+{{- if gt (len $value.Attributes) 0 }}
+Attributes: map[string]schema.Attribute{
+{{- getAttributes $value.Attributes}}
+},
+{{- end}}
+{{- if gt (len $value.Blocks) 0 }}
+Blocks: map[string]schema.Block{
+{{- getBlocks $value.Blocks}}
+},
+{{- end}}
+{{- template "common_block" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.Object{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.Bool{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end}}
+},
+{{- end }}

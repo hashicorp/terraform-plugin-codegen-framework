@@ -1,0 +1,23 @@
+{{ range $key, $value := . }}
+"{{$key}}": schema.SetAttribute{
+ElementType: {{ getElementType .ElementType}},
+{{- template "common_attribute" $value }}
+{{- if $value.PlanModifiers }}
+PlanModifiers: []planmodifier.Set{
+{{- range $planmodifier := .PlanModifiers}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end }}
+{{- if $value.Validators }}
+Validators: []validator.Set{
+{{- range $validator := .Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end}}
+{{- if $value.Default}}
+Default: {{ getSetDefault $value.Default}},
+{{- end}}
+},
+{{- end }}

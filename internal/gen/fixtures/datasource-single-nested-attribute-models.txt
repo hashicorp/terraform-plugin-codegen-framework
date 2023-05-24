@@ -1,0 +1,9 @@
+
+type exampleDataSourceModel struct {
+	SingleNestedAttribute types.Object `tfsdk:"single_nested_attribute"`
+}
+
+type SingleNestedAttributeModel struct {
+	NestedBoolAttribute types.Bool `tfsdk:"nested_bool_attribute"`
+	NestedListAttribute types.List `tfsdk:"nested_list_attribute"`
+}

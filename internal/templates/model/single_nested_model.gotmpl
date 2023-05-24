@@ -1,0 +1,12 @@
+{{define "single_nested_model"}}
+
+type {{snakeCaseToCamelCase .Name}}Model struct {
+{{- template "attributes" .SingleNested }}
+}
+{{- range $attribute := .SingleNested.Attributes}}
+{{- if $attribute.SingleNested}}
+{{- template "single_nested_model" $attribute }}
+{{- end}}
+{{- end}}
+
+{{- end}}

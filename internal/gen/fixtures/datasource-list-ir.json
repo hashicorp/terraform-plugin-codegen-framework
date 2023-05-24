@@ -1,0 +1,31 @@
+{
+  "datasources": [
+    {
+      "name": "example",
+      "schema": {
+        "attributes": [
+          {
+            "name": "list_string_attribute",
+            "list": {
+              "computed_optional_required": "optional",
+              "element_type": {
+                "string": {}
+              }
+            }
+          },
+          {
+            "name": "list_list_string_attribute",
+            "list": {
+              "computed_optional_required": "optional",
+              "element_type": {
+                "list": {
+                  "string": {}
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

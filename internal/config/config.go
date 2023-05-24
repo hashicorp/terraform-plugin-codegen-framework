@@ -6,7 +6,6 @@ import (
 )
 
 const (
-	input  = "input/example.json"
 	schema = "input/schema.json"
 	output = "output"
 )
@@ -41,13 +40,9 @@ func New() (Config, error) {
 	flag.CommandLine.Parse(os.Args[2:])
 
 	config := Config{
-		Input:  input,
+		Input:  i,
 		Schema: schema,
 		Output: output,
-	}
-
-	if i != "" {
-		config.Input = i
 	}
 
 	if s != "" {

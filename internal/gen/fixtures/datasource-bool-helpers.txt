@@ -1,0 +1,26 @@
+
+
+func (m exampleDataSourceModel) attributeType(ctx context.Context) attr.Type {
+	return types.ObjectType{AttrTypes: m.objectAttributeTypes}
+}
+
+func (m exampleDataSourceModel) objectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute": my_type,
+	}
+}
+
+func (m exampleDataSourceModel) objectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.objectAttributeTypes(ctx),
+	)
+}
+
+func (m exampleDataSourceModel) objectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.objectAttributeTypes(ctx),
+		data,
+	)
+}
+
