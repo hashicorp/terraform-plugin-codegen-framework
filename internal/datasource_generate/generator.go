@@ -16,7 +16,7 @@ type GeneratorSchema interface {
 type GeneratorDataSourceSchemas struct {
 	schemas map[string]GeneratorDataSourceSchema
 	// TODO: Could add a field to hold custom templates that are used in calls to
-	// attributeStringsFromGeneratorAttributes() and blockStringsFromGeneratorBlocks() funcs.
+	// getAttributes() and getBlocks() funcs.
 }
 
 type GeneratorDataSourceSchema struct {
@@ -48,8 +48,8 @@ func (g GeneratorDataSourceSchemas) ToBytes() (map[string][]byte, error) {
 
 func (g GeneratorDataSourceSchemas) toBytes(name string, a GeneratorDataSourceSchema) ([]byte, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": attributeStringsFromGeneratorAttributes,
-		"getBlocks":     blockStringsFromGeneratorBlocks,
+		"getAttributes": getAttributes,
+		"getBlocks":     getBlocks,
 	}
 
 	t, err := template.New("datasource_schema").Funcs(funcMap).Parse(
@@ -73,7 +73,7 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, a GeneratorDataSourceSc
 	return buf.Bytes(), nil
 }
 
-func attributeStringsFromGeneratorAttributes(attributes map[string]GeneratorAttribute) (string, error) {
+func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
@@ -102,7 +102,7 @@ func attributeStringsFromGeneratorAttributes(attributes map[string]GeneratorAttr
 	return s.String(), nil
 }
 
-func blockStringsFromGeneratorBlocks(blocks map[string]GeneratorBlock) (string, error) {
+func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
