@@ -10,6 +10,223 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
+func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
+	testCases := map[string]struct {
+		input    GeneratorSetNestedBlock
+		expected map[string]struct{}
+	}{
+		"default": {
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"nested-object-custom-type-without-import": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-and-nested-object-custom-type-without-import": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{},
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{},
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"nested-object-custom-type-with-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Import: pointer(""),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Import: pointer(""),
+					},
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute": {},
+				datasourceSchemaImport:                       {},
+			},
+		},
+		"nested-object-custom-type-with-import": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Import: pointer("github.com/my_account/my_project/attribute"),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                       {},
+				"github.com/my_account/my_project/attribute": {},
+			},
+		},
+		"custom-type-with-import-with-nested-object-custom-type-with-import": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Import: pointer("github.com/my_account/my_project/nested_object"),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute":     {},
+				"github.com/my_account/my_project/nested_object": {},
+			},
+		},
+		"nested-attribute-list": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: map[string]GeneratorAttribute{
+						"list": GeneratorListAttribute{
+							ListAttribute: schema.ListAttribute{
+								ElementType: types.BoolType,
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				typesImport:            {},
+			},
+		},
+		"nested-attribute-list-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: map[string]GeneratorAttribute{
+						"list": GeneratorListAttribute{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/nested_list"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                         {},
+				"github.com/my_account/my_project/nested_list": {},
+			},
+		},
+		"nested-attribute-object": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: map[string]GeneratorAttribute{
+						"obj": GeneratorObjectAttribute{
+							ObjectAttribute: schema.ObjectAttribute{
+								AttributeTypes: map[string]attr.Type{
+									"bool": types.BoolType,
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				attrImport:             {},
+				typesImport:            {},
+			},
+		},
+		"nested-attribute-object-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: map[string]GeneratorAttribute{
+						"obj": GeneratorObjectAttribute{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/nested_object"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                           {},
+				"github.com/my_account/my_project/nested_object": {},
+			},
+		},
+		"nested-block-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Blocks: map[string]GeneratorBlock{
+						"list-nested-block": GeneratorListNestedBlock{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/nested_block"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                          {},
+				"github.com/my_account/my_project/nested_block": {},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestGeneratorSetNestedBlock_ToString(t *testing.T) {
 	testCases := map[string]struct {
 		listNestedBlock GeneratorSetNestedBlock

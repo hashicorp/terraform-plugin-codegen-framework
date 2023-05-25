@@ -19,6 +19,32 @@ type GeneratorListAttribute struct {
 	Validators []specschema.ListValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. Further
+// imports are retrieved by calling getElementTypeImports.
+func (g GeneratorListAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))
+
+	for k := range elemTypeImports {
+		imports[k] = struct{}{}
+	}
+
+	return imports
+}
+
 func (g GeneratorListAttribute) Equal(ga GeneratorAttribute) bool {
 	if _, ok := ga.(GeneratorListAttribute); !ok {
 		return false
@@ -129,4 +155,31 @@ func getElementType(elementType attr.Type) string {
 	}
 
 	return ""
+}
+
+func getElementTypeImports(elementType attr.Type, imports map[string]struct{}) map[string]struct{} {
+	if elementType == nil {
+		return imports
+	}
+
+	imports[typesImport] = struct{}{}
+
+	switch t := elementType.(type) {
+	case basetypes.BoolType,
+		basetypes.Float64Type,
+		basetypes.Int64Type,
+		basetypes.NumberType,
+		basetypes.StringType:
+		return imports
+	case types.ListType:
+		return getElementTypeImports(t.ElementType(), imports)
+	case types.MapType:
+		return getElementTypeImports(t.ElementType(), imports)
+	case types.ObjectType:
+		return getAttrTypesImports(t.AttrTypes, imports)
+	case types.SetType:
+		return getElementTypeImports(t.ElementType(), imports)
+	}
+
+	return imports
 }

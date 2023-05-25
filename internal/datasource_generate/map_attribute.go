@@ -15,6 +15,32 @@ type GeneratorMapAttribute struct {
 	Validators []specschema.MapValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. Further
+// imports are retrieved by calling getElementTypeImports.
+func (g GeneratorMapAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))
+
+	for k := range elemTypeImports {
+		imports[k] = struct{}{}
+	}
+
+	return imports
+}
+
 func (g GeneratorMapAttribute) Equal(ga GeneratorAttribute) bool {
 	if _, ok := ga.(GeneratorMapAttribute); !ok {
 		return false

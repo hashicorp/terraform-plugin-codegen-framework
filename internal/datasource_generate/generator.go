@@ -2,6 +2,7 @@ package datasource_generate
 
 import (
 	"bytes"
+	"fmt"
 	"sort"
 	"strings"
 	"text/template"
@@ -15,7 +16,7 @@ type GeneratorSchema interface {
 
 type GeneratorDataSourceSchemas struct {
 	schemas map[string]GeneratorDataSourceSchema
-	// TODO: Could add a field to hold custom templates that are used in calls to
+	// TODO: Could add a field to hold custom templates that are used in calls toBytes() to allow overriding.
 	// getAttributes() and getBlocks() funcs.
 }
 
@@ -48,6 +49,7 @@ func (g GeneratorDataSourceSchemas) ToBytes() (map[string][]byte, error) {
 
 func (g GeneratorDataSourceSchemas) toBytes(name string, a GeneratorDataSourceSchema) ([]byte, error) {
 	funcMap := template.FuncMap{
+		"getImports":    getImports,
 		"getAttributes": getAttributes,
 		"getBlocks":     getBlocks,
 	}
@@ -71,6 +73,30 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, a GeneratorDataSourceSc
 	}
 
 	return buf.Bytes(), nil
+}
+
+func getImports(schema GeneratorDataSourceSchema) (string, error) {
+	var s strings.Builder
+
+	var imports = make(map[string]struct{})
+
+	for _, v := range schema.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range schema.Blocks {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for a := range imports {
+		s.WriteString(fmt.Sprintf("\"%s\"\n", a))
+	}
+
+	return s.String(), nil
 }
 
 func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
@@ -131,14 +157,20 @@ func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	return s.String(), nil
 }
 
+type GeneratorImport interface {
+	Imports() map[string]struct{}
+}
+
 type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	ToString(string) (string, error)
+	GeneratorImport
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	ToString(string) (string, error)
+	GeneratorImport
 }
 
 type GeneratorNestedAttributeObject struct {

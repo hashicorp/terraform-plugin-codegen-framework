@@ -19,6 +19,32 @@ type GeneratorObjectAttribute struct {
 	Validators []specschema.ObjectValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. Further
+// imports are retrieved by calling getElementTypeImports.
+func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	attrTypesImports := getAttrTypesImports(g.AttributeTypes, make(map[string]struct{}))
+
+	for k := range attrTypesImports {
+		imports[k] = struct{}{}
+	}
+
+	return imports
+}
+
 func (g GeneratorObjectAttribute) Equal(ga GeneratorAttribute) bool {
 	if _, ok := ga.(GeneratorObjectAttribute); !ok {
 		return false
@@ -133,4 +159,15 @@ func getAttrTypes(attrTypes map[string]attr.Type) string {
 	}
 
 	return aTypes.String()
+}
+
+func getAttrTypesImports(attrTypes map[string]attr.Type, imports map[string]struct{}) map[string]struct{} {
+	if len(attrTypes) == 0 {
+		return imports
+	}
+
+	imports[attrImport] = struct{}{}
+	imports[typesImport] = struct{}{}
+
+	return imports
 }

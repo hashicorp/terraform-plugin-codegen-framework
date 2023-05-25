@@ -10,14 +10,214 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
+func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
+	testCases := map[string]struct {
+		input    GeneratorListNestedAttribute
+		expected map[string]struct{}
+	}{
+		"default": {
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorListNestedAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"nested-object-custom-type-without-import": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					CustomType: &specschema.CustomType{},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-and-nested-object-custom-type-without-import": {
+			input: GeneratorListNestedAttribute{
+				CustomType: &specschema.CustomType{},
+				NestedObject: GeneratorNestedAttributeObject{
+					CustomType: &specschema.CustomType{},
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorListNestedAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"nested-object-custom-type-with-import-empty-string": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					CustomType: &specschema.CustomType{
+						Import: pointer(""),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
+			input: GeneratorListNestedAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+				NestedObject: GeneratorNestedAttributeObject{
+					CustomType: &specschema.CustomType{
+						Import: pointer(""),
+					},
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorListNestedAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute": {},
+				datasourceSchemaImport:                       {},
+			},
+		},
+		"nested-object-custom-type-with-import": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					CustomType: &specschema.CustomType{
+						Import: pointer("github.com/my_account/my_project/attribute"),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                       {},
+				"github.com/my_account/my_project/attribute": {},
+			},
+		},
+		"custom-type-with-import-with-nested-object-custom-type-with-import": {
+			input: GeneratorListNestedAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+				NestedObject: GeneratorNestedAttributeObject{
+					CustomType: &specschema.CustomType{
+						Import: pointer("github.com/my_account/my_project/nested_object"),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute":     {},
+				"github.com/my_account/my_project/nested_object": {},
+			},
+		},
+		"nested-list": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: map[string]GeneratorAttribute{
+						"list": GeneratorListAttribute{
+							ListAttribute: schema.ListAttribute{
+								ElementType: types.BoolType,
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				typesImport:            {},
+			},
+		},
+		"nested-list-with-custom-type": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: map[string]GeneratorAttribute{
+						"list": GeneratorListAttribute{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/nested_list"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                         {},
+				"github.com/my_account/my_project/nested_list": {},
+			},
+		},
+		"nested-object": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: map[string]GeneratorAttribute{
+						"obj": GeneratorObjectAttribute{
+							ObjectAttribute: schema.ObjectAttribute{
+								AttributeTypes: map[string]attr.Type{
+									"bool": types.BoolType,
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				attrImport:             {},
+				typesImport:            {},
+			},
+		},
+		"nested-object-with-custom-type": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: map[string]GeneratorAttribute{
+						"obj": GeneratorObjectAttribute{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/nested_object"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                           {},
+				"github.com/my_account/my_project/nested_object": {},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestGeneratorListNestedAttribute_ToString(t *testing.T) {
 	testCases := map[string]struct {
-		listNestedAttribute GeneratorListNestedAttribute
-		expectedAttribute   string
-		expectedError       error
+		input         GeneratorListNestedAttribute
+		expected      string
+		expectedError error
 	}{
 		"attribute-bool": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: map[string]GeneratorAttribute{
 						"bool": GeneratorBoolAttribute{
@@ -28,7 +228,7 @@ func TestGeneratorListNestedAttribute_ToString(t *testing.T) {
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -41,7 +241,7 @@ Optional: true,
 		},
 
 		"attribute-list": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: map[string]GeneratorAttribute{
 						"list": GeneratorListAttribute{
@@ -53,7 +253,7 @@ Optional: true,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -67,7 +267,7 @@ Optional: true,
 		},
 
 		"attribute-list-nested": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: map[string]GeneratorAttribute{
 						"nested_list_nested": GeneratorListNestedAttribute{
@@ -84,7 +284,7 @@ Optional: true,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -103,7 +303,7 @@ Optional: true,
 		},
 
 		"attribute-object": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: map[string]GeneratorAttribute{
 						"object": GeneratorObjectAttribute{
@@ -117,7 +317,7 @@ Optional: true,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -133,7 +333,7 @@ Optional: true,
 		},
 
 		"attribute-single-nested-bool": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: map[string]GeneratorAttribute{
 						"nested_single_nested": GeneratorSingleNestedAttribute{
@@ -148,7 +348,7 @@ Optional: true,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -165,12 +365,12 @@ Optional: true,
 		},
 
 		"custom-type": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				CustomType: &specschema.CustomType{
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -181,12 +381,12 @@ CustomType: my_custom_type,
 		},
 
 		"required": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				ListNestedAttribute: schema.ListNestedAttribute{
 					Required: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -197,12 +397,12 @@ Required: true,
 		},
 
 		"optional": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				ListNestedAttribute: schema.ListNestedAttribute{
 					Optional: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -213,12 +413,12 @@ Optional: true,
 		},
 
 		"computed": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				ListNestedAttribute: schema.ListNestedAttribute{
 					Computed: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -229,12 +429,12 @@ Computed: true,
 		},
 
 		"sensitive": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				ListNestedAttribute: schema.ListNestedAttribute{
 					Sensitive: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -245,12 +445,12 @@ Sensitive: true,
 		},
 
 		"description": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				ListNestedAttribute: schema.ListNestedAttribute{
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -262,12 +462,12 @@ MarkdownDescription: "description",
 		},
 
 		"deprecation-message": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				ListNestedAttribute: schema.ListNestedAttribute{
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -278,7 +478,7 @@ DeprecationMessage: "deprecated",
 		},
 
 		"validators": {
-			listNestedAttribute: GeneratorListNestedAttribute{
+			input: GeneratorListNestedAttribute{
 				Validators: []specschema.ListValidator{
 					{
 						Custom: &specschema.CustomValidator{
@@ -292,7 +492,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
@@ -312,13 +512,13 @@ my_other_validator.Validate(),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.listNestedAttribute.ToString("list_nested_attribute")
+			got, err := testCase.input.ToString("list_nested_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})

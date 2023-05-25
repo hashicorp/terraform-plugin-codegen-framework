@@ -16,6 +16,47 @@ type GeneratorListNestedBlock struct {
 	Validators   []specschema.ListValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. The same
+// logic is applied to the NestedObject. Further imports are then retrieved by
+// calling Imports on each of the nested attributes.
+func (g GeneratorListNestedBlock) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	if g.NestedObject.CustomType != nil {
+		if g.NestedObject.CustomType.Import != nil && *g.NestedObject.CustomType.Import != "" {
+			imports[*g.NestedObject.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	for _, v := range g.NestedObject.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range g.NestedObject.Blocks {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	return imports
+}
+
 func (g GeneratorListNestedBlock) Equal(ga GeneratorBlock) bool {
 	if _, ok := ga.(GeneratorListNestedBlock); !ok {
 		return false

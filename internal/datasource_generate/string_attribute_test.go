@@ -8,11 +8,62 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 )
 
+func TestGeneratorStringAttribute_Imports(t *testing.T) {
+	testCases := map[string]struct {
+		input    GeneratorStringAttribute
+		expected map[string]struct{}
+	}{
+		"default": {
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute": {},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestGeneratorStringAttribute_ToString(t *testing.T) {
 	testCases := map[string]struct {
-		input             GeneratorStringAttribute
-		expectedAttribute string
-		expectedError     error
+		input         GeneratorStringAttribute
+		expected      string
+		expectedError error
 	}{
 		"custom-type": {
 			input: GeneratorStringAttribute{
@@ -20,7 +71,7 @@ func TestGeneratorStringAttribute_ToString(t *testing.T) {
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 CustomType: my_custom_type,
 },`,
@@ -32,7 +83,7 @@ CustomType: my_custom_type,
 					Required: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Required: true,
 },`,
@@ -44,7 +95,7 @@ Required: true,
 					Optional: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Optional: true,
 },`,
@@ -56,7 +107,7 @@ Optional: true,
 					Computed: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Computed: true,
 },`,
@@ -68,7 +119,7 @@ Computed: true,
 					Sensitive: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Sensitive: true,
 },`,
@@ -81,7 +132,7 @@ Sensitive: true,
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Description: "description",
 MarkdownDescription: "description",
@@ -94,7 +145,7 @@ MarkdownDescription: "description",
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 DeprecationMessage: "deprecated",
 },`,
@@ -115,7 +166,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Validators: []validator.String{
 my_validator.Validate(),
@@ -137,7 +188,7 @@ my_other_validator.Validate(),
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})

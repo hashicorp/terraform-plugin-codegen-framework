@@ -10,21 +10,104 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func TestGeneratorObjectAttribute_ToString(t *testing.T) {
+func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 	testCases := map[string]struct {
-		objectAttribute   GeneratorObjectAttribute
-		expectedAttribute string
-		expectedError     error
+		input    GeneratorObjectAttribute
+		expected map[string]struct{}
 	}{
-		"attr-type-bool": {
-			objectAttribute: GeneratorObjectAttribute{
+		"default": {
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorObjectAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorObjectAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorObjectAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute": {},
+			},
+		},
+		"object-without-attribute-types": {
+			input: GeneratorObjectAttribute{
+				ObjectAttribute: schema.ObjectAttribute{},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"object-wit-empty-attribute-types": {
+			input: GeneratorObjectAttribute{
+				ObjectAttribute: schema.ObjectAttribute{
+					AttributeTypes: map[string]attr.Type{},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"object-with-attr-type-bool": {
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"bool": types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				attrImport:             {},
+				typesImport:            {},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorObjectAttribute_ToString(t *testing.T) {
+	testCases := map[string]struct {
+		input         GeneratorObjectAttribute
+		expected      string
+		expectedError error
+	}{
+		"attr-type-bool": {
+			input: GeneratorObjectAttribute{
+				ObjectAttribute: schema.ObjectAttribute{
+					AttributeTypes: map[string]attr.Type{
+						"bool": types.BoolType,
+					},
+				},
+			},
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "bool": types.BoolType,
@@ -33,7 +116,7 @@ AttributeTypes: map[string]attr.Type{
 		},
 
 		"attr-type-list": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"list": types.ListType{
@@ -42,7 +125,7 @@ AttributeTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "list": types.ListType{
@@ -53,7 +136,7 @@ ElemType: types.BoolType,
 		},
 
 		"attr-type-list-list": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"list": types.ListType{
@@ -64,7 +147,7 @@ ElemType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "list": types.ListType{
@@ -77,7 +160,7 @@ ElemType: types.BoolType,
 		},
 
 		"attr-type-list-object": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"list": types.ListType{
@@ -90,7 +173,7 @@ ElemType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "list": types.ListType{
@@ -105,7 +188,7 @@ AttrTypes: map[string]attr.Type{
 		},
 
 		"attr-type-map": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"map": types.MapType{
@@ -114,7 +197,7 @@ AttrTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "map": types.MapType{
@@ -125,7 +208,7 @@ ElemType: types.BoolType,
 		},
 
 		"attr-type-map-map": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"map": types.MapType{
@@ -136,7 +219,7 @@ ElemType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "map": types.MapType{
@@ -149,7 +232,7 @@ ElemType: types.BoolType,
 		},
 
 		"attr-type-map-object": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"map": types.MapType{
@@ -162,7 +245,7 @@ ElemType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "map": types.MapType{
@@ -177,7 +260,7 @@ AttrTypes: map[string]attr.Type{
 		},
 
 		"attr-type-object": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"obj": types.ObjectType{
@@ -188,7 +271,7 @@ AttrTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "obj": types.ObjectType{
@@ -201,7 +284,7 @@ AttrTypes: map[string]attr.Type{
 		},
 
 		"attr-type-object-object": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"obj": types.ObjectType{
@@ -216,7 +299,7 @@ AttrTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "obj": types.ObjectType{
@@ -233,7 +316,7 @@ AttrTypes: map[string]attr.Type{
 		},
 
 		"attr-type-object-list": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"obj": types.ObjectType{
@@ -246,7 +329,7 @@ AttrTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "obj": types.ObjectType{
@@ -261,14 +344,14 @@ ElemType: types.BoolType,
 		},
 
 		"attr-type-string": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -277,7 +360,7 @@ AttributeTypes: map[string]attr.Type{
 		},
 
 		"custom-type": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
@@ -287,7 +370,7 @@ AttributeTypes: map[string]attr.Type{
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -297,7 +380,7 @@ CustomType: my_custom_type,
 		},
 
 		"required": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
@@ -305,7 +388,7 @@ CustomType: my_custom_type,
 					Required: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -315,7 +398,7 @@ Required: true,
 		},
 
 		"optional": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
@@ -323,7 +406,7 @@ Required: true,
 					Optional: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -333,7 +416,7 @@ Optional: true,
 		},
 
 		"computed": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
@@ -341,7 +424,7 @@ Optional: true,
 					Computed: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -351,7 +434,7 @@ Computed: true,
 		},
 
 		"sensitive": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
@@ -359,7 +442,7 @@ Computed: true,
 					Sensitive: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -369,7 +452,7 @@ Sensitive: true,
 		},
 
 		"description": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
@@ -377,7 +460,7 @@ Sensitive: true,
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -388,7 +471,7 @@ MarkdownDescription: "description",
 		},
 
 		"deprecation-message": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
@@ -396,7 +479,7 @@ MarkdownDescription: "description",
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -406,7 +489,7 @@ DeprecationMessage: "deprecated",
 		},
 
 		"validators": {
-			objectAttribute: GeneratorObjectAttribute{
+			input: GeneratorObjectAttribute{
 				ObjectAttribute: schema.ObjectAttribute{
 					AttributeTypes: map[string]attr.Type{
 						"str": types.StringType,
@@ -425,7 +508,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "object_attribute": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
@@ -444,13 +527,13 @@ my_other_validator.Validate(),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.objectAttribute.ToString("object_attribute")
+			got, err := testCase.input.ToString("object_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})
