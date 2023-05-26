@@ -636,6 +636,54 @@ my_other_validator.Validate(),
 },
 },`,
 		},
+
+		"nested-object-custom-type": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					CustomType: &specschema.CustomType{
+						Type: "my_custom_type",
+					},
+				},
+			},
+			expected: `
+"list_nested_attribute": schema.ListNestedAttribute{
+NestedObject: schema.NestedAttributeObject{
+Attributes: map[string]schema.Attribute{
+},
+CustomType: my_custom_type,
+},
+},`,
+		},
+
+		"nested-object-validators": {
+			input: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: &specschema.CustomValidator{
+								SchemaDefinition: "my_validator.Validate()",
+							},
+						},
+						{
+							Custom: &specschema.CustomValidator{
+								SchemaDefinition: "my_other_validator.Validate()",
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"list_nested_attribute": schema.ListNestedAttribute{
+NestedObject: schema.NestedAttributeObject{
+Attributes: map[string]schema.Attribute{
+},
+Validators: []validator.Object{
+my_validator.Validate(),
+my_other_validator.Validate(),
+},
+},
+},`,
+		},
 	}
 
 	for name, testCase := range testCases {

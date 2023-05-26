@@ -361,12 +361,12 @@ func TestGeneratorSetNestedBlock_ToString(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		listNestedBlock GeneratorSetNestedBlock
-		expected        string
-		expectedError   error
+		input         GeneratorSetNestedBlock
+		expected      string
+		expectedError error
 	}{
 		"attribute-bool": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: map[string]GeneratorAttribute{
 						"bool": GeneratorBoolAttribute{
@@ -390,7 +390,7 @@ Optional: true,
 		},
 
 		"attribute-list": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: map[string]GeneratorAttribute{
 						"list": GeneratorListAttribute{
@@ -416,7 +416,7 @@ Optional: true,
 		},
 
 		"attribute-list-nested": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: map[string]GeneratorAttribute{
 						"nested_list_nested": GeneratorSetNestedAttribute{
@@ -452,7 +452,7 @@ Optional: true,
 		},
 
 		"attribute-object": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: map[string]GeneratorAttribute{
 						"object": GeneratorObjectAttribute{
@@ -482,7 +482,7 @@ Optional: true,
 		},
 
 		"attribute-single-nested-bool": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: map[string]GeneratorAttribute{
 						"nested_single_nested": GeneratorSingleNestedAttribute{
@@ -514,7 +514,7 @@ Optional: true,
 		},
 
 		"block-list-nested-bool": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					Blocks: map[string]GeneratorBlock{
 						"nested_list_nested": GeneratorSetNestedBlock{
@@ -550,7 +550,7 @@ Optional: true,
 		},
 
 		"block-single-nested-bool": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					Blocks: map[string]GeneratorBlock{
 						"nested_single_nested": GeneratorSingleNestedBlock{
@@ -582,7 +582,7 @@ Optional: true,
 		},
 
 		"custom-type": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				CustomType: &specschema.CustomType{
 					Type: "my_custom_type",
 				},
@@ -596,7 +596,7 @@ CustomType: my_custom_type,
 		},
 
 		"description": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				SetNestedBlock: schema.SetNestedBlock{
 					Description: "description",
 				},
@@ -611,7 +611,7 @@ MarkdownDescription: "description",
 		},
 
 		"deprecation-message": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				SetNestedBlock: schema.SetNestedBlock{
 					DeprecationMessage: "deprecated",
 				},
@@ -625,7 +625,7 @@ DeprecationMessage: "deprecated",
 		},
 
 		"validators": {
-			listNestedBlock: GeneratorSetNestedBlock{
+			input: GeneratorSetNestedBlock{
 				Validators: []specschema.SetValidator{
 					{
 						Custom: &specschema.CustomValidator{
@@ -649,6 +649,50 @@ my_other_validator.Validate(),
 },
 },`,
 		},
+
+		"nested-object-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Type: "my_custom_type",
+					},
+				},
+			},
+			expected: `
+"set_nested_block": schema.SetNestedBlock{
+NestedObject: schema.NestedBlockObject{
+CustomType: my_custom_type,
+},
+},`,
+		},
+
+		"nested-object-validators": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: &specschema.CustomValidator{
+								SchemaDefinition: "my_validator.Validate()",
+							},
+						},
+						{
+							Custom: &specschema.CustomValidator{
+								SchemaDefinition: "my_other_validator.Validate()",
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"set_nested_block": schema.SetNestedBlock{
+NestedObject: schema.NestedBlockObject{
+Validators: []validator.Object{
+my_validator.Validate(),
+my_other_validator.Validate(),
+},
+},
+},`,
+		},
 	}
 
 	for name, testCase := range testCases {
@@ -657,7 +701,7 @@ my_other_validator.Validate(),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.listNestedBlock.ToString("set_nested_block")
+			got, err := testCase.input.ToString("set_nested_block")
 
 			if err != nil {
 				t.Error(err)
