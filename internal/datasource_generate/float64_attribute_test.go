@@ -44,6 +44,64 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 				"github.com/my_account/my_project/attribute": {},
 			},
 		},
+		"validator-custom-nil": {
+			input: GeneratorFloat64Attribute{
+				Validators: []specschema.Float64Validator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorFloat64Attribute{
+				Validators: []specschema.Float64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorFloat64Attribute{
+				Validators: []specschema.Float64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorFloat64Attribute{
+				Validators: []specschema.Float64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myproject/myvalidators/validator"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				validatorImport:        {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {

@@ -212,6 +212,134 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				"github.com/my_account/my_project/nested_block": {},
 			},
 		},
+		"validator-custom-nil": {
+			input: GeneratorSetNestedBlock{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorSetNestedBlock{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorSetNestedBlock{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myproject/myvalidators/validator"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				validatorImport:        {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
+			},
+		},
+		"nested-object-validator-custom-nil": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: nil,
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"nested-object-validator-custom-import-nil": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: &specschema.CustomValidator{
+								Import: nil,
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"nested-object-validator-custom-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: &specschema.CustomValidator{
+								Import: pointer(""),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"nested-object-validator-custom-import": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: &specschema.CustomValidator{
+								Import: pointer("github.com/myotherproject/myvalidators/validator"),
+							},
+						},
+						{
+							Custom: &specschema.CustomValidator{
+								Import: pointer("github.com/myproject/myvalidators/validator"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				validatorImport:        {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {

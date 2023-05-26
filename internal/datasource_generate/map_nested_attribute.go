@@ -42,6 +42,40 @@ func (g GeneratorMapNestedAttribute) Imports() map[string]struct{} {
 		imports[datasourceSchemaImport] = struct{}{}
 	}
 
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	for _, v := range g.NestedObject.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
 	for _, v := range g.NestedObject.Attributes {
 		for k := range v.Imports() {
 			imports[k] = struct{}{}

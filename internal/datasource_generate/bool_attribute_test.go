@@ -48,6 +48,64 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				"github.com/my_account/my_project/attribute": {},
 			},
 		},
+		"validator-custom-nil": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myproject/myvalidators/validator"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				validatorImport:        {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {

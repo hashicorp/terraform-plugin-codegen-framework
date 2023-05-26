@@ -38,6 +38,23 @@ func (g GeneratorSetAttribute) Imports() map[string]struct{} {
 		imports[k] = struct{}{}
 	}
 
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
 	return imports
 }
 
