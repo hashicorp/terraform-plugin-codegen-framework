@@ -15,6 +15,8 @@ import (
 )
 
 func TestConvertListNestedBlock(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *datasource.ListNestedBlock
 		expected      datasource_generate.GeneratorListNestedBlock

@@ -13,6 +13,8 @@ func pointer[T any](in T) *T {
 }
 
 func TestGeneratorBoolAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input    GeneratorBoolAttribute
 		expected map[string]struct{}
@@ -64,6 +66,8 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 }
 
 func TestGeneratorBoolAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorBoolAttribute
 		expected      string

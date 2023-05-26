@@ -35,21 +35,20 @@ func (g GeneratorInt64Attribute) Imports() map[string]struct{} {
 }
 
 func (g GeneratorInt64Attribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorInt64Attribute); !ok {
+	h, ok := ga.(GeneratorInt64Attribute)
+	if !ok {
 		return false
 	}
 
-	gba := ga.(GeneratorInt64Attribute)
-
-	if !customTypeEqual(g.CustomType, gba.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gba.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.Int64Attribute.Equal(gba.Int64Attribute)
+	return g.Int64Attribute.Equal(h.Int64Attribute)
 }
 
 func (g GeneratorInt64Attribute) ToString(name string) (string, error) {

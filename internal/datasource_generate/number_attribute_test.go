@@ -9,6 +9,8 @@ import (
 )
 
 func TestGeneratorNumberAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input    GeneratorNumberAttribute
 		expected map[string]struct{}
@@ -60,6 +62,8 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 }
 
 func TestGeneratorNumberAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorNumberAttribute
 		expected      string

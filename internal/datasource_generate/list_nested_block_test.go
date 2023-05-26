@@ -11,6 +11,8 @@ import (
 )
 
 func TestGeneratorListNestedBlock_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input    GeneratorListNestedBlock
 		expected map[string]struct{}
@@ -228,6 +230,8 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 }
 
 func TestGeneratorListNestedBlock_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorListNestedBlock
 		expected      string

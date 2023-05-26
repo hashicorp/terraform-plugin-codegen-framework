@@ -11,6 +11,8 @@ import (
 )
 
 func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input    GeneratorSingleNestedAttribute
 		expected map[string]struct{}
@@ -125,6 +127,8 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 }
 
 func TestGeneratorSingleNestedAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorSingleNestedAttribute
 		expected      string

@@ -11,6 +11,8 @@ import (
 )
 
 func TestGeneratorObjectAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorObjectAttribute
 		expected      string

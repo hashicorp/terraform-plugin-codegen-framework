@@ -11,6 +11,8 @@ import (
 )
 
 func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input    GeneratorListNestedAttribute
 		expected map[string]struct{}
@@ -211,6 +213,8 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 }
 
 func TestGeneratorListNestedAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorListNestedAttribute
 		expected      string

@@ -9,6 +9,8 @@ import (
 )
 
 func TestGeneratorInt64Attribute_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input    GeneratorInt64Attribute
 		expected map[string]struct{}
@@ -60,6 +62,8 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 }
 
 func TestGeneratorInt64Attribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorInt64Attribute
 		expected      string

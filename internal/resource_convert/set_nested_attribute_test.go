@@ -15,6 +15,8 @@ import (
 )
 
 func TestConvertSetNestedAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *resource.SetNestedAttribute
 		expected      resource_generate.GeneratorSetNestedAttribute

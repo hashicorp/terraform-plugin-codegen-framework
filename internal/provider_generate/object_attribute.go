@@ -20,21 +20,20 @@ type GeneratorObjectAttribute struct {
 }
 
 func (g GeneratorObjectAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorObjectAttribute); !ok {
+	h, ok := ga.(GeneratorObjectAttribute)
+	if !ok {
 		return false
 	}
 
-	goa := ga.(GeneratorObjectAttribute)
-
-	if !customTypeEqual(g.CustomType, goa.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, goa.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.ObjectAttribute.Equal(goa.ObjectAttribute)
+	return g.ObjectAttribute.Equal(h.ObjectAttribute)
 }
 
 func (g GeneratorObjectAttribute) ToString(name string) (string, error) {

@@ -19,21 +19,20 @@ type GeneratorBoolAttribute struct {
 }
 
 func (g GeneratorBoolAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorBoolAttribute); !ok {
+	h, ok := ga.(GeneratorBoolAttribute)
+	if !ok {
 		return false
 	}
 
-	gba := ga.(GeneratorBoolAttribute)
-
-	if !customTypeEqual(g.CustomType, gba.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gba.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.BoolAttribute.Equal(gba.BoolAttribute)
+	return g.BoolAttribute.Equal(h.BoolAttribute)
 }
 
 func getBoolDefault(boolDefault specschema.BoolDefault) string {

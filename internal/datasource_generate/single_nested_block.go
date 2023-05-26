@@ -51,22 +51,21 @@ func (g GeneratorSingleNestedBlock) Imports() map[string]struct{} {
 }
 
 func (g GeneratorSingleNestedBlock) Equal(ga GeneratorBlock) bool {
-	if _, ok := ga.(GeneratorSingleNestedBlock); !ok {
+	h, ok := ga.(GeneratorSingleNestedBlock)
+	if !ok {
 		return false
 	}
 
-	gsna := ga.(GeneratorSingleNestedBlock)
-
-	if !customTypeEqual(g.CustomType, gsna.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gsna.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
 	for k, a := range g.Attributes {
-		if !a.Equal(gsna.Attributes[k]) {
+		if !a.Equal(h.Attributes[k]) {
 			return false
 		}
 	}

@@ -13,6 +13,8 @@ import (
 )
 
 func TestConvertBoolAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *resource.BoolAttribute
 		expected      resource_generate.GeneratorBoolAttribute

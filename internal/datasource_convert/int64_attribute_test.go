@@ -13,6 +13,8 @@ import (
 )
 
 func TestConvertInt64Attribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *datasource.Int64Attribute
 		expected      datasource_generate.GeneratorInt64Attribute

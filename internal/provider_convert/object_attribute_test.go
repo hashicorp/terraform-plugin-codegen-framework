@@ -15,6 +15,8 @@ import (
 )
 
 func TestConvertObjectAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *provider.ObjectAttribute
 		expected      provider_generate.GeneratorObjectAttribute

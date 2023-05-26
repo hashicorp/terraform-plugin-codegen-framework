@@ -9,6 +9,8 @@ import (
 )
 
 func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input    GeneratorFloat64Attribute
 		expected map[string]struct{}
@@ -60,6 +62,8 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 }
 
 func TestGeneratorFloat64Attribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorFloat64Attribute
 		expected      string

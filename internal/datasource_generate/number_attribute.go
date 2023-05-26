@@ -35,21 +35,20 @@ func (g GeneratorNumberAttribute) Imports() map[string]struct{} {
 }
 
 func (g GeneratorNumberAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorNumberAttribute); !ok {
+	h, ok := ga.(GeneratorNumberAttribute)
+	if !ok {
 		return false
 	}
 
-	gba := ga.(GeneratorNumberAttribute)
-
-	if !customTypeEqual(g.CustomType, gba.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gba.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.NumberAttribute.Equal(gba.NumberAttribute)
+	return g.NumberAttribute.Equal(h.NumberAttribute)
 }
 
 func (g GeneratorNumberAttribute) ToString(name string) (string, error) {

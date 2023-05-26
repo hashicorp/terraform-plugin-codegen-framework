@@ -58,30 +58,29 @@ func (g GeneratorListNestedBlock) Imports() map[string]struct{} {
 }
 
 func (g GeneratorListNestedBlock) Equal(ga GeneratorBlock) bool {
-	if _, ok := ga.(GeneratorListNestedBlock); !ok {
+	h, ok := ga.(GeneratorListNestedBlock)
+	if !ok {
 		return false
 	}
 
-	glna := ga.(GeneratorListNestedBlock)
-
-	if !customTypeEqual(g.CustomType, glna.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.listValidatorsEqual(g.Validators, glna.Validators) {
+	if !g.listValidatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	if !customTypeEqual(g.NestedObject.CustomType, glna.NestedObject.CustomType) {
+	if !customTypeEqual(g.NestedObject.CustomType, h.NestedObject.CustomType) {
 		return false
 	}
 
-	if !g.objectValidatorsEqual(g.NestedObject.Validators, glna.NestedObject.Validators) {
+	if !g.objectValidatorsEqual(g.NestedObject.Validators, h.NestedObject.Validators) {
 		return false
 	}
 
 	for k, a := range g.NestedObject.Attributes {
-		if !a.Equal(glna.NestedObject.Attributes[k]) {
+		if !a.Equal(h.NestedObject.Attributes[k]) {
 			return false
 		}
 	}

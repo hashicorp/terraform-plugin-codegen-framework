@@ -20,6 +20,8 @@ func pointer[T any](in T) *T {
 }
 
 func TestToGeneratorProviderSchema(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		spec           spec.Specification
 		expectedSchema map[string]provider_generate.GeneratorProviderSchema

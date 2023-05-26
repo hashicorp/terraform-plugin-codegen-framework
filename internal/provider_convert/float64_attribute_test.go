@@ -13,6 +13,8 @@ import (
 )
 
 func TestConvertFloat64Attribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *provider.Float64Attribute
 		expected      provider_generate.GeneratorFloat64Attribute

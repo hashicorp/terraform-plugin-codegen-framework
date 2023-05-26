@@ -15,6 +15,8 @@ import (
 )
 
 func TestConvertSingleNestedAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *provider.SingleNestedAttribute
 		expected      provider_generate.GeneratorSingleNestedAttribute

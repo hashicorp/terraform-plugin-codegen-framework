@@ -9,6 +9,8 @@ import (
 )
 
 func TestGeneratorStringAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorStringAttribute
 		expected      string
