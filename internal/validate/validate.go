@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
@@ -95,6 +96,20 @@ func (v SpecValidator) validateSchemaNames(ctx context.Context, s spec.Specifica
 			for k, v := range duplicateBlocks {
 				duplicates[k] = v
 			}
+		}
+	}
+
+	if s.Provider != nil && s.Provider.Schema != nil {
+		duplicateAttributes := duplicatedProviderAttributeNames(fmt.Sprintf("provider %q", s.Provider.Name), s.Provider.Schema.Attributes)
+
+		for k, v := range duplicateAttributes {
+			duplicates[k] = v
+		}
+
+		duplicateBlocks := duplicatedProviderBlockNames(fmt.Sprintf("provider %q", s.Provider.Name), s.Provider.Schema.Blocks)
+
+		for k, v := range duplicateBlocks {
+			duplicates[k] = v
 		}
 	}
 
@@ -191,6 +206,72 @@ func duplicatedDatasourceBlockNames(name string, b []datasource.Block) map[strin
 			nestedBlockDuplicates = duplicatedDatasourceBlockNames(blockName, v.SetNested.NestedObject.Blocks)
 		case v.SingleNested != nil:
 			nestedBlockDuplicates = duplicatedDatasourceBlockNames(blockName, v.SingleNested.Blocks)
+		}
+
+		for k, v := range nestedBlockDuplicates {
+			duplicates[k] = v
+		}
+	}
+
+	return duplicates
+}
+
+func duplicatedProviderAttributeNames(name string, a []provider.Attribute) map[string]struct{} {
+	duplicates := make(map[string]struct{})
+	attrNames := make(map[string]struct{})
+
+	for _, v := range a {
+		if _, ok := attrNames[v.Name]; ok {
+			duplicates[fmt.Sprintf("%s attribute name %q is duplicated", name, v.Name)] = struct{}{}
+		}
+
+		attrNames[v.Name] = struct{}{}
+
+		attrName := fmt.Sprintf("%s attribute %q", name, v.Name)
+		var nestedDuplicates map[string]struct{}
+
+		switch {
+		case v.ListNested != nil:
+			nestedDuplicates = duplicatedProviderAttributeNames(attrName, v.ListNested.NestedObject.Attributes)
+		case v.MapNested != nil:
+			nestedDuplicates = duplicatedProviderAttributeNames(attrName, v.MapNested.NestedObject.Attributes)
+		case v.Object != nil:
+			nestedDuplicates = duplicatedObjectAttributeTypeNames(attrName, v.Object.AttributeTypes)
+		case v.SetNested != nil:
+			nestedDuplicates = duplicatedProviderAttributeNames(attrName, v.SetNested.NestedObject.Attributes)
+		case v.SingleNested != nil:
+			nestedDuplicates = duplicatedProviderAttributeNames(attrName, v.SingleNested.Attributes)
+		}
+
+		for k, v := range nestedDuplicates {
+			duplicates[k] = v
+		}
+	}
+
+	return duplicates
+}
+
+func duplicatedProviderBlockNames(name string, b []provider.Block) map[string]struct{} {
+	duplicates := make(map[string]struct{})
+	blockNames := make(map[string]struct{})
+
+	for _, v := range b {
+		if _, ok := blockNames[v.Name]; ok {
+			duplicates[fmt.Sprintf("%s block name %q is duplicated", name, v.Name)] = struct{}{}
+		}
+
+		blockNames[v.Name] = struct{}{}
+
+		blockName := fmt.Sprintf("%s block %q", name, v.Name)
+		var nestedBlockDuplicates map[string]struct{}
+
+		switch {
+		case v.ListNested != nil:
+			nestedBlockDuplicates = duplicatedProviderBlockNames(blockName, v.ListNested.NestedObject.Blocks)
+		case v.SetNested != nil:
+			nestedBlockDuplicates = duplicatedProviderBlockNames(blockName, v.SetNested.NestedObject.Blocks)
+		case v.SingleNested != nil:
+			nestedBlockDuplicates = duplicatedProviderBlockNames(blockName, v.SingleNested.Blocks)
 		}
 
 		for k, v := range nestedBlockDuplicates {

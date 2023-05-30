@@ -7,12 +7,13 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 )
 
-func TestNames(t *testing.T) {
+func TestValidateDataSource(t *testing.T) {
 	testCases := map[string]struct {
 		input         spec.Specification
 		expectedError error
@@ -790,6 +791,744 @@ func TestNames(t *testing.T) {
 				},
 			},
 		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			specValidator := NewSpecValidator()
+
+			err := specValidator.Validate(context.Background(), testCase.input)
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+		})
+	}
+}
+
+func TestValidateProvider(t *testing.T) {
+	testCases := map[string]struct {
+		input         spec.Specification
+		expectedError error
+	}{
+		"provider-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+							},
+							{
+								Name: "first_attr",
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" attribute name "first_attr" is duplicated`),
+		},
+		"provider-attribute-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+							},
+							{
+								Name: "second_attr",
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-block-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+							},
+							{
+								Name: "first_block",
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" block name "first_block" is duplicated`),
+		},
+		"provider-attribute-and-block-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first",
+							},
+						},
+						Blocks: []provider.Block{
+							{
+								Name: "first",
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-block-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+							},
+							{
+								Name: "second_block",
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-list-nested-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								ListNested: &provider.ListNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "nested_attr",
+											},
+											{
+												Name: "nested_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" attribute "first_attr" attribute name "nested_attr" is duplicated`),
+		},
+		"provider-list-nested-attribute-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								ListNested: &provider.ListNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "nested_first_attr",
+											},
+											{
+												Name: "nested_second_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-attribute-and-list-nested-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								ListNested: &provider.ListNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "first_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-map-nested-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								MapNested: &provider.MapNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "nested_attr",
+											},
+											{
+												Name: "nested_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" attribute "first_attr" attribute name "nested_attr" is duplicated`),
+		},
+		"provider-map-nested-attribute-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								MapNested: &provider.MapNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "nested_first_attr",
+											},
+											{
+												Name: "nested_second_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-attribute-and-map-nested-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								MapNested: &provider.MapNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "first_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-set-nested-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								SetNested: &provider.SetNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "nested_attr",
+											},
+											{
+												Name: "nested_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" attribute "first_attr" attribute name "nested_attr" is duplicated`),
+		},
+		"provider-set-nested-attribute-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								SetNested: &provider.SetNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "nested_first_attr",
+											},
+											{
+												Name: "nested_second_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-attribute-and-set-nested-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								SetNested: &provider.SetNestedAttribute{
+									NestedObject: provider.NestedAttributeObject{
+										Attributes: []provider.Attribute{
+											{
+												Name: "first_attr",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-single-nested-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								SingleNested: &provider.SingleNestedAttribute{
+									Attributes: []provider.Attribute{
+										{
+											Name: "nested_attr",
+										},
+										{
+											Name: "nested_attr",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" attribute "first_attr" attribute name "nested_attr" is duplicated`),
+		},
+		"provider-single-nested-attribute-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								SingleNested: &provider.SingleNestedAttribute{
+									Attributes: []provider.Attribute{
+										{
+											Name: "nested_first_attr",
+										},
+										{
+											Name: "nested_second_attr",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-attribute-and-single-nested-attribute-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								SingleNested: &provider.SingleNestedAttribute{
+									Attributes: []provider.Attribute{
+										{
+											Name: "first_attr",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-list-nested-block-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								ListNested: &provider.ListNestedBlock{
+									NestedObject: provider.NestedBlockObject{
+										Blocks: []provider.Block{
+											{
+												Name: "nested_block",
+											},
+											{
+												Name: "nested_block",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" block "first_block" block name "nested_block" is duplicated`),
+		},
+		"provider-list-nested-block-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								ListNested: &provider.ListNestedBlock{
+									NestedObject: provider.NestedBlockObject{
+										Blocks: []provider.Block{
+											{
+												Name: "nested_first_block",
+											},
+											{
+												Name: "nested_second_block",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-block-and-list-nested-block-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								ListNested: &provider.ListNestedBlock{
+									NestedObject: provider.NestedBlockObject{
+										Blocks: []provider.Block{
+											{
+												Name: "first_block",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-set-nested-block-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								SetNested: &provider.SetNestedBlock{
+									NestedObject: provider.NestedBlockObject{
+										Blocks: []provider.Block{
+											{
+												Name: "nested_block",
+											},
+											{
+												Name: "nested_block",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" block "first_block" block name "nested_block" is duplicated`),
+		},
+		"provider-set-nested-block-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								SetNested: &provider.SetNestedBlock{
+									NestedObject: provider.NestedBlockObject{
+										Blocks: []provider.Block{
+											{
+												Name: "nested_first_block",
+											},
+											{
+												Name: "nested_second_block",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-block-and-set-nested-block-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								SetNested: &provider.SetNestedBlock{
+									NestedObject: provider.NestedBlockObject{
+										Blocks: []provider.Block{
+											{
+												Name: "first_block",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-single-nested-block-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								SingleNested: &provider.SingleNestedBlock{
+									Blocks: []provider.Block{
+										{
+											Name: "nested_block",
+										},
+										{
+											Name: "nested_block",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" block "first_block" block name "nested_block" is duplicated`),
+		},
+		"provider-single-nested-block-names-unique": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								SingleNested: &provider.SingleNestedBlock{
+									Blocks: []provider.Block{
+										{
+											Name: "nested_first_block",
+										},
+										{
+											Name: "nested_second_block",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-block-and-single-nested-block-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Blocks: []provider.Block{
+							{
+								Name: "first_block",
+								SingleNested: &provider.SingleNestedBlock{
+									Blocks: []provider.Block{
+										{
+											Name: "first_block",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"provider-object-attribute-type-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								Object: &provider.ObjectAttribute{
+									AttributeTypes: []schema.ObjectAttributeType{
+										{
+											Name: "obj_attr",
+										},
+										{
+											Name: "obj_attr",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" attribute "first_attr" object attribute type name "obj_attr" is duplicated`),
+		},
+		"provider-object-object-attribute-type-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "first_attr",
+								Object: &provider.ObjectAttribute{
+									AttributeTypes: []schema.ObjectAttributeType{
+										{
+											Name: "obj_attr",
+											Object: []schema.ObjectAttributeType{
+												{
+													Name: "obj_obj_attr",
+												},
+												{
+													Name: "obj_obj_attr",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf(`provider "example" attribute "first_attr" object attribute type "obj_attr" object attribute type name "obj_obj_attr" is duplicated`),
+		},
+		"provider-object-and-object-object-attribute-type-names-duplicated": {
+			input: spec.Specification{
+				Provider: &provider.Provider{
+					Name: "example",
+					Schema: &provider.Schema{
+						Attributes: []provider.Attribute{
+							{
+								Name: "obj_attr",
+								Object: &provider.ObjectAttribute{
+									AttributeTypes: []schema.ObjectAttributeType{
+										{
+											Name: "obj_attr",
+											Object: []schema.ObjectAttributeType{
+												{
+													Name: "obj_attr",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			specValidator := NewSpecValidator()
+
+			err := specValidator.Validate(context.Background(), testCase.input)
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+		})
+	}
+}
+
+func TestValidateResources(t *testing.T) {
+	testCases := map[string]struct {
+		input         spec.Specification
+		expectedError error
+	}{
 		"resource-names-duplicated": {
 			input: spec.Specification{
 				Resources: []resource.Resource{
