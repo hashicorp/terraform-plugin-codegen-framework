@@ -9,7 +9,6 @@ import (
 	"github/hashicorp/terraform-provider-code-generator/internal/cmd"
 )
 
-//go:generate go run main.go
 func main() {
 	ui := &cli.BasicUi{
 		Reader:      os.Stdin,

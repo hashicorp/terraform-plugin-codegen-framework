@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 
@@ -35,6 +36,8 @@ func (a AllCommand) Synopsis() string {
 }
 
 func (a AllCommand) Run(args []string) int {
+	ctx := context.Background()
+
 	// parse flags
 	conf, err := config.New()
 	if err != nil {
@@ -54,7 +57,7 @@ func (a AllCommand) Run(args []string) int {
 	}
 
 	// validate against IR Schema
-	err = validate.Schema(src)
+	err = validate.Schema(ctx, src)
 	if err != nil {
 		log.Println("The document is not valid. see errors :")
 		log.Println(err)
@@ -64,6 +67,11 @@ func (a AllCommand) Run(args []string) int {
 	// unmarshal JSON
 	var s spec.Specification
 	err = json.Unmarshal(src, &s)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = validate.SchemaNames(ctx, s)
 	if err != nil {
 		log.Fatal(err)
 	}
