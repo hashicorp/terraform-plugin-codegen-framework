@@ -110,6 +110,10 @@ func getAttrTypes(attrTypes map[string]attr.Type) string {
 	var aTypes strings.Builder
 
 	for k, v := range attrTypes {
+		if aTypes.Len() > 0 {
+			aTypes.WriteString("\n")
+		}
+
 		switch t := v.(type) {
 		case basetypes.BoolType:
 			aTypes.WriteString(fmt.Sprintf("\"%s\": types.BoolType,", k))
