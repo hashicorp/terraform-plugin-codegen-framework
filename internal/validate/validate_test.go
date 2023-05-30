@@ -1571,7 +1571,9 @@ func TestNames(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			err := SchemaNames(context.Background(), testCase.input)
+			specValidator := NewSpecValidator()
+
+			err := specValidator.Validate(context.Background(), testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

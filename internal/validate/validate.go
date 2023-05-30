@@ -13,8 +13,34 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 )
 
-// JSON verifies that the supplied input is valid JSON.
-func JSON(input []byte) error {
+// IntermediateRepresentationValidator is a struct used to abstract away the details
+// of the underlying validations.
+type IntermediateRepresentationValidator struct {
+}
+
+// NewIntermediateRepresentationValidator returns an IntermediateRepresentationValidator struct.
+func NewIntermediateRepresentationValidator() IntermediateRepresentationValidator {
+	return IntermediateRepresentationValidator{}
+}
+
+// Validate validates that the input is valid JSON and that the input adheres to the JSON
+// schema within the terraform-plugin-codegen-spec module.
+func (v IntermediateRepresentationValidator) Validate(ctx context.Context, input []byte) error {
+	err := v.validateJSON(input)
+	if err != nil {
+		return err
+	}
+
+	err = v.validateWithSchema(ctx, input)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateJSON verifies that the supplied input is valid JSON.
+func (v IntermediateRepresentationValidator) validateJSON(input []byte) error {
 	if !json.Valid(input) {
 		return errors.New("invalid JSON")
 	}
@@ -22,18 +48,31 @@ func JSON(input []byte) error {
 	return nil
 }
 
-// Schema uses the spec.Validate function to verify that
-// the input adheres to the JSON schema defined within the
-// spec modules.
-func Schema(ctx context.Context, input []byte) error {
+// validateWithSchema uses the spec.Validate function to verify that the input adheres to the JSON schema
+// defined within the spec modules.
+func (v IntermediateRepresentationValidator) validateWithSchema(ctx context.Context, input []byte) error {
 	return spec.Validate(ctx, input)
 }
 
-// SchemaNames determines whether any of the names used for data
-// sources or resources are duplicated. SchemaNames also determines
-// whether any of the names used for attributes or blocks
-// at the same level of nesting within a schema are duplicated.
-func SchemaNames(ctx context.Context, s spec.Specification) error {
+// SpecValidator is a struct used to abstract away the details of the underlying validations.
+type SpecValidator struct {
+}
+
+// NewSpecValidator returns a SpecValidator struct.
+func NewSpecValidator() SpecValidator {
+	return SpecValidator{}
+}
+
+// Validate validates that the input is valid JSON and that the input adheres to the JSON
+// schema within the terraform-plugin-codegen-spec module.
+func (v SpecValidator) Validate(ctx context.Context, input spec.Specification) error {
+	return v.validateSchemaNames(ctx, input)
+}
+
+// validateSchemaNames determines whether any of the names used for data sources or
+// resources are duplicated. SchemaNames also determines whether any of the names used
+// for attributes or blocks at the same level of nesting within a schema are duplicated.
+func (v SpecValidator) validateSchemaNames(ctx context.Context, s spec.Specification) error {
 	duplicates := make(map[string]struct{})
 	dataSourceNames := make(map[string]struct{})
 

@@ -19,11 +19,20 @@ import (
 	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
 	"github/hashicorp/terraform-provider-code-generator/internal/resource_convert"
 	"github/hashicorp/terraform-provider-code-generator/internal/resource_generate"
-	"github/hashicorp/terraform-provider-code-generator/internal/validate"
 )
 
+type IRValidator interface {
+	Validate(ctx context.Context, input []byte) error
+}
+
+type SpecValidator interface {
+	Validate(ctx context.Context, input spec.Specification) error
+}
+
 type AllCommand struct {
-	Ui cli.Ui
+	Ui            cli.Ui
+	IRValidator   IRValidator
+	SpecValidator SpecValidator
 }
 
 func (a AllCommand) Help() string {
@@ -50,18 +59,8 @@ func (a AllCommand) Run(args []string) int {
 		log.Fatal(err)
 	}
 
-	// validate JSON
-	err = validate.JSON(src)
-	if err != nil {
+	if err = a.IRValidator.Validate(ctx, src); err != nil {
 		log.Fatal(err)
-	}
-
-	// validate against IR Schema
-	err = validate.Schema(ctx, src)
-	if err != nil {
-		log.Println("The document is not valid. see errors :")
-		log.Println(err)
-		log.Fatal("The document is not valid. Terminating execution.")
 	}
 
 	// unmarshal JSON
@@ -71,8 +70,7 @@ func (a AllCommand) Run(args []string) int {
 		log.Fatal(err)
 	}
 
-	err = validate.SchemaNames(ctx, s)
-	if err != nil {
+	if err = a.SpecValidator.Validate(ctx, s); err != nil {
 		log.Fatal(err)
 	}
 
