@@ -174,6 +174,7 @@ func getElementType(elementType attr.Type) string {
 	return ""
 }
 
+// TODO: Handle custom types
 func getElementTypeImports(elementType attr.Type, imports map[string]struct{}) map[string]struct{} {
 	if elementType == nil {
 		return imports
