@@ -54,8 +54,8 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSc
 		"getBlocks":     getBlocks,
 	}
 
-	t, err := template.New("datasource_schema").Funcs(funcMap).Parse(
-		dataSourceSchemaGoTemplate,
+	t, err := template.New("schema").Funcs(funcMap).Parse(
+		schemaGoTemplate,
 	)
 	if err != nil {
 		return nil, err

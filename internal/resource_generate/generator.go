@@ -52,7 +52,7 @@ func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema
 		"getBlocks":     getBlocks,
 	}
 
-	t, err := template.New("resource_schema").Funcs(funcMap).Parse(resourceSchemaGoTemplate)
+	t, err := template.New("schema").Funcs(funcMap).Parse(schemaGoTemplate)
 	if err != nil {
 		return nil, err
 	}

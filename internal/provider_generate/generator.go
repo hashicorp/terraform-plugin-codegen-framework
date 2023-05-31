@@ -52,8 +52,8 @@ func (g GeneratorProviderSchemas) toBytes(name string, s GeneratorProviderSchema
 		"getBlocks":     blockStringsFromGeneratorBlocks,
 	}
 
-	t, err := template.New("provider_schema").Funcs(funcMap).Parse(
-		providerSchemaGoTemplate,
+	t, err := template.New("schema").Funcs(funcMap).Parse(
+		schemaGoTemplate,
 	)
 	if err != nil {
 		return nil, err

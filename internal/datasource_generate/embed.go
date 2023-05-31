@@ -2,8 +2,8 @@ package datasource_generate
 
 import _ "embed"
 
-//go:embed templates/datasource_schema.gotmpl
-var dataSourceSchemaGoTemplate string
+//go:embed templates/schema.gotmpl
+var schemaGoTemplate string
 
 //go:embed templates/bool_attribute.gotmpl
 var boolAttributeGoTemplate string

@@ -2,8 +2,8 @@ package resource_generate
 
 import _ "embed"
 
-//go:embed templates/resource_schema.gotmpl
-var resourceSchemaGoTemplate string
+//go:embed templates/schema.gotmpl
+var schemaGoTemplate string
 
 //go:embed templates/bool_attribute.gotmpl
 var boolAttributeGoTemplate string
