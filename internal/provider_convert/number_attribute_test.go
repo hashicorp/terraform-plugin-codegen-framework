@@ -13,6 +13,8 @@ import (
 )
 
 func TestConvertNumberAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *provider.NumberAttribute
 		expected      provider_generate.GeneratorNumberAttribute

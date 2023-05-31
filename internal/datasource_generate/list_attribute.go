@@ -19,22 +19,65 @@ type GeneratorListAttribute struct {
 	Validators []specschema.ListValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. Further
+// imports are retrieved by calling getElementTypeImports.
+func (g GeneratorListAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))
+
+	for k := range elemTypeImports {
+		imports[k] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
+}
+
 func (g GeneratorListAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorListAttribute); !ok {
+	h, ok := ga.(GeneratorListAttribute)
+	if !ok {
 		return false
 	}
 
-	gla := ga.(GeneratorListAttribute)
-
-	if !customTypeEqual(g.CustomType, gla.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gla.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.ListAttribute.Equal(gla.ListAttribute)
+	return g.ListAttribute.Equal(h.ListAttribute)
 }
 
 func (g GeneratorListAttribute) ToString(name string) (string, error) {
@@ -129,4 +172,32 @@ func getElementType(elementType attr.Type) string {
 	}
 
 	return ""
+}
+
+// TODO: Handle custom types
+func getElementTypeImports(elementType attr.Type, imports map[string]struct{}) map[string]struct{} {
+	if elementType == nil {
+		return imports
+	}
+
+	imports[typesImport] = struct{}{}
+
+	switch t := elementType.(type) {
+	case basetypes.BoolType,
+		basetypes.Float64Type,
+		basetypes.Int64Type,
+		basetypes.NumberType,
+		basetypes.StringType:
+		return imports
+	case types.ListType:
+		return getElementTypeImports(t.ElementType(), imports)
+	case types.MapType:
+		return getElementTypeImports(t.ElementType(), imports)
+	case types.ObjectType:
+		return getAttrTypesImports(t.AttrTypes, imports)
+	case types.SetType:
+		return getElementTypeImports(t.ElementType(), imports)
+	}
+
+	return imports
 }

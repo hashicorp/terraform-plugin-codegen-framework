@@ -17,22 +17,21 @@ type GeneratorSingleNestedAttribute struct {
 }
 
 func (g GeneratorSingleNestedAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorSingleNestedAttribute); !ok {
+	h, ok := ga.(GeneratorSingleNestedAttribute)
+	if !ok {
 		return false
 	}
 
-	gsna := ga.(GeneratorSingleNestedAttribute)
-
-	if !customTypeEqual(g.CustomType, gsna.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gsna.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
 	for k, a := range g.Attributes {
-		if !a.Equal(gsna.Attributes[k]) {
+		if !a.Equal(h.Attributes[k]) {
 			return false
 		}
 	}

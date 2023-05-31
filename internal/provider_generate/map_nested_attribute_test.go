@@ -11,6 +11,8 @@ import (
 )
 
 func TestGeneratorMapNestedAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         GeneratorMapNestedAttribute
 		expected      string

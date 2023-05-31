@@ -4,7 +4,7 @@ AttributeTypes: map[string]attr.Type{
 {{ getAttrTypes .AttributeTypes}}
 },
 {{- template "common_attribute" $value }}
-{{- if $value.Validators }}
+{{- if gt (len $value.Validators) 0 }}
 Validators: []validator.Bool{
 {{- range $validator := .Validators}}
 {{.Custom.SchemaDefinition}},

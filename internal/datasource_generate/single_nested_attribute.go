@@ -16,23 +16,67 @@ type GeneratorSingleNestedAttribute struct {
 	Validators []specschema.ObjectValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. The same
+// logic is applied to the NestedObject. Further imports are then retrieved by
+// calling Imports on each of the nested attributes.
+func (g GeneratorSingleNestedAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	for _, v := range g.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
+}
+
 func (g GeneratorSingleNestedAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorSingleNestedAttribute); !ok {
+	h, ok := ga.(GeneratorSingleNestedAttribute)
+	if !ok {
 		return false
 	}
 
-	gsna := ga.(GeneratorSingleNestedAttribute)
-
-	if !customTypeEqual(g.CustomType, gsna.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gsna.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
 	for k, a := range g.Attributes {
-		if !a.Equal(gsna.Attributes[k]) {
+		if !a.Equal(h.Attributes[k]) {
 			return false
 		}
 	}
@@ -42,7 +86,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": attributeStringsFromGeneratorAttributes,
+		"getAttributes": getAttributes,
 	}
 
 	t, err := template.New("single_nested_attribute").Funcs(funcMap).Parse(singleNestedAttributeGoTemplate)

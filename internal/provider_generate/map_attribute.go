@@ -16,21 +16,20 @@ type GeneratorMapAttribute struct {
 }
 
 func (g GeneratorMapAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorMapAttribute); !ok {
+	h, ok := ga.(GeneratorMapAttribute)
+	if !ok {
 		return false
 	}
 
-	gla := ga.(GeneratorMapAttribute)
-
-	if !customTypeEqual(g.CustomType, gla.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gla.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.MapAttribute.Equal(gla.MapAttribute)
+	return g.MapAttribute.Equal(h.MapAttribute)
 }
 
 func (g GeneratorMapAttribute) ToString(name string) (string, error) {

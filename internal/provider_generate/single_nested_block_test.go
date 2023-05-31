@@ -11,6 +11,8 @@ import (
 )
 
 func TestGeneratorSingleNestedBlock_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		singleNestedBlock GeneratorSingleNestedBlock
 		expected          string

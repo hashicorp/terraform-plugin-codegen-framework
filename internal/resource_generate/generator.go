@@ -46,24 +46,28 @@ func (g GeneratorResourceSchemas) ToBytes() (map[string][]byte, error) {
 	return schemasBytes, nil
 }
 
-func (g GeneratorResourceSchemas) toBytes(name string, a GeneratorResourceSchema) ([]byte, error) {
+func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema) ([]byte, error) {
 	funcMap := template.FuncMap{
 		"getAttributes": getAttributes,
 		"getBlocks":     getBlocks,
 	}
 
-	t, err := template.New("resource_schema").Funcs(funcMap).Parse(resourceSchemaGoTemplate)
+	t, err := template.New("schema").Funcs(funcMap).Parse(schemaGoTemplate)
 	if err != nil {
 		return nil, err
 	}
 
 	var buf bytes.Buffer
 
-	attrib := map[string]GeneratorResourceSchema{
-		name: a,
+	templateData := struct {
+		Name string
+		GeneratorResourceSchema
+	}{
+		Name:                    name,
+		GeneratorResourceSchema: s,
 	}
 
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, templateData)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +79,7 @@ func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	keys := make([]string, len(attributes))
+	var keys = make([]string, 0, len(attributes))
 
 	for k := range attributes {
 		keys = append(keys, k)
@@ -104,7 +108,7 @@ func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	keys := make([]string, len(blocks))
+	var keys = make([]string, 0, len(blocks))
 
 	for k := range blocks {
 		keys = append(keys, k)

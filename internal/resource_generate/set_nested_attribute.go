@@ -19,30 +19,29 @@ type GeneratorSetNestedAttribute struct {
 }
 
 func (g GeneratorSetNestedAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorSetNestedAttribute); !ok {
+	h, ok := ga.(GeneratorSetNestedAttribute)
+	if !ok {
 		return false
 	}
 
-	glna := ga.(GeneratorSetNestedAttribute)
-
-	if !customTypeEqual(g.CustomType, glna.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.setValidatorsEqual(g.Validators, glna.Validators) {
+	if !g.setValidatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	if !customTypeEqual(g.NestedObject.CustomType, glna.NestedObject.CustomType) {
+	if !customTypeEqual(g.NestedObject.CustomType, h.NestedObject.CustomType) {
 		return false
 	}
 
-	if !g.objectValidatorsEqual(g.NestedObject.Validators, glna.NestedObject.Validators) {
+	if !g.objectValidatorsEqual(g.NestedObject.Validators, h.NestedObject.Validators) {
 		return false
 	}
 
 	for k, a := range g.NestedObject.Attributes {
-		if !a.Equal(glna.NestedObject.Attributes[k]) {
+		if !a.Equal(h.NestedObject.Attributes[k]) {
 			return false
 		}
 	}

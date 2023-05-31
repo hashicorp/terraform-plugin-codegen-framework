@@ -16,31 +16,101 @@ type GeneratorSetNestedAttribute struct {
 	Validators   []specschema.SetValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. The same
+// logic is applied to the NestedObject. Further imports are then retrieved by
+// calling Imports on each of the nested attributes.
+func (g GeneratorSetNestedAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	if g.NestedObject.CustomType != nil {
+		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
+		if g.NestedObject.CustomType.Import != nil && *g.NestedObject.CustomType.Import != "" {
+			imports[*g.NestedObject.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	for _, v := range g.NestedObject.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	for _, v := range g.NestedObject.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	return imports
+}
+
 func (g GeneratorSetNestedAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorSetNestedAttribute); !ok {
+	h, ok := ga.(GeneratorSetNestedAttribute)
+	if !ok {
 		return false
 	}
 
-	glna := ga.(GeneratorSetNestedAttribute)
-
-	if !customTypeEqual(g.CustomType, glna.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.setValidatorsEqual(g.Validators, glna.Validators) {
+	if !g.setValidatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	if !customTypeEqual(g.NestedObject.CustomType, glna.NestedObject.CustomType) {
+	if !customTypeEqual(g.NestedObject.CustomType, h.NestedObject.CustomType) {
 		return false
 	}
 
-	if !g.objectValidatorsEqual(g.NestedObject.Validators, glna.NestedObject.Validators) {
+	if !g.objectValidatorsEqual(g.NestedObject.Validators, h.NestedObject.Validators) {
 		return false
 	}
 
 	for k, a := range g.NestedObject.Attributes {
-		if !a.Equal(glna.NestedObject.Attributes[k]) {
+		if !a.Equal(h.NestedObject.Attributes[k]) {
 			return false
 		}
 	}
@@ -50,7 +120,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorSetNestedAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": attributeStringsFromGeneratorAttributes,
+		"getAttributes": getAttributes,
 	}
 
 	t, err := template.New("set_nested_attribute").Funcs(funcMap).Parse(setNestedAttributeGoTemplate)

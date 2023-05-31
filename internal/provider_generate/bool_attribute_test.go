@@ -9,6 +9,8 @@ import (
 )
 
 func TestGeneratorBoolAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		boolAttribute     GeneratorBoolAttribute
 		expectedAttribute string

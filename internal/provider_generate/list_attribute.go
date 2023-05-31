@@ -20,21 +20,20 @@ type GeneratorListAttribute struct {
 }
 
 func (g GeneratorListAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorListAttribute); !ok {
+	h, ok := ga.(GeneratorListAttribute)
+	if !ok {
 		return false
 	}
 
-	gla := ga.(GeneratorListAttribute)
-
-	if !customTypeEqual(g.CustomType, gla.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gla.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.ListAttribute.Equal(gla.ListAttribute)
+	return g.ListAttribute.Equal(h.ListAttribute)
 }
 
 func (g GeneratorListAttribute) ToString(name string) (string, error) {

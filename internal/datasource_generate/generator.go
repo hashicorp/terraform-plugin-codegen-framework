@@ -2,6 +2,7 @@ package datasource_generate
 
 import (
 	"bytes"
+	"fmt"
 	"sort"
 	"strings"
 	"text/template"
@@ -15,8 +16,8 @@ type GeneratorSchema interface {
 
 type GeneratorDataSourceSchemas struct {
 	schemas map[string]GeneratorDataSourceSchema
-	// TODO: Could add a field to hold custom templates that are used in calls to
-	// attributeStringsFromGeneratorAttributes() and blockStringsFromGeneratorBlocks() funcs.
+	// TODO: Could add a field to hold custom templates that are used in calls toBytes() to allow overriding.
+	// getAttributes() and getBlocks() funcs.
 }
 
 type GeneratorDataSourceSchema struct {
@@ -46,14 +47,15 @@ func (g GeneratorDataSourceSchemas) ToBytes() (map[string][]byte, error) {
 	return schemasBytes, nil
 }
 
-func (g GeneratorDataSourceSchemas) toBytes(name string, a GeneratorDataSourceSchema) ([]byte, error) {
+func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSchema) ([]byte, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": attributeStringsFromGeneratorAttributes,
-		"getBlocks":     blockStringsFromGeneratorBlocks,
+		"getImports":    getImports,
+		"getAttributes": getAttributes,
+		"getBlocks":     getBlocks,
 	}
 
-	t, err := template.New("datasource_schema").Funcs(funcMap).Parse(
-		dataSourceSchemaGoTemplate,
+	t, err := template.New("schema").Funcs(funcMap).Parse(
+		schemaGoTemplate,
 	)
 	if err != nil {
 		return nil, err
@@ -61,11 +63,15 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, a GeneratorDataSourceSc
 
 	var buf bytes.Buffer
 
-	attrib := map[string]GeneratorDataSourceSchema{
-		name: a,
+	templateData := struct {
+		Name string
+		GeneratorDataSourceSchema
+	}{
+		Name:                      name,
+		GeneratorDataSourceSchema: s,
 	}
 
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, templateData)
 	if err != nil {
 		return nil, err
 	}
@@ -73,11 +79,35 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, a GeneratorDataSourceSc
 	return buf.Bytes(), nil
 }
 
-func attributeStringsFromGeneratorAttributes(attributes map[string]GeneratorAttribute) (string, error) {
+func getImports(schema GeneratorDataSourceSchema) (string, error) {
+	var s strings.Builder
+
+	var imports = make(map[string]struct{})
+
+	for _, v := range schema.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range schema.Blocks {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for a := range imports {
+		s.WriteString(fmt.Sprintf("\"%s\"\n", a))
+	}
+
+	return s.String(), nil
+}
+
+func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	keys := make([]string, len(attributes))
+	var keys = make([]string, 0, len(attributes))
 
 	for k := range attributes {
 		keys = append(keys, k)
@@ -102,11 +132,11 @@ func attributeStringsFromGeneratorAttributes(attributes map[string]GeneratorAttr
 	return s.String(), nil
 }
 
-func blockStringsFromGeneratorBlocks(blocks map[string]GeneratorBlock) (string, error) {
+func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	keys := make([]string, len(blocks))
+	var keys = make([]string, 0, len(blocks))
 
 	for k := range blocks {
 		keys = append(keys, k)
@@ -131,14 +161,20 @@ func blockStringsFromGeneratorBlocks(blocks map[string]GeneratorBlock) (string, 
 	return s.String(), nil
 }
 
+type GeneratorImport interface {
+	Imports() map[string]struct{}
+}
+
 type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	ToString(string) (string, error)
+	GeneratorImport
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	ToString(string) (string, error)
+	GeneratorImport
 }
 
 type GeneratorNestedAttributeObject struct {

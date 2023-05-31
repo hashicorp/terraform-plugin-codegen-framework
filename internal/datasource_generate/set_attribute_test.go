@@ -10,11 +10,162 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func TestGeneratorSetAttribute_ToString(t *testing.T) {
+func TestGeneratorSetAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
-		input             GeneratorSetAttribute
-		expectedAttribute string
-		expectedError     error
+		input    GeneratorSetAttribute
+		expected map[string]struct{}
+	}{
+		"default": {
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorSetAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorSetAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorSetAttribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute": {},
+			},
+		},
+		"elem-type-bool": {
+			input: GeneratorSetAttribute{
+				SetAttribute: schema.SetAttribute{
+					ElementType: types.BoolType,
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				typesImport:            {},
+			},
+		},
+		"elem-type-object": {
+			input: GeneratorSetAttribute{
+				SetAttribute: schema.SetAttribute{
+					ElementType: types.ObjectType{},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				typesImport:            {},
+			},
+		},
+		"elem-type-object-bool": {
+			input: GeneratorSetAttribute{
+				SetAttribute: schema.SetAttribute{
+					ElementType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"b": types.BoolType,
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				attrImport:             {},
+				typesImport:            {},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorSetAttribute{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorSetAttribute{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorSetAttribute{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorSetAttribute{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myproject/myvalidators/validator"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				validatorImport:        {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorSetAttribute_ToString(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorSetAttribute
+		expected      string
+		expectedError error
 	}{
 		"element-type-bool": {
 			input: GeneratorSetAttribute{
@@ -22,7 +173,7 @@ func TestGeneratorSetAttribute_ToString(t *testing.T) {
 					ElementType: types.BoolType,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.BoolType,
 },`,
@@ -36,7 +187,7 @@ ElementType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.ListType{
 ElemType: types.BoolType,
@@ -54,7 +205,7 @@ ElemType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.ListType{
 ElemType: types.ListType{
@@ -76,7 +227,7 @@ ElemType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.ListType{
 ElemType: types.ObjectType{
@@ -96,7 +247,7 @@ AttrTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.MapType{
 ElemType: types.BoolType,
@@ -114,7 +265,7 @@ ElemType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.MapType{
 ElemType: types.MapType{
@@ -136,7 +287,7 @@ ElemType: types.BoolType,
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.MapType{
 ElemType: types.ObjectType{
@@ -158,7 +309,7 @@ AttrTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -182,7 +333,7 @@ AttrTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -208,7 +359,7 @@ AttrTypes: map[string]attr.Type{
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -226,7 +377,7 @@ ElemType: types.BoolType,
 					ElementType: types.StringType,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 },`,
@@ -241,7 +392,7 @@ ElementType: types.StringType,
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 CustomType: my_custom_type,
@@ -255,7 +406,7 @@ CustomType: my_custom_type,
 					Required:    true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Required: true,
@@ -269,7 +420,7 @@ Required: true,
 					Optional:    true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Optional: true,
@@ -283,7 +434,7 @@ Optional: true,
 					Computed:    true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Computed: true,
@@ -297,7 +448,7 @@ Computed: true,
 					Sensitive:   true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Sensitive: true,
@@ -312,7 +463,7 @@ Sensitive: true,
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Description: "description",
@@ -327,7 +478,7 @@ MarkdownDescription: "description",
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 DeprecationMessage: "deprecated",
@@ -352,7 +503,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Validators: []validator.Set{
@@ -375,7 +526,7 @@ my_other_validator.Validate(),
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})

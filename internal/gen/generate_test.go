@@ -65,6 +65,9 @@ func TestDataSourcesModels(t *testing.T) {
 			}
 
 			got, err := dataSourcesModelsGenerator.Process(ir)
+			if err != nil {
+				t.Error(err)
+			}
 
 			formattedGot, err := format.Format(got)
 			if err != nil {
@@ -145,6 +148,9 @@ func TestDataSourcesHelpers(t *testing.T) {
 			}
 
 			got, err := dataSourcesHelpersGenerator.Process(ir)
+			if err != nil {
+				t.Error(err)
+			}
 
 			formattedGot, err := format.Format(got)
 			if err != nil {

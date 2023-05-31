@@ -15,6 +15,8 @@ import (
 )
 
 func TestConvertListNestedAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *provider.ListNestedAttribute
 		expected      provider_generate.GeneratorListNestedAttribute

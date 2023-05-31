@@ -15,6 +15,8 @@ import (
 )
 
 func TestConvertListAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *provider.ListAttribute
 		expected      provider_generate.GeneratorListAttribute

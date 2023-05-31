@@ -8,11 +8,124 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 )
 
-func TestGeneratorFloat64Attribute_ToString(t *testing.T) {
+func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
-		input             GeneratorFloat64Attribute
-		expectedAttribute string
-		expectedError     error
+		input    GeneratorFloat64Attribute
+		expected map[string]struct{}
+	}{
+		"default": {
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorFloat64Attribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorFloat64Attribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorFloat64Attribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute": {},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorFloat64Attribute{
+				Validators: []specschema.Float64Validator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorFloat64Attribute{
+				Validators: []specschema.Float64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorFloat64Attribute{
+				Validators: []specschema.Float64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorFloat64Attribute{
+				Validators: []specschema.Float64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myproject/myvalidators/validator"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				validatorImport:        {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorFloat64Attribute_ToString(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorFloat64Attribute
+		expected      string
+		expectedError error
 	}{
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
@@ -20,7 +133,7 @@ func TestGeneratorFloat64Attribute_ToString(t *testing.T) {
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 CustomType: my_custom_type,
 },`,
@@ -32,7 +145,7 @@ CustomType: my_custom_type,
 					Required: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Required: true,
 },`,
@@ -44,7 +157,7 @@ Required: true,
 					Optional: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Optional: true,
 },`,
@@ -56,7 +169,7 @@ Optional: true,
 					Computed: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Computed: true,
 },`,
@@ -68,7 +181,7 @@ Computed: true,
 					Sensitive: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Sensitive: true,
 },`,
@@ -81,7 +194,7 @@ Sensitive: true,
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Description: "description",
 MarkdownDescription: "description",
@@ -94,7 +207,7 @@ MarkdownDescription: "description",
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 DeprecationMessage: "deprecated",
 },`,
@@ -115,7 +228,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Validators: []validator.Float64{
 my_validator.Validate(),
@@ -137,7 +250,7 @@ my_other_validator.Validate(),
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})

@@ -15,6 +15,8 @@ import (
 )
 
 func TestConvertSetNestedBlock(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *resource.SetNestedBlock
 		expected      resource_generate.GeneratorSetNestedBlock

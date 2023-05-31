@@ -37,7 +37,11 @@ func New() (Config, error) {
 	flag.StringVar(&o, "output", "", "Directory for generated code files")
 	flag.StringVar(&s, "schema", "", "Path or URL to intermediate representation JSON schema")
 	flag.Var(&includeFlags, "include", "Specify which data sources, provider and resources to include on the basis of name")
-	flag.CommandLine.Parse(os.Args[2:])
+
+	err := flag.CommandLine.Parse(os.Args[2:])
+	if err != nil {
+		return Config{}, err
+	}
 
 	config := Config{
 		Input:  i,

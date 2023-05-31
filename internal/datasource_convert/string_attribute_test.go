@@ -13,6 +13,8 @@ import (
 )
 
 func TestConvertStringAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *datasource.StringAttribute
 		expected      datasource_generate.GeneratorStringAttribute

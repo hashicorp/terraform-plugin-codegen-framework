@@ -15,22 +15,58 @@ type GeneratorFloat64Attribute struct {
 	Validators []specschema.Float64Validator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used.
+func (g GeneratorFloat64Attribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
+}
+
 func (g GeneratorFloat64Attribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorFloat64Attribute); !ok {
+	h, ok := ga.(GeneratorFloat64Attribute)
+	if !ok {
 		return false
 	}
 
-	gba := ga.(GeneratorFloat64Attribute)
-
-	if !customTypeEqual(g.CustomType, gba.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gba.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.Float64Attribute.Equal(gba.Float64Attribute)
+	return g.Float64Attribute.Equal(h.Float64Attribute)
 }
 
 func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {

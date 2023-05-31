@@ -15,6 +15,8 @@ import (
 )
 
 func TestConvertMapAttribute(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		input         *datasource.MapAttribute
 		expected      datasource_generate.GeneratorMapAttribute

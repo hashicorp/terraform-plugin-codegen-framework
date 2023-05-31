@@ -19,22 +19,66 @@ type GeneratorObjectAttribute struct {
 	Validators []specschema.ObjectValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used.
+// The imports required for the object attribute types are retrieved by calling
+// getAttrTypesImports.
+func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
+		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[datasourceSchemaImport] = struct{}{}
+	}
+
+	attrTypesImports := getAttrTypesImports(g.AttributeTypes, make(map[string]struct{}))
+
+	for k := range attrTypesImports {
+		imports[k] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
+}
+
 func (g GeneratorObjectAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorObjectAttribute); !ok {
+	h, ok := ga.(GeneratorObjectAttribute)
+	if !ok {
 		return false
 	}
 
-	goa := ga.(GeneratorObjectAttribute)
-
-	if !customTypeEqual(g.CustomType, goa.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, goa.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.ObjectAttribute.Equal(goa.ObjectAttribute)
+	return g.ObjectAttribute.Equal(h.ObjectAttribute)
 }
 
 func (g GeneratorObjectAttribute) ToString(name string) (string, error) {
@@ -133,4 +177,15 @@ func getAttrTypes(attrTypes map[string]attr.Type) string {
 	}
 
 	return aTypes.String()
+}
+
+func getAttrTypesImports(attrTypes map[string]attr.Type, imports map[string]struct{}) map[string]struct{} {
+	if len(attrTypes) == 0 {
+		return imports
+	}
+
+	imports[attrImport] = struct{}{}
+	imports[typesImport] = struct{}{}
+
+	return imports
 }

@@ -16,21 +16,20 @@ type GeneratorSetAttribute struct {
 }
 
 func (g GeneratorSetAttribute) Equal(ga GeneratorAttribute) bool {
-	if _, ok := ga.(GeneratorSetAttribute); !ok {
+	h, ok := ga.(GeneratorSetAttribute)
+	if !ok {
 		return false
 	}
 
-	gla := ga.(GeneratorSetAttribute)
-
-	if !customTypeEqual(g.CustomType, gla.CustomType) {
+	if !customTypeEqual(g.CustomType, h.CustomType) {
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, gla.Validators) {
+	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.SetAttribute.Equal(gla.SetAttribute)
+	return g.SetAttribute.Equal(h.SetAttribute)
 }
 
 func (g GeneratorSetAttribute) ToString(name string) (string, error) {
