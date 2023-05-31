@@ -2,22 +2,20 @@
 
 package provider
 
-{{ range $key, $value := . }}
 import (
 	"context"
 
     "github.com/hashicorp/terraform-plugin-framework/datasource"
-{{getImports $value}}
+{{getImports .GeneratorDataSourceSchema}}
 )
 
-func (e *{{$key}}DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (e *{{.Name}}DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
     resp.Schema = schema.Schema{
         Attributes: map[string]schema.Attribute{
-			{{- getAttributes $value.Attributes}}
+			{{- getAttributes .GeneratorDataSourceSchema.Attributes}}
         },
         Blocks: map[string]schema.Block{
-            {{- getBlocks $value.Blocks}}
+            {{- getBlocks .GeneratorDataSourceSchema.Blocks}}
         },
     }
 }
-{{- end}}

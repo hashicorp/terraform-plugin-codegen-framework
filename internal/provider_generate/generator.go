@@ -46,7 +46,7 @@ func (g GeneratorProviderSchemas) ToBytes() (map[string][]byte, error) {
 	return schemasBytes, nil
 }
 
-func (g GeneratorProviderSchemas) toBytes(name string, a GeneratorProviderSchema) ([]byte, error) {
+func (g GeneratorProviderSchemas) toBytes(name string, s GeneratorProviderSchema) ([]byte, error) {
 	funcMap := template.FuncMap{
 		"getAttributes": attributeStringsFromGeneratorAttributes,
 		"getBlocks":     blockStringsFromGeneratorBlocks,
@@ -61,11 +61,15 @@ func (g GeneratorProviderSchemas) toBytes(name string, a GeneratorProviderSchema
 
 	var buf bytes.Buffer
 
-	attrib := map[string]GeneratorProviderSchema{
-		name: a,
+	templateData := struct {
+		Name string
+		GeneratorProviderSchema
+	}{
+		Name:                    name,
+		GeneratorProviderSchema: s,
 	}
 
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, templateData)
 	if err != nil {
 		return nil, err
 	}
