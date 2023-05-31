@@ -7,7 +7,7 @@ Attributes: map[string]schema.Attribute{
 {{- if $value.NestedObject.CustomType}}
 CustomType: {{$value.NestedObject.CustomType.Type}},
 {{- end}}
-{{- if $value.NestedObject.Validators }}
+{{- if gt (len $value.NestedObject.Validators) 0 }}
 Validators: []validator.Object{
 {{- range $validator := $value.NestedObject.Validators}}
 {{.Custom.SchemaDefinition}},
@@ -16,7 +16,7 @@ Validators: []validator.Object{
 {{- end}}
 },
 {{- template "common_attribute" $value }}
-{{- if $value.Validators }}
+{{- if gt (len $value.Validators) 0 }}
 Validators: []validator.Map{
 {{- range $validator := .Validators}}
 {{.Custom.SchemaDefinition}},

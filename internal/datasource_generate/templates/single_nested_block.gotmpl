@@ -11,7 +11,7 @@ Blocks: map[string]schema.Block{
 },
 {{- end}}
 {{- template "common_block" $value }}
-{{- if $value.Validators }}
+{{- if gt (len $value.Validators) 0 }}
 Validators: []validator.Bool{
 {{- range $validator := .Validators}}
 {{.Custom.SchemaDefinition}},

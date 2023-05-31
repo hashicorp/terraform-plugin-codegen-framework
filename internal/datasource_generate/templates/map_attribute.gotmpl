@@ -2,7 +2,7 @@
 "{{$key}}": schema.MapAttribute{
 ElementType: {{ getElementType .ElementType}},
 {{- template "common_attribute" $value }}
-{{- if $value.Validators }}
+{{- if gt (len $value.Validators) 0 }}
 Validators: []validator.Map{
 {{- range $validator := .Validators}}
 {{.Custom.SchemaDefinition}},

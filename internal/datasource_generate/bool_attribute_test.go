@@ -217,6 +217,14 @@ DeprecationMessage: "deprecated",
 },`,
 		},
 
+		"validators-empty": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{},
+			},
+			expected: `
+"bool_attribute": schema.BoolAttribute{
+},`,
+		},
 		"validators": {
 			input: GeneratorBoolAttribute{
 				Validators: []specschema.BoolValidator{
