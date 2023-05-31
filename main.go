@@ -117,41 +117,14 @@ func (a SchemaModelsCommand) Run(args []string) int {
 		log.Fatal(err)
 	}
 
-	//// generate model code
-	//dataSourcesModelsGenerator := gen.NewDataSourcesModelsGenerator()
-	//dataSourcesModels, err := dataSourcesModelsGenerator.Process(s)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//// generate model helper code
-	//dataSourcesHelpersGenerator := gen.NewDataSourcesHelpersGenerator()
-	//dataSourcesHelpers, err := dataSourcesHelpersGenerator.Process(s)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
 	// format schema code
 	formattedDataSourcesSchema, err := format.Format(schemaBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//// format model code
-	//formattedDataSourcesModels, err := format.Format(dataSourcesModels)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//// format model helper code
-	//formattedDataSourcesHelpers, err := format.Format(dataSourcesHelpers)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
 	// write code
 	err = output.WriteDataSources(formattedDataSourcesSchema, conf.Output)
-	//err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedDataSourcesHelpers, conf.Output)
 	if err != nil {
 		log.Fatal(err)
 	}
