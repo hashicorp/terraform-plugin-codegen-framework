@@ -69,6 +69,8 @@ func (g GeneratorBoolAttribute) Equal(ga GeneratorAttribute) bool {
 	return g.BoolAttribute.Equal(h.BoolAttribute)
 }
 
+// TODO: Refactor to pass a struct to the template in order to avoid
+// an unnecessary use of range within the template.
 func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
 	t, err := template.New("bool_attribute").Parse(boolAttributeGoTemplate)
 	if err != nil {
