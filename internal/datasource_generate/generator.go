@@ -103,7 +103,7 @@ func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var keys []string
+	var keys = make([]string, 0, len(attributes))
 
 	for k := range attributes {
 		keys = append(keys, k)
@@ -132,7 +132,7 @@ func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var keys []string
+	var keys = make([]string, 0, len(blocks))
 
 	for k := range blocks {
 		keys = append(keys, k)
