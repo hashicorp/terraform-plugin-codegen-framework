@@ -17,10 +17,10 @@ Sensitive: {{.Sensitive}},
 {{- end}}
 
 {{- if .Description }}
-Description: "{{.Description}}",
-MarkdownDescription: "{{.Description }}",
+Description: {{ .Description | quote }},
+MarkdownDescription: {{.Description | quote }},
 {{- end}}
 
 {{- if .DeprecationMessage }}
-DeprecationMessage: "{{ .DeprecationMessage }}",{{- end}}
+DeprecationMessage: {{ .DeprecationMessage | quote }},{{- end}}
 {{- end}}
