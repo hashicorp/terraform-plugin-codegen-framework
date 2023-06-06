@@ -58,6 +58,55 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 				typesImport:            {},
 			},
 		},
+		"elem-type-bool-with-import": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{
+						CustomType: &specschema.CustomType{
+							Import: pointer("github.com/my_account/my_project/element"),
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                     {},
+				"github.com/my_account/my_project/element": {},
+			},
+		},
+		"elem-type-list-bool": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				typesImport:            {},
+			},
+		},
+		"elem-type-list-bool-with-import": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Import: pointer("github.com/my_account/my_project/element"),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                     {},
+				"github.com/my_account/my_project/element": {},
+			},
+		},
 		"elem-type-object": {
 			input: GeneratorMapAttribute{
 				ElementType: specschema.ElementType{
@@ -83,6 +132,52 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 				datasourceSchemaImport: {},
 				attrImport:             {},
 				typesImport:            {},
+			},
+		},
+		"elem-type-object-bool-with-import": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "bool",
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Import: pointer("github.com/my_account/my_project/element"),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                     {},
+				"github.com/my_account/my_project/element": {},
+			},
+		},
+		"elem-type-object-with-imports": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "b",
+							Bool: &specschema.BoolType{},
+						},
+						{
+							Name: "c",
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Import: pointer("github.com/my_account/my_project/element"),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport: {},
+				attrImport:             {},
+				typesImport:            {},
+				"github.com/my_account/my_project/element": {},
 			},
 		},
 		"validator-custom-nil": {

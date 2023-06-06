@@ -76,6 +76,65 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				typesImport:            {},
 			},
 		},
+		"object-with-attr-type-bool-with-import": {
+			input: GeneratorObjectAttribute{
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "bool",
+						Bool: &specschema.BoolType{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/element"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                     {},
+				"github.com/my_account/my_project/element": {},
+			},
+		},
+		"object-with-attr-type-bool-with-imports": {
+			input: GeneratorObjectAttribute{
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "bool",
+						Bool: &specschema.BoolType{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/element"),
+							},
+						},
+					},
+					{
+						Name: "list",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: pointer("github.com/my_account/my_project/another_element"),
+									},
+								},
+							},
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/list"),
+							},
+						},
+					},
+					{
+						Name:   "str",
+						String: &specschema.StringType{},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                             {},
+				"github.com/my_account/my_project/element":         {},
+				"github.com/my_account/my_project/another_element": {},
+				"github.com/my_account/my_project/list":            {},
+				attrImport:                                         {},
+				typesImport:                                        {},
+			},
+		},
 		"validator-custom-nil": {
 			input: GeneratorObjectAttribute{
 				Validators: []specschema.ObjectValidator{

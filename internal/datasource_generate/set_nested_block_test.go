@@ -159,6 +159,31 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
+		"nested-attribute-list-with-custom-type-with-element-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: map[string]GeneratorAttribute{
+						"list": GeneratorListAttribute{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/nested_list"),
+							},
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: pointer("github.com/my_account/my_project/bool"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                         {},
+				"github.com/my_account/my_project/nested_list": {},
+				"github.com/my_account/my_project/bool":        {},
+			},
+		},
 		"nested-attribute-object": {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
@@ -195,6 +220,34 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 			expected: map[string]struct{}{
 				datasourceSchemaImport:                           {},
 				"github.com/my_account/my_project/nested_object": {},
+			},
+		},
+		"nested-attribute-object-with-custom-type-with-attribute-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: map[string]GeneratorAttribute{
+						"obj": GeneratorObjectAttribute{
+							CustomType: &specschema.CustomType{
+								Import: pointer("github.com/my_account/my_project/nested_object"),
+							},
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{
+										CustomType: &specschema.CustomType{
+											Import: pointer("github.com/my_account/my_project/bool"),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				datasourceSchemaImport:                           {},
+				"github.com/my_account/my_project/nested_object": {},
+				"github.com/my_account/my_project/bool":          {},
 			},
 		},
 		"nested-block-with-custom-type": {
