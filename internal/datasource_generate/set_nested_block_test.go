@@ -8,9 +8,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
@@ -132,8 +130,8 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: map[string]GeneratorAttribute{
 						"list": GeneratorListAttribute{
-							ListAttribute: schema.ListAttribute{
-								ElementType: types.BoolType,
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{},
 							},
 						},
 					},
@@ -166,9 +164,10 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: map[string]GeneratorAttribute{
 						"obj": GeneratorObjectAttribute{
-							ObjectAttribute: schema.ObjectAttribute{
-								AttributeTypes: map[string]attr.Type{
-									"bool": types.BoolType,
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
 								},
 							},
 						},
@@ -398,8 +397,10 @@ Optional: true,
 					Attributes: map[string]GeneratorAttribute{
 						"list": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
-								ElementType: types.StringType,
-								Optional:    true,
+								Optional: true,
+							},
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
 							},
 						},
 					},
@@ -460,10 +461,13 @@ Optional: true,
 					Attributes: map[string]GeneratorAttribute{
 						"object": GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
-								AttributeTypes: map[string]attr.Type{
-									"str": types.StringType,
-								},
 								Optional: true,
+							},
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name:   "str",
+									String: &specschema.StringType{},
+								},
 							},
 						},
 					},

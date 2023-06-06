@@ -9,17 +9,15 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
 type GeneratorObjectAttribute struct {
 	schema.ObjectAttribute
 
-	CustomType *specschema.CustomType
-	Validators []specschema.ObjectValidator
+	AttributeTypes []specschema.ObjectAttributeType
+	CustomType     *specschema.CustomType
+	Validators     []specschema.ObjectValidator
 }
 
 // Imports examines the CustomType and if this is not nil then the CustomType.Import
@@ -153,42 +151,97 @@ func (g GeneratorObjectAttribute) validatorsEqual(x, y []specschema.ObjectValida
 	return true
 }
 
-func getAttrTypes(attrTypes map[string]attr.Type) string {
+func getAttrTypes(attrTypes []specschema.ObjectAttributeType) string {
 	var aTypes strings.Builder
 
-	for k, v := range attrTypes {
-		switch t := v.(type) {
-		case basetypes.BoolType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.BoolType,", k))
-		case basetypes.Float64Type:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.Float64Type,", k))
-		case basetypes.Int64Type:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.Int64Type,", k))
-		case types.ListType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.ListType{\nElemType: %s,\n},", k, getElementType(t.ElementType())))
-		case types.MapType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.MapType{\nElemType: %s,\n},", k, getElementType(t.ElementType())))
-		case basetypes.NumberType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.NumberType,", k))
-		case types.ObjectType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n},", k, getAttrTypes(t.AttrTypes)))
-		case types.SetType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.SetType{\nElemType: %s,\n},", k, getElementType(t.ElementType())))
-		case basetypes.StringType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.StringType,", k))
+	for _, v := range attrTypes {
+		switch {
+		case v.Bool != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.BoolType,", v.Name))
+		case v.Float64 != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.Float64Type,", v.Name))
+		case v.Int64 != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.Int64Type,", v.Name))
+		case v.List != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.ListType{\nElemType: %s,\n},", v.Name, getElementType(v.List.ElementType)))
+		case v.Map != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.MapType{\nElemType: %s,\n},", v.Name, getElementType(v.Map.ElementType)))
+		case v.Number != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.NumberType,", v.Name))
+		case v.Object != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n},", v.Name, getAttrTypes(v.Object)))
+		case v.Set != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.SetType{\nElemType: %s,\n},", v.Name, getElementType(v.Set.ElementType)))
+		case v.String != nil:
+			aTypes.WriteString(fmt.Sprintf("\"%s\": types.StringType,", v.Name))
 		}
 	}
 
 	return aTypes.String()
 }
 
-func getAttrTypesImports(attrTypes map[string]attr.Type, imports map[string]struct{}) map[string]struct{} {
+func getAttrTypesImports(attrTypes []specschema.ObjectAttributeType, imports map[string]struct{}) map[string]struct{} {
 	if len(attrTypes) == 0 {
 		return imports
 	}
 
-	imports[attrImport] = struct{}{}
-	imports[typesImport] = struct{}{}
+	for _, v := range attrTypes {
+		switch {
+		case v.Bool != nil:
+			if v.Bool.CustomType != nil && v.Bool.CustomType.HasImport() {
+				imports[*v.Bool.CustomType.Import] = struct{}{}
+				return imports
+			}
+			imports[attrImport] = struct{}{}
+			imports[typesImport] = struct{}{}
+			return imports
+		case v.Float64 != nil:
+			if v.Float64.CustomType != nil && v.Float64.CustomType.HasImport() {
+				imports[*v.Float64.CustomType.Import] = struct{}{}
+				return imports
+			}
+			imports[attrImport] = struct{}{}
+			imports[typesImport] = struct{}{}
+			return imports
+		case v.Int64 != nil:
+			if v.Int64.CustomType != nil && v.Int64.CustomType.HasImport() {
+				imports[*v.Int64.CustomType.Import] = struct{}{}
+				return imports
+			}
+			imports[attrImport] = struct{}{}
+			imports[typesImport] = struct{}{}
+			return imports
+		case v.List != nil:
+			return getElementTypeImports(v.List.ElementType, imports)
+		case v.Map != nil:
+			return getElementTypeImports(v.Map.ElementType, imports)
+		case v.Number != nil:
+			if v.Number.CustomType != nil && v.Number.CustomType.HasImport() {
+				imports[*v.Number.CustomType.Import] = struct{}{}
+				return imports
+			}
+			imports[attrImport] = struct{}{}
+			imports[typesImport] = struct{}{}
+			return imports
+		case v.Object != nil:
+			return getAttrTypesImports(v.Object, imports)
+		case v.Set != nil:
+			return getElementTypeImports(v.Set.ElementType, imports)
+		case v.String != nil:
+			if v.String.CustomType != nil && v.String.CustomType.HasImport() {
+				imports[*v.Float64.CustomType.Import] = struct{}{}
+				return imports
+			}
+			imports[attrImport] = struct{}{}
+			imports[typesImport] = struct{}{}
+			return imports
+		default:
+			imports[attrImport] = struct{}{}
+			imports[typesImport] = struct{}{}
+
+			return imports
+		}
+	}
 
 	return imports
 }

@@ -14,8 +14,9 @@ import (
 type GeneratorSetAttribute struct {
 	schema.SetAttribute
 
-	CustomType *specschema.CustomType
-	Validators []specschema.SetValidator
+	CustomType  *specschema.CustomType
+	ElementType specschema.ElementType
+	Validators  []specschema.SetValidator
 }
 
 // Imports examines the CustomType and if this is not nil then the CustomType.Import
@@ -72,11 +73,43 @@ func (g GeneratorSetAttribute) Equal(ga GeneratorAttribute) bool {
 		return false
 	}
 
+	if !elementTypeEqual(g.ElementType, h.ElementType) {
+		return false
+	}
+
 	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.SetAttribute.Equal(h.SetAttribute)
+	if g.Required != h.Required {
+		return false
+	}
+
+	if g.Optional != h.Optional {
+		return false
+	}
+
+	if g.Computed != h.Computed {
+		return false
+	}
+
+	if g.Sensitive != h.Sensitive {
+		return false
+	}
+
+	if g.Description != h.Description {
+		return false
+	}
+
+	if g.MarkdownDescription != h.MarkdownDescription {
+		return false
+	}
+
+	if g.DeprecationMessage != h.DeprecationMessage {
+		return false
+	}
+
+	return true
 }
 
 func (g GeneratorSetAttribute) ToString(name string) (string, error) {

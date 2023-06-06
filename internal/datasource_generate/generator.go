@@ -230,3 +230,113 @@ func customTypeEqual(x, y *specschema.CustomType) bool {
 
 	return true
 }
+
+func objectTypeEqual(x, y []specschema.ObjectAttributeType) bool {
+	for k, v := range x {
+		if v.Name != y[k].Name {
+			return false
+		}
+
+		a := specschema.ElementType{
+			Bool:    v.Bool,
+			Float64: v.Float64,
+			Int64:   v.Int64,
+			List:    v.List,
+			Map:     v.Map,
+			Number:  v.Number,
+			Object:  v.Object,
+			Set:     v.Set,
+			String:  v.String,
+		}
+
+		b := specschema.ElementType{
+			Bool:    y[k].Bool,
+			Float64: y[k].Float64,
+			Int64:   y[k].Int64,
+			List:    y[k].List,
+			Map:     y[k].Map,
+			Number:  y[k].Number,
+			Object:  y[k].Object,
+			Set:     y[k].Set,
+			String:  y[k].String,
+		}
+
+		if !elementTypeEqual(a, b) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func elementTypeEqual(x, y specschema.ElementType) bool {
+	if x.Bool != nil && y.Bool != nil {
+		if !customTypeEqual(x.Bool.CustomType, y.Bool.CustomType) {
+			return false
+		}
+
+		return true
+	}
+
+	if x.Float64 != nil && y.Float64 != nil {
+		if !customTypeEqual(x.Float64.CustomType, y.Float64.CustomType) {
+			return false
+		}
+
+		return true
+	}
+
+	if x.Int64 != nil && y.Float64 != nil {
+		if !customTypeEqual(x.Int64.CustomType, y.Int64.CustomType) {
+			return false
+		}
+
+		return true
+	}
+
+	if x.List != nil && y.List != nil {
+		if !customTypeEqual(x.List.CustomType, y.List.CustomType) {
+			return false
+		}
+
+		return elementTypeEqual(x.List.ElementType, y.List.ElementType)
+	}
+
+	if x.Map != nil && y.Map != nil {
+		if !customTypeEqual(x.Map.CustomType, y.Map.CustomType) {
+			return false
+		}
+
+		return elementTypeEqual(x.Map.ElementType, y.Map.ElementType)
+	}
+
+	if x.Number != nil && y.Number != nil {
+		if !customTypeEqual(x.Number.CustomType, y.Number.CustomType) {
+			return false
+		}
+
+		return true
+	}
+
+	if x.Object != nil && y.Object != nil {
+		return objectTypeEqual(x.Object, y.Object)
+	}
+
+	if x.Set != nil && y.Set != nil {
+		if !customTypeEqual(x.Set.CustomType, y.Set.CustomType) {
+			return false
+		}
+
+		return elementTypeEqual(x.Set.ElementType, y.Set.ElementType)
+	}
+
+	if x.String != nil && y.String != nil {
+		if !customTypeEqual(x.String.CustomType, y.String.CustomType) {
+			return false
+		}
+
+		return true
+	}
+
+	return false
+}

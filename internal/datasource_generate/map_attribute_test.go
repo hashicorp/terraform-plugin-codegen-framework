@@ -8,9 +8,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 func TestGeneratorMapAttribute_Imports(t *testing.T) {
@@ -51,8 +49,8 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 		},
 		"elem-type-bool": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.BoolType,
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{},
 				},
 			},
 			expected: map[string]struct{}{
@@ -62,21 +60,21 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 		},
 		"elem-type-object": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ObjectType{},
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{},
 				},
 			},
 			expected: map[string]struct{}{
 				datasourceSchemaImport: {},
-				typesImport:            {},
 			},
 		},
 		"elem-type-object-bool": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"b": types.BoolType,
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "b",
+							Bool: &specschema.BoolType{},
 						},
 					},
 				},
@@ -172,8 +170,8 @@ func TestGeneratorMapAttribute_ToString(t *testing.T) {
 	}{
 		"element-type-bool": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.BoolType,
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{},
 				},
 			},
 			expected: `
@@ -184,9 +182,11 @@ ElementType: types.BoolType,
 
 		"element-type-list": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ListType{
-						ElemType: types.BoolType,
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{},
+						},
 					},
 				},
 			},
@@ -200,10 +200,14 @@ ElemType: types.BoolType,
 
 		"element-type-list-list": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ListType{
-						ElemType: types.ListType{
-							ElemType: types.BoolType,
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							List: &specschema.ListType{
+								ElementType: specschema.ElementType{
+									Bool: &specschema.BoolType{},
+								},
+							},
 						},
 					},
 				},
@@ -220,11 +224,14 @@ ElemType: types.BoolType,
 
 		"element-type-list-object": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ListType{
-						ElemType: types.ObjectType{
-							AttrTypes: map[string]attr.Type{
-								"bool": types.BoolType,
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Object: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
+								},
 							},
 						},
 					},
@@ -244,9 +251,11 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-map": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.MapType{
-						ElemType: types.BoolType,
+				ElementType: specschema.ElementType{
+					Map: &specschema.MapType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{},
+						},
 					},
 				},
 			},
@@ -260,10 +269,14 @@ ElemType: types.BoolType,
 
 		"element-type-map-map": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.MapType{
-						ElemType: types.MapType{
-							ElemType: types.BoolType,
+				ElementType: specschema.ElementType{
+					Map: &specschema.MapType{
+						ElementType: specschema.ElementType{
+							Map: &specschema.MapType{
+								ElementType: specschema.ElementType{
+									Bool: &specschema.BoolType{},
+								},
+							},
 						},
 					},
 				},
@@ -280,11 +293,14 @@ ElemType: types.BoolType,
 
 		"element-type-map-object": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.MapType{
-						ElemType: types.ObjectType{
-							AttrTypes: map[string]attr.Type{
-								"bool": types.BoolType,
+				ElementType: specschema.ElementType{
+					Map: &specschema.MapType{
+						ElementType: specschema.ElementType{
+							Object: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
+								},
 							},
 						},
 					},
@@ -304,10 +320,11 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-object": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"bool": types.BoolType,
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "bool",
+							Bool: &specschema.BoolType{},
 						},
 					},
 				},
@@ -324,12 +341,14 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-object-object": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"obj": types.ObjectType{
-								AttrTypes: map[string]attr.Type{
-									"bool": types.BoolType,
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "obj",
+							Object: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
 								},
 							},
 						},
@@ -352,11 +371,14 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-object-list": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"list": types.ListType{
-								ElemType: types.BoolType,
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "list",
+							List: &specschema.ListType{
+								ElementType: specschema.ElementType{
+									Bool: &specschema.BoolType{},
+								},
 							},
 						},
 					},
@@ -376,8 +398,8 @@ ElemType: types.BoolType,
 
 		"element-type-string": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 			expected: `
@@ -388,11 +410,11 @@ ElementType: types.StringType,
 
 		"custom-type": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
-				},
 				CustomType: &specschema.CustomType{
 					Type: "my_custom_type",
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 			expected: `
@@ -405,8 +427,10 @@ CustomType: my_custom_type,
 		"required": {
 			input: GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
-					Required:    true,
+					Required: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 			expected: `
@@ -419,8 +443,10 @@ Required: true,
 		"optional": {
 			input: GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
-					Optional:    true,
+					Optional: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 			expected: `
@@ -433,8 +459,10 @@ Optional: true,
 		"computed": {
 			input: GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
-					Computed:    true,
+					Computed: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 			expected: `
@@ -447,8 +475,10 @@ Computed: true,
 		"sensitive": {
 			input: GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
-					Sensitive:   true,
+					Sensitive: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 			expected: `
@@ -462,8 +492,10 @@ Sensitive: true,
 		"description": {
 			input: GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
 					Description: "description",
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 			expected: `
@@ -477,8 +509,10 @@ MarkdownDescription: "description",
 		"deprecation-message": {
 			input: GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					ElementType:        types.StringType,
 					DeprecationMessage: "deprecated",
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 			expected: `
@@ -490,8 +524,8 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 				Validators: []specschema.MapValidator{
 					{
