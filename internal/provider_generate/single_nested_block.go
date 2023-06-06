@@ -54,7 +54,7 @@ func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 		return "", err
 	}
 
-	if _, err = t.New("common_block").Parse(commonBlockGoTemplate); err != nil {
+	if _, err = addCommonBlockTemplate(t); err != nil {
 		return "", err
 	}
 

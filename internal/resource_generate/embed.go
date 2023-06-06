@@ -73,3 +73,11 @@ func addCommonAttributeTemplate(t *template.Template) (*template.Template, error
 
 //go:embed templates/common_block.gotmpl
 var commonBlockGoTemplate string
+
+func addCommonBlockTemplate(t *template.Template) (*template.Template, error) {
+	commonTemplateFuncs := template.FuncMap{
+		"quote": strconv.Quote,
+	}
+
+	return t.New("common_block").Funcs(commonTemplateFuncs).Parse(commonBlockGoTemplate)
+}
