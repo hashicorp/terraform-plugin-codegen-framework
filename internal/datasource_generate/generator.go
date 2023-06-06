@@ -271,27 +271,15 @@ func objectTypeEqual(x, y []specschema.ObjectAttributeType) bool {
 
 func elementTypeEqual(x, y specschema.ElementType) bool {
 	if x.Bool != nil && y.Bool != nil {
-		if !customTypeEqual(x.Bool.CustomType, y.Bool.CustomType) {
-			return false
-		}
-
-		return true
+		return customTypeEqual(x.Bool.CustomType, y.Bool.CustomType)
 	}
 
 	if x.Float64 != nil && y.Float64 != nil {
-		if !customTypeEqual(x.Float64.CustomType, y.Float64.CustomType) {
-			return false
-		}
-
-		return true
+		return customTypeEqual(x.Float64.CustomType, y.Float64.CustomType)
 	}
 
 	if x.Int64 != nil && y.Float64 != nil {
-		if !customTypeEqual(x.Int64.CustomType, y.Int64.CustomType) {
-			return false
-		}
-
-		return true
+		return customTypeEqual(x.Int64.CustomType, y.Int64.CustomType)
 	}
 
 	if x.List != nil && y.List != nil {
@@ -311,11 +299,7 @@ func elementTypeEqual(x, y specschema.ElementType) bool {
 	}
 
 	if x.Number != nil && y.Number != nil {
-		if !customTypeEqual(x.Number.CustomType, y.Number.CustomType) {
-			return false
-		}
-
-		return true
+		return customTypeEqual(x.Number.CustomType, y.Number.CustomType)
 	}
 
 	if x.Object != nil && y.Object != nil {
@@ -331,11 +315,7 @@ func elementTypeEqual(x, y specschema.ElementType) bool {
 	}
 
 	if x.String != nil && y.String != nil {
-		if !customTypeEqual(x.String.CustomType, y.String.CustomType) {
-			return false
-		}
-
-		return true
+		return customTypeEqual(x.String.CustomType, y.String.CustomType)
 	}
 
 	return false
