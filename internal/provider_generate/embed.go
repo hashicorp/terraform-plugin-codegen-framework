@@ -3,7 +3,11 @@
 
 package provider_generate
 
-import _ "embed"
+import (
+	_ "embed"
+	"strconv"
+	"text/template"
+)
 
 //go:embed templates/schema.gotmpl
 var schemaGoTemplate string
@@ -59,5 +63,21 @@ var singleNestedBlockGoTemplate string
 //go:embed templates/common_attribute.gotmpl
 var commonAttributeGoTemplate string
 
+func addCommonAttributeTemplate(t *template.Template) (*template.Template, error) {
+	commonTemplateFuncs := template.FuncMap{
+		"quote": strconv.Quote,
+	}
+
+	return t.New("common_attribute").Funcs(commonTemplateFuncs).Parse(commonAttributeGoTemplate)
+}
+
 //go:embed templates/common_block.gotmpl
 var commonBlockGoTemplate string
+
+func addCommonBlockTemplate(t *template.Template) (*template.Template, error) {
+	commonTemplateFuncs := template.FuncMap{
+		"quote": strconv.Quote,
+	}
+
+	return t.New("common_block").Funcs(commonTemplateFuncs).Parse(commonBlockGoTemplate)
+}
