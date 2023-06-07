@@ -4,7 +4,7 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
 	"log"
 	"os"
 
@@ -88,17 +88,7 @@ func (a SchemaModelsCommand) Run(args []string) int {
 		log.Fatal(err)
 	}
 
-	// validate against IR Schema
-	err = validate.Schema(src)
-	if err != nil {
-		log.Println("The document is not valid. see errors :")
-		log.Println(err)
-		log.Fatal("The document is not valid. Terminating execution.")
-	}
-
-	// unmarshal JSON
-	var s spec.Specification
-	err = json.Unmarshal(src, &s)
+	spec, err := spec.Parse(context.Background(), src)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -107,7 +97,7 @@ func (a SchemaModelsCommand) Run(args []string) int {
 	// DataSources
 	// ********************
 	// convert IR to framework schema
-	c := datasource_convert.NewConverter(s)
+	c := datasource_convert.NewConverter(spec)
 	schema, err := c.ToGeneratorDataSourceSchema()
 	if err != nil {
 		log.Fatal(err)
@@ -136,7 +126,7 @@ func (a SchemaModelsCommand) Run(args []string) int {
 	// Resources
 	// ********************
 	// convert IR to framework schema
-	resourceSchemaConverter := resource_convert.NewConverter(s)
+	resourceSchemaConverter := resource_convert.NewConverter(spec)
 	resourceSchemas, err := resourceSchemaConverter.ToGeneratorResourceSchema()
 	if err != nil {
 		log.Fatal(err)
@@ -165,7 +155,7 @@ func (a SchemaModelsCommand) Run(args []string) int {
 	// Provider
 	// ********************
 	// convert IR to framework schema
-	providerSchemaConverter := provider_convert.NewConverter(s)
+	providerSchemaConverter := provider_convert.NewConverter(spec)
 	providerSchemas, err := providerSchemaConverter.ToGeneratorProviderSchema()
 	if err != nil {
 		log.Fatal(err)

@@ -250,7 +250,7 @@ func getElementTypeImports(e specschema.ElementType, imports map[string]struct{}
 		return getElementTypeImports(e.Set.ElementType, imports)
 	case e.String != nil:
 		if e.String.CustomType != nil && e.String.CustomType.HasImport() {
-			imports[*e.Float64.CustomType.Import] = struct{}{}
+			imports[*e.String.CustomType.Import] = struct{}{}
 			return imports
 		}
 		imports[typesImport] = struct{}{}

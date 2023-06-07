@@ -30,7 +30,13 @@
               "computed_optional_required": "computed",
               "element_type": {
                 "list": {
-                  "string": {}
+                  "string": {
+                    "custom_type": {
+                      "import": "github.com/my_account/my_project/string",
+                      "type": "my_string_type",
+                      "value_type": "my_string_value_type"
+                    }
+                  }
                 }
               }
             }
