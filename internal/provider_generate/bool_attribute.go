@@ -41,7 +41,7 @@ func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
 		return "", err
 	}
 
-	if _, err = t.New("common_attribute").Parse(commonAttributeGoTemplate); err != nil {
+	if _, err = addCommonAttributeTemplate(t); err != nil {
 		return "", err
 	}
 
