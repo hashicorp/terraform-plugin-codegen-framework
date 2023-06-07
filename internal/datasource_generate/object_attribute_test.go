@@ -20,7 +20,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 	}{
 		"default": {
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"custom-type-without-import": {
@@ -50,7 +50,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		"object-without-attribute-types": {
 			input: GeneratorObjectAttribute{},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"object-with-empty-attribute-types": {
@@ -58,7 +58,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				AttributeTypes: []specschema.ObjectAttributeType{},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"object-with-attr-type-bool": {
@@ -71,9 +71,9 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				attrImport:             {},
-				typesImport:            {},
+				schemaImport: {},
+				attrImport:   {},
+				typesImport:  {},
 			},
 		},
 		"object-with-attr-type-bool-with-import": {
@@ -90,7 +90,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                     {},
+				schemaImport: {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -127,7 +127,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                             {},
+				schemaImport: {},
 				"github.com/my_account/my_project/element":         {},
 				"github.com/my_account/my_project/another_element": {},
 				"github.com/my_account/my_project/list":            {},
@@ -143,7 +143,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import-nil": {
@@ -156,7 +156,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -169,7 +169,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import": {
@@ -187,8 +187,8 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				validatorImport:        {},
+				schemaImport:    {},
+				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},

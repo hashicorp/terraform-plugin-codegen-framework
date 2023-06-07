@@ -17,14 +17,8 @@ func convertListAttribute(a *provider.ListAttribute) (provider_generate.Generato
 		return provider_generate.GeneratorListAttribute{}, fmt.Errorf("*provider.ListAttribute is nil")
 	}
 
-	elemType, err := convertElementType(a.ElementType)
-	if err != nil {
-		return provider_generate.GeneratorListAttribute{}, err
-	}
-
 	return provider_generate.GeneratorListAttribute{
 		ListAttribute: schema.ListAttribute{
-			ElementType:         elemType,
 			Required:            isRequired(a.OptionalRequired),
 			Optional:            isOptional(a.OptionalRequired),
 			Sensitive:           isSensitive(a.Sensitive),
@@ -33,7 +27,8 @@ func convertListAttribute(a *provider.ListAttribute) (provider_generate.Generato
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+		CustomType:  a.CustomType,
+		ElementType: a.ElementType,
+		Validators:  a.Validators,
 	}, nil
 }

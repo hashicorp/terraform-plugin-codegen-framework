@@ -18,6 +18,42 @@ type GeneratorNumberAttribute struct {
 	Validators []specschema.NumberValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the schemaImport will be used.
+func (g GeneratorNumberAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[schemaImport] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
+}
+
 func (g GeneratorNumberAttribute) Equal(ga GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorNumberAttribute)
 	if !ok {

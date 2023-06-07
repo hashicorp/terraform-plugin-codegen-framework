@@ -9,19 +9,63 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
 type GeneratorListAttribute struct {
 	schema.ListAttribute
 
-	CustomType *specschema.CustomType
-	Validators []specschema.ListValidator
+	CustomType  *specschema.CustomType
+	ElementType specschema.ElementType
+	Validators  []specschema.ListValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. Further
+// imports are retrieved by calling getElementTypeImports.
+func (g GeneratorListAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[schemaImport] = struct{}{}
+	}
+
+	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))
+
+	for k := range elemTypeImports {
+		imports[k] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
+}
+
+// Equal does not delegate to g.ListAttribute.Equal(h.ListAttribute) as the
+// call returns false owing to !a.GetType().Equal(b.GetType()) returning false
+// when the ElementType is nil.
 func (g GeneratorListAttribute) Equal(ga GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorListAttribute)
 	if !ok {
@@ -32,11 +76,39 @@ func (g GeneratorListAttribute) Equal(ga GeneratorAttribute) bool {
 		return false
 	}
 
+	if !elementTypeEqual(g.ElementType, h.ElementType) {
+		return false
+	}
+
 	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.ListAttribute.Equal(h.ListAttribute)
+	if g.Required != h.Required {
+		return false
+	}
+
+	if g.Optional != h.Optional {
+		return false
+	}
+
+	if g.Sensitive != h.Sensitive {
+		return false
+	}
+
+	if g.Description != h.Description {
+		return false
+	}
+
+	if g.MarkdownDescription != h.MarkdownDescription {
+		return false
+	}
+
+	if g.DeprecationMessage != h.DeprecationMessage {
+		return false
+	}
+
+	return true
 }
 
 func (g GeneratorListAttribute) ToString(name string) (string, error) {
@@ -108,27 +180,77 @@ func (g GeneratorListAttribute) validatorsEqual(x, y []specschema.ListValidator)
 	return true
 }
 
-func getElementType(elementType attr.Type) string {
-	switch t := elementType.(type) {
-	case basetypes.BoolType:
+func getElementType(e specschema.ElementType) string {
+	switch {
+	case e.Bool != nil:
 		return "types.BoolType"
-	case basetypes.Float64Type:
+	case e.Float64 != nil:
 		return "types.Float64Type"
-	case basetypes.Int64Type:
+	case e.Int64 != nil:
 		return "types.Int64Type"
-	case types.ListType:
-		return fmt.Sprintf("types.ListType{\nElemType: %s,\n}", getElementType(t.ElementType()))
-	case types.MapType:
-		return fmt.Sprintf("types.MapType{\nElemType: %s,\n}", getElementType(t.ElementType()))
-	case basetypes.NumberType:
+	case e.List != nil:
+		return fmt.Sprintf("types.ListType{\nElemType: %s,\n}", getElementType(e.List.ElementType))
+	case e.Map != nil:
+		return fmt.Sprintf("types.MapType{\nElemType: %s,\n}", getElementType(e.Map.ElementType))
+	case e.Number != nil:
 		return "types.NumberType"
-	case types.ObjectType:
-		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", getAttrTypes(t.AttrTypes))
-	case types.SetType:
-		return fmt.Sprintf("types.SetType{\nElemType: %s,\n}", getElementType(t.ElementType()))
-	case basetypes.StringType:
+	case e.Object != nil:
+		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", getAttrTypes(e.Object))
+	case e.Set != nil:
+		return fmt.Sprintf("types.SetType{\nElemType: %s,\n}", getElementType(e.Set.ElementType))
+	case e.String != nil:
 		return "types.StringType"
 	}
 
 	return ""
+}
+
+func getElementTypeImports(e specschema.ElementType, imports map[string]struct{}) map[string]struct{} {
+	switch {
+	case e.Bool != nil:
+		if e.Bool.CustomType != nil && e.Bool.CustomType.HasImport() {
+			imports[*e.Bool.CustomType.Import] = struct{}{}
+			return imports
+		}
+		imports[typesImport] = struct{}{}
+		return imports
+	case e.Float64 != nil:
+		if e.Float64.CustomType != nil && e.Float64.CustomType.HasImport() {
+			imports[*e.Float64.CustomType.Import] = struct{}{}
+			return imports
+		}
+		imports[typesImport] = struct{}{}
+		return imports
+	case e.Int64 != nil:
+		if e.Int64.CustomType != nil && e.Int64.CustomType.HasImport() {
+			imports[*e.Int64.CustomType.Import] = struct{}{}
+			return imports
+		}
+		imports[typesImport] = struct{}{}
+		return imports
+	case e.List != nil:
+		return getElementTypeImports(e.List.ElementType, imports)
+	case e.Map != nil:
+		return getElementTypeImports(e.Map.ElementType, imports)
+	case e.Number != nil:
+		if e.Number.CustomType != nil && e.Number.CustomType.HasImport() {
+			imports[*e.Number.CustomType.Import] = struct{}{}
+			return imports
+		}
+		imports[typesImport] = struct{}{}
+		return imports
+	case e.Object != nil:
+		return getAttrTypesImports(e.Object, imports)
+	case e.Set != nil:
+		return getElementTypeImports(e.Set.ElementType, imports)
+	case e.String != nil:
+		if e.String.CustomType != nil && e.String.CustomType.HasImport() {
+			imports[*e.String.CustomType.Import] = struct{}{}
+			return imports
+		}
+		imports[typesImport] = struct{}{}
+		return imports
+	default:
+		return imports
+	}
 }

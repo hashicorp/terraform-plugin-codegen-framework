@@ -10,9 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github/hashicorp/terraform-provider-code-generator/internal/resource_generate"
 )
@@ -88,8 +86,10 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 					Attributes: map[string]resource_generate.GeneratorAttribute{
 						"list_attribute": resource_generate.GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
-								ElementType: types.BoolType,
-								Optional:    true,
+								Optional: true,
+							},
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{},
 							},
 						},
 					},
@@ -164,10 +164,13 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 					Attributes: map[string]resource_generate.GeneratorAttribute{
 						"object_attribute": resource_generate.GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
-								AttributeTypes: map[string]attr.Type{
-									"obj_bool": types.BoolType,
-								},
 								Optional: true,
+							},
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
 							},
 						},
 					},

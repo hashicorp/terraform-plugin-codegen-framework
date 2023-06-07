@@ -24,7 +24,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 	}{
 		"default": {
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"custom-type-without-import": {
@@ -59,7 +59,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import-nil": {
@@ -72,7 +72,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -85,7 +85,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import": {
@@ -103,8 +103,8 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				validatorImport:        {},
+				schemaImport:    {},
+				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},

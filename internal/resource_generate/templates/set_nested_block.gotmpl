@@ -11,6 +11,16 @@ Blocks: map[string]schema.Block{
 {{- getBlocks $value.NestedObject.Blocks}}
 },
 {{- end}}
+{{- if $value.NestedObject.CustomType}}
+CustomType: {{$value.NestedObject.CustomType.Type}},
+{{- end}}
+{{- if gt (len $value.NestedObject.Validators) 0 }}
+Validators: []validator.Object{
+{{- range $validator := $value.NestedObject.Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end}}
 },
 {{- template "common_block" $value }}
 {{- if $value.PlanModifiers }}

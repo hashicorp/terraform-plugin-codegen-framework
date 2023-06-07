@@ -14,10 +14,57 @@ import (
 type GeneratorMapAttribute struct {
 	schema.MapAttribute
 
-	CustomType *specschema.CustomType
-	Validators []specschema.MapValidator
+	CustomType  *specschema.CustomType
+	ElementType specschema.ElementType
+	Validators  []specschema.MapValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the schemaImport will be used. Further
+// imports are retrieved by calling getElementTypeImports.
+func (g GeneratorMapAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	} else {
+		imports[schemaImport] = struct{}{}
+	}
+
+	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))
+
+	for k := range elemTypeImports {
+		imports[k] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if v.Custom.Import == nil {
+			continue
+		}
+
+		if *v.Custom.Import == "" {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
+}
+
+// Equal does not delegate to g.ListAttribute.Equal(h.ListAttribute) as the
+// call returns false owing to !a.GetType().Equal(b.GetType()) returning false
+// when the ElementType is nil.
 func (g GeneratorMapAttribute) Equal(ga GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorMapAttribute)
 	if !ok {
@@ -28,11 +75,39 @@ func (g GeneratorMapAttribute) Equal(ga GeneratorAttribute) bool {
 		return false
 	}
 
+	if !elementTypeEqual(g.ElementType, h.ElementType) {
+		return false
+	}
+
 	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.MapAttribute.Equal(h.MapAttribute)
+	if g.Required != h.Required {
+		return false
+	}
+
+	if g.Optional != h.Optional {
+		return false
+	}
+
+	if g.Sensitive != h.Sensitive {
+		return false
+	}
+
+	if g.Description != h.Description {
+		return false
+	}
+
+	if g.MarkdownDescription != h.MarkdownDescription {
+		return false
+	}
+
+	if g.DeprecationMessage != h.DeprecationMessage {
+		return false
+	}
+
+	return true
 }
 
 func (g GeneratorMapAttribute) ToString(name string) (string, error) {

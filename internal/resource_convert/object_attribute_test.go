@@ -10,9 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github/hashicorp/terraform-provider-code-generator/internal/resource_generate"
 )
@@ -28,18 +26,6 @@ func TestConvertObjectAttribute(t *testing.T) {
 		"nil": {
 			expectedError: fmt.Errorf("*resource.ObjectAttribute is nil"),
 		},
-		"attribute-type-nil": {
-			input: &resource.ObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
-					{
-						Name: "empty",
-					},
-				},
-			},
-			expectedError: fmt.Errorf("attribute type not defined: %+v", specschema.ObjectAttributeType{
-				Name: "empty",
-			}),
-		},
 		"attribute-type-bool": {
 			input: &resource.ObjectAttribute{
 				AttributeTypes: []specschema.ObjectAttributeType{
@@ -50,9 +36,10 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
-				ObjectAttribute: schema.ObjectAttribute{
-					AttributeTypes: map[string]attr.Type{
-						"obj_bool": types.BoolType,
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "obj_bool",
+						Bool: &specschema.BoolType{},
 					},
 				},
 			},
@@ -67,9 +54,10 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
-				ObjectAttribute: schema.ObjectAttribute{
-					AttributeTypes: map[string]attr.Type{
-						"obj_string": types.StringType,
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name:   "obj_string",
+						String: &specschema.StringType{},
 					},
 				},
 			},
@@ -88,10 +76,13 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
-				ObjectAttribute: schema.ObjectAttribute{
-					AttributeTypes: map[string]attr.Type{
-						"obj_list_string": types.ListType{
-							ElemType: types.StringType,
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "obj_list_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
 						},
 					},
 				},
@@ -111,10 +102,13 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
-				ObjectAttribute: schema.ObjectAttribute{
-					AttributeTypes: map[string]attr.Type{
-						"obj_map_string": types.MapType{
-							ElemType: types.StringType,
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "obj_map_string",
+						Map: &specschema.MapType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
 						},
 					},
 				},
@@ -139,12 +133,16 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
-				ObjectAttribute: schema.ObjectAttribute{
-					AttributeTypes: map[string]attr.Type{
-						"obj_list_object_string": types.ListType{
-							ElemType: types.ObjectType{
-								AttrTypes: map[string]attr.Type{
-									"obj_string": types.StringType,
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "obj_list_object_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								Object: []specschema.ObjectAttributeType{
+									{
+										Name:   "obj_string",
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -162,9 +160,10 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
-				ObjectAttribute: schema.ObjectAttribute{
-					AttributeTypes: map[string]attr.Type{
-						"obj_string": types.StringType,
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name:   "obj_string",
+						String: &specschema.StringType{},
 					},
 				},
 			},
@@ -183,10 +182,13 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
-				ObjectAttribute: schema.ObjectAttribute{
-					AttributeTypes: map[string]attr.Type{
-						"obj_list_string": types.ListType{
-							ElemType: types.StringType,
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "obj_list_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
 						},
 					},
 				},

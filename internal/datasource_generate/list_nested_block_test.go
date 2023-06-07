@@ -20,7 +20,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 	}{
 		"default": {
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"custom-type-without-import": {
@@ -28,7 +28,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				CustomType: &specschema.CustomType{},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"nested-object-custom-type-without-import": {
@@ -38,7 +38,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"custom-type-and-nested-object-custom-type-without-import": {
@@ -57,7 +57,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"nested-object-custom-type-with-import-empty-string": {
@@ -69,7 +69,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
@@ -93,7 +93,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 			},
 			expected: map[string]struct{}{
 				"github.com/my_account/my_project/attribute": {},
-				datasourceSchemaImport:                       {},
+				schemaImport: {},
 			},
 		},
 		"nested-object-custom-type-with-import": {
@@ -105,7 +105,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                       {},
+				schemaImport: {},
 				"github.com/my_account/my_project/attribute": {},
 			},
 		},
@@ -138,8 +138,8 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				typesImport:            {},
+				schemaImport: {},
+				typesImport:  {},
 			},
 		},
 		"nested-attribute-list-with-custom-type": {
@@ -155,7 +155,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                         {},
+				schemaImport: {},
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -179,7 +179,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                         {},
+				schemaImport: {},
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -200,9 +200,9 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				attrImport:             {},
-				typesImport:            {},
+				schemaImport: {},
+				attrImport:   {},
+				typesImport:  {},
 			},
 		},
 		"nested-attribute-object-with-custom-type": {
@@ -218,7 +218,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                           {},
+				schemaImport: {},
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -245,7 +245,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                           {},
+				schemaImport: {},
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -263,7 +263,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                          {},
+				schemaImport: {},
 				"github.com/my_account/my_project/nested_block": {},
 			},
 		},
@@ -275,7 +275,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import-nil": {
@@ -288,7 +288,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -301,7 +301,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"validator-custom-import": {
@@ -319,8 +319,8 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				validatorImport:        {},
+				schemaImport:    {},
+				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
@@ -336,7 +336,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"nested-object-validator-custom-import-nil": {
@@ -352,7 +352,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"nested-object-validator-custom-import-empty-string": {
@@ -368,7 +368,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
+				schemaImport: {},
 			},
 		},
 		"nested-object-validator-custom-import": {
@@ -389,8 +389,8 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				validatorImport:        {},
+				schemaImport:    {},
+				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},

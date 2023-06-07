@@ -11,6 +11,117 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 )
 
+func TestGeneratorInt64Attribute_Imports(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorInt64Attribute
+		expected map[string]struct{}
+	}{
+		"default": {
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorInt64Attribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorInt64Attribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer(""),
+				},
+			},
+			expected: map[string]struct{}{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorInt64Attribute{
+				CustomType: &specschema.CustomType{
+					Import: pointer("github.com/my_account/my_project/attribute"),
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/attribute": {},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorInt64Attribute{
+				Validators: []specschema.Int64Validator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorInt64Attribute{
+				Validators: []specschema.Int64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorInt64Attribute{
+				Validators: []specschema.Int64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorInt64Attribute{
+				Validators: []specschema.Int64Validator{
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Import: pointer("github.com/myproject/myvalidators/validator"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport:    {},
+				validatorImport: {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestGeneratorInt64Attribute_ToString(t *testing.T) {
 	t.Parallel()
 

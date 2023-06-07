@@ -17,14 +17,8 @@ func convertListAttribute(a *resource.ListAttribute) (resource_generate.Generato
 		return resource_generate.GeneratorListAttribute{}, fmt.Errorf("*resource.ListAttribute is nil")
 	}
 
-	elemType, err := convertElementType(a.ElementType)
-	if err != nil {
-		return resource_generate.GeneratorListAttribute{}, err
-	}
-
 	return resource_generate.GeneratorListAttribute{
 		ListAttribute: schema.ListAttribute{
-			ElementType:         elemType,
 			Required:            isRequired(a.ComputedOptionalRequired),
 			Optional:            isOptional(a.ComputedOptionalRequired),
 			Computed:            isComputed(a.ComputedOptionalRequired),
@@ -35,6 +29,7 @@ func convertListAttribute(a *resource.ListAttribute) (resource_generate.Generato
 		},
 		CustomType:    a.CustomType,
 		Default:       a.Default,
+		ElementType:   a.ElementType,
 		PlanModifiers: a.PlanModifiers,
 		Validators:    a.Validators,
 	}, nil

@@ -24,7 +24,7 @@ type GeneratorObjectAttribute struct {
 // will be used if it is not nil. If CustomType.Import is nil then no import will be
 // specified as it is assumed that the CustomType.Type and CustomType.ValueType will
 // be accessible from the same package that the schema.Schema for the data source is
-// defined in. If CustomType is nil, then the datasourceSchemaImport will be used.
+// defined in. If CustomType is nil, then the schemaImport will be used.
 // The imports required for the object attribute types are retrieved by calling
 // getAttrTypesImports.
 func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
@@ -35,7 +35,7 @@ func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
 	} else {
-		imports[datasourceSchemaImport] = struct{}{}
+		imports[schemaImport] = struct{}{}
 	}
 
 	attrTypesImports := getAttrTypesImports(g.AttributeTypes, make(map[string]struct{}))

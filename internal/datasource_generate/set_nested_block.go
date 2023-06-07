@@ -23,7 +23,7 @@ type GeneratorSetNestedBlock struct {
 // will be used if it is not nil. If CustomType.Import is nil then no import will be
 // specified as it is assumed that the CustomType.Type and CustomType.ValueType will
 // be accessible from the same package that the schema.Schema for the data source is
-// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. The same
+// defined in. If CustomType is nil, then the schemaImport will be used. The same
 // logic is applied to the NestedObject. Further imports are then retrieved by
 // calling Imports on each of the nested attributes.
 func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
@@ -34,7 +34,7 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
 	} else {
-		imports[datasourceSchemaImport] = struct{}{}
+		imports[schemaImport] = struct{}{}
 	}
 
 	if g.NestedObject.CustomType != nil {
@@ -42,7 +42,7 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 			imports[*g.NestedObject.CustomType.Import] = struct{}{}
 		}
 	} else {
-		imports[datasourceSchemaImport] = struct{}{}
+		imports[schemaImport] = struct{}{}
 	}
 
 	for _, v := range g.Validators {
