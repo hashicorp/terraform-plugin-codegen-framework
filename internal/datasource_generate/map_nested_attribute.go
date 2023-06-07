@@ -30,8 +30,7 @@ func (g GeneratorMapNestedAttribute) Imports() map[string]struct{} {
 	imports := make(map[string]struct{})
 
 	if g.CustomType != nil {
-		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
-		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
 	} else {
@@ -39,8 +38,7 @@ func (g GeneratorMapNestedAttribute) Imports() map[string]struct{} {
 	}
 
 	if g.NestedObject.CustomType != nil {
-		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
-		if g.NestedObject.CustomType.Import != nil && *g.NestedObject.CustomType.Import != "" {
+		if g.NestedObject.CustomType.HasImport() {
 			imports[*g.NestedObject.CustomType.Import] = struct{}{}
 		}
 	} else {

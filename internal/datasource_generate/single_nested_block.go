@@ -31,8 +31,7 @@ func (g GeneratorSingleNestedBlock) Imports() map[string]struct{} {
 	imports := make(map[string]struct{})
 
 	if g.CustomType != nil {
-		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
-		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
 	} else {
