@@ -148,6 +148,10 @@ func getAttrTypes(attrTypes []specschema.ObjectAttributeType) string {
 	var aTypes strings.Builder
 
 	for _, v := range attrTypes {
+		if aTypes.Len() > 0 {
+			aTypes.WriteString("\n")
+		}
+
 		switch {
 		case v.Bool != nil:
 			aTypes.WriteString(fmt.Sprintf("\"%s\": types.BoolType,", v.Name))
