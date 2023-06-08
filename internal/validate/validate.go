@@ -4,11 +4,8 @@
 package validate
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
-
-	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 )
 
 func JSON(input []byte) error {
@@ -17,11 +14,4 @@ func JSON(input []byte) error {
 	}
 
 	return nil
-}
-
-// Schema
-// TODO: Check for duplicate keys at same nesting level in JSON.
-// TODO: Handle schema when supplied as URL
-func Schema(input []byte) error {
-	return spec.Validate(context.TODO(), input)
 }
