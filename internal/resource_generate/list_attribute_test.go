@@ -20,9 +20,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-without-import": {
 			input: GeneratorListAttribute{
@@ -55,8 +53,8 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				typesImport:  {},
+
+				typesImport: {},
 			},
 		},
 		"elem-type-bool-with-import": {
@@ -70,7 +68,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -85,8 +83,8 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				typesImport:  {},
+
+				typesImport: {},
 			},
 		},
 		"elem-type-list-bool-with-import": {
@@ -104,7 +102,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -114,9 +112,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					Object: []specschema.ObjectAttributeType{},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"elem-type-object-bool": {
 			input: GeneratorListAttribute{
@@ -130,9 +126,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				attrImport:   {},
-				typesImport:  {},
+
+				attrImport:  {},
+				typesImport: {},
 			},
 		},
 		"elem-type-object-bool-with-import": {
@@ -151,7 +147,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -175,9 +171,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				attrImport:   {},
-				typesImport:  {},
+
+				attrImport:  {},
+				typesImport: {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -188,9 +184,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorListAttribute{
@@ -201,9 +195,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorListAttribute{
@@ -214,9 +206,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import": {
 			input: GeneratorListAttribute{
@@ -233,7 +223,6 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:    {},
 				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -246,9 +235,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorListAttribute{
@@ -259,9 +246,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorListAttribute{
@@ -272,9 +257,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorListAttribute{
@@ -291,25 +274,21 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:       {},
+
 				planModifierImport: {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
 			},
 		},
 		"default-nil": {
-			input: GeneratorListAttribute{},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			input:    GeneratorListAttribute{},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-nil": {
 			input: GeneratorListAttribute{
 				Default: &specschema.ListDefault{},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import-nil": {
 			input: GeneratorListAttribute{
@@ -317,9 +296,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorListAttribute{
@@ -329,9 +306,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import": {
 			input: GeneratorListAttribute{
@@ -342,7 +317,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},

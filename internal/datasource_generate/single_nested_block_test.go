@@ -19,9 +19,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-without-import": {
 			input: GeneratorSingleNestedBlock{
@@ -58,8 +56,8 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				typesImport:  {},
+
+				typesImport: {},
 			},
 		},
 		"nested-attribute-list-with-custom-type": {
@@ -73,7 +71,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -95,7 +93,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -114,9 +112,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				attrImport:   {},
-				typesImport:  {},
+
+				attrImport:  {},
+				typesImport: {},
 			},
 		},
 		"nested-attribute-object-with-custom-type": {
@@ -130,7 +128,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -155,7 +153,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -171,7 +169,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_block": {},
 			},
 		},
@@ -182,9 +180,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorSingleNestedBlock{
@@ -195,9 +191,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorSingleNestedBlock{
@@ -208,9 +202,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import": {
 			input: GeneratorSingleNestedBlock{
@@ -227,7 +219,6 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:    {},
 				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},

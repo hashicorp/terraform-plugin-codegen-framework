@@ -19,17 +19,13 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-without-import": {
 			input: GeneratorSetNestedBlock{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-custom-type-without-import": {
 			input: GeneratorSetNestedBlock{
@@ -37,9 +33,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					CustomType: &specschema.CustomType{},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-and-nested-object-custom-type-without-import": {
 			input: GeneratorSetNestedBlock{
@@ -56,9 +50,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Import: pointer(""),
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorSetNestedBlock{
@@ -68,9 +60,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorSetNestedBlock{
@@ -93,7 +83,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 			},
 			expected: map[string]struct{}{
 				"github.com/my_account/my_project/attribute": {},
-				schemaImport: {},
 			},
 		},
 		"nested-object-custom-type-with-import": {
@@ -105,7 +94,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/attribute": {},
 			},
 		},
@@ -138,8 +127,8 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				typesImport:  {},
+
+				typesImport: {},
 			},
 		},
 		"nested-attribute-list-with-custom-type": {
@@ -155,7 +144,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -179,7 +168,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -200,9 +189,9 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				attrImport:   {},
-				typesImport:  {},
+
+				attrImport:  {},
+				typesImport: {},
 			},
 		},
 		"nested-attribute-object-with-custom-type": {
@@ -218,7 +207,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -245,7 +234,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -263,7 +252,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_block": {},
 			},
 		},
@@ -274,9 +263,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorSetNestedBlock{
@@ -287,9 +274,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorSetNestedBlock{
@@ -300,9 +285,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import": {
 			input: GeneratorSetNestedBlock{
@@ -319,7 +302,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:    {},
 				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -335,9 +317,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-validator-custom-import-nil": {
 			input: GeneratorSetNestedBlock{
@@ -351,9 +331,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-validator-custom-import-empty-string": {
 			input: GeneratorSetNestedBlock{
@@ -367,9 +345,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-validator-custom-import": {
 			input: GeneratorSetNestedBlock{
@@ -389,7 +365,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport:    {},
 				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},

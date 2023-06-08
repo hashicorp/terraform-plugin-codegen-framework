@@ -10,7 +10,6 @@ const (
 	defaultInt64Import   = "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	defaultStringImport  = "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	planModifierImport   = "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	schemaImport         = "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	typesImport          = "github.com/hashicorp/terraform-plugin-framework/types"
 	validatorImport      = "github.com/hashicorp/terraform-plugin-framework/schema/validator"
 )

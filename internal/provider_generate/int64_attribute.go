@@ -22,7 +22,7 @@ type GeneratorInt64Attribute struct {
 // will be used if it is not nil. If CustomType.Import is nil then no import will be
 // specified as it is assumed that the CustomType.Type and CustomType.ValueType will
 // be accessible from the same package that the schema.Schema for the data source is
-// defined in. If CustomType is nil, then the schemaImport will be used.
+// defined in.
 func (g GeneratorInt64Attribute) Imports() map[string]struct{} {
 	imports := make(map[string]struct{})
 
@@ -30,8 +30,6 @@ func (g GeneratorInt64Attribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
-	} else {
-		imports[schemaImport] = struct{}{}
 	}
 
 	for _, v := range g.Validators {

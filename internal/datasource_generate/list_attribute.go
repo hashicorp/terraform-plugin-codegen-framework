@@ -24,7 +24,7 @@ type GeneratorListAttribute struct {
 // will be used if it is not nil. If CustomType.Import is nil then no import will be
 // specified as it is assumed that the CustomType.Type and CustomType.ValueType will
 // be accessible from the same package that the schema.Schema for the data source is
-// defined in. If CustomType is nil, then the schemaImport will be used. Further
+// defined in.  Further
 // imports are retrieved by calling getElementTypeImports.
 func (g GeneratorListAttribute) Imports() map[string]struct{} {
 	imports := make(map[string]struct{})
@@ -33,8 +33,6 @@ func (g GeneratorListAttribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
-	} else {
-		imports[schemaImport] = struct{}{}
 	}
 
 	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))

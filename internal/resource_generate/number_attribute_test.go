@@ -19,9 +19,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-without-import": {
 			input: GeneratorNumberAttribute{
@@ -54,9 +52,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorNumberAttribute{
@@ -67,9 +63,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorNumberAttribute{
@@ -80,9 +74,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import": {
 			input: GeneratorNumberAttribute{
@@ -99,7 +91,6 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:    {},
 				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -112,9 +103,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorNumberAttribute{
@@ -125,9 +114,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorNumberAttribute{
@@ -138,9 +125,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorNumberAttribute{
@@ -157,25 +142,21 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:       {},
+
 				planModifierImport: {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
 			},
 		},
 		"default-nil": {
-			input: GeneratorNumberAttribute{},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			input:    GeneratorNumberAttribute{},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-nil": {
 			input: GeneratorNumberAttribute{
 				Default: &specschema.NumberDefault{},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import-nil": {
 			input: GeneratorNumberAttribute{
@@ -183,9 +164,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorNumberAttribute{
@@ -195,9 +174,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import": {
 			input: GeneratorNumberAttribute{
@@ -208,7 +185,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},

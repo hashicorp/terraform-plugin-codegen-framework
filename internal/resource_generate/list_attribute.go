@@ -35,8 +35,6 @@ func (g GeneratorListAttribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
-	} else {
-		imports[schemaImport] = struct{}{}
 	}
 
 	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))

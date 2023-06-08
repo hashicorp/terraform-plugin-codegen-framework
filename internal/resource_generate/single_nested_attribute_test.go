@@ -19,9 +19,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-without-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -58,8 +56,8 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				typesImport:  {},
+
+				typesImport: {},
 			},
 		},
 		"nested-attribute-list-with-custom-type": {
@@ -73,7 +71,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -95,7 +93,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -114,9 +112,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				attrImport:   {},
-				typesImport:  {},
+
+				attrImport:  {},
+				typesImport: {},
 			},
 		},
 		"nested-attribute-object-with-custom-type": {
@@ -130,7 +128,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -155,7 +153,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -167,9 +165,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorSingleNestedAttribute{
@@ -180,9 +176,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorSingleNestedAttribute{
@@ -193,9 +187,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -212,7 +204,6 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:    {},
 				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -225,9 +216,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorSingleNestedAttribute{
@@ -238,9 +227,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorSingleNestedAttribute{
@@ -251,9 +238,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -270,25 +255,21 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:       {},
+
 				planModifierImport: {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
 			},
 		},
 		"default-nil": {
-			input: GeneratorSingleNestedAttribute{},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			input:    GeneratorSingleNestedAttribute{},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-nil": {
 			input: GeneratorSingleNestedAttribute{
 				Default: &specschema.ObjectDefault{},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import-nil": {
 			input: GeneratorSingleNestedAttribute{
@@ -296,9 +277,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorSingleNestedAttribute{
@@ -308,9 +287,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -321,7 +298,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},

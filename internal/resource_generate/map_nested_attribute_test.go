@@ -19,17 +19,13 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-without-import": {
 			input: GeneratorMapNestedAttribute{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-custom-type-without-import": {
 			input: GeneratorMapNestedAttribute{
@@ -37,9 +33,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					CustomType: &specschema.CustomType{},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-and-nested-object-custom-type-without-import": {
 			input: GeneratorMapNestedAttribute{
@@ -56,9 +50,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Import: pointer(""),
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
@@ -68,9 +60,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
@@ -93,7 +83,6 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 			},
 			expected: map[string]struct{}{
 				"github.com/my_account/my_project/attribute": {},
-				schemaImport: {},
 			},
 		},
 		"nested-object-custom-type-with-import": {
@@ -105,7 +94,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/attribute": {},
 			},
 		},
@@ -138,8 +127,8 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				typesImport:  {},
+
+				typesImport: {},
 			},
 		},
 		"nested-list-with-custom-type": {
@@ -155,7 +144,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -179,7 +168,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -200,9 +189,9 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
-				attrImport:   {},
-				typesImport:  {},
+
+				attrImport:  {},
+				typesImport: {},
 			},
 		},
 		"nested-object-with-custom-type": {
@@ -218,7 +207,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -245,7 +234,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -257,9 +246,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorMapNestedAttribute{
@@ -270,9 +257,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
@@ -283,9 +268,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import": {
 			input: GeneratorMapNestedAttribute{
@@ -302,7 +285,6 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:    {},
 				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -318,9 +300,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-validator-custom-import-nil": {
 			input: GeneratorMapNestedAttribute{
@@ -334,9 +314,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-validator-custom-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
@@ -350,9 +328,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-validator-custom-import": {
 			input: GeneratorMapNestedAttribute{
@@ -372,7 +348,6 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport:    {},
 				validatorImport: {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -385,9 +360,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorMapNestedAttribute{
@@ -398,9 +371,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
@@ -411,9 +382,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorMapNestedAttribute{
@@ -430,25 +399,21 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				schemaImport:       {},
+
 				planModifierImport: {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
 			},
 		},
 		"default-nil": {
-			input: GeneratorMapNestedAttribute{},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			input:    GeneratorMapNestedAttribute{},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-nil": {
 			input: GeneratorMapNestedAttribute{
 				Default: &specschema.MapDefault{},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import-nil": {
 			input: GeneratorMapNestedAttribute{
@@ -456,9 +421,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
@@ -468,9 +431,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"default-custom-import": {
 			input: GeneratorMapNestedAttribute{
@@ -481,7 +442,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport: {},
+
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},
@@ -495,9 +456,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-plan-modifier-custom-import-nil": {
 			input: GeneratorMapNestedAttribute{
@@ -511,9 +470,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-plan-modifiers-custom-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
@@ -527,9 +484,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				schemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"nested-object-plan-modifier-custom-import": {
 			input: GeneratorMapNestedAttribute{
@@ -549,7 +504,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				schemaImport:       {},
+
 				planModifierImport: {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
