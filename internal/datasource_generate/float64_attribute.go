@@ -39,11 +39,7 @@ func (g GeneratorFloat64Attribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		if v.Custom.Import == nil {
-			continue
-		}
-
-		if *v.Custom.Import == "" {
+		if !v.Custom.HasImport() {
 			continue
 		}
 
