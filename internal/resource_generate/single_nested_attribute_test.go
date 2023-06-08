@@ -218,6 +218,113 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				"github.com/myproject/myvalidators/validator":      {},
 			},
 		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorSingleNestedAttribute{
+				PlanModifiers: []specschema.ObjectPlanModifier{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorSingleNestedAttribute{
+				PlanModifiers: []specschema.ObjectPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorSingleNestedAttribute{
+				PlanModifiers: []specschema.ObjectPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorSingleNestedAttribute{
+				PlanModifiers: []specschema.ObjectPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+						},
+					},
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport:       {},
+				planModifierImport: {},
+				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
+				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			},
+		},
+		"default-nil": {
+			input: GeneratorSingleNestedAttribute{},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-nil": {
+			input: GeneratorSingleNestedAttribute{
+				Default: &specschema.ObjectDefault{},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorSingleNestedAttribute{
+				Default: &specschema.ObjectDefault{
+					Custom: &specschema.CustomDefault{},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorSingleNestedAttribute{
+				Default: &specschema.ObjectDefault{
+					Custom: &specschema.CustomDefault{
+						Import: pointer(""),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorSingleNestedAttribute{
+				Default: &specschema.ObjectDefault{
+					Custom: &specschema.CustomDefault{
+						Import: pointer("github.com/myproject/mydefaults/default"),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+				"github.com/myproject/mydefaults/default": {},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {

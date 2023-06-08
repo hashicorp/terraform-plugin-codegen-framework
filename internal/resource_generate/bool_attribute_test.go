@@ -105,6 +105,124 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				"github.com/myproject/myvalidators/validator":      {},
 			},
 		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorBoolAttribute{
+				PlanModifiers: []specschema.BoolPlanModifier{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorBoolAttribute{
+				PlanModifiers: []specschema.BoolPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorBoolAttribute{
+				PlanModifiers: []specschema.BoolPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorBoolAttribute{
+				PlanModifiers: []specschema.BoolPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+						},
+					},
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport:       {},
+				planModifierImport: {},
+				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
+				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			},
+		},
+		"default-nil": {
+			input: GeneratorBoolAttribute{},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-and-static-nil": {
+			input: GeneratorBoolAttribute{
+				Default: &specschema.BoolDefault{},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorBoolAttribute{
+				Default: &specschema.BoolDefault{
+					Custom: &specschema.CustomDefault{},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorBoolAttribute{
+				Default: &specschema.BoolDefault{
+					Custom: &specschema.CustomDefault{
+						Import: pointer(""),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorBoolAttribute{
+				Default: &specschema.BoolDefault{
+					Custom: &specschema.CustomDefault{
+						Import: pointer("github.com/myproject/mydefaults/default"),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+				"github.com/myproject/mydefaults/default": {},
+			},
+		},
+		"default-static": {
+			input: GeneratorBoolAttribute{
+				Default: &specschema.BoolDefault{
+					Static: pointer(true),
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport:      {},
+				defaultBoolImport: {},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {

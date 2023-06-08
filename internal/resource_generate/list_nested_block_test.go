@@ -395,6 +395,134 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				"github.com/myproject/myvalidators/validator":      {},
 			},
 		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorListNestedBlock{
+				PlanModifiers: []specschema.ListPlanModifier{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorListNestedBlock{
+				PlanModifiers: []specschema.ListPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorListNestedBlock{
+				PlanModifiers: []specschema.ListPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorListNestedBlock{
+				PlanModifiers: []specschema.ListPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+						},
+					},
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport:       {},
+				planModifierImport: {},
+				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
+				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			},
+		},
+		"nested-object-plan-modifier-custom-nil": {
+			input: GeneratorListNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					PlanModifiers: []specschema.ObjectPlanModifier{
+						{
+							Custom: nil,
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"nested-object-plan-modifier-custom-import-nil": {
+			input: GeneratorListNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					PlanModifiers: []specschema.ObjectPlanModifier{
+						{
+							Custom: &specschema.CustomPlanModifier{
+								Import: nil,
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"nested-object-plan-modifiers-custom-import-empty-string": {
+			input: GeneratorListNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					PlanModifiers: []specschema.ObjectPlanModifier{
+						{
+							Custom: &specschema.CustomPlanModifier{
+								Import: pointer(""),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"nested-object-plan-modifier-custom-import": {
+			input: GeneratorListNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					PlanModifiers: []specschema.ObjectPlanModifier{
+						{
+							Custom: &specschema.CustomPlanModifier{
+								Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+							},
+						},
+						{
+							Custom: &specschema.CustomPlanModifier{
+								Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport:       {},
+				planModifierImport: {},
+				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
+				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {

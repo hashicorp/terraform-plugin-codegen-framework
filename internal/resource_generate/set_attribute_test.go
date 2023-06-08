@@ -238,6 +238,113 @@ func TestGeneratorSetAttribute_Imports(t *testing.T) {
 				"github.com/myproject/myvalidators/validator":      {},
 			},
 		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorSetAttribute{
+				PlanModifiers: []specschema.SetPlanModifier{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorSetAttribute{
+				PlanModifiers: []specschema.SetPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorSetAttribute{
+				PlanModifiers: []specschema.SetPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorSetAttribute{
+				PlanModifiers: []specschema.SetPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+						},
+					},
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport:       {},
+				planModifierImport: {},
+				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
+				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			},
+		},
+		"default-nil": {
+			input: GeneratorSetAttribute{},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-nil": {
+			input: GeneratorSetAttribute{
+				Default: &specschema.SetDefault{},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorSetAttribute{
+				Default: &specschema.SetDefault{
+					Custom: &specschema.CustomDefault{},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorSetAttribute{
+				Default: &specschema.SetDefault{
+					Custom: &specschema.CustomDefault{
+						Import: pointer(""),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorSetAttribute{
+				Default: &specschema.SetDefault{
+					Custom: &specschema.CustomDefault{
+						Import: pointer("github.com/myproject/mydefaults/default"),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+				"github.com/myproject/mydefaults/default": {},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {

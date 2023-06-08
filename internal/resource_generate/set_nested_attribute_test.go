@@ -378,6 +378,183 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 				"github.com/myproject/myvalidators/validator":      {},
 			},
 		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorSetNestedAttribute{
+				PlanModifiers: []specschema.SetPlanModifier{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorSetNestedAttribute{
+				PlanModifiers: []specschema.SetPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: nil,
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorSetNestedAttribute{
+				PlanModifiers: []specschema.SetPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer(""),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorSetNestedAttribute{
+				PlanModifiers: []specschema.SetPlanModifier{
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+						},
+					},
+					{
+						Custom: &specschema.CustomPlanModifier{
+							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+						},
+					},
+				}},
+			expected: map[string]struct{}{
+				schemaImport:       {},
+				planModifierImport: {},
+				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
+				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			},
+		},
+		"default-nil": {
+			input: GeneratorSetNestedAttribute{},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-nil": {
+			input: GeneratorSetNestedAttribute{
+				Default: &specschema.SetDefault{},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorSetNestedAttribute{
+				Default: &specschema.SetDefault{
+					Custom: &specschema.CustomDefault{},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorSetNestedAttribute{
+				Default: &specschema.SetDefault{
+					Custom: &specschema.CustomDefault{
+						Import: pointer(""),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorSetNestedAttribute{
+				Default: &specschema.SetDefault{
+					Custom: &specschema.CustomDefault{
+						Import: pointer("github.com/myproject/mydefaults/default"),
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+				"github.com/myproject/mydefaults/default": {},
+			},
+		},
+		"nested-object-plan-modifier-custom-nil": {
+			input: GeneratorSetNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					PlanModifiers: []specschema.ObjectPlanModifier{
+						{
+							Custom: nil,
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"nested-object-plan-modifier-custom-import-nil": {
+			input: GeneratorSetNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					PlanModifiers: []specschema.ObjectPlanModifier{
+						{
+							Custom: &specschema.CustomPlanModifier{
+								Import: nil,
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"nested-object-plan-modifiers-custom-import-empty-string": {
+			input: GeneratorSetNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					PlanModifiers: []specschema.ObjectPlanModifier{
+						{
+							Custom: &specschema.CustomPlanModifier{
+								Import: pointer(""),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport: {},
+			},
+		},
+		"nested-object-plan-modifier-custom-import": {
+			input: GeneratorSetNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					PlanModifiers: []specschema.ObjectPlanModifier{
+						{
+							Custom: &specschema.CustomPlanModifier{
+								Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+							},
+						},
+						{
+							Custom: &specschema.CustomPlanModifier{
+								Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				schemaImport:       {},
+				planModifierImport: {},
+				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
+				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {

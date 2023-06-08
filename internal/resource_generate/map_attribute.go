@@ -44,16 +44,31 @@ func (g GeneratorMapAttribute) Imports() map[string]struct{} {
 		imports[k] = struct{}{}
 	}
 
+	if g.Default != nil {
+		if g.Default.Custom != nil && g.Default.Custom.HasImport() {
+			imports[*g.Default.Custom.Import] = struct{}{}
+		}
+	}
+
+	for _, v := range g.PlanModifiers {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[planModifierImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
 	for _, v := range g.Validators {
 		if v.Custom == nil {
 			continue
 		}
 
-		if v.Custom.Import == nil {
-			continue
-		}
-
-		if *v.Custom.Import == "" {
+		if !v.Custom.HasImport() {
 			continue
 		}
 

@@ -37,16 +37,33 @@ func (g GeneratorInt64Attribute) Imports() map[string]struct{} {
 		imports[schemaImport] = struct{}{}
 	}
 
+	if g.Default != nil {
+		if g.Default.Static != nil {
+			imports[defaultInt64Import] = struct{}{}
+		} else if g.Default.Custom != nil && g.Default.Custom.HasImport() {
+			imports[*g.Default.Custom.Import] = struct{}{}
+		}
+	}
+
+	for _, v := range g.PlanModifiers {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[planModifierImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
 	for _, v := range g.Validators {
 		if v.Custom == nil {
 			continue
 		}
 
-		if v.Custom.Import == nil {
-			continue
-		}
-
-		if *v.Custom.Import == "" {
+		if !v.Custom.HasImport() {
 			continue
 		}
 

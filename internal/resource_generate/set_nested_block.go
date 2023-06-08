@@ -38,6 +38,32 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 		imports[schemaImport] = struct{}{}
 	}
 
+	for _, v := range g.PlanModifiers {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[planModifierImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[validatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
 	if g.NestedObject.CustomType != nil {
 		if g.NestedObject.CustomType.HasImport() {
 			imports[*g.NestedObject.CustomType.Import] = struct{}{}
@@ -46,20 +72,16 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 		imports[schemaImport] = struct{}{}
 	}
 
-	for _, v := range g.Validators {
+	for _, v := range g.NestedObject.PlanModifiers {
 		if v.Custom == nil {
 			continue
 		}
 
-		if v.Custom.Import == nil {
+		if !v.Custom.HasImport() {
 			continue
 		}
 
-		if *v.Custom.Import == "" {
-			continue
-		}
-
-		imports[validatorImport] = struct{}{}
+		imports[planModifierImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 
@@ -68,11 +90,7 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 			continue
 		}
 
-		if v.Custom.Import == nil {
-			continue
-		}
-
-		if *v.Custom.Import == "" {
+		if !v.Custom.HasImport() {
 			continue
 		}
 
