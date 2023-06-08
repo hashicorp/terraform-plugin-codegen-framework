@@ -84,7 +84,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": attributeStringsFromGeneratorAttributes,
+		"getAttributes": getAttributes,
 	}
 
 	t, err := template.New("single_nested_attribute").Funcs(funcMap).Parse(singleNestedAttributeGoTemplate)

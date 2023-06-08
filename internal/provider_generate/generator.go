@@ -5,6 +5,7 @@ package provider_generate
 
 import (
 	"bytes"
+	"fmt"
 	"sort"
 	"strings"
 	"text/template"
@@ -19,7 +20,7 @@ type GeneratorSchema interface {
 type GeneratorProviderSchemas struct {
 	schemas map[string]GeneratorProviderSchema
 	// TODO: Could add a field to hold custom templates that are used in calls to
-	// attributeStringsFromGeneratorAttributes() and blockStringsFromGeneratorBlocks() funcs.
+	// getAttributes() and getBlocks() funcs.
 }
 
 type GeneratorProviderSchema struct {
@@ -51,8 +52,9 @@ func (g GeneratorProviderSchemas) ToBytes() (map[string][]byte, error) {
 
 func (g GeneratorProviderSchemas) toBytes(name string, s GeneratorProviderSchema) ([]byte, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": attributeStringsFromGeneratorAttributes,
-		"getBlocks":     blockStringsFromGeneratorBlocks,
+		"getImports":    getImports,
+		"getAttributes": getAttributes,
+		"getBlocks":     getBlocks,
 	}
 
 	t, err := template.New("schema").Funcs(funcMap).Parse(
@@ -80,7 +82,31 @@ func (g GeneratorProviderSchemas) toBytes(name string, s GeneratorProviderSchema
 	return buf.Bytes(), nil
 }
 
-func attributeStringsFromGeneratorAttributes(attributes map[string]GeneratorAttribute) (string, error) {
+func getImports(schema GeneratorProviderSchema) (string, error) {
+	var s strings.Builder
+
+	var imports = make(map[string]struct{})
+
+	for _, v := range schema.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range schema.Blocks {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for a := range imports {
+		s.WriteString(fmt.Sprintf("\"%s\"\n", a))
+	}
+
+	return s.String(), nil
+}
+
+func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
@@ -109,7 +135,7 @@ func attributeStringsFromGeneratorAttributes(attributes map[string]GeneratorAttr
 	return s.String(), nil
 }
 
-func blockStringsFromGeneratorBlocks(blocks map[string]GeneratorBlock) (string, error) {
+func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.

@@ -5,6 +5,7 @@ package resource_generate
 
 import (
 	"bytes"
+	"fmt"
 	"sort"
 	"strings"
 	"text/template"
@@ -51,6 +52,7 @@ func (g GeneratorResourceSchemas) ToBytes() (map[string][]byte, error) {
 
 func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema) ([]byte, error) {
 	funcMap := template.FuncMap{
+		"getImports":    getImports,
 		"getAttributes": getAttributes,
 		"getBlocks":     getBlocks,
 	}
@@ -76,6 +78,30 @@ func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema
 	}
 
 	return buf.Bytes(), nil
+}
+
+func getImports(schema GeneratorResourceSchema) (string, error) {
+	var s strings.Builder
+
+	var imports = make(map[string]struct{})
+
+	for _, v := range schema.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range schema.Blocks {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for a := range imports {
+		s.WriteString(fmt.Sprintf("\"%s\"\n", a))
+	}
+
+	return s.String(), nil
 }
 
 func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {

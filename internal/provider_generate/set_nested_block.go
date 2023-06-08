@@ -119,8 +119,8 @@ func (g GeneratorSetNestedBlock) Equal(ga GeneratorBlock) bool {
 
 func (g GeneratorSetNestedBlock) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": attributeStringsFromGeneratorAttributes,
-		"getBlocks":     blockStringsFromGeneratorBlocks,
+		"getAttributes": getAttributes,
+		"getBlocks":     getBlocks,
 	}
 
 	t, err := template.New("set_nested_block").Funcs(funcMap).Parse(setNestedBlockGoTemplate)
