@@ -4,12 +4,13 @@
 package datasource_generate
 
 import (
-	"fmt"
 	"strings"
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 type GeneratorListAttribute struct {
@@ -24,8 +25,7 @@ type GeneratorListAttribute struct {
 // will be used if it is not nil. If CustomType.Import is nil then no import will be
 // specified as it is assumed that the CustomType.Type and CustomType.ValueType will
 // be accessible from the same package that the schema.Schema for the data source is
-// defined in.  Further
-// imports are retrieved by calling getElementTypeImports.
+// defined in.
 func (g GeneratorListAttribute) Imports() map[string]struct{} {
 	imports := make(map[string]struct{})
 
@@ -35,7 +35,7 @@ func (g GeneratorListAttribute) Imports() map[string]struct{} {
 		}
 	}
 
-	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))
+	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType, make(map[string]struct{}))
 
 	for k := range elemTypeImports {
 		imports[k] = struct{}{}
@@ -50,7 +50,7 @@ func (g GeneratorListAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 
@@ -111,7 +111,7 @@ func (g GeneratorListAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorListAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getElementType": getElementType,
+		"getElementType": generatorschema.GetElementType,
 	}
 
 	t, err := template.New("list_attribute").Funcs(funcMap).Parse(listAttributeGoTemplate)
@@ -176,103 +176,4 @@ func (g GeneratorListAttribute) validatorsEqual(x, y []specschema.ListValidator)
 	}
 
 	return true
-}
-
-func getElementType(e specschema.ElementType) string {
-	switch {
-	case e.Bool != nil:
-		if e.Bool.CustomType != nil {
-			return e.Bool.CustomType.Type
-		}
-		return "types.BoolType"
-	case e.Float64 != nil:
-		if e.Float64.CustomType != nil {
-			return e.Float64.CustomType.Type
-		}
-		return "types.Float64Type"
-	case e.Int64 != nil:
-		if e.Int64.CustomType != nil {
-			return e.Int64.CustomType.Type
-		}
-		return "types.Int64Type"
-	case e.List != nil:
-		if e.List.CustomType != nil {
-			return fmt.Sprintf("%s{\nElemType: %s,\n}", e.List.CustomType.Type, getElementType(e.List.ElementType))
-		}
-		return fmt.Sprintf("types.ListType{\nElemType: %s,\n}", getElementType(e.List.ElementType))
-	case e.Map != nil:
-		if e.Map.CustomType != nil {
-			return fmt.Sprintf("%s{\nElemType: %s,\n}", e.Map.CustomType.Type, getElementType(e.Map.ElementType))
-		}
-		return fmt.Sprintf("types.MapType{\nElemType: %s,\n}", getElementType(e.Map.ElementType))
-	case e.Number != nil:
-		if e.Number.CustomType != nil {
-			return e.Number.CustomType.Type
-		}
-		return "types.NumberType"
-	case e.Object != nil:
-		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", getAttrTypes(e.Object))
-	case e.Set != nil:
-		if e.Set.CustomType != nil {
-			return fmt.Sprintf("%s{\nElemType: %s,\n}", e.Set.CustomType.Type, getElementType(e.Set.ElementType))
-		}
-		return fmt.Sprintf("types.SetType{\nElemType: %s,\n}", getElementType(e.Set.ElementType))
-	case e.String != nil:
-		if e.String.CustomType != nil {
-			return e.String.CustomType.Type
-		}
-		return "types.StringType"
-	}
-
-	return ""
-}
-
-func getElementTypeImports(e specschema.ElementType, imports map[string]struct{}) map[string]struct{} {
-	switch {
-	case e.Bool != nil:
-		if e.Bool.CustomType != nil && e.Bool.CustomType.HasImport() {
-			imports[*e.Bool.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[typesImport] = struct{}{}
-		return imports
-	case e.Float64 != nil:
-		if e.Float64.CustomType != nil && e.Float64.CustomType.HasImport() {
-			imports[*e.Float64.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[typesImport] = struct{}{}
-		return imports
-	case e.Int64 != nil:
-		if e.Int64.CustomType != nil && e.Int64.CustomType.HasImport() {
-			imports[*e.Int64.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[typesImport] = struct{}{}
-		return imports
-	case e.List != nil:
-		return getElementTypeImports(e.List.ElementType, imports)
-	case e.Map != nil:
-		return getElementTypeImports(e.Map.ElementType, imports)
-	case e.Number != nil:
-		if e.Number.CustomType != nil && e.Number.CustomType.HasImport() {
-			imports[*e.Number.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[typesImport] = struct{}{}
-		return imports
-	case e.Object != nil:
-		return getAttrTypesImports(e.Object, imports)
-	case e.Set != nil:
-		return getElementTypeImports(e.Set.ElementType, imports)
-	case e.String != nil:
-		if e.String.CustomType != nil && e.String.CustomType.HasImport() {
-			imports[*e.String.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[typesImport] = struct{}{}
-		return imports
-	default:
-		return imports
-	}
 }

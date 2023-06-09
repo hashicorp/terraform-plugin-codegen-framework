@@ -9,6 +9,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 func TestGeneratorNumberAttribute_Imports(t *testing.T) {
@@ -91,7 +93,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				validatorImport: {},
+				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},

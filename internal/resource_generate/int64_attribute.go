@@ -10,6 +10,8 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 type GeneratorInt64Attribute struct {
@@ -65,7 +67,7 @@ func (g GeneratorInt64Attribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 

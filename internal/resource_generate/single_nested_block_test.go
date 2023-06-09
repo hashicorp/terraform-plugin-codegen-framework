@@ -9,6 +9,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
@@ -56,8 +58,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				typesImport: {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"nested-attribute-list-with-custom-type": {
@@ -71,7 +72,6 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -93,7 +93,6 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -112,9 +111,8 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				attrImport:  {},
-				typesImport: {},
+				generatorschema.AttrImport:  {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"nested-attribute-object-with-custom-type": {
@@ -128,7 +126,6 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -153,7 +150,6 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -169,7 +165,6 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_block": {},
 			},
 		},
@@ -219,7 +214,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				validatorImport: {},
+				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
@@ -270,7 +265,6 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-
 				planModifierImport: {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},

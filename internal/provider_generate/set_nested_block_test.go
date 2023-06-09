@@ -9,6 +9,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
@@ -94,7 +96,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/attribute": {},
 			},
 		},
@@ -127,8 +128,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				typesImport: {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"nested-attribute-list-with-custom-type": {
@@ -144,7 +144,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -168,7 +167,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -189,9 +187,8 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				attrImport:  {},
-				typesImport: {},
+				generatorschema.AttrImport:  {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"nested-attribute-object-with-custom-type": {
@@ -207,7 +204,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -234,7 +230,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -252,7 +247,6 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/nested_block": {},
 			},
 		},
@@ -302,7 +296,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				validatorImport: {},
+				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
@@ -365,7 +359,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				validatorImport: {},
+				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},

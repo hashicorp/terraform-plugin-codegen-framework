@@ -9,6 +9,8 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 type GeneratorListNestedBlock struct {
@@ -50,7 +52,7 @@ func (g GeneratorListNestedBlock) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 
@@ -63,7 +65,7 @@ func (g GeneratorListNestedBlock) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 

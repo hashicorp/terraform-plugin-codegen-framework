@@ -9,6 +9,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 func TestGeneratorObjectAttribute_Imports(t *testing.T) {
@@ -65,9 +67,8 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				attrImport:  {},
-				typesImport: {},
+				generatorschema.AttrImport:  {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"object-with-attr-type-bool-with-import": {
@@ -84,7 +85,6 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -121,12 +121,11 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/element":         {},
 				"github.com/my_account/my_project/another_element": {},
 				"github.com/my_account/my_project/list":            {},
-				attrImport:                                         {},
-				typesImport:                                        {},
+				generatorschema.AttrImport:                         {},
+				generatorschema.TypesImport:                        {},
 			},
 		},
 		"validator-custom-nil": {
@@ -175,7 +174,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				validatorImport: {},
+				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
@@ -226,7 +225,6 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-
 				planModifierImport: {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
@@ -269,7 +267,6 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},

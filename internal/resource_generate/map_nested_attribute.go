@@ -9,6 +9,8 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 type GeneratorMapNestedAttribute struct {
@@ -65,7 +67,7 @@ func (g GeneratorMapNestedAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 
@@ -97,7 +99,7 @@ func (g GeneratorMapNestedAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 

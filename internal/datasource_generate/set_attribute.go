@@ -9,6 +9,8 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 type GeneratorSetAttribute struct {
@@ -23,8 +25,7 @@ type GeneratorSetAttribute struct {
 // will be used if it is not nil. If CustomType.Import is nil then no import will be
 // specified as it is assumed that the CustomType.Type and CustomType.ValueType will
 // be accessible from the same package that the schema.Schema for the data source is
-// defined in.  Further
-// imports are retrieved by calling getElementTypeImports.
+// defined in.
 func (g GeneratorSetAttribute) Imports() map[string]struct{} {
 	imports := make(map[string]struct{})
 
@@ -34,7 +35,7 @@ func (g GeneratorSetAttribute) Imports() map[string]struct{} {
 		}
 	}
 
-	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))
+	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType, make(map[string]struct{}))
 
 	for k := range elemTypeImports {
 		imports[k] = struct{}{}
@@ -49,7 +50,7 @@ func (g GeneratorSetAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 
@@ -107,7 +108,7 @@ func (g GeneratorSetAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorSetAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getElementType": getElementType,
+		"getElementType": generatorschema.GetElementType,
 	}
 
 	t, err := template.New("set_attribute").Funcs(funcMap).Parse(setAttributeGoTemplate)

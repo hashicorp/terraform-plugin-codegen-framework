@@ -10,6 +10,8 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	generatorschema "github/hashicorp/terraform-provider-code-generator/internal/schema"
 )
 
 func TestGeneratorListAttribute_Imports(t *testing.T) {
@@ -53,8 +55,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				typesImport: {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"elem-type-bool-with-import": {
@@ -68,7 +69,6 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -83,8 +83,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				typesImport: {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"elem-type-list-bool-with-import": {
@@ -102,7 +101,6 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -126,9 +124,8 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				attrImport:  {},
-				typesImport: {},
+				generatorschema.AttrImport:  {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"elem-type-object-bool-with-import": {
@@ -147,7 +144,6 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -171,9 +167,8 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
-				attrImport:  {},
-				typesImport: {},
+				generatorschema.AttrImport:                 {},
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -223,7 +218,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				validatorImport: {},
+				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
@@ -274,7 +269,6 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-
 				planModifierImport: {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
@@ -317,7 +311,6 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},
