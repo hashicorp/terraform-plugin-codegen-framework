@@ -774,6 +774,186 @@ ElementType: types.StringType,
 Default: my_list_default.Default(),
 },`,
 		},
+
+		"element-type-bool-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{
+						CustomType: &specschema.CustomType{
+							Type: "boolCustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: boolCustomType,
+},`,
+		},
+
+		"element-type-float64-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Float64: &specschema.Float64Type{
+						CustomType: &specschema.CustomType{
+							Type: "float64CustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: float64CustomType,
+},`,
+		},
+
+		"element-type-int64-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Int64: &specschema.Int64Type{
+						CustomType: &specschema.CustomType{
+							Type: "int64CustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: int64CustomType,
+},`,
+		},
+
+		"element-type-list-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						CustomType: &specschema.CustomType{
+							Type: "customListType",
+						},
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Type: "customBoolType",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: customListType{
+ElemType: customBoolType,
+},
+},`,
+		},
+
+		"element-type-map-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Map: &specschema.MapType{
+						CustomType: &specschema.CustomType{
+							Type: "customMapType",
+						},
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Type: "customBoolType",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: customMapType{
+ElemType: customBoolType,
+},
+},`,
+		},
+
+		"element-type-number-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Number: &specschema.NumberType{
+						CustomType: &specschema.CustomType{
+							Type: "numberCustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: numberCustomType,
+},`,
+		},
+
+		"element-type-object-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "bool",
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Type: "customBoolType",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: types.ObjectType{
+AttrTypes: map[string]attr.Type{
+"bool": customBoolType,
+},
+},
+},`,
+		},
+
+		"element-type-set-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Set: &specschema.SetType{
+						CustomType: &specschema.CustomType{
+							Type: "customSetType",
+						},
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Type: "customBoolType",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: customSetType{
+ElemType: customBoolType,
+},
+},`,
+		},
+
+		"element-type-string-custom": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{
+						CustomType: &specschema.CustomType{
+							Type: "stringCustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+ElementType: stringCustomType,
+},`,
+		},
 	}
 
 	for name, testCase := range testCases {

@@ -617,6 +617,186 @@ my_other_validator.Validate(),
 },
 },`,
 		},
+
+		"element-type-bool-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{
+						CustomType: &specschema.CustomType{
+							Type: "boolCustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: boolCustomType,
+},`,
+		},
+
+		"element-type-float64-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Float64: &specschema.Float64Type{
+						CustomType: &specschema.CustomType{
+							Type: "float64CustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: float64CustomType,
+},`,
+		},
+
+		"element-type-int64-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Int64: &specschema.Int64Type{
+						CustomType: &specschema.CustomType{
+							Type: "int64CustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: int64CustomType,
+},`,
+		},
+
+		"element-type-list-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						CustomType: &specschema.CustomType{
+							Type: "customListType",
+						},
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Type: "customBoolType",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: customListType{
+ElemType: customBoolType,
+},
+},`,
+		},
+
+		"element-type-map-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Map: &specschema.MapType{
+						CustomType: &specschema.CustomType{
+							Type: "customMapType",
+						},
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Type: "customBoolType",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: customMapType{
+ElemType: customBoolType,
+},
+},`,
+		},
+
+		"element-type-number-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Number: &specschema.NumberType{
+						CustomType: &specschema.CustomType{
+							Type: "numberCustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: numberCustomType,
+},`,
+		},
+
+		"element-type-object-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "bool",
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Type: "customBoolType",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: types.ObjectType{
+AttrTypes: map[string]attr.Type{
+"bool": customBoolType,
+},
+},
+},`,
+		},
+
+		"element-type-set-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Set: &specschema.SetType{
+						CustomType: &specschema.CustomType{
+							Type: "customSetType",
+						},
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Type: "customBoolType",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: customSetType{
+ElemType: customBoolType,
+},
+},`,
+		},
+
+		"element-type-string-custom": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{
+						CustomType: &specschema.CustomType{
+							Type: "stringCustomType",
+						},
+					},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+ElementType: stringCustomType,
+},`,
+		},
 	}
 
 	for name, testCase := range testCases {

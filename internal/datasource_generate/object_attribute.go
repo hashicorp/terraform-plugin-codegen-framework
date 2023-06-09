@@ -154,23 +154,55 @@ func getAttrTypes(attrTypes []specschema.ObjectAttributeType) string {
 
 		switch {
 		case v.Bool != nil:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.BoolType,", v.Name))
+			if v.Bool.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": %s,", v.Name, v.Bool.CustomType.Type))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": types.BoolType,", v.Name))
+			}
 		case v.Float64 != nil:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.Float64Type,", v.Name))
+			if v.Float64.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": %s,", v.Name, v.Float64.CustomType.Type))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": types.Float64Type,", v.Name))
+			}
 		case v.Int64 != nil:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.Int64Type,", v.Name))
+			if v.Int64.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": %s,", v.Name, v.Int64.CustomType.Type))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": types.Int64Type,", v.Name))
+			}
 		case v.List != nil:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.ListType{\nElemType: %s,\n},", v.Name, getElementType(v.List.ElementType)))
+			if v.List.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": %s{\nElemType: %s,\n},", v.Name, v.List.CustomType.Type, getElementType(v.List.ElementType)))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": types.ListType{\nElemType: %s,\n},", v.Name, getElementType(v.List.ElementType)))
+			}
 		case v.Map != nil:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.MapType{\nElemType: %s,\n},", v.Name, getElementType(v.Map.ElementType)))
+			if v.Map.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": %s{\nElemType: %s,\n},", v.Name, v.Map.CustomType.Type, getElementType(v.Map.ElementType)))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": types.MapType{\nElemType: %s,\n},", v.Name, getElementType(v.Map.ElementType)))
+			}
 		case v.Number != nil:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.NumberType,", v.Name))
+			if v.Number.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": %s,", v.Name, v.Number.CustomType.Type))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": types.NumberType,", v.Name))
+			}
 		case v.Object != nil:
 			aTypes.WriteString(fmt.Sprintf("\"%s\": types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n},", v.Name, getAttrTypes(v.Object)))
 		case v.Set != nil:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.SetType{\nElemType: %s,\n},", v.Name, getElementType(v.Set.ElementType)))
+			if v.Set.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": %s{\nElemType: %s,\n},", v.Name, v.Set.CustomType.Type, getElementType(v.Set.ElementType)))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": types.SetType{\nElemType: %s,\n},", v.Name, getElementType(v.Set.ElementType)))
+			}
 		case v.String != nil:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.StringType,", v.Name))
+			if v.String.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": %s,", v.Name, v.String.CustomType.Type))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("\"%s\": types.StringType,", v.Name))
+			}
 		}
 	}
 
