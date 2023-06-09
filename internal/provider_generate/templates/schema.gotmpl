@@ -3,20 +3,18 @@
 package provider
 
 import (
-    "context"
-
-    "github.com/hashicorp/terraform-plugin-framework/provider"
     "github.com/hashicorp/terraform-plugin-framework/provider/schema"
-    "github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (e *{{.Name}}Provider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
-    resp.Schema = schema.Schema{
-        Attributes: map[string]schema.Attribute{
-			{{- getAttributes .GeneratorProviderSchema.Attributes}}
-        },
-        Blocks: map[string]schema.Block{
-            {{- getBlocks .GeneratorProviderSchema.Blocks}}
-        },
-    }
+var {{.Name}}ProviderSchema = schema.Schema{
+{{- if gt (len .GeneratorProviderSchema.Attributes) 0 }}
+    Attributes: map[string]schema.Attribute{
+        {{- getAttributes .GeneratorProviderSchema.Attributes}}
+    },
+{{- end}}
+{{- if gt (len .GeneratorProviderSchema.Blocks) 0 }}
+    Blocks: map[string]schema.Block{
+        {{- getBlocks .GeneratorProviderSchema.Blocks}}
+    },
+{{- end}}
 }
