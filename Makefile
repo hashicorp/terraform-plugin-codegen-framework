@@ -11,4 +11,10 @@ test:
 generate:
 	cd tools; go generate ./...
 
+# Regenerate testdata folder
+testdata:
+	go run . all \
+		-input ./internal/cmd/testdata/basic/ir.json \
+		-output ./internal/cmd/testdata/basic/
+
 .PHONY: lint fmt test
