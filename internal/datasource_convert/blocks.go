@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/datasource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
 )
 
 func convertBlock(b datasource.Block) (datasource_generate.GeneratorBlock, error) {

@@ -1,4 +1,4 @@
-module github/hashicorp/terraform-provider-code-generator
+module github.com/hashicorp/terraform-plugin-codegen-framework
 
 go 1.20
 

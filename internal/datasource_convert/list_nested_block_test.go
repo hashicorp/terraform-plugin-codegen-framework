@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/datasource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
 )
 
 func TestConvertListNestedBlock(t *testing.T) {

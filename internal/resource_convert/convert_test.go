@@ -15,7 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/resource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
 )
 
 func pointer[T any](in T) *T {

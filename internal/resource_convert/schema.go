@@ -6,7 +6,7 @@ package resource_convert
 import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/resource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
 )
 
 func convertSchema(d resource.Resource) (resource_generate.GeneratorResourceSchema, error) {

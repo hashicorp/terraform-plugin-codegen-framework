@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 )
 
 func convertBlock(b provider.Block) (provider_generate.GeneratorBlock, error) {

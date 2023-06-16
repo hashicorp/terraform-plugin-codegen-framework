@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/datasource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
 )
 
 func convertSetNestedAttribute(a *datasource.SetNestedAttribute) (datasource_generate.GeneratorSetNestedAttribute, error) {
