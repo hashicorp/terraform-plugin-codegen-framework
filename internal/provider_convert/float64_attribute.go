@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 )
 
 func convertFloat64Attribute(a *provider.Float64Attribute) (provider_generate.GeneratorFloat64Attribute, error) {

@@ -11,17 +11,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/mitchellh/cli"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/config"
-	"github/hashicorp/terraform-provider-code-generator/internal/datasource_convert"
-	"github/hashicorp/terraform-provider-code-generator/internal/datasource_generate"
-	"github/hashicorp/terraform-provider-code-generator/internal/format"
-	"github/hashicorp/terraform-provider-code-generator/internal/input"
-	"github/hashicorp/terraform-provider-code-generator/internal/output"
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_convert"
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
-	"github/hashicorp/terraform-provider-code-generator/internal/resource_convert"
-	"github/hashicorp/terraform-provider-code-generator/internal/resource_generate"
-	"github/hashicorp/terraform-provider-code-generator/internal/validate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/config"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_convert"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_convert"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_convert"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
 
 //go:generate go run main.go

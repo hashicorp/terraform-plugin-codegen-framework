@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 )
 
 type converter struct {

@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/resource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
 )
 
 func convertInt64Attribute(a *resource.Int64Attribute) (resource_generate.GeneratorInt64Attribute, error) {

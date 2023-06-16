@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/resource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
 )
 
 func convertAttribute(a resource.Attribute) (resource_generate.GeneratorAttribute, error) {
