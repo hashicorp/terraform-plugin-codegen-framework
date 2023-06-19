@@ -6,7 +6,7 @@ package provider_convert
 import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 )
 
 func convertSchema(d *provider.Provider) (provider_generate.GeneratorProviderSchema, error) {

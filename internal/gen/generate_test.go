@@ -12,7 +12,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/format"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 )
 
 func TestDataSourcesModels(t *testing.T) {

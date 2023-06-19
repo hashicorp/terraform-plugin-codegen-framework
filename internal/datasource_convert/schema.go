@@ -6,7 +6,7 @@ package datasource_convert
 import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/datasource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
 )
 
 func convertSchema(d datasource.DataSource) (datasource_generate.GeneratorDataSourceSchema, error) {

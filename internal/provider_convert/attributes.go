@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 )
 
 func convertAttribute(a provider.Attribute) (provider_generate.GeneratorAttribute, error) {
