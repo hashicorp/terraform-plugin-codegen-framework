@@ -9,7 +9,7 @@ import (
 
 	"github.com/mitchellh/cli"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/cmd"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 )
 
 func main() {
