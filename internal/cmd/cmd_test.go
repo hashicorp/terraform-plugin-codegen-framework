@@ -4,12 +4,12 @@
 package cmd_test
 
 import (
-	"github/hashicorp/terraform-provider-code-generator/internal/cmd"
 	"os"
 	"path"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 	"github.com/mitchellh/cli"
 )
 
