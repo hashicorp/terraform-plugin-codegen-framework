@@ -16,6 +16,8 @@ import (
 type GeneratorSingleNestedBlock struct {
 	schema.SingleNestedBlock
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	Attributes map[string]GeneratorAttribute
 	Blocks     map[string]GeneratorBlock
 	CustomType *specschema.CustomType

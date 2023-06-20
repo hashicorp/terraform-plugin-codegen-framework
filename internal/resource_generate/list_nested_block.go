@@ -16,6 +16,8 @@ import (
 type GeneratorListNestedBlock struct {
 	schema.ListNestedBlock
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	NestedObject  GeneratorNestedBlockObject
 	PlanModifiers []specschema.ListPlanModifier
