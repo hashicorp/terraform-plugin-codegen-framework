@@ -100,7 +100,7 @@ func getImports(schema GeneratorDataSourceSchema) (string, error) {
 	}
 
 	for a := range imports {
-		s.WriteString(fmt.Sprintf("\"%s\"\n", a))
+		s.WriteString(fmt.Sprintf("%q\n", a))
 	}
 
 	return s.String(), nil
