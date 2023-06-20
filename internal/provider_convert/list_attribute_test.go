@@ -12,7 +12,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 )
 
 func TestConvertListAttribute(t *testing.T) {

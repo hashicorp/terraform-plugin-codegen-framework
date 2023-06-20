@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
-	"github/hashicorp/terraform-provider-code-generator/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 )
 
 func convertSetNestedBlock(b *provider.SetNestedBlock) (provider_generate.GeneratorSetNestedBlock, error) {
