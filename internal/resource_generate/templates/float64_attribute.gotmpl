@@ -13,7 +13,9 @@ PlanModifiers: []planmodifier.Float64{
 {{- if $value.Validators }}
 Validators: []validator.Float64{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end }}

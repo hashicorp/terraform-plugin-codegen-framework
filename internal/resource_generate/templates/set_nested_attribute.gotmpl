@@ -28,7 +28,9 @@ PlanModifiers: []planmodifier.Set{
 {{- if $value.Validators }}
 Validators: []validator.Set{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end}}
