@@ -35,12 +35,13 @@ var includeFlags stringsFlags
 func New(args []string) (Config, error) {
 	var i, o, s string
 
-	flag.StringVar(&i, "input", "", "Path to intermediate representation")
-	flag.StringVar(&o, "output", "", "Directory for generated code files")
-	flag.StringVar(&s, "schema", "", "Path or URL to intermediate representation JSON schema")
-	flag.Var(&includeFlags, "include", "Specify which data sources, provider and resources to include on the basis of name")
+	fs := flag.NewFlagSet("all", flag.ExitOnError)
+	fs.StringVar(&i, "input", "", "Path to intermediate representation")
+	fs.StringVar(&o, "output", "", "Directory for generated code files")
+	fs.StringVar(&s, "schema", "", "Path or URL to intermediate representation JSON schema")
+	fs.Var(&includeFlags, "include", "Specify which data sources, provider and resources to include on the basis of name")
 
-	err := flag.CommandLine.Parse(args)
+	err := fs.Parse(args)
 	if err != nil {
 		return Config{}, err
 	}
