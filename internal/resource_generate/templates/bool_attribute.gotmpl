@@ -4,7 +4,9 @@
 {{- if $value.PlanModifiers }}
 PlanModifiers: []planmodifier.Bool{
 {{- range $planmodifier := .PlanModifiers}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end }}

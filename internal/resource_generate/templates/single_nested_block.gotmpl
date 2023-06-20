@@ -14,7 +14,9 @@ Blocks: map[string]schema.Block{
 {{- if $value.PlanModifiers }}
 PlanModifiers: []planmodifier.Object{
 {{- range $planmodifier := .PlanModifiers}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end }}

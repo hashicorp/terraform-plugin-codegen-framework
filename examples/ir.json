@@ -1,82 +1,89 @@
 {
   "datasources": [
     {
-      "name": "example",
+      "name": "datasource",
       "schema": {
         "attributes": [
           {
             "name": "bool_attribute",
             "bool": {
-              "computed_optional_required": "optional",
-              "custom_type": {
-                "import": "github.com/my_account/my_project/boolattribute",
-                "type": "my_boolattribute_type",
-                "value_type": "my_boolattribute_value_type"
-              },
-              "sensitive": true,
-              "validators": [
-                {
-                  "custom": {
-                    "import": "github.com/.../myvalidator",
-                    "schema_definition": "myvalidator.Validate()"
-                  }
-                }
-              ]
+              "computed_optional_required": "computed"
             }
           },
           {
-            "name": "list_attribute",
+            "name": "list_list_attribute",
             "list": {
               "computed_optional_required": "computed",
               "element_type": {
                 "list": {
-                  "string": {
-                    "custom_type": {
-                      "import": "github.com/my_account/my_project/string",
-                      "type": "my_string_type",
-                      "value_type": "my_string_value_type"
-                    }
-                  }
+                  "string":{}
                 }
               }
             }
           },
           {
-            "name": "list_nested_attribute",
-            "list_nested": {
-              "nested_object": {
-                "attributes": [
+            "name": "list_map_attribute",
+            "list": {
+              "computed_optional_required": "computed",
+              "element_type": {
+                "map": {
+                  "string": {}
+                }
+              }
+            }
+          },
+          {
+            "name": "list_object_attribute",
+            "list": {
+              "computed_optional_required": "computed",
+              "element_type": {
+                "object": [
                   {
-                    "name": "nested_bool_attribute",
-                    "bool": {
-                      "computed_optional_required": "optional"
-                    }
-                  },
-                  {
-                    "name": "nested_list_attribute",
-                    "list": {
-                      "computed_optional_required": "computed",
-                      "element_type": {
-                        "string": {}
-                      }
-                    }
+                    "name": "obj_string_attr",
+                    "string": {}
                   }
                 ]
-              },
-              "computed_optional_required": "optional"
+              }
+            }
+          },
+          {
+            "name": "list_object_object_attribute",
+            "list": {
+              "computed_optional_required": "computed",
+              "element_type": {
+                "object": [
+                  {
+                    "name": "obj_obj_attr",
+                    "object": [
+                      {
+                        "name": "obj_obj_string_attr",
+                        "string": {}
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "object_attribute",
             "object": {
-              "computed_optional_required": "required",
+              "computed_optional_required": "computed",
               "attribute_types": [
                 {
-                  "name": "obj_bool",
-                  "bool": {}
-                },
+                  "name": "obj_string_attr",
+                  "string": {}
+                }
+              ]
+            }
+          },
+          {
+            "name": "object_list_attribute",
+            "object": {
+              "computed_optional_required": "computed",
+              "attribute_types": [
                 {
-                  "name": "obj_list",
+                  "name": "obj_list_attr",
                   "list": {
                     "string": {}
                   }
@@ -85,51 +92,59 @@
             }
           },
           {
-            "name": "single_nested_attribute",
-            "single_nested": {
-              "attributes": [
+            "name": "object_list_object_attribute",
+            "object": {
+              "computed_optional_required": "computed",
+              "attribute_types": [
                 {
-                  "name": "nested_bool_attribute",
-                  "bool": {
-                    "computed_optional_required": "optional"
-                  }
-                },
-                {
-                  "name": "nested_list_attribute",
+                  "name": "obj_list_attr",
                   "list": {
-                    "computed_optional_required": "computed",
-                    "element_type": {
-                      "string": {}
-                    }
+                    "object": [
+                      {
+                        "name": "obj_list_obj_attr",
+                        "string": {}
+                      }
+                    ]
                   }
                 }
-              ],
-              "associated_external_type": {
-                "import": "example.com/apisdk",
-                "type": "*apisdk.ExampleSingleNested"
-              },
-              "computed_optional_required": "optional"
+              ]
             }
-          }
-        ],
-        "blocks": [
+          },
           {
-            "name": "list_nested_block",
+            "name": "list_nested_bool_attribute",
             "list_nested": {
+              "computed_optional_required": "computed",
               "nested_object": {
                 "attributes": [
                   {
-                    "name": "nested_bool_attribute",
+                    "name": "bool_attribute",
                     "bool": {
-                      "computed_optional_required": "optional"
+                      "computed_optional_required": "computed"
                     }
-                  },
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "list_nested_list_nested_bool_attribute",
+            "list_nested": {
+              "computed_optional_required": "computed",
+              "nested_object": {
+                "attributes": [
                   {
-                    "name": "nested_list_attribute",
-                    "list": {
+                    "name": "list_nested_attribute",
+                    "list_nested": {
                       "computed_optional_required": "computed",
-                      "element_type": {
-                        "string": {}
+                      "nested_object": {
+                        "attributes": [
+                          {
+                            "name": "bool_attribute",
+                            "bool": {
+                              "computed_optional_required": "computed"
+                            }
+                          }
+                        ]
                       }
                     }
                   }
@@ -138,21 +153,247 @@
             }
           },
           {
-            "name": "single_nested_block",
+            "name": "list_nested_list_nested_list_attribute",
+            "list_nested": {
+              "computed_optional_required": "computed",
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "list_nested_attribute",
+                    "list_nested": {
+                      "computed_optional_required": "computed",
+                      "nested_object": {
+                        "attributes": [
+                          {
+                            "name": "list_attribute",
+                            "list": {
+                              "computed_optional_required": "computed",
+                              "element_type": {
+                                "string": {}
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "single_nested_bool_attribute",
+            "single_nested": {
+              "associated_external_type": {
+                "import": "example.com/apisdk",
+                "type": "*apisdk.DataSourceProperty"
+              },
+              "attributes": [
+                {
+                  "name": "bool_attribute",
+                  "bool": {
+                    "computed_optional_required": "computed"
+                  }
+                }
+              ],
+              "computed_optional_required": "computed"
+            }
+          },
+          {
+            "name": "single_nested_single_nested_bool_attribute",
             "single_nested": {
               "attributes": [
                 {
-                  "name": "nested_bool_attribute",
-                  "bool": {
-                    "computed_optional_required": "optional"
+                  "name": "single_nested_attribute",
+                  "single_nested": {
+                    "attributes": [
+                      {
+                        "name": "bool_attribute",
+                        "bool": {
+                          "computed_optional_required": "computed"
+                        }
+                      }
+                    ],
+                    "computed_optional_required": "computed"
                   }
-                },
+                }
+              ],
+              "computed_optional_required": "computed"
+            }
+          },
+          {
+            "name": "single_nested_single_nested_list_attribute",
+            "single_nested": {
+              "attributes": [
                 {
-                  "name": "nested_list_attribute",
-                  "list": {
+                  "name": "single_nested_attribute",
+                  "single_nested": {
+                    "attributes": [
+                      {
+                        "name": "list_attribute",
+                        "list": {
+                          "computed_optional_required": "computed",
+                          "element_type": {
+                            "string": {}
+                          }
+                        }
+                      }
+                    ],
+                    "computed_optional_required": "computed"
+                  }
+                }
+              ],
+              "computed_optional_required": "computed"
+            }
+          }
+        ],
+        "blocks": [
+          {
+            "name": "list_nested_block_bool_attribute",
+            "list_nested": {
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "bool_attribute",
+                    "bool": {
+                      "computed_optional_required": "computed"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "list_nested_list_nested_block_bool_attribute",
+            "list_nested": {
+              "nested_object": {
+                "blocks": [
+                  {
+                    "name": "list_nested_block",
+                    "list_nested": {
+                      "nested_object": {
+                        "attributes": [
+                          {
+                            "name": "bool_attribute",
+                            "bool": {
+                              "computed_optional_required": "computed"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "list_nested_block_object_attribute_list_nested_nested_block_list_attribute",
+            "list_nested": {
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "object_attribute",
+                    "object": {
+                      "computed_optional_required": "computed",
+                      "attribute_types": [
+                        {
+                          "name": "obj_string_attr",
+                          "string": {}
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "blocks": [
+                  {
+                    "name": "list_nested_block",
+                    "list_nested": {
+                      "nested_object": {
+                        "attributes": [
+                          {
+                            "name": "list_attribute",
+                            "list": {
+                              "computed_optional_required": "computed",
+                              "element_type": {
+                                "string": {}
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "single_nested_block_bool_attribute",
+            "single_nested": {
+              "attributes": [
+                {
+                  "name": "bool_attribute",
+                  "bool": {
+                    "computed_optional_required": "computed"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "single_nested_single_nested_block_bool_attribute",
+            "single_nested": {
+              "blocks": [
+                {
+                  "name": "single_nested_block",
+                  "single_nested": {
+                    "attributes": [
+                      {
+                        "name": "bool_attribute",
+                        "bool": {
+                          "computed_optional_required": "computed"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "single_nested_block_object_attribute_single_nested_list_nested_block_list_attribute",
+            "single_nested": {
+              "attributes": [
+                {
+                  "name": "object_attribute",
+                  "object": {
                     "computed_optional_required": "computed",
-                    "element_type": {
-                      "string": {}
+                    "attribute_types": [
+                      {
+                        "name": "obj_string_attr",
+                        "string": {}
+                      }
+                    ]
+                  }
+                }
+              ],
+              "blocks": [
+                {
+                  "name": "list_nested_block",
+                  "list_nested": {
+                    "nested_object": {
+                      "attributes": [
+                        {
+                          "name": "list_attribute",
+                          "list": {
+                            "computed_optional_required": "computed",
+                            "element_type": {
+                              "string": {}
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -164,11 +405,11 @@
     }
   ],
   "provider": {
-    "name": "example"
+    "name": "provider"
   },
   "resources": [
     {
-      "name": "example",
+      "name": "resource",
       "schema": {
         "attributes": [
           {
@@ -176,18 +417,29 @@
             "bool": {
               "computed_optional_required": "computed",
               "custom_type": {
-                "import": "github.com/",
-                "type": "my_type",
-                "value_type": "my_value_type"
+                "import": "github.com/my_account_my_project/bool",
+                "type": "my_bool_type",
+                "value_type": "my_bool_value"
               },
               "default": {
                 "static": true
               },
               "plan_modifiers": [
                 {
+                  "requires_replace": {}
+                },
+                {
                   "custom": {
-                    "import": "github.com/.../myplanmodifier",
-                    "schema_definition": "myplanmodifier.Modify()"
+                    "import": "github.com/my_account/my_project/boolplanmodifier",
+                    "schema_definition": "myboolplanmodifier.Modify()"
+                  }
+                }
+              ],
+              "validators": [
+                {
+                  "custom": {
+                    "import": "github.com/my_account/my_project/myboolvalidator",
+                    "schema_definition": "myboolvalidator.Validate()"
                   }
                 }
               ]

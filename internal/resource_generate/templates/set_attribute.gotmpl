@@ -5,7 +5,9 @@ ElementType: {{ getElementType .ElementType}},
 {{- if $value.PlanModifiers }}
 PlanModifiers: []planmodifier.Set{
 {{- range $planmodifier := .PlanModifiers}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end }}
