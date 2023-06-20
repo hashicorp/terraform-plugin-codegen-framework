@@ -16,5 +16,8 @@ testdata:
 	go run . all \
 		-input ./internal/cmd/testdata/custom_and_external/ir.json \
 		-output ./internal/cmd/testdata/custom_and_external/output
+	go run . all \
+		-input ./internal/cmd/testdata/complex/ir.json \
+		-output ./internal/cmd/testdata/complex/output
 
 .PHONY: lint fmt test
