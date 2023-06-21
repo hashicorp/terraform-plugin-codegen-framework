@@ -16,6 +16,8 @@ import (
 type GeneratorObjectAttribute struct {
 	schema.ObjectAttribute
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	AttributeTypes []specschema.ObjectAttributeType
 	CustomType     *specschema.CustomType
 	Validators     []specschema.ObjectValidator

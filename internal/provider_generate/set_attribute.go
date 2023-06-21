@@ -16,6 +16,8 @@ import (
 type GeneratorSetAttribute struct {
 	schema.SetAttribute
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	CustomType  *specschema.CustomType
 	ElementType specschema.ElementType
 	Validators  []specschema.SetValidator

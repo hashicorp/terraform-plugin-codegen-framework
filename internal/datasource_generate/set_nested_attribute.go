@@ -16,6 +16,8 @@ import (
 type GeneratorSetNestedAttribute struct {
 	schema.SetNestedAttribute
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedAttributeObject
 	Validators   []specschema.SetValidator

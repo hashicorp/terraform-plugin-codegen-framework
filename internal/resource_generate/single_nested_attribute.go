@@ -16,6 +16,8 @@ import (
 type GeneratorSingleNestedAttribute struct {
 	schema.SingleNestedAttribute
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	Attributes    map[string]GeneratorAttribute
 	CustomType    *specschema.CustomType
 	Default       *specschema.ObjectDefault

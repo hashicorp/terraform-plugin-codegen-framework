@@ -7,14 +7,18 @@ Attributes: map[string]schema.Attribute{
 {{- if $value.PlanModifiers }}
 PlanModifiers: []planmodifier.Object{
 {{- range $planmodifier := .PlanModifiers}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end }}
 {{- if $value.Validators }}
 Validators: []validator.Bool{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end}}

@@ -7,7 +7,9 @@ Attributes: map[string]schema.Attribute{
 {{- if gt (len $value.Validators) 0 }}
 Validators: []validator.Bool{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end}}

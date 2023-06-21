@@ -26,14 +26,18 @@ Validators: []validator.Object{
 {{- if $value.PlanModifiers }}
 PlanModifiers: []planmodifier.Set{
 {{- range $planmodifier := .PlanModifiers}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end }}
 {{- if $value.Validators }}
 Validators: []validator.Set{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end}}

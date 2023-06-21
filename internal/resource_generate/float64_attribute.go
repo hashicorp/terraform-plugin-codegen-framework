@@ -18,6 +18,8 @@ import (
 type GeneratorFloat64Attribute struct {
 	schema.Float64Attribute
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	Default       *specschema.Float64Default
 	PlanModifiers []specschema.Float64PlanModifier
