@@ -273,13 +273,34 @@ func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
 		expected      string
 		expectedError error
 	}{
+		"default": {
+			expected: "\nBoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+		},
+		"custom-type-nil": {
+			input: GeneratorBoolAttribute{
+				CustomType: nil,
+			},
+			expected: "\nBoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+		},
+		"custom-type-missing-value-type": {
+			input: GeneratorBoolAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: "\nBoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+		},
+		"custom-type-value-type-empty-string": {
+			input: GeneratorBoolAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: "\nBoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+		},
 		"custom-type": {
 			input: GeneratorBoolAttribute{
-				//CustomType: &specschema.CustomType{
-				//	ValueType: "my_custom_value_type",
-				//},
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
 			},
-			expected: "BoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+			expected: "\nBoolAttribute my_custom_value_type `tfsdk:\"bool_attribute\"`",
 		},
 	}
 
