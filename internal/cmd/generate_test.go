@@ -13,16 +13,16 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-func TestAllCommand(t *testing.T) {
+func TestGenerateAllCommand(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		irInputPath   string
 		goldenFileDir string
 	}{
-		"all - custom_and_external": {
-			irInputPath:   "testdata/all/custom_and_external/ir.json",
-			goldenFileDir: "testdata/all/custom_and_external/output",
+		"custom_and_external": {
+			irInputPath:   "testdata/custom_and_external/ir.json",
+			goldenFileDir: "testdata/custom_and_external/all_output",
 		},
 	}
 	for name, testCase := range testCases {
@@ -46,7 +46,124 @@ func TestAllCommand(t *testing.T) {
 
 			exitCode := c.Run(args)
 			if exitCode != 0 {
-				t.Fatalf("unexpected error running `all` cmd: %s", mockUi.ErrorWriter.String())
+				t.Fatalf("unexpected error running `generate all` cmd: %s", mockUi.ErrorWriter.String())
+			}
+
+			compareDirectories(t, testCase.goldenFileDir, testOutputDir)
+		})
+	}
+}
+
+func TestGenerateResourcesCommand(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		irInputPath   string
+		goldenFileDir string
+	}{
+		"custom_and_external": {
+			irInputPath:   "testdata/custom_and_external/ir.json",
+			goldenFileDir: "testdata/custom_and_external/resources_output",
+		},
+	}
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			testOutputDir := t.TempDir()
+			mockUi := cli.NewMockUi()
+			c := cmd.GenerateCommand{
+				UI:                mockUi,
+				GenerateResources: true,
+			}
+
+			args := []string{
+				"-input", testCase.irInputPath,
+				"-output", testOutputDir,
+			}
+
+			exitCode := c.Run(args)
+			if exitCode != 0 {
+				t.Fatalf("unexpected error running `generate resources` cmd: %s", mockUi.ErrorWriter.String())
+			}
+
+			compareDirectories(t, testCase.goldenFileDir, testOutputDir)
+		})
+	}
+}
+
+func TestGenerateDataSourcesCommand(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		irInputPath   string
+		goldenFileDir string
+	}{
+		"custom_and_external": {
+			irInputPath:   "testdata/custom_and_external/ir.json",
+			goldenFileDir: "testdata/custom_and_external/data_sources_output",
+		},
+	}
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			testOutputDir := t.TempDir()
+			mockUi := cli.NewMockUi()
+			c := cmd.GenerateCommand{
+				UI:                  mockUi,
+				GenerateDataSources: true,
+			}
+
+			args := []string{
+				"-input", testCase.irInputPath,
+				"-output", testOutputDir,
+			}
+
+			exitCode := c.Run(args)
+			if exitCode != 0 {
+				t.Fatalf("unexpected error running `generate data-sources` cmd: %s", mockUi.ErrorWriter.String())
+			}
+
+			compareDirectories(t, testCase.goldenFileDir, testOutputDir)
+		})
+	}
+}
+
+func TestGenerateProviderCommand(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		irInputPath   string
+		goldenFileDir string
+	}{
+		"custom_and_external": {
+			irInputPath:   "testdata/custom_and_external/ir.json",
+			goldenFileDir: "testdata/custom_and_external/provider_output",
+		},
+	}
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			testOutputDir := t.TempDir()
+			mockUi := cli.NewMockUi()
+			c := cmd.GenerateCommand{
+				UI:               mockUi,
+				GenerateProvider: true,
+			}
+
+			args := []string{
+				"-input", testCase.irInputPath,
+				"-output", testOutputDir,
+			}
+
+			exitCode := c.Run(args)
+			if exitCode != 0 {
+				t.Fatalf("unexpected error running `generate provider` cmd: %s", mockUi.ErrorWriter.String())
 			}
 
 			compareDirectories(t, testCase.goldenFileDir, testOutputDir)
