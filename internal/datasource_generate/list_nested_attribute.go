@@ -139,6 +139,36 @@ func (g GeneratorListNestedAttribute) ToString(name string) (string, error) {
 	return buf.String(), nil
 }
 
+func (g GeneratorListNestedAttribute) ToModel(name string) (string, error) {
+	funcMap := template.FuncMap{
+		"snakeCaseToCamelCase": snakeCaseToCamelCase,
+	}
+
+	t, err := template.New("attribute_model").Funcs(funcMap).Parse(attributeModelTmpl)
+	if err != nil {
+		return "", err
+	}
+
+	var buf strings.Builder
+
+	templateData := struct {
+		Name        string
+		DefaultType string
+		GeneratorListNestedAttribute
+	}{
+		Name:                         name,
+		DefaultType:                  "[]types.Object",
+		GeneratorListNestedAttribute: g,
+	}
+
+	err = t.Execute(&buf, templateData)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
 func (g GeneratorListNestedAttribute) listValidatorsEqual(x, y []specschema.ListValidator) bool {
 	if x == nil && y == nil {
 		return true

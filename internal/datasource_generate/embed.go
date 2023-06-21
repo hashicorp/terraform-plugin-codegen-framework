@@ -89,3 +89,6 @@ var datasourceModelTmpl string
 
 //go:embed model_templates/attribute_model.gotmpl
 var attributeModelTmpl string
+
+//go:embed model_templates/nested_model.gotmpl
+var nestedModelTmpl string

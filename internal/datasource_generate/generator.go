@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strings"
 	"text/template"
+	"unicode"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 )
@@ -138,7 +139,7 @@ func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
 func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	// Using sorted keys to guarantee block order as maps are unordered in Go.
 	var keys = make([]string, 0, len(blocks))
 
 	for k := range blocks {
@@ -362,10 +363,69 @@ func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSour
 			return nil, err
 		}
 
+		for attribName, a := range s.Attributes {
+			switch t := a.(type) {
+			case GeneratorListNestedAttribute:
+				model, err := nestedModel(attribName, t.NestedObject.Attributes, nil)
+				if err != nil {
+					return nil, err
+				}
+
+				buf.Write(model)
+			}
+		}
+
 		dataSourcesModels[k] = buf.Bytes()
 	}
 
 	return dataSourcesModels, nil
+}
+
+func nestedModel(attribName string, attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) ([]byte, error) {
+	var buf bytes.Buffer
+
+	funcMap := template.FuncMap{
+		"getModel": getModel,
+		"lcFirst":  lcFirst,
+	}
+
+	datasourceModelTemplate, err := template.New("nested_model.gotmpl").Funcs(funcMap).Parse(
+		nestedModelTmpl,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	templateData := struct {
+		Name string
+		GeneratorDataSourceSchema
+	}{
+		Name: attribName,
+		GeneratorDataSourceSchema: GeneratorDataSourceSchema{
+			Attributes: attributes,
+			Blocks:     blocks,
+		},
+	}
+
+	err = datasourceModelTemplate.Execute(&buf, templateData)
+	if err != nil {
+		return nil, err
+	}
+
+	for name, a := range attributes {
+		switch t := a.(type) {
+		case GeneratorListNestedAttribute:
+			model, err := nestedModel(name, t.NestedObject.Attributes, nil)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(model)
+		}
+	}
+
+	return buf.Bytes(), nil
+
 }
 
 // snakeCaseToCamelCase relies on the convention of using snake-case
@@ -395,30 +455,66 @@ func snakeCaseToCamelCase(input string) string {
 	return ucName
 }
 
-// TODO: Order to maintain same output
-func getModel(s GeneratorDataSourceSchema) (string, error) {
-	return getModelAttributes(s.Attributes)
-}
+func lcFirst(input string) string {
+	str := snakeCaseToCamelCase(input)
 
-func getModelAttributes(attributes map[string]GeneratorAttribute) (string, error) {
-	var s strings.Builder
-
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var keys = make([]string, 0, len(attributes))
-
-	for k := range attributes {
-		keys = append(keys, k)
+	for i, v := range str {
+		preparedStr := string(unicode.ToLower(v)) + str[i+1:]
+		return preparedStr
 	}
 
-	sort.Strings(keys)
+	return str
+}
 
-	for _, k := range keys {
+func getModel(s GeneratorDataSourceSchema) (string, error) {
+	return getModelAttributesAndBlocks(s.Attributes, s.Blocks)
+}
+
+func getModelAttributesAndBlocks(attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) (string, error) {
+	var s strings.Builder
+
+	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+	var attributeKeys = make([]string, 0, len(attributes))
+
+	for k := range attributes {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	for _, k := range attributeKeys {
 		if attributes[k] == nil {
 			continue
 		}
 
 		// TODO: Remove once implemented across all generator attributes and blocks
 		if m, ok := attributes[k].(GeneratorModel); ok {
+			str, err := m.ToModel(k)
+
+			if err != nil {
+				return "", err
+			}
+
+			s.WriteString(str)
+		}
+	}
+
+	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(blocks))
+
+	for k := range blocks {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	for _, k := range blockKeys {
+		if blocks[k] == nil {
+			continue
+		}
+
+		// TODO: Remove once implemented across all generator attributes and blocks
+		if m, ok := blocks[k].(GeneratorModel); ok {
 			str, err := m.ToModel(k)
 
 			if err != nil {
