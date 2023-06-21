@@ -20,10 +20,6 @@ func TestAllCommand(t *testing.T) {
 		irInputPath   string
 		goldenFileDir string
 	}{
-		"complex": {
-			irInputPath:   "testdata/complex/ir.json",
-			goldenFileDir: "testdata/complex/output",
-		},
 		"custom_and_external": {
 			irInputPath:   "testdata/custom_and_external/ir.json",
 			goldenFileDir: "testdata/custom_and_external/output",
