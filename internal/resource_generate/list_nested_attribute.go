@@ -9,16 +9,109 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorListNestedAttribute struct {
 	schema.ListNestedAttribute
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	Default       *specschema.ListDefault
 	NestedObject  GeneratorNestedAttributeObject
 	PlanModifiers []specschema.ListPlanModifier
 	Validators    []specschema.ListValidator
+}
+
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in.  The same
+// logic is applied to the NestedObject. Further imports are then retrieved by
+// calling Imports on each of the nested attributes.
+func (g GeneratorListNestedAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	}
+
+	if g.Default != nil {
+		if g.Default.Custom != nil && g.Default.Custom.HasImport() {
+			imports[*g.Default.Custom.Import] = struct{}{}
+		}
+	}
+
+	for _, v := range g.PlanModifiers {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[planModifierImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[generatorschema.ValidatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	if g.NestedObject.CustomType != nil {
+		if g.NestedObject.CustomType.HasImport() {
+			imports[*g.NestedObject.CustomType.Import] = struct{}{}
+		}
+	}
+
+	for _, v := range g.NestedObject.PlanModifiers {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[planModifierImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	for _, v := range g.NestedObject.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[generatorschema.ValidatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	for _, v := range g.NestedObject.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	return imports
 }
 
 func (g GeneratorListNestedAttribute) Equal(ga GeneratorAttribute) bool {

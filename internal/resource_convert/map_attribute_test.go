@@ -10,9 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
 )
@@ -28,12 +26,6 @@ func TestConvertMapAttribute(t *testing.T) {
 		"nil": {
 			expectedError: fmt.Errorf("*resource.MapAttribute is nil"),
 		},
-		"element-type-nil": {
-			input: &resource.MapAttribute{
-				ElementType: specschema.ElementType{},
-			},
-			expectedError: fmt.Errorf("element type is not defined: %+v", specschema.ElementType{}),
-		},
 		"element-type-bool": {
 			input: &resource.MapAttribute{
 				ElementType: specschema.ElementType{
@@ -41,8 +33,8 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.BoolType,
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{},
 				},
 			},
 		},
@@ -53,8 +45,8 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -69,9 +61,11 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ListType{
-						ElemType: types.StringType,
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							String: &specschema.StringType{},
+						},
 					},
 				},
 			},
@@ -87,9 +81,11 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.MapType{
-						ElemType: types.StringType,
+				ElementType: specschema.ElementType{
+					Map: &specschema.MapType{
+						ElementType: specschema.ElementType{
+							String: &specschema.StringType{},
+						},
 					},
 				},
 			},
@@ -110,11 +106,14 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ListType{
-						ElemType: types.ObjectType{
-							AttrTypes: map[string]attr.Type{
-								"str": types.StringType,
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Object: []specschema.ObjectAttributeType{
+								{
+									Name:   "str",
+									String: &specschema.StringType{},
+								},
 							},
 						},
 					},
@@ -133,10 +132,11 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"str": types.StringType,
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name:   "str",
+							String: &specschema.StringType{},
 						},
 					},
 				},
@@ -158,11 +158,14 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"list": types.ListType{
-								ElemType: types.StringType,
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "list",
+							List: &specschema.ListType{
+								ElementType: specschema.ElementType{
+									String: &specschema.StringType{},
+								},
 							},
 						},
 					},
@@ -178,8 +181,10 @@ func TestConvertMapAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					Computed:    true,
-					ElementType: types.StringType,
+					Computed: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -192,9 +197,11 @@ func TestConvertMapAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					Computed:    true,
-					Optional:    true,
-					ElementType: types.StringType,
+					Computed: true,
+					Optional: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -207,8 +214,10 @@ func TestConvertMapAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					Optional:    true,
-					ElementType: types.StringType,
+					Optional: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -221,8 +230,10 @@ func TestConvertMapAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					Required:    true,
-					ElementType: types.StringType,
+					Required: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -238,13 +249,13 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
-				},
 				CustomType: &specschema.CustomType{
 					Import:    pointer("github.com/"),
 					Type:      "my_type",
 					ValueType: "myvalue_type",
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -258,7 +269,9 @@ func TestConvertMapAttribute(t *testing.T) {
 			expected: resource_generate.GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
 					DeprecationMessage: "deprecation message",
-					ElementType:        types.StringType,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -273,7 +286,9 @@ func TestConvertMapAttribute(t *testing.T) {
 				MapAttribute: schema.MapAttribute{
 					Description:         "description",
 					MarkdownDescription: "description",
-					ElementType:         types.StringType,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -286,8 +301,10 @@ func TestConvertMapAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorMapAttribute{
 				MapAttribute: schema.MapAttribute{
-					Sensitive:   true,
-					ElementType: types.StringType,
+					Sensitive: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -306,8 +323,8 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 				Validators: []specschema.MapValidator{
 					{
@@ -334,8 +351,8 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 				PlanModifiers: []specschema.MapPlanModifier{
 					{
@@ -360,8 +377,8 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					ElementType: types.StringType,
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 				Default: &specschema.MapDefault{
 					Custom: &specschema.CustomDefault{

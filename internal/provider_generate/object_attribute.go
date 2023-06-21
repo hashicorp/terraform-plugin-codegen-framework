@@ -4,22 +4,61 @@
 package provider_generate
 
 import (
-	"fmt"
 	"strings"
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorObjectAttribute struct {
 	schema.ObjectAttribute
 
-	CustomType *specschema.CustomType
-	Validators []specschema.ObjectValidator
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
+	AttributeTypes []specschema.ObjectAttributeType
+	CustomType     *specschema.CustomType
+	Validators     []specschema.ObjectValidator
+}
+
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used.
+// The imports required for the object attribute types are retrieved by calling
+// getAttrTypesImports.
+func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	}
+
+	attrTypesImports := generatorschema.GetAttrTypesImports(g.AttributeTypes, make(map[string]struct{}))
+
+	for k := range attrTypesImports {
+		imports[k] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[generatorschema.ValidatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
 }
 
 func (g GeneratorObjectAttribute) Equal(ga GeneratorAttribute) bool {
@@ -41,7 +80,7 @@ func (g GeneratorObjectAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorObjectAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttrTypes": getAttrTypes,
+		"getAttrTypes": generatorschema.GetAttrTypes,
 	}
 
 	t, err := template.New("object_attribute").Funcs(funcMap).Parse(objectAttributeGoTemplate)
@@ -106,33 +145,4 @@ func (g GeneratorObjectAttribute) validatorsEqual(x, y []specschema.ObjectValida
 	}
 
 	return true
-}
-
-func getAttrTypes(attrTypes map[string]attr.Type) string {
-	var aTypes strings.Builder
-
-	for k, v := range attrTypes {
-		switch t := v.(type) {
-		case basetypes.BoolType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.BoolType,", k))
-		case basetypes.Float64Type:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.Float64Type,", k))
-		case basetypes.Int64Type:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.Int64Type,", k))
-		case types.ListType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.ListType{\nElemType: %s,\n},", k, getElementType(t.ElementType())))
-		case types.MapType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.MapType{\nElemType: %s,\n},", k, getElementType(t.ElementType())))
-		case basetypes.NumberType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.NumberType,", k))
-		case types.ObjectType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n},", k, getAttrTypes(t.AttrTypes)))
-		case types.SetType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.SetType{\nElemType: %s,\n},", k, getElementType(t.ElementType())))
-		case basetypes.StringType:
-			aTypes.WriteString(fmt.Sprintf("\"%s\": types.StringType,", k))
-		}
-	}
-
-	return aTypes.String()
 }

@@ -4,26 +4,85 @@
 package resource_generate
 
 import (
-	"fmt"
 	"strings"
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorListAttribute struct {
 	schema.ListAttribute
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	Default       *specschema.ListDefault
+	ElementType   specschema.ElementType
 	PlanModifiers []specschema.ListPlanModifier
 	Validators    []specschema.ListValidator
 }
 
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in. If CustomType is nil, then the datasourceSchemaImport will be used.
+func (g GeneratorListAttribute) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	}
+
+	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType, make(map[string]struct{}))
+
+	for k := range elemTypeImports {
+		imports[k] = struct{}{}
+	}
+
+	if g.Default != nil {
+		if g.Default.Custom != nil && g.Default.Custom.HasImport() {
+			imports[*g.Default.Custom.Import] = struct{}{}
+		}
+	}
+
+	for _, v := range g.PlanModifiers {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[planModifierImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[generatorschema.ValidatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
+}
+
+// Equal does not delegate to g.ListAttribute.Equal(h.ListAttribute) as the
+// call returns false owing to !a.GetType().Equal(b.GetType()) returning false
+// when the ElementType is nil.
 func (g GeneratorListAttribute) Equal(ga GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorListAttribute)
 	if !ok {
@@ -34,11 +93,39 @@ func (g GeneratorListAttribute) Equal(ga GeneratorAttribute) bool {
 		return false
 	}
 
+	if !elementTypeEqual(g.ElementType, h.ElementType) {
+		return false
+	}
+
 	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.ListAttribute.Equal(h.ListAttribute)
+	if g.Required != h.Required {
+		return false
+	}
+
+	if g.Optional != h.Optional {
+		return false
+	}
+
+	if g.Sensitive != h.Sensitive {
+		return false
+	}
+
+	if g.Description != h.Description {
+		return false
+	}
+
+	if g.MarkdownDescription != h.MarkdownDescription {
+		return false
+	}
+
+	if g.DeprecationMessage != h.DeprecationMessage {
+		return false
+	}
+
+	return true
 }
 
 func getListDefault(d specschema.ListDefault) string {
@@ -51,7 +138,7 @@ func getListDefault(d specschema.ListDefault) string {
 
 func (g GeneratorListAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getElementType": getElementType,
+		"getElementType": generatorschema.GetElementType,
 		"getListDefault": getListDefault,
 	}
 
@@ -117,29 +204,4 @@ func (g GeneratorListAttribute) validatorsEqual(x, y []specschema.ListValidator)
 	}
 
 	return true
-}
-
-func getElementType(elementType attr.Type) string {
-	switch t := elementType.(type) {
-	case basetypes.BoolType:
-		return "types.BoolType"
-	case basetypes.Float64Type:
-		return "types.Float64Type"
-	case basetypes.Int64Type:
-		return "types.Int64Type"
-	case types.ListType:
-		return fmt.Sprintf("types.ListType{\nElemType: %s,\n}", getElementType(t.ElementType()))
-	case types.MapType:
-		return fmt.Sprintf("types.MapType{\nElemType: %s,\n}", getElementType(t.ElementType()))
-	case basetypes.NumberType:
-		return "types.NumberType"
-	case types.ObjectType:
-		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", getAttrTypes(t.AttrTypes))
-	case types.SetType:
-		return fmt.Sprintf("types.SetType{\nElemType: %s,\n}", getElementType(t.ElementType()))
-	case basetypes.StringType:
-		return "types.StringType"
-	}
-
-	return ""
 }

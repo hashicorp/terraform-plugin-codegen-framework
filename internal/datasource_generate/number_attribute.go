@@ -9,11 +9,15 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorNumberAttribute struct {
 	schema.NumberAttribute
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
 	Validators []specschema.NumberValidator
 }
@@ -22,17 +26,14 @@ type GeneratorNumberAttribute struct {
 // will be used if it is not nil. If CustomType.Import is nil then no import will be
 // specified as it is assumed that the CustomType.Type and CustomType.ValueType will
 // be accessible from the same package that the schema.Schema for the data source is
-// defined in. If CustomType is nil, then the datasourceSchemaImport will be used.
+// defined in.
 func (g GeneratorNumberAttribute) Imports() map[string]struct{} {
 	imports := make(map[string]struct{})
 
 	if g.CustomType != nil {
-		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
-		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
-	} else {
-		imports[datasourceSchemaImport] = struct{}{}
 	}
 
 	for _, v := range g.Validators {
@@ -40,15 +41,11 @@ func (g GeneratorNumberAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		if v.Custom.Import == nil {
+		if !v.Custom.HasImport() {
 			continue
 		}
 
-		if *v.Custom.Import == "" {
-			continue
-		}
-
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 

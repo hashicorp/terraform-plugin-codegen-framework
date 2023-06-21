@@ -9,15 +9,63 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorSingleNestedBlock struct {
 	schema.SingleNestedBlock
 
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
 	Attributes map[string]GeneratorAttribute
 	Blocks     map[string]GeneratorBlock
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
+}
+
+// Imports examines the CustomType and if this is not nil then the CustomType.Import
+// will be used if it is not nil. If CustomType.Import is nil then no import will be
+// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
+// be accessible from the same package that the schema.Schema for the data source is
+// defined in.  The same
+// logic is applied to the NestedObject. Further imports are then retrieved by
+// calling Imports on each of the nested attributes.
+func (g GeneratorSingleNestedBlock) Imports() map[string]struct{} {
+	imports := make(map[string]struct{})
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports[*g.CustomType.Import] = struct{}{}
+		}
+	}
+
+	for _, v := range g.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range g.Blocks {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		imports[generatorschema.ValidatorImport] = struct{}{}
+		imports[*v.Custom.Import] = struct{}{}
+	}
+
+	return imports
 }
 
 func (g GeneratorSingleNestedBlock) Equal(ga GeneratorBlock) bool {
@@ -45,8 +93,8 @@ func (g GeneratorSingleNestedBlock) Equal(ga GeneratorBlock) bool {
 
 func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": attributeStringsFromGeneratorAttributes,
-		"getBlocks":     blockStringsFromGeneratorBlocks,
+		"getAttributes": getAttributes,
+		"getBlocks":     getBlocks,
 	}
 
 	t, err := template.New("single_nested_block").Funcs(funcMap).Parse(singleNestedBlockGoTemplate)

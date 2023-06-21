@@ -17,14 +17,8 @@ func convertMapAttribute(a *provider.MapAttribute) (provider_generate.GeneratorM
 		return provider_generate.GeneratorMapAttribute{}, fmt.Errorf("*provider.MapAttribute is nil")
 	}
 
-	elemType, err := convertElementType(a.ElementType)
-	if err != nil {
-		return provider_generate.GeneratorMapAttribute{}, err
-	}
-
 	return provider_generate.GeneratorMapAttribute{
 		MapAttribute: schema.MapAttribute{
-			ElementType:         elemType,
 			Required:            isRequired(a.OptionalRequired),
 			Optional:            isOptional(a.OptionalRequired),
 			Sensitive:           isSensitive(a.Sensitive),
@@ -33,7 +27,8 @@ func convertMapAttribute(a *provider.MapAttribute) (provider_generate.GeneratorM
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+		CustomType:  a.CustomType,
+		ElementType: a.ElementType,
+		Validators:  a.Validators,
 	}, nil
 }

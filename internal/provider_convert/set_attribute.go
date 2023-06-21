@@ -17,14 +17,8 @@ func convertSetAttribute(a *provider.SetAttribute) (provider_generate.GeneratorS
 		return provider_generate.GeneratorSetAttribute{}, fmt.Errorf("*provider.SetAttribute is nil")
 	}
 
-	elemType, err := convertElementType(a.ElementType)
-	if err != nil {
-		return provider_generate.GeneratorSetAttribute{}, err
-	}
-
 	return provider_generate.GeneratorSetAttribute{
 		SetAttribute: schema.SetAttribute{
-			ElementType:         elemType,
 			Required:            isRequired(a.OptionalRequired),
 			Optional:            isOptional(a.OptionalRequired),
 			Sensitive:           isSensitive(a.Sensitive),
@@ -32,7 +26,8 @@ func convertSetAttribute(a *provider.SetAttribute) (provider_generate.GeneratorS
 			MarkdownDescription: description(a.Description),
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+		CustomType:  a.CustomType,
+		ElementType: a.ElementType,
+		Validators:  a.Validators,
 	}, nil
 }

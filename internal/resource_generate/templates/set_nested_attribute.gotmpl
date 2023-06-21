@@ -4,19 +4,33 @@ NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 {{- getAttributes $value.NestedObject.Attributes}}
 },
+{{- if $value.NestedObject.CustomType}}
+CustomType: {{$value.NestedObject.CustomType.Type}},
+{{- end}}
+{{- if gt (len $value.NestedObject.Validators) 0 }}
+Validators: []validator.Object{
+{{- range $validator := $value.NestedObject.Validators}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+},
+{{- end}}
 },
 {{- template "common_attribute" $value }}
 {{- if $value.PlanModifiers }}
 PlanModifiers: []planmodifier.Set{
 {{- range $planmodifier := .PlanModifiers}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end }}
 {{- if $value.Validators }}
 Validators: []validator.Set{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end}}

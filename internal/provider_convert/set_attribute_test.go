@@ -10,9 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 )
@@ -28,12 +26,6 @@ func TestConvertSetAttribute(t *testing.T) {
 		"nil": {
 			expectedError: fmt.Errorf("*provider.SetAttribute is nil"),
 		},
-		"element-type-nil": {
-			input: &provider.SetAttribute{
-				ElementType: specschema.ElementType{},
-			},
-			expectedError: fmt.Errorf("element type is not defined: %+v", specschema.ElementType{}),
-		},
 		"element-type-bool": {
 			input: &provider.SetAttribute{
 				ElementType: specschema.ElementType{
@@ -41,8 +33,8 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.BoolType,
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{},
 				},
 			},
 		},
@@ -53,8 +45,8 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.StringType,
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -69,9 +61,11 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.ListType{
-						ElemType: types.StringType,
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							String: &specschema.StringType{},
+						},
 					},
 				},
 			},
@@ -87,9 +81,11 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.MapType{
-						ElemType: types.StringType,
+				ElementType: specschema.ElementType{
+					Map: &specschema.MapType{
+						ElementType: specschema.ElementType{
+							String: &specschema.StringType{},
+						},
 					},
 				},
 			},
@@ -110,11 +106,14 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.ListType{
-						ElemType: types.ObjectType{
-							AttrTypes: map[string]attr.Type{
-								"str": types.StringType,
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Object: []specschema.ObjectAttributeType{
+								{
+									Name:   "str",
+									String: &specschema.StringType{},
+								},
 							},
 						},
 					},
@@ -133,10 +132,11 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"str": types.StringType,
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name:   "str",
+							String: &specschema.StringType{},
 						},
 					},
 				},
@@ -158,14 +158,49 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"list": types.ListType{
-								ElemType: types.StringType,
+				ElementType: specschema.ElementType{
+					Object: []specschema.ObjectAttributeType{
+						{
+							Name: "list",
+							List: &specschema.ListType{
+								ElementType: specschema.ElementType{
+									String: &specschema.StringType{},
+								},
 							},
 						},
 					},
+				},
+			},
+		},
+		"computed": {
+			input: &provider.SetAttribute{
+				OptionalRequired: "computed",
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
+				},
+			},
+			expected: provider_generate.GeneratorSetAttribute{
+				SetAttribute: schema.SetAttribute{
+					Optional: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
+				},
+			},
+		},
+		"computed_optional": {
+			input: &provider.SetAttribute{
+				OptionalRequired: "computed_optional",
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
+				},
+			},
+			expected: provider_generate.GeneratorSetAttribute{
+				SetAttribute: schema.SetAttribute{
+					Optional: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -178,8 +213,10 @@ func TestConvertSetAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetAttribute{
 				SetAttribute: schema.SetAttribute{
-					Optional:    true,
-					ElementType: types.StringType,
+					Optional: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -192,8 +229,10 @@ func TestConvertSetAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetAttribute{
 				SetAttribute: schema.SetAttribute{
-					Required:    true,
-					ElementType: types.StringType,
+					Required: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -209,13 +248,13 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.StringType,
-				},
 				CustomType: &specschema.CustomType{
 					Import:    pointer("github.com/"),
 					Type:      "my_type",
 					ValueType: "myvalue_type",
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -229,7 +268,9 @@ func TestConvertSetAttribute(t *testing.T) {
 			expected: provider_generate.GeneratorSetAttribute{
 				SetAttribute: schema.SetAttribute{
 					DeprecationMessage: "deprecation message",
-					ElementType:        types.StringType,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -244,7 +285,9 @@ func TestConvertSetAttribute(t *testing.T) {
 				SetAttribute: schema.SetAttribute{
 					Description:         "description",
 					MarkdownDescription: "description",
-					ElementType:         types.StringType,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -257,8 +300,10 @@ func TestConvertSetAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetAttribute{
 				SetAttribute: schema.SetAttribute{
-					Sensitive:   true,
-					ElementType: types.StringType,
+					Sensitive: true,
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 			},
 		},
@@ -277,8 +322,8 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					ElementType: types.StringType,
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
 				},
 				Validators: []specschema.SetValidator{
 					{

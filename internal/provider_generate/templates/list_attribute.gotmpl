@@ -5,7 +5,9 @@ ElementType: {{ getElementType .ElementType}},
 {{- if $value.Validators }}
 Validators: []validator.List{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end}}

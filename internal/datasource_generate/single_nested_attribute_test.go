@@ -8,9 +8,9 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
@@ -21,9 +21,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-without-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -53,15 +51,14 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 			input: GeneratorSingleNestedAttribute{
 				Attributes: map[string]GeneratorAttribute{
 					"list": GeneratorListAttribute{
-						ListAttribute: schema.ListAttribute{
-							ElementType: types.BoolType,
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{},
 						},
 					},
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				typesImport:            {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"nested-attribute-list-with-custom-type": {
@@ -75,26 +72,47 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                         {},
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
-		"nested-attribute-object": {
+		"nested-list-with-custom-type-with-element-with-custom-type": {
 			input: GeneratorSingleNestedAttribute{
 				Attributes: map[string]GeneratorAttribute{
-					"obj": GeneratorObjectAttribute{
-						ObjectAttribute: schema.ObjectAttribute{
-							AttributeTypes: map[string]attr.Type{
-								"bool": types.BoolType,
+					"list": GeneratorListAttribute{
+						CustomType: &specschema.CustomType{
+							Import: pointer("github.com/my_account/my_project/nested_list"),
+						},
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Import: pointer("github.com/my_account/my_project/bool"),
+								},
 							},
 						},
 					},
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				attrImport:             {},
-				typesImport:            {},
+				"github.com/my_account/my_project/nested_list": {},
+				"github.com/my_account/my_project/bool":        {},
+			},
+		},
+		"nested-attribute-object": {
+			input: GeneratorSingleNestedAttribute{
+				Attributes: map[string]GeneratorAttribute{
+					"obj": GeneratorObjectAttribute{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "bool",
+								Bool: &specschema.BoolType{},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				generatorschema.AttrImport:  {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"nested-attribute-object-with-custom-type": {
@@ -108,8 +126,32 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				datasourceSchemaImport:                           {},
 				"github.com/my_account/my_project/nested_object": {},
+			},
+		},
+		"nested-object-with-custom-type-with-attribute-with-custom-type": {
+			input: GeneratorSingleNestedAttribute{
+				Attributes: map[string]GeneratorAttribute{
+					"obj": GeneratorObjectAttribute{
+						CustomType: &specschema.CustomType{
+							Import: pointer("github.com/my_account/my_project/nested_object"),
+						},
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "bool",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: pointer("github.com/my_account/my_project/bool"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: map[string]struct{}{
+				"github.com/my_account/my_project/nested_object": {},
+				"github.com/my_account/my_project/bool":          {},
 			},
 		},
 		"validator-custom-nil": {
@@ -119,9 +161,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorSingleNestedAttribute{
@@ -132,9 +172,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorSingleNestedAttribute{
@@ -145,9 +183,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -164,8 +200,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				validatorImport:        {},
+				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
@@ -220,8 +255,10 @@ Optional: true,
 				Attributes: map[string]GeneratorAttribute{
 					"list": GeneratorListAttribute{
 						ListAttribute: schema.ListAttribute{
-							ElementType: types.StringType,
-							Optional:    true,
+							Optional: true,
+						},
+						ElementType: specschema.ElementType{
+							String: &specschema.StringType{},
 						},
 					},
 				},
@@ -274,10 +311,13 @@ Optional: true,
 				Attributes: map[string]GeneratorAttribute{
 					"object": GeneratorObjectAttribute{
 						ObjectAttribute: schema.ObjectAttribute{
-							AttributeTypes: map[string]attr.Type{
-								"str": types.StringType,
-							},
 							Optional: true,
+						},
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name:   "str",
+								String: &specschema.StringType{},
+							},
 						},
 					},
 				},

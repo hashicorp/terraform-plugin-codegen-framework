@@ -10,10 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
 )
@@ -49,6 +46,32 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 										ComputedOptionalRequired: "computed",
 										ElementType: specschema.ElementType{
 											List: &specschema.ListType{
+												ElementType: specschema.ElementType{
+													String: &specschema.StringType{},
+												},
+											},
+										},
+									},
+								},
+								{
+									Name: "map_attribute",
+									Map: &resource.MapAttribute{
+										ComputedOptionalRequired: "computed",
+										ElementType: specschema.ElementType{
+											Map: &specschema.MapType{
+												ElementType: specschema.ElementType{
+													String: &specschema.StringType{},
+												},
+											},
+										},
+									},
+								},
+								{
+									Name: "set_attribute",
+									Set: &resource.SetAttribute{
+										ComputedOptionalRequired: "computed",
+										ElementType: specschema.ElementType{
+											Set: &specschema.SetType{
 												ElementType: specschema.ElementType{
 													String: &specschema.StringType{},
 												},
@@ -171,8 +194,36 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 						"list_attribute": resource_generate.GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Computed: true,
-								ElementType: types.ListType{
-									ElemType: types.StringType,
+							},
+							ElementType: specschema.ElementType{
+								List: &specschema.ListType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
+								},
+							},
+						},
+						"map_attribute": resource_generate.GeneratorMapAttribute{
+							MapAttribute: schema.MapAttribute{
+								Computed: true,
+							},
+							ElementType: specschema.ElementType{
+								Map: &specschema.MapType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
+								},
+							},
+						},
+						"set_attribute": resource_generate.GeneratorSetAttribute{
+							SetAttribute: schema.SetAttribute{
+								Computed: true,
+							},
+							ElementType: specschema.ElementType{
+								Set: &specschema.SetType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -186,8 +237,10 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 									},
 									"nested_list_attribute": resource_generate.GeneratorListAttribute{
 										ListAttribute: schema.ListAttribute{
-											Computed:    true,
-											ElementType: types.StringType,
+											Computed: true,
+										},
+										ElementType: specschema.ElementType{
+											String: &specschema.StringType{},
 										},
 									},
 								},
@@ -198,13 +251,21 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 						},
 						"object_attribute": resource_generate.GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
-								AttributeTypes: map[string]attr.Type{
-									"obj_bool": basetypes.BoolType{},
-									"obj_list": basetypes.ListType{
-										ElemType: types.StringType,
+								Optional: true,
+							},
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+								{
+									Name: "obj_list",
+									List: &specschema.ListType{
+										ElementType: specschema.ElementType{
+											String: &specschema.StringType{},
+										},
 									},
 								},
-								Optional: true,
 							},
 						},
 						"single_nested_attribute": resource_generate.GeneratorSingleNestedAttribute{
@@ -216,8 +277,10 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 								},
 								"nested_list_attribute": resource_generate.GeneratorListAttribute{
 									ListAttribute: schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
+										Computed: true,
+									},
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
 									},
 								},
 							},

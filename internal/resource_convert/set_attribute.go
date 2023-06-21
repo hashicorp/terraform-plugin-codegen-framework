@@ -17,14 +17,8 @@ func convertSetAttribute(a *resource.SetAttribute) (resource_generate.GeneratorS
 		return resource_generate.GeneratorSetAttribute{}, fmt.Errorf("*resource.SetAttribute is nil")
 	}
 
-	elemType, err := convertElementType(a.ElementType)
-	if err != nil {
-		return resource_generate.GeneratorSetAttribute{}, err
-	}
-
 	return resource_generate.GeneratorSetAttribute{
 		SetAttribute: schema.SetAttribute{
-			ElementType:         elemType,
 			Required:            isRequired(a.ComputedOptionalRequired),
 			Optional:            isOptional(a.ComputedOptionalRequired),
 			Computed:            isComputed(a.ComputedOptionalRequired),
@@ -35,6 +29,7 @@ func convertSetAttribute(a *resource.SetAttribute) (resource_generate.GeneratorS
 		},
 		CustomType:    a.CustomType,
 		Default:       a.Default,
+		ElementType:   a.ElementType,
 		PlanModifiers: a.PlanModifiers,
 		Validators:    a.Validators,
 	}, nil

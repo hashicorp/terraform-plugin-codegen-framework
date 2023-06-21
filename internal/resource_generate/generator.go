@@ -5,6 +5,7 @@ package resource_generate
 
 import (
 	"bytes"
+	"fmt"
 	"sort"
 	"strings"
 	"text/template"
@@ -51,6 +52,7 @@ func (g GeneratorResourceSchemas) ToBytes() (map[string][]byte, error) {
 
 func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema) ([]byte, error) {
 	funcMap := template.FuncMap{
+		"getImports":    getImports,
 		"getAttributes": getAttributes,
 		"getBlocks":     getBlocks,
 	}
@@ -76,6 +78,30 @@ func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema
 	}
 
 	return buf.Bytes(), nil
+}
+
+func getImports(schema GeneratorResourceSchema) (string, error) {
+	var s strings.Builder
+
+	var imports = make(map[string]struct{})
+
+	for _, v := range schema.Attributes {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for _, v := range schema.Blocks {
+		for k := range v.Imports() {
+			imports[k] = struct{}{}
+		}
+	}
+
+	for a := range imports {
+		s.WriteString(fmt.Sprintf("%q\n", a))
+	}
+
+	return s.String(), nil
 }
 
 func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
@@ -136,14 +162,20 @@ func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	return s.String(), nil
 }
 
+type GeneratorImport interface {
+	Imports() map[string]struct{}
+}
+
 type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	ToString(string) (string, error)
+	GeneratorImport
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	ToString(string) (string, error)
+	GeneratorImport
 }
 
 type GeneratorNestedAttributeObject struct {
@@ -197,4 +229,94 @@ func customTypeEqual(x, y *specschema.CustomType) bool {
 	}
 
 	return true
+}
+
+func objectTypeEqual(x, y []specschema.ObjectAttributeType) bool {
+	for k, v := range x {
+		if v.Name != y[k].Name {
+			return false
+		}
+
+		a := specschema.ElementType{
+			Bool:    v.Bool,
+			Float64: v.Float64,
+			Int64:   v.Int64,
+			List:    v.List,
+			Map:     v.Map,
+			Number:  v.Number,
+			Object:  v.Object,
+			Set:     v.Set,
+			String:  v.String,
+		}
+
+		b := specschema.ElementType{
+			Bool:    y[k].Bool,
+			Float64: y[k].Float64,
+			Int64:   y[k].Int64,
+			List:    y[k].List,
+			Map:     y[k].Map,
+			Number:  y[k].Number,
+			Object:  y[k].Object,
+			Set:     y[k].Set,
+			String:  y[k].String,
+		}
+
+		if !elementTypeEqual(a, b) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func elementTypeEqual(x, y specschema.ElementType) bool {
+	if x.Bool != nil && y.Bool != nil {
+		return customTypeEqual(x.Bool.CustomType, y.Bool.CustomType)
+	}
+
+	if x.Float64 != nil && y.Float64 != nil {
+		return customTypeEqual(x.Float64.CustomType, y.Float64.CustomType)
+	}
+
+	if x.Int64 != nil && y.Float64 != nil {
+		return customTypeEqual(x.Int64.CustomType, y.Int64.CustomType)
+	}
+
+	if x.List != nil && y.List != nil {
+		if !customTypeEqual(x.List.CustomType, y.List.CustomType) {
+			return false
+		}
+
+		return elementTypeEqual(x.List.ElementType, y.List.ElementType)
+	}
+
+	if x.Map != nil && y.Map != nil {
+		if !customTypeEqual(x.Map.CustomType, y.Map.CustomType) {
+			return false
+		}
+
+		return elementTypeEqual(x.Map.ElementType, y.Map.ElementType)
+	}
+
+	if x.Number != nil && y.Number != nil {
+		return customTypeEqual(x.Number.CustomType, y.Number.CustomType)
+	}
+
+	if x.Object != nil && y.Object != nil {
+		return objectTypeEqual(x.Object, y.Object)
+	}
+
+	if x.Set != nil && y.Set != nil {
+		if !customTypeEqual(x.Set.CustomType, y.Set.CustomType) {
+			return false
+		}
+
+		return elementTypeEqual(x.Set.ElementType, y.Set.ElementType)
+	}
+
+	if x.String != nil && y.String != nil {
+		return customTypeEqual(x.String.CustomType, y.String.CustomType)
+	}
+
+	return false
 }

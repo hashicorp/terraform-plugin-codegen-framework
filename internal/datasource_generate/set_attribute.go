@@ -9,34 +9,35 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorSetAttribute struct {
 	schema.SetAttribute
 
-	CustomType *specschema.CustomType
-	Validators []specschema.SetValidator
+	// The "specschema" types are used instead of the types within the attribute
+	// because support for extracting custom import information is required.
+	CustomType  *specschema.CustomType
+	ElementType specschema.ElementType
+	Validators  []specschema.SetValidator
 }
 
 // Imports examines the CustomType and if this is not nil then the CustomType.Import
 // will be used if it is not nil. If CustomType.Import is nil then no import will be
 // specified as it is assumed that the CustomType.Type and CustomType.ValueType will
 // be accessible from the same package that the schema.Schema for the data source is
-// defined in. If CustomType is nil, then the datasourceSchemaImport will be used. Further
-// imports are retrieved by calling getElementTypeImports.
+// defined in.
 func (g GeneratorSetAttribute) Imports() map[string]struct{} {
 	imports := make(map[string]struct{})
 
 	if g.CustomType != nil {
-		// TODO: Refactor once HasImport() helpers have been added to spec Go bindings.
-		if g.CustomType.Import != nil && *g.CustomType.Import != "" {
+		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
-	} else {
-		imports[datasourceSchemaImport] = struct{}{}
 	}
 
-	elemTypeImports := getElementTypeImports(g.ElementType, make(map[string]struct{}))
+	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType, make(map[string]struct{}))
 
 	for k := range elemTypeImports {
 		imports[k] = struct{}{}
@@ -47,15 +48,11 @@ func (g GeneratorSetAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		if v.Custom.Import == nil {
+		if !v.Custom.HasImport() {
 			continue
 		}
 
-		if *v.Custom.Import == "" {
-			continue
-		}
-
-		imports[validatorImport] = struct{}{}
+		imports[generatorschema.ValidatorImport] = struct{}{}
 		imports[*v.Custom.Import] = struct{}{}
 	}
 
@@ -72,16 +69,48 @@ func (g GeneratorSetAttribute) Equal(ga GeneratorAttribute) bool {
 		return false
 	}
 
+	if !elementTypeEqual(g.ElementType, h.ElementType) {
+		return false
+	}
+
 	if !g.validatorsEqual(g.Validators, h.Validators) {
 		return false
 	}
 
-	return g.SetAttribute.Equal(h.SetAttribute)
+	if g.Required != h.Required {
+		return false
+	}
+
+	if g.Optional != h.Optional {
+		return false
+	}
+
+	if g.Computed != h.Computed {
+		return false
+	}
+
+	if g.Sensitive != h.Sensitive {
+		return false
+	}
+
+	if g.Description != h.Description {
+		return false
+	}
+
+	if g.MarkdownDescription != h.MarkdownDescription {
+		return false
+	}
+
+	if g.DeprecationMessage != h.DeprecationMessage {
+		return false
+	}
+
+	return true
 }
 
 func (g GeneratorSetAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getElementType": getElementType,
+		"getElementType": generatorschema.GetElementType,
 	}
 
 	t, err := template.New("set_attribute").Funcs(funcMap).Parse(setAttributeGoTemplate)

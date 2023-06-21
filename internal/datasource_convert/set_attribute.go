@@ -17,14 +17,8 @@ func convertSetAttribute(a *datasource.SetAttribute) (datasource_generate.Genera
 		return datasource_generate.GeneratorSetAttribute{}, fmt.Errorf("*datasource.SetAttribute is nil")
 	}
 
-	elemType, err := convertElementType(a.ElementType)
-	if err != nil {
-		return datasource_generate.GeneratorSetAttribute{}, err
-	}
-
 	return datasource_generate.GeneratorSetAttribute{
 		SetAttribute: schema.SetAttribute{
-			ElementType:         elemType,
 			Required:            isRequired(a.ComputedOptionalRequired),
 			Optional:            isOptional(a.ComputedOptionalRequired),
 			Computed:            isComputed(a.ComputedOptionalRequired),
@@ -34,7 +28,8 @@ func convertSetAttribute(a *datasource.SetAttribute) (datasource_generate.Genera
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+		CustomType:  a.CustomType,
+		ElementType: a.ElementType,
+		Validators:  a.Validators,
 	}, nil
 }

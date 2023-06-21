@@ -17,14 +17,8 @@ func convertMapAttribute(a *resource.MapAttribute) (resource_generate.GeneratorM
 		return resource_generate.GeneratorMapAttribute{}, fmt.Errorf("*resource.MapAttribute is nil")
 	}
 
-	elemType, err := convertElementType(a.ElementType)
-	if err != nil {
-		return resource_generate.GeneratorMapAttribute{}, err
-	}
-
 	return resource_generate.GeneratorMapAttribute{
 		MapAttribute: schema.MapAttribute{
-			ElementType:         elemType,
 			Required:            isRequired(a.ComputedOptionalRequired),
 			Optional:            isOptional(a.ComputedOptionalRequired),
 			Computed:            isComputed(a.ComputedOptionalRequired),
@@ -35,6 +29,7 @@ func convertMapAttribute(a *resource.MapAttribute) (resource_generate.GeneratorM
 		},
 		CustomType:    a.CustomType,
 		Default:       a.Default,
+		ElementType:   a.ElementType,
 		PlanModifiers: a.PlanModifiers,
 		Validators:    a.Validators,
 	}, nil

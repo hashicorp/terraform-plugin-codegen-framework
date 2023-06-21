@@ -5,14 +5,18 @@ ElementType: {{ getElementType .ElementType}},
 {{- if $value.PlanModifiers }}
 PlanModifiers: []planmodifier.Map{
 {{- range $planmodifier := .PlanModifiers}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end }}
 {{- if $value.Validators }}
 Validators: []validator.Map{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end}}

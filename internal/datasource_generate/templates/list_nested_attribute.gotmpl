@@ -19,7 +19,9 @@ Validators: []validator.Object{
 {{- if gt (len $value.Validators) 0 }}
 Validators: []validator.List{
 {{- range $validator := .Validators}}
+{{- if .Custom}}
 {{.Custom.SchemaDefinition}},
+{{- end}}
 {{- end}}
 },
 {{- end}}

@@ -17,14 +17,8 @@ func convertListAttribute(a *datasource.ListAttribute) (datasource_generate.Gene
 		return datasource_generate.GeneratorListAttribute{}, fmt.Errorf("*datasource.ListAttribute is nil")
 	}
 
-	elemType, err := convertElementType(a.ElementType)
-	if err != nil {
-		return datasource_generate.GeneratorListAttribute{}, err
-	}
-
 	return datasource_generate.GeneratorListAttribute{
 		ListAttribute: schema.ListAttribute{
-			ElementType:         elemType,
 			Required:            isRequired(a.ComputedOptionalRequired),
 			Optional:            isOptional(a.ComputedOptionalRequired),
 			Computed:            isComputed(a.ComputedOptionalRequired),
@@ -34,7 +28,8 @@ func convertListAttribute(a *datasource.ListAttribute) (datasource_generate.Gene
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+		CustomType:  a.CustomType,
+		ElementType: a.ElementType,
+		Validators:  a.Validators,
 	}, nil
 }

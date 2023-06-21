@@ -9,6 +9,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorInt64Attribute_Imports(t *testing.T) {
@@ -19,9 +21,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"custom-type-without-import": {
 			input: GeneratorInt64Attribute{
@@ -54,9 +54,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorInt64Attribute{
@@ -67,9 +65,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorInt64Attribute{
@@ -80,9 +76,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-			},
+			expected: map[string]struct{}{},
 		},
 		"validator-custom-import": {
 			input: GeneratorInt64Attribute{
@@ -99,8 +93,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				datasourceSchemaImport: {},
-				validatorImport:        {},
+				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
