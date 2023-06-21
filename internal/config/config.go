@@ -5,7 +5,6 @@ package config
 
 import (
 	"flag"
-	"os"
 )
 
 const (
@@ -33,15 +32,16 @@ func (s *stringsFlags) Set(value string) error {
 
 var includeFlags stringsFlags
 
-func New() (Config, error) {
+func New(args []string) (Config, error) {
 	var i, o, s string
 
-	flag.StringVar(&i, "input", "", "Path to intermediate representation")
-	flag.StringVar(&o, "output", "", "Directory for generated code files")
-	flag.StringVar(&s, "schema", "", "Path or URL to intermediate representation JSON schema")
-	flag.Var(&includeFlags, "include", "Specify which data sources, provider and resources to include on the basis of name")
+	fs := flag.NewFlagSet("all", flag.ExitOnError)
+	fs.StringVar(&i, "input", "", "Path to intermediate representation")
+	fs.StringVar(&o, "output", "", "Directory for generated code files")
+	fs.StringVar(&s, "schema", "", "Path or URL to intermediate representation JSON schema")
+	fs.Var(&includeFlags, "include", "Specify which data sources, provider and resources to include on the basis of name")
 
-	err := flag.CommandLine.Parse(os.Args[2:])
+	err := fs.Parse(args)
 	if err != nil {
 		return Config{}, err
 	}

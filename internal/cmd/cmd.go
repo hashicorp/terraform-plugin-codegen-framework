@@ -39,7 +39,7 @@ func (a AllCommand) Synopsis() string {
 func (a AllCommand) Run(args []string) int {
 	ctx := context.Background()
 	// parse flags
-	conf, err := config.New()
+	conf, err := config.New(args)
 	if err != nil {
 		log.Fatal(err)
 	}
