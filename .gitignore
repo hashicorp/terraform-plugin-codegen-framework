@@ -22,3 +22,6 @@ terraform-plugin-codegen-openapi
 
 # VSCode files
 .vscode/
+
+# Ignore any manual testing output from running codegen tool 
+output/
