@@ -1,0 +1,3 @@
+{{define "single_nested_attribute"}}
+{{snakeCaseToCamelCase .Name}} types.Object `tfsdk:"{{.Name}}"`
+{{- end}}

@@ -78,14 +78,27 @@ func (a AllCommand) Run(args []string) int {
 		log.Fatal(err)
 	}
 
+	// generate model code
+	dataSourcesModelsGenerator := datasource_generate.NewDataSourcesModelsGenerator()
+	dataSourcesModels, err := dataSourcesModelsGenerator.Process(schema)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// format schema code
 	formattedDataSourcesSchema, err := format.Format(schemaBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// format model code
+	formattedDataSourcesModels, err := format.Format(dataSourcesModels)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// write code
-	err = output.WriteDataSources(formattedDataSourcesSchema, conf.Output)
+	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, conf.Output)
 	if err != nil {
 		log.Fatal(err)
 	}

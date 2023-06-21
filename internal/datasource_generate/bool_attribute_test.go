@@ -264,3 +264,40 @@ my_other_validator.Validate(),
 		})
 	}
 }
+
+func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorBoolAttribute
+		expected      string
+		expectedError error
+	}{
+		"custom-type": {
+			input: GeneratorBoolAttribute{
+				//CustomType: &specschema.CustomType{
+				//	ValueType: "my_custom_value_type",
+				//},
+			},
+			expected: "BoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ToModel("bool_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}

@@ -81,3 +81,23 @@ func addCommonBlockTemplate(t *template.Template) (*template.Template, error) {
 
 	return t.New("common_block").Funcs(commonTemplateFuncs).Parse(commonBlockGoTemplate)
 }
+
+// Models
+//
+//go:embed model_templates/attributes.gotmpl
+var attributesModel string
+
+//go:embed model_templates/bool_attribute.gotmpl
+var boolAttributeModel string
+
+//go:embed model_templates/datasource_model.gotmpl
+var datasourceModel string
+
+//go:embed model_templates/list_attribute.gotmpl
+var listAttributeModel string
+
+//go:embed model_templates/single_nested_attribute.gotmpl
+var singleNestedAttributeModel string
+
+//go:embed model_templates/single_nested_model.gotmpl
+var singleNestedModel string

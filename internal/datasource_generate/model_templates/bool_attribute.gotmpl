@@ -1,0 +1,7 @@
+{{define "bool_attribute"}}
+{{- if .CustomType}}
+{{snakeCaseToCamelCase .Name}} {{ .CustomType.ValueType }} `tfsdk:"{{.Name}}"`
+{{- else}}
+{{snakeCaseToCamelCase .Name}} types.Bool `tfsdk:"{{.Name}}"`
+{{- end}}
+{{- end}}

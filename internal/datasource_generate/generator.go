@@ -168,6 +168,10 @@ type GeneratorImport interface {
 	Imports() map[string]struct{}
 }
 
+type GeneratorModel interface {
+	ToModel(string) (string, error)
+}
+
 type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	ToString(string) (string, error)
@@ -319,4 +323,125 @@ func elementTypeEqual(x, y specschema.ElementType) bool {
 	}
 
 	return false
+}
+
+type DataSourcesModelsGenerator struct {
+}
+
+func NewDataSourcesModelsGenerator() DataSourcesModelsGenerator {
+	return DataSourcesModelsGenerator{}
+}
+
+func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSourceSchema) (map[string][]byte, error) {
+	funcMap := template.FuncMap{
+		"getModel": getModel,
+	}
+
+	datasourceModelTemplate, err := template.New("datasource_model.gotmpl").Funcs(funcMap).Parse(
+		datasourceModel,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	//additionalTemplates := []string{
+	//	attributesModel,
+	//	boolAttributeModel,
+	//	listAttributeModel,
+	//	//singleNestedAttributeGoTemplate,
+	//	//singleNestedAttributeModel,
+	//}
+	//
+	//for i, templ := range additionalTemplates {
+	//	if _, err = datasourceModelTemplate.New(fmt.Sprint("_", i)).Parse(templ); err != nil {
+	//		return nil, err
+	//	}
+	//}
+
+	dataSourcesModels := make(map[string][]byte, len(schemas))
+
+	for k, s := range schemas {
+		var buf bytes.Buffer
+
+		templateData := struct {
+			Name string
+			GeneratorDataSourceSchema
+		}{
+			Name:                      k,
+			GeneratorDataSourceSchema: s,
+		}
+
+		err = datasourceModelTemplate.Execute(&buf, templateData)
+		if err != nil {
+			return nil, err
+		}
+
+		dataSourcesModels[k] = buf.Bytes()
+	}
+
+	return dataSourcesModels, nil
+}
+
+// snakeCaseToCamelCase relies on the convention of using snake-case
+// names in configuration.
+// TODO: A more robust approach is likely required here.
+func snakeCaseToCamelCase(input string) string {
+	inputSplit := strings.Split(input, "_")
+
+	var ucName string
+
+	for _, v := range inputSplit {
+		if len(v) < 1 {
+			continue
+		}
+
+		firstChar := v[0:1]
+		ucFirstChar := strings.ToUpper(firstChar)
+
+		if len(v) < 2 {
+			ucName += ucFirstChar
+			continue
+		}
+
+		ucName += ucFirstChar + v[1:]
+	}
+
+	return ucName
+}
+
+// TODO: Order to maintain same output
+func getModel(s GeneratorDataSourceSchema) (string, error) {
+	return getModelAttributes(s.Attributes)
+}
+
+func getModelAttributes(attributes map[string]GeneratorAttribute) (string, error) {
+	var s strings.Builder
+
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var keys = make([]string, 0, len(attributes))
+
+	for k := range attributes {
+		keys = append(keys, k)
+	}
+
+	sort.Strings(keys)
+
+	for _, k := range keys {
+		if attributes[k] == nil {
+			continue
+		}
+
+		// TODO: Remove once implemented across all generator attributes and blocks
+		if m, ok := attributes[k].(GeneratorModel); ok {
+			str, err := m.ToModel(k)
+
+			if err != nil {
+				return "", err
+			}
+
+			s.WriteString(str)
+		}
+	}
+
+	return s.String(), nil
 }

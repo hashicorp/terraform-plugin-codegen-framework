@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func WriteDataSources(dataSourcesSchema map[string][]byte, outputDir string) error {
+func WriteDataSources(dataSourcesSchema, dataSourcesModels map[string][]byte, outputDir string) error {
 	//func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesHelpers map[string][]byte, outputDir string) error {
 	for k, v := range dataSourcesSchema {
 		filename := fmt.Sprintf("%s_data_source_gen.go", k)
@@ -24,11 +24,11 @@ func WriteDataSources(dataSourcesSchema map[string][]byte, outputDir string) err
 			return err
 		}
 
-		//_, err = f.Write(dataSourcesModels[k])
-		//if err != nil {
-		//	return err
-		//}
-		//
+		_, err = f.Write(dataSourcesModels[k])
+		if err != nil {
+			return err
+		}
+
 		//_, err = f.Write(dataSourcesHelpers[k])
 		//if err != nil {
 		//	return err

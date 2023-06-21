@@ -95,6 +95,34 @@ func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
 	return buf.String(), nil
 }
 
+func (g GeneratorBoolAttribute) ToModel(name string) (string, error) {
+	funcMap := template.FuncMap{
+		"snakeCaseToCamelCase": snakeCaseToCamelCase,
+	}
+
+	t, err := template.New("bool_attribute").Funcs(funcMap).Parse(boolAttributeModel)
+	if err != nil {
+		return "", err
+	}
+
+	var buf strings.Builder
+
+	templateData := struct {
+		Name string
+		GeneratorBoolAttribute
+	}{
+		Name:                   name,
+		GeneratorBoolAttribute: g,
+	}
+
+	err = t.Execute(&buf, templateData)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
 func (g GeneratorBoolAttribute) validatorsEqual(x, y []specschema.BoolValidator) bool {
 	if x == nil && y == nil {
 		return true
