@@ -14,7 +14,7 @@ generate:
 # Regenerate testdata folder
 testdata:
 	go run ./cmd/terraform-plugin-codegen-framework generate all \
-		-input ./internal/cmd/testdata/all/custom_and_external/ir.json \
-		-output ./internal/cmd/testdata/all/custom_and_external/output
+		-input ./internal/cmd/testdata/custom_and_external/ir.json \
+		-output ./internal/cmd/testdata/custom_and_external/all_output
 
 .PHONY: lint fmt test
