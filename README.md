@@ -2,13 +2,18 @@
 
 ## Running the Generator
 
+```shell
+# Build the binary
+go build ./cmd/terraform-plugin-codegen-framework
+```
+
 The generator reads the intermediate representation (IR) from _stdin_ by default in order to 
 facilitate the chaining together of CLI commands.
 
 The following is a contrived example:
 
 ```shell
-cat examples/ir.json | go run . all
+cat examples/ir.json | ./terraform-plugin-codegen-framework all
 ```
 
 An alternative is to use the `-input` flag to specify a file from which the IR can be read.
@@ -16,7 +21,7 @@ An alternative is to use the `-input` flag to specify a file from which the IR c
 For example:
 
 ```shell
-go run . all -input examples/ir.json
+./terraform-plugin-codegen-framework all -input examples/ir.json
 ```
 
 Both cases will process `ir.json`.
@@ -28,7 +33,7 @@ The generated code will be saved into the `generator/output` directory.
 ## Running the Tests
 
 ```shell
-go test $(go list ./... | grep -v /output) -v -count=1
+make test
 ```
 
 ## Overview
