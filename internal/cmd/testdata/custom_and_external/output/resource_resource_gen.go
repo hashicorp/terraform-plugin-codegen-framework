@@ -3,20 +3,25 @@
 package provider
 
 import (
-	"github.com/"
-	"github.com/.../myplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/my_account/my_project/boolplanmodifier"
+	"github.com/my_account/my_project/myboolvalidator"
+	"github.com/my_account_my_project/bool"
 )
 
-var exampleResourceSchema = schema.Schema{
+var resourceResourceSchema = schema.Schema{
 	Attributes: map[string]schema.Attribute{
 		"bool_attribute": schema.BoolAttribute{
-			CustomType: my_type,
+			CustomType: my_bool_type,
 			Computed:   true,
 			PlanModifiers: []planmodifier.Bool{
-				myplanmodifier.Modify(),
+				myboolplanmodifier.Modify(),
+			},
+			Validators: []validator.Bool{
+				myboolvalidator.Validate(),
 			},
 			Default: booldefault.StaticBool(true),
 		},

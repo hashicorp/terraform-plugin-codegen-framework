@@ -6,4 +6,4 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 )
 
-var exampleProviderSchema = schema.Schema{}
+var providerProviderSchema = schema.Schema{}
