@@ -351,22 +351,35 @@ func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSour
 		var buf bytes.Buffer
 
 		templateData := struct {
-			Name string
-			GeneratorDataSourceSchema
+			Name       string
+			Attributes map[string]GeneratorAttribute
+			Blocks     map[string]GeneratorBlock
 		}{
-			Name:                      k,
-			GeneratorDataSourceSchema: s,
+			Name:       k,
+			Attributes: s.Attributes,
+			Blocks:     s.Blocks,
 		}
 
+		// Generate model
 		err = datasourceModelTemplate.Execute(&buf, templateData)
 		if err != nil {
 			return nil, err
 		}
 
-		for attribName, a := range s.Attributes {
-			switch t := a.(type) {
+		// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+		var attributeKeys = make([]string, 0, len(s.Attributes))
+
+		for x := range s.Attributes {
+			attributeKeys = append(attributeKeys, x)
+		}
+
+		sort.Strings(attributeKeys)
+
+		// If there are any nested attributes, generate model.
+		for _, x := range attributeKeys {
+			switch t := s.Attributes[x].(type) {
 			case GeneratorListNestedAttribute:
-				model, err := nestedModel(attribName, t.NestedObject.Attributes, nil)
+				model, err := nestedModel(x, t.NestedObject.Attributes, nil)
 				if err != nil {
 					return nil, err
 				}
@@ -397,14 +410,13 @@ func nestedModel(attribName string, attributes map[string]GeneratorAttribute, bl
 	}
 
 	templateData := struct {
-		Name string
-		GeneratorDataSourceSchema
+		Name       string
+		Attributes map[string]GeneratorAttribute
+		Blocks     map[string]GeneratorBlock
 	}{
-		Name: attribName,
-		GeneratorDataSourceSchema: GeneratorDataSourceSchema{
-			Attributes: attributes,
-			Blocks:     blocks,
-		},
+		Name:       attribName,
+		Attributes: attributes,
+		Blocks:     blocks,
 	}
 
 	err = datasourceModelTemplate.Execute(&buf, templateData)
@@ -466,11 +478,7 @@ func lcFirst(input string) string {
 	return str
 }
 
-func getModel(s GeneratorDataSourceSchema) (string, error) {
-	return getModelAttributesAndBlocks(s.Attributes, s.Blocks)
-}
-
-func getModelAttributesAndBlocks(attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) (string, error) {
+func getModel(attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
 	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
