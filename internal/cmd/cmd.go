@@ -24,7 +24,7 @@ import (
 )
 
 type AllCommand struct {
-	Ui cli.Ui
+	UI cli.Ui
 }
 
 func (a AllCommand) Help() string {

@@ -32,7 +32,7 @@ func TestAllCommand(t *testing.T) {
 
 			testOutputDir := t.TempDir()
 			mockUi := cli.NewMockUi()
-			c := cmd.AllCommand{Ui: mockUi}
+			c := cmd.AllCommand{UI: mockUi}
 			args := []string{
 				"-input", testCase.irInputPath,
 				"-output", testOutputDir,

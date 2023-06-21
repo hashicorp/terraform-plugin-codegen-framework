@@ -4,38 +4,71 @@
 package main
 
 import (
-	"log"
+	"io"
 	"os"
 
+	"github.com/mattn/go-colorable"
 	"github.com/mitchellh/cli"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 )
 
 func main() {
-	ui := &cli.BasicUi{
-		Reader:      os.Stdin,
-		Writer:      os.Stdout,
-		ErrorWriter: os.Stderr,
+	// TODO: Temporary name for CLI :)
+	name := "terraform-plugin-codegen-framework"
+	version := name + " Version " + version
+	if commit != "" {
+		version += " from commit " + commit
 	}
 
-	commands := map[string]cli.CommandFactory{
-		"all": func() (cli.Command, error) {
-			return cmd.AllCommand{
-				Ui: ui,
-			}, nil
+	os.Exit(runCLI(
+		name,
+		version,
+		os.Args[1:],
+		os.Stdin,
+		colorable.NewColorableStdout(),
+		colorable.NewColorableStderr(),
+	))
+}
+
+func initCommands(ui cli.Ui) map[string]cli.CommandFactory {
+
+	allFactory := func() (cli.Command, error) {
+		return &cmd.AllCommand{
+			UI: ui,
+		}, nil
+	}
+
+	return map[string]cli.CommandFactory{
+		"all": allFactory,
+	}
+}
+
+func runCLI(name, version string, args []string, stdin io.Reader, stdout, stderr io.Writer) int {
+	ui := &cli.ColoredUi{
+		ErrorColor: cli.UiColorRed,
+		WarnColor:  cli.UiColorYellow,
+
+		Ui: &cli.BasicUi{
+			Reader:      stdin,
+			Writer:      stdout,
+			ErrorWriter: stderr,
 		},
 	}
 
-	c := &cli.CLI{
-		Args:     os.Args[1:],
-		Commands: commands,
+	commands := initCommands(ui)
+	frameworkGen := cli.CLI{
+		Name:       name,
+		Args:       args,
+		Commands:   commands,
+		HelpFunc:   cli.BasicHelpFunc(name),
+		HelpWriter: stderr,
+		Version:    version,
 	}
-
-	code, err := c.Run()
+	exitCode, err := frameworkGen.Run()
 	if err != nil {
-		log.Fatal(err)
+		return 1
 	}
 
-	os.Exit(code)
+	return exitCode
 }

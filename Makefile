@@ -13,7 +13,7 @@ generate:
 
 # Regenerate testdata folder
 testdata:
-	go run . all \
+	go run ./cmd/terraform-plugin-codegen-framework all \
 		-input ./internal/cmd/testdata/custom_and_external/ir.json \
 		-output ./internal/cmd/testdata/custom_and_external/output
 
