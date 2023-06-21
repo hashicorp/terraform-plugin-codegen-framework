@@ -16,7 +16,7 @@ func convertAttribute(a datasource.Attribute) (datasource_generate.GeneratorAttr
 	case a.Bool != nil:
 		return convertBoolAttribute(a.Bool)
 	case a.Float64 != nil:
-		return convertInt64Attribute(a.Int64)
+		return convertFloat64Attribute(a.Float64)
 	case a.Int64 != nil:
 		return convertInt64Attribute(a.Int64)
 	case a.List != nil:

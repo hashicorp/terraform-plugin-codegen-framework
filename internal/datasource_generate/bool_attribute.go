@@ -102,7 +102,7 @@ func (g GeneratorBoolAttribute) ToModel(name string) (string, error) {
 		"snakeCaseToCamelCase": snakeCaseToCamelCase,
 	}
 
-	t, err := template.New("bool_model").Funcs(funcMap).Parse(boolModel)
+	t, err := template.New("attribute_model").Funcs(funcMap).Parse(attributeModelTmpl)
 	if err != nil {
 		return "", err
 	}
@@ -110,10 +110,12 @@ func (g GeneratorBoolAttribute) ToModel(name string) (string, error) {
 	var buf strings.Builder
 
 	templateData := struct {
-		Name string
+		Name        string
+		DefaultType string
 		GeneratorBoolAttribute
 	}{
 		Name:                   name,
+		DefaultType:            "types.Bool",
 		GeneratorBoolAttribute: g,
 	}
 

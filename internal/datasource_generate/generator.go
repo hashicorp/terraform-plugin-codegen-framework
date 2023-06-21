@@ -338,7 +338,7 @@ func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSour
 	}
 
 	datasourceModelTemplate, err := template.New("datasource_model.gotmpl").Funcs(funcMap).Parse(
-		datasourceModel,
+		datasourceModelTmpl,
 	)
 	if err != nil {
 		return nil, err

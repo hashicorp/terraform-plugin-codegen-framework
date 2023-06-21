@@ -34,6 +34,8 @@ func (g GeneratorFloat64Attribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
+	} else {
+		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
 	for _, v := range g.Validators {
@@ -86,6 +88,36 @@ func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {
 	}
 
 	err = t.Execute(&buf, attrib)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
+func (g GeneratorFloat64Attribute) ToModel(name string) (string, error) {
+	funcMap := template.FuncMap{
+		"snakeCaseToCamelCase": snakeCaseToCamelCase,
+	}
+
+	t, err := template.New("attribute_model").Funcs(funcMap).Parse(attributeModelTmpl)
+	if err != nil {
+		return "", err
+	}
+
+	var buf strings.Builder
+
+	templateData := struct {
+		Name        string
+		DefaultType string
+		GeneratorFloat64Attribute
+	}{
+		Name:                      name,
+		DefaultType:               "types.Float64",
+		GeneratorFloat64Attribute: g,
+	}
+
+	err = t.Execute(&buf, templateData)
 	if err != nil {
 		return "", err
 	}

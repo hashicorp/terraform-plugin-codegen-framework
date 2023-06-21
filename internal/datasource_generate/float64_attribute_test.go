@@ -21,7 +21,9 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorFloat64Attribute{
@@ -54,7 +56,9 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorFloat64Attribute{
@@ -65,7 +69,9 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorFloat64Attribute{
@@ -76,7 +82,9 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorFloat64Attribute{
@@ -93,9 +101,10 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				generatorschema.ValidatorImport:                    {},
-				"github.com/myotherproject/myvalidators/validator": {},
-				"github.com/myproject/myvalidators/validator":      {},
+				generatorschema.ValidatorImport:                         {},
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				"github.com/myotherproject/myvalidators/validator":      {},
+				"github.com/myproject/myvalidators/validator":           {},
 			},
 		},
 	}
@@ -241,6 +250,64 @@ my_other_validator.Validate(),
 			t.Parallel()
 
 			got, err := testCase.input.ToString("float64_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorFloat64Attribute_ToModel(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorFloat64Attribute
+		expected      string
+		expectedError error
+	}{
+		"default": {
+			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
+		},
+		"custom-type-nil": {
+			input: GeneratorFloat64Attribute{
+				CustomType: nil,
+			},
+			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
+		},
+		"custom-type-missing-value-type": {
+			input: GeneratorFloat64Attribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
+		},
+		"custom-type-value-type-empty-string": {
+			input: GeneratorFloat64Attribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
+		},
+		"custom-type": {
+			input: GeneratorFloat64Attribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: "\nFloat64Attribute my_custom_value_type `tfsdk:\"float64_attribute\"`",
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ToModel("float64_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
