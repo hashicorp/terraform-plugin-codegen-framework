@@ -344,20 +344,6 @@ func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSour
 		return nil, err
 	}
 
-	//additionalTemplates := []string{
-	//	attributesModel,
-	//	boolAttributeModel,
-	//	listAttributeModel,
-	//	//singleNestedAttributeGoTemplate,
-	//	//singleNestedAttributeModel,
-	//}
-	//
-	//for i, templ := range additionalTemplates {
-	//	if _, err = datasourceModelTemplate.New(fmt.Sprint("_", i)).Parse(templ); err != nil {
-	//		return nil, err
-	//	}
-	//}
-
 	dataSourcesModels := make(map[string][]byte, len(schemas))
 
 	for k, s := range schemas {

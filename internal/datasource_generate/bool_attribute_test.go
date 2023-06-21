@@ -25,7 +25,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorBoolAttribute{
@@ -58,7 +60,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorBoolAttribute{
@@ -69,7 +73,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
@@ -80,7 +86,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorBoolAttribute{
@@ -97,9 +105,10 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				generatorschema.ValidatorImport:                    {},
-				"github.com/myotherproject/myvalidators/validator": {},
-				"github.com/myproject/myvalidators/validator":      {},
+				generatorschema.ValidatorImport:                         {},
+				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				"github.com/myotherproject/myvalidators/validator":      {},
+				"github.com/myproject/myvalidators/validator":           {},
 			},
 		},
 	}

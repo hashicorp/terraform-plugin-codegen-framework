@@ -102,7 +102,7 @@ func (g GeneratorBoolAttribute) ToModel(name string) (string, error) {
 		"snakeCaseToCamelCase": snakeCaseToCamelCase,
 	}
 
-	t, err := template.New("bool_attribute").Funcs(funcMap).Parse(boolAttributeModel)
+	t, err := template.New("bool_model").Funcs(funcMap).Parse(boolModel)
 	if err != nil {
 		return "", err
 	}
