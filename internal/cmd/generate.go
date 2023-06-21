@@ -4,8 +4,6 @@
 package cmd
 
 import (
-	"context"
-	"flag"
 	"fmt"
 	"strings"
 
@@ -15,135 +13,33 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
 
 type GenerateCommand struct {
-	UI                  cli.Ui
-	GenerateDataSources bool
-	GenerateResources   bool
-	GenerateProvider    bool
-
-	flagIRInputPath string
-	flagOutputPath  string
-}
-
-func (cmd *GenerateCommand) Flags() *flag.FlagSet {
-	fs := flag.NewFlagSet("generate", flag.ExitOnError)
-	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
-	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
-
-	return fs
+	UI cli.Ui
 }
 
 func (cmd *GenerateCommand) Help() string {
-	strBuilder := &strings.Builder{}
-
-	longestName := 0
-	longestUsage := 0
-	cmd.Flags().VisitAll(func(f *flag.Flag) {
-		if len(f.Name) > longestName {
-			longestName = len(f.Name)
-		}
-		if len(f.Usage) > longestUsage {
-			longestUsage = len(f.Usage)
-		}
-	})
-
-	strBuilder.WriteString("\nUsage: terraform-plugin-codegen-framework generate <all|resources|data-sources|providers> [<args>]")
-	cmd.Flags().VisitAll(func(f *flag.Flag) {
-		if f.DefValue != "" {
-			strBuilder.WriteString(fmt.Sprintf("    --%s <ARG> %s%s%s  (default: %q)\n",
-				f.Name,
-				strings.Repeat(" ", longestName-len(f.Name)+2),
-				f.Usage,
-				strings.Repeat(" ", longestUsage-len(f.Usage)+2),
-				f.DefValue,
-			))
-		} else {
-			strBuilder.WriteString(fmt.Sprintf("    --%s <ARG> %s%s%s\n",
-				f.Name,
-				strings.Repeat(" ", longestName-len(f.Name)+2),
-				f.Usage,
-				strings.Repeat(" ", longestUsage-len(f.Usage)+2),
-			))
-		}
-	})
-	strBuilder.WriteString("\n")
-
-	return strBuilder.String()
+	helpText := `
+	Usage: terraform-plugin-codegen-framework generate <subcommand> [<args>]
+	
+	  This command has subcommands for Terraform Plugin Framework code generation.
+	
+	`
+	return strings.TrimSpace(helpText)
 }
 
 func (a *GenerateCommand) Synopsis() string {
-	return "Generates Terraform Plugin Framework Go code files for a given Intermediate Representation (IR) JSON file."
+	return "Terraform Plugin Framework code generation commands"
 }
 
 func (cmd *GenerateCommand) Run(args []string) int {
-	ctx := context.Background()
-
-	fs := cmd.Flags()
-	err := fs.Parse(args)
-	if err != nil {
-		cmd.UI.Error(fmt.Sprintf("error parsing command flags: %s", err))
-		return 1
-	}
-
-	err = cmd.runInternal(ctx)
-	if err != nil {
-		cmd.UI.Error(fmt.Sprintf("Error executing command: %s\n", err))
-		return 1
-	}
-
-	return 0
-}
-
-func (cmd *GenerateCommand) runInternal(ctx context.Context) error {
-	// read input file
-	src, err := input.Read(cmd.flagIRInputPath)
-	if err != nil {
-		return fmt.Errorf("error reading IR JSON: %w", err)
-	}
-
-	// validate JSON
-	err = validate.JSON(src)
-	if err != nil {
-		return fmt.Errorf("error validating IR JSON: %w", err)
-	}
-
-	// parse and validate IR against specification
-	spec, err := spec.Parse(ctx, src)
-	if err != nil {
-		return fmt.Errorf("error parsing IR JSON: %w", err)
-	}
-
-	if cmd.GenerateDataSources {
-		err = generateDataSourceCode(spec, cmd.flagOutputPath)
-		if err != nil {
-			return fmt.Errorf("error generating data source code: %w", err)
-		}
-	}
-
-	if cmd.GenerateResources {
-		err = generateResourceCode(spec, cmd.flagOutputPath)
-		if err != nil {
-			return fmt.Errorf("error generating resource code: %w", err)
-		}
-	}
-
-	if cmd.GenerateProvider {
-		err = generateProviderCode(spec, cmd.flagOutputPath)
-		if err != nil {
-			return fmt.Errorf("error generating provider code: %w", err)
-		}
-	}
-
-	return nil
+	return cli.RunResultHelp
 }
 
 func generateDataSourceCode(spec spec.Specification, outputPath string) error {

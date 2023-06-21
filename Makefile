@@ -1,3 +1,6 @@
+build:
+	go build ./cmd/terraform-plugin-codegen-framework
+
 lint:
 	golangci-lint run
 

@@ -32,37 +32,38 @@ func main() {
 }
 
 func initCommands(ui cli.Ui) map[string]cli.CommandFactory {
-	generateAllFactory := func() (cli.Command, error) {
+	generateFactory := func() (cli.Command, error) {
 		return &cmd.GenerateCommand{
-			UI:                  ui,
-			GenerateResources:   true,
-			GenerateDataSources: true,
-			GenerateProvider:    true,
+			UI: ui,
+		}, nil
+	}
+
+	generateAllFactory := func() (cli.Command, error) {
+		return &cmd.GenerateAllCommand{
+			UI: ui,
 		}, nil
 	}
 
 	generateResourcesFactory := func() (cli.Command, error) {
-		return &cmd.GenerateCommand{
-			UI:                ui,
-			GenerateResources: true,
+		return &cmd.GenerateResourcesCommand{
+			UI: ui,
 		}, nil
 	}
 
 	generateDataSourcesFactory := func() (cli.Command, error) {
-		return &cmd.GenerateCommand{
-			UI:                  ui,
-			GenerateDataSources: true,
+		return &cmd.GenerateDataSourcesCommand{
+			UI: ui,
 		}, nil
 	}
 
 	generateProviderFactory := func() (cli.Command, error) {
-		return &cmd.GenerateCommand{
-			UI:               ui,
-			GenerateProvider: true,
+		return &cmd.GenerateProviderCommand{
+			UI: ui,
 		}, nil
 	}
 
 	return map[string]cli.CommandFactory{
+		"generate":              generateFactory,
 		"generate all":          generateAllFactory,
 		"generate resources":    generateResourcesFactory,
 		"generate data-sources": generateDataSourcesFactory,
