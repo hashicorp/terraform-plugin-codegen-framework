@@ -950,26 +950,6 @@ func TestGeneratorObjectAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorObjectAttribute{
-				CustomType: nil,
-			},
-			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorObjectAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorObjectAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorObjectAttribute{
 				CustomType: &specschema.CustomType{

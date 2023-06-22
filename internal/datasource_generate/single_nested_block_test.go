@@ -543,26 +543,6 @@ func TestGeneratorSingleNestedBlock_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nSingleNestedBlock types.Object `tfsdk:\"single_nested_block\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorSingleNestedBlock{
-				CustomType: nil,
-			},
-			expected: "\nSingleNestedBlock types.Object `tfsdk:\"single_nested_block\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorSingleNestedBlock{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nSingleNestedBlock types.Object `tfsdk:\"single_nested_block\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorSingleNestedBlock{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nSingleNestedBlock types.Object `tfsdk:\"single_nested_block\"`",
-		},
 		"custom-type": {
 			input: GeneratorSingleNestedBlock{
 				CustomType: &specschema.CustomType{

@@ -854,26 +854,6 @@ func TestGeneratorSetAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nSetAttribute types.Set `tfsdk:\"set_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorSetAttribute{
-				CustomType: nil,
-			},
-			expected: "\nSetAttribute types.Set `tfsdk:\"set_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorSetAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nSetAttribute types.Set `tfsdk:\"set_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorSetAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nSetAttribute types.Set `tfsdk:\"set_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorSetAttribute{
 				CustomType: &specschema.CustomType{

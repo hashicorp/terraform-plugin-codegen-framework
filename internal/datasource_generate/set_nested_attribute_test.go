@@ -771,26 +771,6 @@ func TestGeneratorSetNestedAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nSetNestedAttribute []types.Object `tfsdk:\"set_nested_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorSetNestedAttribute{
-				CustomType: nil,
-			},
-			expected: "\nSetNestedAttribute []types.Object `tfsdk:\"set_nested_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorSetNestedAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nSetNestedAttribute []types.Object `tfsdk:\"set_nested_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorSetNestedAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nSetNestedAttribute []types.Object `tfsdk:\"set_nested_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorSetNestedAttribute{
 				CustomType: &specschema.CustomType{

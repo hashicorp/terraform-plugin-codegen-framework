@@ -273,26 +273,6 @@ func TestGeneratorInt64Attribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nInt64Attribute types.Int64 `tfsdk:\"int64_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorInt64Attribute{
-				CustomType: nil,
-			},
-			expected: "\nInt64Attribute types.Int64 `tfsdk:\"int64_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorInt64Attribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nInt64Attribute types.Int64 `tfsdk:\"int64_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorInt64Attribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nInt64Attribute types.Int64 `tfsdk:\"int64_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorInt64Attribute{
 				CustomType: &specschema.CustomType{

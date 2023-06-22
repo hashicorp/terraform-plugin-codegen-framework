@@ -532,26 +532,6 @@ func TestGeneratorSingleNestedAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nSingleNestedAttribute types.Object `tfsdk:\"single_nested_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorSingleNestedAttribute{
-				CustomType: nil,
-			},
-			expected: "\nSingleNestedAttribute types.Object `tfsdk:\"single_nested_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorSingleNestedAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nSingleNestedAttribute types.Object `tfsdk:\"single_nested_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorSingleNestedAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nSingleNestedAttribute types.Object `tfsdk:\"single_nested_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorSingleNestedAttribute{
 				CustomType: &specschema.CustomType{

@@ -273,26 +273,6 @@ func TestGeneratorStringAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorStringAttribute{
-				CustomType: nil,
-			},
-			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorStringAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorStringAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorStringAttribute{
 				CustomType: &specschema.CustomType{

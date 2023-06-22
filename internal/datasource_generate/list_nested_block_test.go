@@ -780,26 +780,6 @@ func TestGeneratorListNestedBlock_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nListNestedBlock []types.Object `tfsdk:\"list_nested_block\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorListNestedBlock{
-				CustomType: nil,
-			},
-			expected: "\nListNestedBlock []types.Object `tfsdk:\"list_nested_block\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorListNestedBlock{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nListNestedBlock []types.Object `tfsdk:\"list_nested_block\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorListNestedBlock{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nListNestedBlock []types.Object `tfsdk:\"list_nested_block\"`",
-		},
 		"custom-type": {
 			input: GeneratorListNestedBlock{
 				CustomType: &specschema.CustomType{

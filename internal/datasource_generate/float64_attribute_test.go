@@ -273,26 +273,6 @@ func TestGeneratorFloat64Attribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorFloat64Attribute{
-				CustomType: nil,
-			},
-			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorFloat64Attribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorFloat64Attribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
 				CustomType: &specschema.CustomType{

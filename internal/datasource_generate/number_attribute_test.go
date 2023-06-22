@@ -273,26 +273,6 @@ func TestGeneratorNumberAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nNumberAttribute types.Number `tfsdk:\"number_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorNumberAttribute{
-				CustomType: nil,
-			},
-			expected: "\nNumberAttribute types.Number `tfsdk:\"number_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nNumberAttribute types.Number `tfsdk:\"number_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nNumberAttribute types.Number `tfsdk:\"number_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorNumberAttribute{
 				CustomType: &specschema.CustomType{

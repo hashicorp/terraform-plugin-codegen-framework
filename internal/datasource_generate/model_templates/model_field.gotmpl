@@ -1,4 +1,4 @@
-{{- if and .CustomType .CustomType.ValueType}}
+{{- if .CustomType}}
 {{snakeCaseToCamelCase .Name}} {{ .CustomType.ValueType }} `tfsdk:"{{.Name}}"`
 {{- else}}
 {{snakeCaseToCamelCase .Name}} {{.DefaultType}} `tfsdk:"{{.Name}}"`

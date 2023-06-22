@@ -771,26 +771,6 @@ func TestGeneratorMapNestedAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nMapNestedAttribute map[string]types.Object `tfsdk:\"map_nested_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorMapNestedAttribute{
-				CustomType: nil,
-			},
-			expected: "\nMapNestedAttribute map[string]types.Object `tfsdk:\"map_nested_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorMapNestedAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nMapNestedAttribute map[string]types.Object `tfsdk:\"map_nested_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorMapNestedAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nMapNestedAttribute map[string]types.Object `tfsdk:\"map_nested_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorMapNestedAttribute{
 				CustomType: &specschema.CustomType{

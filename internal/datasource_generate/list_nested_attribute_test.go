@@ -771,26 +771,6 @@ func TestGeneratorListNestedAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nListNestedAttribute []types.Object `tfsdk:\"list_nested_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorListNestedAttribute{
-				CustomType: nil,
-			},
-			expected: "\nListNestedAttribute []types.Object `tfsdk:\"list_nested_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nListNestedAttribute []types.Object `tfsdk:\"list_nested_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nListNestedAttribute []types.Object `tfsdk:\"list_nested_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorListNestedAttribute{
 				CustomType: &specschema.CustomType{

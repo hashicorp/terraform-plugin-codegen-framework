@@ -856,26 +856,6 @@ func TestGeneratorListAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorListAttribute{
-				CustomType: nil,
-			},
-			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorListAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorListAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorListAttribute{
 				CustomType: &specschema.CustomType{

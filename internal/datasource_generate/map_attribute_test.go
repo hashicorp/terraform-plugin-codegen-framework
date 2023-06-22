@@ -854,26 +854,6 @@ func TestGeneratorMapAttribute_ToModel(t *testing.T) {
 		"default": {
 			expected: "\nMapAttribute types.Map `tfsdk:\"map_attribute\"`",
 		},
-		"custom-type-nil": {
-			input: GeneratorMapAttribute{
-				CustomType: nil,
-			},
-			expected: "\nMapAttribute types.Map `tfsdk:\"map_attribute\"`",
-		},
-		"custom-type-missing-value-type": {
-			input: GeneratorMapAttribute{
-				CustomType: &specschema.CustomType{},
-			},
-			expected: "\nMapAttribute types.Map `tfsdk:\"map_attribute\"`",
-		},
-		"custom-type-value-type-empty-string": {
-			input: GeneratorMapAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "",
-				},
-			},
-			expected: "\nMapAttribute types.Map `tfsdk:\"map_attribute\"`",
-		},
 		"custom-type": {
 			input: GeneratorMapAttribute{
 				CustomType: &specschema.CustomType{
