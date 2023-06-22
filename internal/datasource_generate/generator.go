@@ -177,12 +177,14 @@ type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	ToString(string) (string, error)
 	GeneratorImport
+	GeneratorModel
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	ToString(string) (string, error)
 	GeneratorImport
+	GeneratorModel
 }
 
 type GeneratorNestedAttributeObject struct {
@@ -560,16 +562,13 @@ func getModel(attributes map[string]GeneratorAttribute, blocks map[string]Genera
 			continue
 		}
 
-		// TODO: Remove once implemented across all generator attributes and blocks
-		if m, ok := attributes[k].(GeneratorModel); ok {
-			str, err := m.ToModel(k)
+		str, err := attributes[k].ToModel(k)
 
-			if err != nil {
-				return "", err
-			}
-
-			s.WriteString(str)
+		if err != nil {
+			return "", err
 		}
+
+		s.WriteString(str)
 	}
 
 	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
@@ -586,16 +585,13 @@ func getModel(attributes map[string]GeneratorAttribute, blocks map[string]Genera
 			continue
 		}
 
-		// TODO: Remove once implemented across all generator attributes and blocks
-		if m, ok := blocks[k].(GeneratorModel); ok {
-			str, err := m.ToModel(k)
+		str, err := blocks[k].ToModel(k)
 
-			if err != nil {
-				return "", err
-			}
-
-			s.WriteString(str)
+		if err != nil {
+			return "", err
 		}
+
+		s.WriteString(str)
 	}
 
 	return s.String(), nil
