@@ -120,6 +120,36 @@ func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 	return buf.String(), nil
 }
 
+func (g GeneratorSingleNestedBlock) ToModel(name string) (string, error) {
+	funcMap := template.FuncMap{
+		"snakeCaseToCamelCase": snakeCaseToCamelCase,
+	}
+
+	t, err := template.New("attribute_model").Funcs(funcMap).Parse(modelFieldTmpl)
+	if err != nil {
+		return "", err
+	}
+
+	var buf strings.Builder
+
+	templateData := struct {
+		Name        string
+		DefaultType string
+		GeneratorSingleNestedBlock
+	}{
+		Name:                       name,
+		DefaultType:                "types.Object",
+		GeneratorSingleNestedBlock: g,
+	}
+
+	err = t.Execute(&buf, templateData)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
 func (g GeneratorSingleNestedBlock) validatorsEqual(x, y []specschema.ObjectValidator) bool {
 	if x == nil && y == nil {
 		return true
