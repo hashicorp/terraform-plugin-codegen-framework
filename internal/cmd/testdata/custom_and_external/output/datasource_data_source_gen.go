@@ -243,3 +243,108 @@ var datasourceDataSourceSchema = schema.Schema{
 		},
 	},
 }
+
+type datasourceDataSourceModel struct {
+	BoolAttribute                                                            types.Bool     `tfsdk:"bool_attribute"`
+	ListListAttribute                                                        types.List     `tfsdk:"list_list_attribute"`
+	ListMapAttribute                                                         types.List     `tfsdk:"list_map_attribute"`
+	ListNestedBoolAttribute                                                  []types.Object `tfsdk:"list_nested_bool_attribute"`
+	ListNestedListNestedBoolAttribute                                        []types.Object `tfsdk:"list_nested_list_nested_bool_attribute"`
+	ListNestedListNestedListAttribute                                        []types.Object `tfsdk:"list_nested_list_nested_list_attribute"`
+	ListObjectAttribute                                                      types.List     `tfsdk:"list_object_attribute"`
+	ListObjectObjectAttribute                                                types.List     `tfsdk:"list_object_object_attribute"`
+	ObjectAttribute                                                          types.Object   `tfsdk:"object_attribute"`
+	ObjectListAttribute                                                      types.Object   `tfsdk:"object_list_attribute"`
+	ObjectListObjectAttribute                                                types.Object   `tfsdk:"object_list_object_attribute"`
+	SingleNestedBoolAttribute                                                types.Object   `tfsdk:"single_nested_bool_attribute"`
+	SingleNestedSingleNestedBoolAttribute                                    types.Object   `tfsdk:"single_nested_single_nested_bool_attribute"`
+	SingleNestedSingleNestedListAttribute                                    types.Object   `tfsdk:"single_nested_single_nested_list_attribute"`
+	ListNestedBlockBoolAttribute                                             []types.Object `tfsdk:"list_nested_block_bool_attribute"`
+	ListNestedBlockObjectAttributeListNestedNestedBlockListAttribute         []types.Object `tfsdk:"list_nested_block_object_attribute_list_nested_nested_block_list_attribute"`
+	ListNestedListNestedBlockBoolAttribute                                   []types.Object `tfsdk:"list_nested_list_nested_block_bool_attribute"`
+	SingleNestedBlockBoolAttribute                                           types.Object   `tfsdk:"single_nested_block_bool_attribute"`
+	SingleNestedBlockObjectAttributeSingleNestedListNestedBlockListAttribute types.Object   `tfsdk:"single_nested_block_object_attribute_single_nested_list_nested_block_list_attribute"`
+	SingleNestedSingleNestedBlockBoolAttribute                               types.Object   `tfsdk:"single_nested_single_nested_block_bool_attribute"`
+}
+
+type listNestedBoolAttributeModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type listNestedListNestedBoolAttributeModel struct {
+	ListNestedAttribute []types.Object `tfsdk:"list_nested_attribute"`
+}
+
+type listNestedAttributeModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type listNestedListNestedListAttributeModel struct {
+	ListNestedAttribute []types.Object `tfsdk:"list_nested_attribute"`
+}
+
+type listNestedAttributeModel struct {
+	ListAttribute types.List `tfsdk:"list_attribute"`
+}
+
+type singleNestedBoolAttributeModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type singleNestedSingleNestedBoolAttributeModel struct {
+	SingleNestedAttribute types.Object `tfsdk:"single_nested_attribute"`
+}
+
+type singleNestedAttributeModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type singleNestedSingleNestedListAttributeModel struct {
+	SingleNestedAttribute types.Object `tfsdk:"single_nested_attribute"`
+}
+
+type singleNestedAttributeModel struct {
+	ListAttribute types.List `tfsdk:"list_attribute"`
+}
+
+type listNestedBlockBoolAttributeModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type listNestedBlockObjectAttributeListNestedNestedBlockListAttributeModel struct {
+	ObjectAttribute types.Object   `tfsdk:"object_attribute"`
+	ListNestedBlock []types.Object `tfsdk:"list_nested_block"`
+}
+
+type listNestedBlockModel struct {
+	ListAttribute types.List `tfsdk:"list_attribute"`
+}
+
+type listNestedListNestedBlockBoolAttributeModel struct {
+	ListNestedBlock []types.Object `tfsdk:"list_nested_block"`
+}
+
+type listNestedBlockModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type singleNestedBlockBoolAttributeModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type singleNestedBlockObjectAttributeSingleNestedListNestedBlockListAttributeModel struct {
+	ObjectAttribute types.Object   `tfsdk:"object_attribute"`
+	ListNestedBlock []types.Object `tfsdk:"list_nested_block"`
+}
+
+type listNestedBlockModel struct {
+	ListAttribute types.List `tfsdk:"list_attribute"`
+}
+
+type singleNestedSingleNestedBlockBoolAttributeModel struct {
+	SingleNestedBlock types.Object `tfsdk:"single_nested_block"`
+}
+
+type singleNestedBlockModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
