@@ -2,33 +2,51 @@
 
 ## Running the Generator
 
+### Build (local)
 ```shell
-# Build the binary
-go build ./cmd/terraform-plugin-codegen-framework
+# Build the binary from source
+# Creates binary named `terraform-plugin-codegen-framework`
+make build
 ```
 
-The generator reads the intermediate representation (IR) from _stdin_ by default in order to 
-facilitate the chaining together of CLI commands.
+### Input
+
+The generator reads an [Intermediate Representation (IR)](https://github.com/hashicorp/terraform-plugin-codegen-spec) of a Terraform Provider. Input is read from **stdin** by default in order to facilitate the chaining together of CLI commands.
 
 The following is a contrived example:
 
 ```shell
-cat examples/ir.json | ./terraform-plugin-codegen-framework all
+cat examples/ir.json | ./terraform-plugin-codegen-framework generate all
 ```
 
-An alternative is to use the `-input` flag to specify a file from which the IR can be read.
+An alternative is to use the `--input` flag to specify a file from which the IR can be read.
 
 For example:
 
 ```shell
-./terraform-plugin-codegen-framework all -input examples/ir.json
+./terraform-plugin-codegen-framework generate all --input examples/ir.json
 ```
 
-Both cases will process `ir.json`.
+### Commands
+The IR JSON file contains `provider`, `resources`, and `datasources` definitions. These can all be processed together or individually with the following commands:
 
-The generated code will be saved into the `generator/output` directory.
+```shell
+# Generates all code for provider, resources, and data-sources
+./terraform-plugin-codegen-framework generate all --input examples/ir.json
 
-`ir.json` contains a simple intermediate representation (IR).
+# Generates all code for data-sources only.
+./terraform-plugin-codegen-framework generate data-sources --input examples/ir.json
+
+# Generates all code for provider only.
+./terraform-plugin-codegen-framework generate provider --input examples/ir.json
+
+# Generates all code for resources only.
+./terraform-plugin-codegen-framework generate resources --input examples/ir.json
+```
+
+### Output
+
+The generated code will default to the `./output` directory, but can be controlled with the `--output` parameter.
 
 ## Running the Tests
 
@@ -54,8 +72,5 @@ The general flow is as follows:
 * Generate Go code for schema, models and model helper functions.
 * Format the generated Go code.
 * Write the formatted Go code, one file per data source, provider or resource, into
-  `generator/output`.
+  `./output`.
 
-Currently, the only command that has been implemented is `all`. This is a bit of a misnomer 
-as the `all` command only generates schema for data sources, provider and resources at 
-present.
