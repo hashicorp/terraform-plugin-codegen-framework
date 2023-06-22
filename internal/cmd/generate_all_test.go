@@ -34,8 +34,8 @@ func TestGenerateAllCommand(t *testing.T) {
 			}
 
 			args := []string{
-				"-input", testCase.irInputPath,
-				"-output", testOutputDir,
+				"--input", testCase.irInputPath,
+				"--output", testOutputDir,
 			}
 
 			exitCode := c.Run(args)
