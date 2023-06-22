@@ -35,6 +35,7 @@ func TestGenerateAllCommand(t *testing.T) {
 
 			args := []string{
 				"--input", testCase.irInputPath,
+				"--package", "generated",
 				"--output", testOutputDir,
 			}
 
