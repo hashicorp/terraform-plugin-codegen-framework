@@ -20,12 +20,14 @@ type GenerateDataSourcesCommand struct {
 	UI              cli.Ui
 	flagIRInputPath string
 	flagOutputPath  string
+	flagPackageName string
 }
 
 func (cmd *GenerateDataSourcesCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("generate data-sources", flag.ExitOnError)
 	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
+	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for generated code files")
 
 	return fs
 }
@@ -110,7 +112,7 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateDataSourceCode(spec, cmd.flagOutputPath)
+	err = generateDataSourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
 	}
@@ -118,7 +120,7 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context) error {
 	return nil
 }
 
-func generateDataSourceCode(spec spec.Specification, outputPath string) error {
+func generateDataSourceCode(spec spec.Specification, outputPath, packageName string) error {
 	// convert IR to framework schema
 	c := datasource_convert.NewConverter(spec)
 	schema, err := c.ToGeneratorDataSourceSchema()
@@ -128,7 +130,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath string) error {
 
 	// convert framework schema to []byte
 	g := datasource_generate.NewGeneratorDataSourceSchemas(schema)
-	schemaBytes, err := g.ToBytes()
+	schemaBytes, err := g.ToBytes(packageName)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}

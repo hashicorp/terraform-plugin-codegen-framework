@@ -20,12 +20,14 @@ type GenerateProviderCommand struct {
 	UI              cli.Ui
 	flagIRInputPath string
 	flagOutputPath  string
+	flagPackageName string
 }
 
 func (cmd *GenerateProviderCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("generate provider", flag.ExitOnError)
 	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
+	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for generated code files")
 
 	return fs
 }
@@ -110,7 +112,7 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateProviderCode(spec, cmd.flagOutputPath)
+	err = generateProviderCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
 	if err != nil {
 		return fmt.Errorf("error generating provider code: %w", err)
 	}
@@ -118,7 +120,7 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context) error {
 	return nil
 }
 
-func generateProviderCode(spec spec.Specification, outputPath string) error {
+func generateProviderCode(spec spec.Specification, outputPath, packageName string) error {
 	// convert IR to framework schema
 	providerSchemaConverter := provider_convert.NewConverter(spec)
 	providerSchemas, err := providerSchemaConverter.ToGeneratorProviderSchema()
@@ -128,7 +130,7 @@ func generateProviderCode(spec spec.Specification, outputPath string) error {
 
 	// convert framework schema to []byte
 	providerSchemaGenerator := provider_generate.NewGeneratorProviderSchemas(providerSchemas)
-	providerSchemaBytes, err := providerSchemaGenerator.ToBytes()
+	providerSchemaBytes, err := providerSchemaGenerator.ToBytes(packageName)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}

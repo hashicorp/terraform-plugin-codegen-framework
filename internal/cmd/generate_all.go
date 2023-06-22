@@ -16,12 +16,14 @@ type GenerateAllCommand struct {
 	UI              cli.Ui
 	flagIRInputPath string
 	flagOutputPath  string
+	flagPackageName string
 }
 
 func (cmd *GenerateAllCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("generate all", flag.ExitOnError)
 	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
+	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for generated code files")
 
 	return fs
 }
@@ -106,15 +108,15 @@ func (cmd *GenerateAllCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateDataSourceCode(spec, cmd.flagOutputPath)
+	err = generateDataSourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
 	}
-	err = generateResourceCode(spec, cmd.flagOutputPath)
+	err = generateResourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
 	if err != nil {
 		return fmt.Errorf("error generating resource code: %w", err)
 	}
-	err = generateProviderCode(spec, cmd.flagOutputPath)
+	err = generateProviderCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
 	if err != nil {
 		return fmt.Errorf("error generating provider code: %w", err)
 	}

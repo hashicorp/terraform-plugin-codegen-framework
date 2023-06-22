@@ -20,12 +20,14 @@ type GenerateResourcesCommand struct {
 	UI              cli.Ui
 	flagIRInputPath string
 	flagOutputPath  string
+	flagPackageName string
 }
 
 func (cmd *GenerateResourcesCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("generate resources", flag.ExitOnError)
 	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
+	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for generated code files")
 
 	return fs
 }
@@ -110,7 +112,7 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateResourceCode(spec, cmd.flagOutputPath)
+	err = generateResourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
 	if err != nil {
 		return fmt.Errorf("error generating resource code: %w", err)
 	}
@@ -118,7 +120,7 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context) error {
 	return nil
 }
 
-func generateResourceCode(spec spec.Specification, outputPath string) error {
+func generateResourceCode(spec spec.Specification, outputPath, packageName string) error {
 	// convert IR to framework schema
 	resourceSchemaConverter := resource_convert.NewConverter(spec)
 	resourceSchemas, err := resourceSchemaConverter.ToGeneratorResourceSchema()
@@ -128,7 +130,7 @@ func generateResourceCode(spec spec.Specification, outputPath string) error {
 
 	// convert framework schema to []byte
 	resourceSchemaGenerator := resource_generate.NewGeneratorResourceSchemas(resourceSchemas)
-	resourceSchemaBytes, err := resourceSchemaGenerator.ToBytes()
+	resourceSchemaBytes, err := resourceSchemaGenerator.ToBytes(packageName)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}

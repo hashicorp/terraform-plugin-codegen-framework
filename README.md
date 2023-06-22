@@ -46,7 +46,11 @@ The IR JSON file contains `provider`, `resources`, and `datasources` definitions
 
 ### Output
 
-The generated code will default to the `./output` directory, but can be controlled with the `--output` parameter.
+The generated code will default to the `./output` directory, but can also be specified with the `--output` parameter. Similarly, the name of the Go package in the generated code will default to `provider`, but can be specified with `--package`.
+```shell
+# Generates all code into a Go package named `generated` at the directory path `./internal/provider/generated`
+./terraform-plugin-codegen-framework generate all --input examples/ir.json --output internal/provider/generated --package generated
+```
 
 ## Running the Tests
 
