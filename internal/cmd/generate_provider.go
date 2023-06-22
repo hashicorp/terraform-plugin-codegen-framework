@@ -6,7 +6,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_convert"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/mitchellh/cli"
@@ -109,6 +113,36 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context) error {
 	err = generateProviderCode(spec, cmd.flagOutputPath)
 	if err != nil {
 		return fmt.Errorf("error generating provider code: %w", err)
+	}
+
+	return nil
+}
+
+func generateProviderCode(spec spec.Specification, outputPath string) error {
+	// convert IR to framework schema
+	providerSchemaConverter := provider_convert.NewConverter(spec)
+	providerSchemas, err := providerSchemaConverter.ToGeneratorProviderSchema()
+	if err != nil {
+		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
+	}
+
+	// convert framework schema to []byte
+	providerSchemaGenerator := provider_generate.NewGeneratorProviderSchemas(providerSchemas)
+	providerSchemaBytes, err := providerSchemaGenerator.ToBytes()
+	if err != nil {
+		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
+	}
+
+	// format schema code
+	formattedProvidersSchema, err := format.Format(providerSchemaBytes)
+	if err != nil {
+		return fmt.Errorf("error formatting Go code: %w", err)
+	}
+
+	// write code
+	err = output.WriteProviders(formattedProvidersSchema, outputPath)
+	if err != nil {
+		return fmt.Errorf("error writing Go code to output: %w", err)
 	}
 
 	return nil

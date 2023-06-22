@@ -6,7 +6,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_convert"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/mitchellh/cli"
@@ -109,6 +113,36 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context) error {
 	err = generateDataSourceCode(spec, cmd.flagOutputPath)
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
+	}
+
+	return nil
+}
+
+func generateDataSourceCode(spec spec.Specification, outputPath string) error {
+	// convert IR to framework schema
+	c := datasource_convert.NewConverter(spec)
+	schema, err := c.ToGeneratorDataSourceSchema()
+	if err != nil {
+		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
+	}
+
+	// convert framework schema to []byte
+	g := datasource_generate.NewGeneratorDataSourceSchemas(schema)
+	schemaBytes, err := g.ToBytes()
+	if err != nil {
+		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
+	}
+
+	// format schema code
+	formattedDataSourcesSchema, err := format.Format(schemaBytes)
+	if err != nil {
+		return fmt.Errorf("error formatting Go code: %w", err)
+	}
+
+	// write code
+	err = output.WriteDataSources(formattedDataSourcesSchema, outputPath)
+	if err != nil {
+		return fmt.Errorf("error writing Go code to output: %w", err)
 	}
 
 	return nil
