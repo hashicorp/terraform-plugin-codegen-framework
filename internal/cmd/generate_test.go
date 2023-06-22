@@ -26,19 +26,19 @@ func compareDirectories(t *testing.T, wantDirPath, gotDirPath string) {
 	}
 
 	if len(gotDirEntries) != len(wantDirEntries) {
-		t.Fatalf("mismatched files in output directory, wanted: %d file(s), got: %d file(s)", len(wantDirEntries), len(gotDirEntries))
+		t.Fatalf("mismatched file count in output directory, golden directory: %d file(s), test directory: %d file(s)", len(wantDirEntries), len(gotDirEntries))
 	}
 
 	for i, wantEntry := range wantDirEntries {
 		gotEntry := gotDirEntries[i]
 
 		if gotEntry.Name() != wantEntry.Name() {
-			t.Errorf("mismatched file name, wanted: %s, got: %s", wantEntry.Name(), gotEntry.Name())
+			t.Errorf("mismatched file name, golden file name: %s, test file name: %s", wantEntry.Name(), gotEntry.Name())
 			continue
 		}
 
 		if gotEntry.Type() != wantEntry.Type() {
-			t.Errorf("mismatched file type, wanted: %s, got: %s", wantEntry.Type(), gotEntry.Type())
+			t.Errorf("mismatched file type, golden file type: %s, test file type: %s", wantEntry.Type(), gotEntry.Type())
 			continue
 		}
 
