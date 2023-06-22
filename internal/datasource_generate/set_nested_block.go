@@ -37,6 +37,8 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
+	} else {
+		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
 	if g.NestedObject.CustomType != nil {
@@ -139,6 +141,36 @@ func (g GeneratorSetNestedBlock) ToString(name string) (string, error) {
 	}
 
 	err = t.Execute(&buf, attrib)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
+func (g GeneratorSetNestedBlock) ToModel(name string) (string, error) {
+	funcMap := template.FuncMap{
+		"snakeCaseToCamelCase": snakeCaseToCamelCase,
+	}
+
+	t, err := template.New("model_field").Funcs(funcMap).Parse(modelFieldTmpl)
+	if err != nil {
+		return "", err
+	}
+
+	var buf strings.Builder
+
+	templateData := struct {
+		Name        string
+		DefaultType string
+		GeneratorSetNestedBlock
+	}{
+		Name:                    name,
+		DefaultType:             "[]types.Object",
+		GeneratorSetNestedBlock: g,
+	}
+
+	err = t.Execute(&buf, templateData)
 	if err != nil {
 		return "", err
 	}

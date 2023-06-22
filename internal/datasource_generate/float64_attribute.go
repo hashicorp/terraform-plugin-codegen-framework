@@ -100,7 +100,7 @@ func (g GeneratorFloat64Attribute) ToModel(name string) (string, error) {
 		"snakeCaseToCamelCase": snakeCaseToCamelCase,
 	}
 
-	t, err := template.New("attribute_model").Funcs(funcMap).Parse(modelFieldTmpl)
+	t, err := template.New("model_field").Funcs(funcMap).Parse(modelFieldTmpl)
 	if err != nil {
 		return "", err
 	}

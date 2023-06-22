@@ -22,7 +22,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorListAttribute{
@@ -69,6 +71,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -101,6 +104,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -110,7 +114,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					Object: []specschema.ObjectAttributeType{},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"elem-type-object-bool": {
 			input: GeneratorListAttribute{
@@ -144,6 +150,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -179,7 +186,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorListAttribute{
@@ -190,7 +199,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorListAttribute{
@@ -201,7 +212,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorListAttribute{
@@ -218,6 +231,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -819,6 +833,66 @@ ElementType: stringCustomType,
 			t.Parallel()
 
 			got, err := testCase.input.ToString("list_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorListAttribute_ToModel(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorListAttribute
+		expected      string
+		expectedError error
+	}{
+		"default": {
+			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
+		},
+		"custom-type-nil": {
+			input: GeneratorListAttribute{
+				CustomType: nil,
+			},
+			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
+		},
+		"custom-type-missing-value-type": {
+			input: GeneratorListAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
+		},
+		"custom-type-value-type-empty-string": {
+			input: GeneratorListAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "",
+				},
+			},
+			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
+		},
+		"custom-type": {
+			input: GeneratorListAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: "\nListAttribute my_custom_value_type `tfsdk:\"list_attribute\"`",
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ToModel("list_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

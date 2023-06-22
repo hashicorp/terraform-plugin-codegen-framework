@@ -34,6 +34,8 @@ func (g GeneratorNumberAttribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
+	} else {
+		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
 	for _, v := range g.Validators {
@@ -86,6 +88,36 @@ func (g GeneratorNumberAttribute) ToString(name string) (string, error) {
 	}
 
 	err = t.Execute(&buf, attrib)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
+func (g GeneratorNumberAttribute) ToModel(name string) (string, error) {
+	funcMap := template.FuncMap{
+		"snakeCaseToCamelCase": snakeCaseToCamelCase,
+	}
+
+	t, err := template.New("model_field").Funcs(funcMap).Parse(modelFieldTmpl)
+	if err != nil {
+		return "", err
+	}
+
+	var buf strings.Builder
+
+	templateData := struct {
+		Name        string
+		DefaultType string
+		GeneratorNumberAttribute
+	}{
+		Name:                     name,
+		DefaultType:              "types.Number",
+		GeneratorNumberAttribute: g,
+	}
+
+	err = t.Execute(&buf, templateData)
 	if err != nil {
 		return "", err
 	}

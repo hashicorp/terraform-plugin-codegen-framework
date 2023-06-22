@@ -22,7 +22,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 	}{
 		"default": {
 			expected: map[string]struct{}{
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"custom-type-without-import": {
@@ -57,7 +57,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"validator-custom-import-nil": {
@@ -70,7 +70,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -83,7 +83,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"validator-custom-import": {
@@ -101,10 +101,10 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				generatorschema.ValidatorImport:                         {},
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
-				"github.com/myotherproject/myvalidators/validator":      {},
-				"github.com/myproject/myvalidators/validator":           {},
+				generatorschema.ValidatorImport:                    {},
+				generatorschema.TypesImport:                        {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
 			},
 		},
 	}
@@ -287,7 +287,9 @@ func TestGeneratorFloat64Attribute_ToModel(t *testing.T) {
 		},
 		"custom-type-value-type-empty-string": {
 			input: GeneratorFloat64Attribute{
-				CustomType: &specschema.CustomType{},
+				CustomType: &specschema.CustomType{
+					ValueType: "",
+				},
 			},
 			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
 		},

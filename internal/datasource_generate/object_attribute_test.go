@@ -21,7 +21,9 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorObjectAttribute{
@@ -48,14 +50,18 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 			},
 		},
 		"object-without-attribute-types": {
-			input:    GeneratorObjectAttribute{},
-			expected: map[string]struct{}{},
+			input: GeneratorObjectAttribute{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"object-with-empty-attribute-types": {
 			input: GeneratorObjectAttribute{
 				AttributeTypes: []specschema.ObjectAttributeType{},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"object-with-attr-type-bool": {
 			input: GeneratorObjectAttribute{
@@ -85,6 +91,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -135,7 +142,9 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorObjectAttribute{
@@ -146,7 +155,9 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorObjectAttribute{
@@ -157,7 +168,9 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorObjectAttribute{
@@ -174,6 +187,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -913,6 +927,66 @@ AttributeTypes: map[string]attr.Type{
 			t.Parallel()
 
 			got, err := testCase.input.ToString("object_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorObjectAttribute_ToModel(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorObjectAttribute
+		expected      string
+		expectedError error
+	}{
+		"default": {
+			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
+		},
+		"custom-type-nil": {
+			input: GeneratorObjectAttribute{
+				CustomType: nil,
+			},
+			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
+		},
+		"custom-type-missing-value-type": {
+			input: GeneratorObjectAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
+		},
+		"custom-type-value-type-empty-string": {
+			input: GeneratorObjectAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "",
+				},
+			},
+			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
+		},
+		"custom-type": {
+			input: GeneratorObjectAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: "\nObjectAttribute my_custom_value_type `tfsdk:\"object_attribute\"`",
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ToModel("object_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

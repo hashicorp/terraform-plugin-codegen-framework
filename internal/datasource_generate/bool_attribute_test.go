@@ -26,7 +26,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 	}{
 		"default": {
 			expected: map[string]struct{}{
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"custom-type-without-import": {
@@ -61,7 +61,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"validator-custom-import-nil": {
@@ -74,7 +74,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -87,7 +87,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
+				generatorschema.TypesImport: {},
 			},
 		},
 		"validator-custom-import": {
@@ -105,10 +105,10 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				generatorschema.ValidatorImport:                         {},
-				"github.com/hashicorp/terraform-plugin-framework/types": {},
-				"github.com/myotherproject/myvalidators/validator":      {},
-				"github.com/myproject/myvalidators/validator":           {},
+				generatorschema.ValidatorImport:                    {},
+				generatorschema.TypesImport:                        {},
+				"github.com/myotherproject/myvalidators/validator": {},
+				"github.com/myproject/myvalidators/validator":      {},
 			},
 		},
 	}
@@ -299,7 +299,9 @@ func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
 		},
 		"custom-type-value-type-empty-string": {
 			input: GeneratorBoolAttribute{
-				CustomType: &specschema.CustomType{},
+				CustomType: &specschema.CustomType{
+					ValueType: "",
+				},
 			},
 			expected: "\nBoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
 		},

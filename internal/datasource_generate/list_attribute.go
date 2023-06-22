@@ -35,6 +35,8 @@ func (g GeneratorListAttribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
+	} else {
+		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
 	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType, make(map[string]struct{}))
@@ -132,6 +134,36 @@ func (g GeneratorListAttribute) ToString(name string) (string, error) {
 	}
 
 	err = t.Execute(&buf, attrib)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
+func (g GeneratorListAttribute) ToModel(name string) (string, error) {
+	funcMap := template.FuncMap{
+		"snakeCaseToCamelCase": snakeCaseToCamelCase,
+	}
+
+	t, err := template.New("model_field").Funcs(funcMap).Parse(modelFieldTmpl)
+	if err != nil {
+		return "", err
+	}
+
+	var buf strings.Builder
+
+	templateData := struct {
+		Name        string
+		DefaultType string
+		GeneratorListAttribute
+	}{
+		Name:                   name,
+		DefaultType:            "types.List",
+		GeneratorListAttribute: g,
+	}
+
+	err = t.Execute(&buf, templateData)
 	if err != nil {
 		return "", err
 	}

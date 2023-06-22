@@ -21,7 +21,9 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorStringAttribute{
@@ -54,7 +56,9 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorStringAttribute{
@@ -65,7 +69,9 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorStringAttribute{
@@ -76,7 +82,9 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorStringAttribute{
@@ -93,6 +101,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -241,6 +250,66 @@ my_other_validator.Validate(),
 			t.Parallel()
 
 			got, err := testCase.input.ToString("string_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorStringAttribute_ToModel(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorStringAttribute
+		expected      string
+		expectedError error
+	}{
+		"default": {
+			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
+		},
+		"custom-type-nil": {
+			input: GeneratorStringAttribute{
+				CustomType: nil,
+			},
+			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
+		},
+		"custom-type-missing-value-type": {
+			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
+		},
+		"custom-type-value-type-empty-string": {
+			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "",
+				},
+			},
+			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
+		},
+		"custom-type": {
+			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: "\nStringAttribute my_custom_value_type `tfsdk:\"string_attribute\"`",
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ToModel("string_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

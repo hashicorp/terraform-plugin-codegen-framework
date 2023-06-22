@@ -37,6 +37,8 @@ func (g GeneratorListNestedAttribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
+	} else {
+		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
 	if g.NestedObject.CustomType != nil {
@@ -144,7 +146,7 @@ func (g GeneratorListNestedAttribute) ToModel(name string) (string, error) {
 		"snakeCaseToCamelCase": snakeCaseToCamelCase,
 	}
 
-	t, err := template.New("attribute_model").Funcs(funcMap).Parse(modelFieldTmpl)
+	t, err := template.New("model_field").Funcs(funcMap).Parse(modelFieldTmpl)
 	if err != nil {
 		return "", err
 	}
