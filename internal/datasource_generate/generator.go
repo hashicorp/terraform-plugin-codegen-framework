@@ -356,7 +356,7 @@ func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSour
 	return dataSourcesModels, nil
 }
 
-func generateModel(attribName string, attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) ([]byte, error) {
+func generateModel(name string, attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) ([]byte, error) {
 	var buf bytes.Buffer
 
 	fields, err := generateModelFields(attributes, blocks)
@@ -365,7 +365,7 @@ func generateModel(attribName string, attributes map[string]GeneratorAttribute, 
 	}
 
 	m := model.Model{
-		Name:   lcFirst(attribName),
+		Name:   lcFirst(name),
 		Fields: fields,
 	}
 
@@ -374,34 +374,34 @@ func generateModel(attribName string, attributes map[string]GeneratorAttribute, 
 	// Using sorted attributeNames to guarantee attribute order as maps are unordered in Go.
 	var attributeNames = make([]string, 0, len(attributes))
 
-	for name := range attributes {
-		attributeNames = append(attributeNames, name)
+	for attributeName := range attributes {
+		attributeNames = append(attributeNames, attributeName)
 	}
 
 	sort.Strings(attributeNames)
 
 	// If there are any nested attributes, generate model.
-	for _, name := range attributeNames {
+	for _, attributeName := range attributeNames {
 		var modelBytes []byte
 
-		switch t := attributes[name].(type) {
+		switch t := attributes[attributeName].(type) {
 		case GeneratorListNestedAttribute:
-			modelBytes, err = generateModel(name, t.NestedObject.Attributes, nil)
+			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorMapNestedAttribute:
-			modelBytes, err = generateModel(name, t.NestedObject.Attributes, nil)
+			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSetNestedAttribute:
-			modelBytes, err = generateModel(name, t.NestedObject.Attributes, nil)
+			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSingleNestedAttribute:
-			modelBytes, err = generateModel(name, t.Attributes, nil)
+			modelBytes, err = generateModel(attributeName, t.Attributes, nil)
 			if err != nil {
 				return nil, err
 			}
@@ -415,29 +415,29 @@ func generateModel(attribName string, attributes map[string]GeneratorAttribute, 
 	// Using sorted blockNames to guarantee block order as maps are unordered in Go.
 	var blockNames = make([]string, 0, len(blocks))
 
-	for name := range blocks {
-		blockNames = append(blockNames, name)
+	for blockName := range blocks {
+		blockNames = append(blockNames, blockName)
 	}
 
 	sort.Strings(blockNames)
 
 	// If there are any nested blocks, generate model.
-	for _, name := range blockNames {
+	for _, blockName := range blockNames {
 		var modelBytes []byte
 
-		switch t := blocks[name].(type) {
+		switch t := blocks[blockName].(type) {
 		case GeneratorListNestedBlock:
-			modelBytes, err = generateModel(name, t.NestedObject.Attributes, t.NestedObject.Blocks)
+			modelBytes, err = generateModel(blockName, t.NestedObject.Attributes, t.NestedObject.Blocks)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSetNestedBlock:
-			modelBytes, err = generateModel(name, t.NestedObject.Attributes, t.NestedObject.Blocks)
+			modelBytes, err = generateModel(blockName, t.NestedObject.Attributes, t.NestedObject.Blocks)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSingleNestedBlock:
-			modelBytes, err = generateModel(name, t.Attributes, t.Blocks)
+			modelBytes, err = generateModel(blockName, t.Attributes, t.Blocks)
 			if err != nil {
 				return nil, err
 			}
