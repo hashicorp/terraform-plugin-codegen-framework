@@ -34,11 +34,11 @@ func NewGeneratorResourceSchemas(schemas map[string]GeneratorResourceSchema) Gen
 	}
 }
 
-func (g GeneratorResourceSchemas) ToBytes() (map[string][]byte, error) {
+func (g GeneratorResourceSchemas) ToBytes(packageName string) (map[string][]byte, error) {
 	schemasBytes := make(map[string][]byte, len(g.schemas))
 
 	for k, s := range g.schemas {
-		b, err := g.toBytes(k, s)
+		b, err := g.toBytes(k, s, packageName)
 
 		if err != nil {
 			return nil, err
@@ -50,7 +50,7 @@ func (g GeneratorResourceSchemas) ToBytes() (map[string][]byte, error) {
 	return schemasBytes, nil
 }
 
-func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema) ([]byte, error) {
+func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema, packageName string) ([]byte, error) {
 	funcMap := template.FuncMap{
 		"getImports":    getImports,
 		"getAttributes": getAttributes,
@@ -67,9 +67,11 @@ func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema
 	templateData := struct {
 		Name string
 		GeneratorResourceSchema
+		PackageName string
 	}{
 		Name:                    name,
 		GeneratorResourceSchema: s,
+		PackageName:             packageName,
 	}
 
 	err = t.Execute(&buf, templateData)

@@ -5,7 +5,7 @@
 *.so
 *.dylib
 
-terraform-plugin-codegen-openapi
+terraform-plugin-codegen-framework
 
 # Test binary, built with `go test -c`
 *.test
@@ -22,3 +22,6 @@ terraform-plugin-codegen-openapi
 
 # VSCode files
 .vscode/
+
+# Ignore any manual testing output from running codegen tool at root
+./output
