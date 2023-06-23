@@ -12,6 +12,8 @@ import (
 	"unicode"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
 type GeneratorSchema interface {
@@ -337,7 +339,7 @@ func NewDataSourcesModelsGenerator() DataSourcesModelsGenerator {
 
 func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSourceSchema) (map[string][]byte, error) {
 	funcMap := template.FuncMap{
-		"getModel": getModel,
+		"getModel": generateModelFields,
 	}
 
 	datasourceModelTemplate, err := template.New("datasource_model.gotmpl").Funcs(funcMap).Parse(
@@ -469,32 +471,17 @@ func handleNested(attributes map[string]GeneratorAttribute, blocks map[string]Ge
 func nestedModel(attribName string, attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) ([]byte, error) {
 	var buf bytes.Buffer
 
-	funcMap := template.FuncMap{
-		"getModel": getModel,
-		"lcFirst":  lcFirst,
-	}
-
-	datasourceModelTemplate, err := template.New("nested_model.gotmpl").Funcs(funcMap).Parse(
-		nestedModelTmpl,
-	)
+	fields, err := generateModelFields(attributes, blocks)
 	if err != nil {
 		return nil, err
 	}
 
-	templateData := struct {
-		Name       string
-		Attributes map[string]GeneratorAttribute
-		Blocks     map[string]GeneratorBlock
-	}{
-		Name:       attribName,
-		Attributes: attributes,
-		Blocks:     blocks,
+	m := model.Model{
+		Name:   lcFirst(attribName),
+		Fields: fields,
 	}
 
-	err = datasourceModelTemplate.Execute(&buf, templateData)
-	if err != nil {
-		return nil, err
-	}
+	buf.WriteString("\n" + m.String() + "\n")
 
 	nested, err := handleNested(attributes, blocks)
 	if err != nil {
@@ -545,7 +532,7 @@ func lcFirst(input string) string {
 	return str
 }
 
-func getModel(attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) (string, error) {
+func generateModelFields(attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
 	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
@@ -556,6 +543,8 @@ func getModel(attributes map[string]GeneratorAttribute, blocks map[string]Genera
 	}
 
 	sort.Strings(attributeKeys)
+
+	totalFields := 0
 
 	for _, k := range attributeKeys {
 		if attributes[k] == nil {
@@ -568,7 +557,13 @@ func getModel(attributes map[string]GeneratorAttribute, blocks map[string]Genera
 			return "", err
 		}
 
-		s.WriteString("\n" + str)
+		if totalFields > 0 {
+			s.WriteString("\n")
+		}
+
+		s.WriteString(str)
+
+		totalFields++
 	}
 
 	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
@@ -591,7 +586,13 @@ func getModel(attributes map[string]GeneratorAttribute, blocks map[string]Genera
 			return "", err
 		}
 
-		s.WriteString("\n" + str)
+		if totalFields > 0 {
+			s.WriteString("\n")
+		}
+
+		s.WriteString(str)
+
+		totalFields++
 	}
 
 	return s.String(), nil

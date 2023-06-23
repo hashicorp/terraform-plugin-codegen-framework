@@ -1,6 +1,8 @@
 package model
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const (
 	BoolValueType    = "types.Bool"
@@ -22,4 +24,13 @@ type StructField struct {
 
 func (f StructField) String() string {
 	return fmt.Sprintf("%s %s `tfsdk:%q`", f.Name, f.ValueType, f.TfsdkName)
+}
+
+type Model struct {
+	Name   string
+	Fields string
+}
+
+func (m Model) String() string {
+	return fmt.Sprintf("type %sModel struct {\n%s\n}", m.Name, m.Fields)
 }
