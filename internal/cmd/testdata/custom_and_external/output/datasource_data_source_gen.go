@@ -244,7 +244,7 @@ var datasourceDataSourceSchema = schema.Schema{
 	},
 }
 
-type datasourceDataSourceModel struct {
+type datasourceModel struct {
 	BoolAttribute                                                            types.Bool   `tfsdk:"bool_attribute"`
 	ListListAttribute                                                        types.List   `tfsdk:"list_list_attribute"`
 	ListMapAttribute                                                         types.List   `tfsdk:"list_map_attribute"`

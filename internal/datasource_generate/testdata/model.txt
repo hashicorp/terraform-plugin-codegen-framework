@@ -1,5 +1,5 @@
 
-type exampleDataSourceModel struct {
+type exampleModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 BoolAttributeCustom my_bool_value_type `tfsdk:"bool_attribute_custom"`
 Float64Attribute types.Float64 `tfsdk:"float64_attribute"`

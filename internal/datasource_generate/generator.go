@@ -338,44 +338,17 @@ func NewDataSourcesModelsGenerator() DataSourcesModelsGenerator {
 }
 
 func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSourceSchema) (map[string][]byte, error) {
-	funcMap := template.FuncMap{
-		"getModel": generateModelFields,
-	}
-
-	datasourceModelTemplate, err := template.New("datasource_model.gotmpl").Funcs(funcMap).Parse(
-		datasourceModelTmpl,
-	)
-	if err != nil {
-		return nil, err
-	}
-
 	dataSourcesModels := make(map[string][]byte, len(schemas))
 
 	for k, s := range schemas {
 		var buf bytes.Buffer
 
-		templateData := struct {
-			Name       string
-			Attributes map[string]GeneratorAttribute
-			Blocks     map[string]GeneratorBlock
-		}{
-			Name:       k,
-			Attributes: s.Attributes,
-			Blocks:     s.Blocks,
-		}
-
-		// Generate model
-		err = datasourceModelTemplate.Execute(&buf, templateData)
+		m, err := nestedModel(k, s.Attributes, s.Blocks)
 		if err != nil {
 			return nil, err
 		}
 
-		nested, err := handleNested(s.Attributes, s.Blocks)
-		if err != nil {
-			return nil, err
-		}
-
-		buf.Write(nested)
+		buf.Write(m)
 
 		dataSourcesModels[k] = buf.Bytes()
 	}
