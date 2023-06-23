@@ -769,7 +769,7 @@ func TestGeneratorListNestedAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nListNestedAttribute []types.Object `tfsdk:\"list_nested_attribute\"`",
+			expected: "\nListNestedAttribute types.List `tfsdk:\"list_nested_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorListNestedAttribute{

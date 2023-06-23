@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -139,33 +140,17 @@ func (g GeneratorSetAttribute) ToString(name string) (string, error) {
 }
 
 func (g GeneratorSetAttribute) ToModel(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"snakeCaseToCamelCase": snakeCaseToCamelCase,
+	field := model.StructField{
+		Name:      snakeCaseToCamelCase(name),
+		TfsdkName: name,
+		ValueType: model.SetValueType,
 	}
 
-	t, err := template.New("model_field").Funcs(funcMap).Parse(modelFieldTmpl)
-	if err != nil {
-		return "", err
+	if g.CustomType != nil {
+		field.ValueType = g.CustomType.ValueType
 	}
 
-	var buf strings.Builder
-
-	templateData := struct {
-		Name        string
-		DefaultType string
-		GeneratorSetAttribute
-	}{
-		Name:                  name,
-		DefaultType:           "types.Set",
-		GeneratorSetAttribute: g,
-	}
-
-	err = t.Execute(&buf, templateData)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return "\n" + field.String(), nil
 }
 
 func (g GeneratorSetAttribute) validatorsEqual(x, y []specschema.SetValidator) bool {

@@ -769,7 +769,7 @@ func TestGeneratorSetNestedAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nSetNestedAttribute []types.Object `tfsdk:\"set_nested_attribute\"`",
+			expected: "\nSetNestedAttribute types.Set `tfsdk:\"set_nested_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorSetNestedAttribute{

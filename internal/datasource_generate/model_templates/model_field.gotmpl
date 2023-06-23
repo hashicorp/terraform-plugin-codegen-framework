@@ -1,5 +1,0 @@
-{{- if .CustomType}}
-{{snakeCaseToCamelCase .Name}} {{ .CustomType.ValueType }} `tfsdk:"{{.Name}}"`
-{{- else}}
-{{snakeCaseToCamelCase .Name}} {{.DefaultType}} `tfsdk:"{{.Name}}"`
-{{- end}}
