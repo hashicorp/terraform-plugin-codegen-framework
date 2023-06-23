@@ -271,7 +271,7 @@ func TestGeneratorInt64Attribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nInt64Attribute types.Int64 `tfsdk:\"int64_attribute\"`",
+			expected: "Int64Attribute types.Int64 `tfsdk:\"int64_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorInt64Attribute{
@@ -279,7 +279,7 @@ func TestGeneratorInt64Attribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nInt64Attribute my_custom_value_type `tfsdk:\"int64_attribute\"`",
+			expected: "Int64Attribute my_custom_value_type `tfsdk:\"int64_attribute\"`",
 		},
 	}
 

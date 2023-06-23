@@ -150,7 +150,7 @@ func (g GeneratorSetAttribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return "\n" + field.String(), nil
+	return field.String(), nil
 }
 
 func (g GeneratorSetAttribute) validatorsEqual(x, y []specschema.SetValidator) bool {

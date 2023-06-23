@@ -778,7 +778,7 @@ func TestGeneratorSetNestedBlock_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nSetNestedBlock types.Set `tfsdk:\"set_nested_block\"`",
+			expected: "SetNestedBlock types.Set `tfsdk:\"set_nested_block\"`",
 		},
 		"custom-type": {
 			input: GeneratorSetNestedBlock{
@@ -786,7 +786,7 @@ func TestGeneratorSetNestedBlock_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nSetNestedBlock my_custom_value_type `tfsdk:\"set_nested_block\"`",
+			expected: "SetNestedBlock my_custom_value_type `tfsdk:\"set_nested_block\"`",
 		},
 	}
 

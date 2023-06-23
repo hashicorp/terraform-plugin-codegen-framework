@@ -160,7 +160,7 @@ func (g GeneratorListNestedBlock) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return "\n" + field.String(), nil
+	return field.String(), nil
 }
 
 func (g GeneratorListNestedBlock) listValidatorsEqual(x, y []specschema.ListValidator) bool {

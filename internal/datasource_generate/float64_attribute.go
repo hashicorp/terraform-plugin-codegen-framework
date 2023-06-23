@@ -107,7 +107,7 @@ func (g GeneratorFloat64Attribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return "\n" + field.String(), nil
+	return field.String(), nil
 }
 
 func (g GeneratorFloat64Attribute) validatorsEqual(x, y []specschema.Float64Validator) bool {

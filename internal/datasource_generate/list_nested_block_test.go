@@ -778,7 +778,7 @@ func TestGeneratorListNestedBlock_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nListNestedBlock types.List `tfsdk:\"list_nested_block\"`",
+			expected: "ListNestedBlock types.List `tfsdk:\"list_nested_block\"`",
 		},
 		"custom-type": {
 			input: GeneratorListNestedBlock{
@@ -786,7 +786,7 @@ func TestGeneratorListNestedBlock_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nListNestedBlock my_custom_value_type `tfsdk:\"list_nested_block\"`",
+			expected: "ListNestedBlock my_custom_value_type `tfsdk:\"list_nested_block\"`",
 		},
 	}
 

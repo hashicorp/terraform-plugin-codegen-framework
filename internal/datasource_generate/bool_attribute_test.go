@@ -283,7 +283,7 @@ func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nBoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+			expected: "BoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorBoolAttribute{
@@ -291,7 +291,7 @@ func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nBoolAttribute my_custom_value_type `tfsdk:\"bool_attribute\"`",
+			expected: "BoolAttribute my_custom_value_type `tfsdk:\"bool_attribute\"`",
 		},
 	}
 

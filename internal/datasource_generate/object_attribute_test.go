@@ -948,7 +948,7 @@ func TestGeneratorObjectAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
+			expected: "ObjectAttribute types.Object `tfsdk:\"object_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorObjectAttribute{
@@ -956,7 +956,7 @@ func TestGeneratorObjectAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nObjectAttribute my_custom_value_type `tfsdk:\"object_attribute\"`",
+			expected: "ObjectAttribute my_custom_value_type `tfsdk:\"object_attribute\"`",
 		},
 	}
 

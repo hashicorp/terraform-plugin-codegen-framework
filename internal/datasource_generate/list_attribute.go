@@ -153,7 +153,7 @@ func (g GeneratorListAttribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return "\n" + field.String(), nil
+	return field.String(), nil
 }
 
 func (g GeneratorListAttribute) validatorsEqual(x, y []specschema.ListValidator) bool {

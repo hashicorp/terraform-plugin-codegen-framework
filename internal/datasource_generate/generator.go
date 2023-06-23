@@ -568,7 +568,7 @@ func getModel(attributes map[string]GeneratorAttribute, blocks map[string]Genera
 			return "", err
 		}
 
-		s.WriteString(str)
+		s.WriteString("\n" + str)
 	}
 
 	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
@@ -591,7 +591,7 @@ func getModel(attributes map[string]GeneratorAttribute, blocks map[string]Genera
 			return "", err
 		}
 
-		s.WriteString(str)
+		s.WriteString("\n" + str)
 	}
 
 	return s.String(), nil

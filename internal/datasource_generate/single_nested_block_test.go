@@ -541,7 +541,7 @@ func TestGeneratorSingleNestedBlock_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nSingleNestedBlock types.Object `tfsdk:\"single_nested_block\"`",
+			expected: "SingleNestedBlock types.Object `tfsdk:\"single_nested_block\"`",
 		},
 		"custom-type": {
 			input: GeneratorSingleNestedBlock{
@@ -549,7 +549,7 @@ func TestGeneratorSingleNestedBlock_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nSingleNestedBlock my_custom_value_type `tfsdk:\"single_nested_block\"`",
+			expected: "SingleNestedBlock my_custom_value_type `tfsdk:\"single_nested_block\"`",
 		},
 	}
 

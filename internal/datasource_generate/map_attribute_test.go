@@ -852,7 +852,7 @@ func TestGeneratorMapAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nMapAttribute types.Map `tfsdk:\"map_attribute\"`",
+			expected: "MapAttribute types.Map `tfsdk:\"map_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorMapAttribute{
@@ -860,7 +860,7 @@ func TestGeneratorMapAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nMapAttribute my_custom_value_type `tfsdk:\"map_attribute\"`",
+			expected: "MapAttribute my_custom_value_type `tfsdk:\"map_attribute\"`",
 		},
 	}
 

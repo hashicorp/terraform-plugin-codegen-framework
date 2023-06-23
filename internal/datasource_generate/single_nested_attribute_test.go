@@ -530,7 +530,7 @@ func TestGeneratorSingleNestedAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nSingleNestedAttribute types.Object `tfsdk:\"single_nested_attribute\"`",
+			expected: "SingleNestedAttribute types.Object `tfsdk:\"single_nested_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorSingleNestedAttribute{
@@ -538,7 +538,7 @@ func TestGeneratorSingleNestedAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nSingleNestedAttribute my_custom_value_type `tfsdk:\"single_nested_attribute\"`",
+			expected: "SingleNestedAttribute my_custom_value_type `tfsdk:\"single_nested_attribute\"`",
 		},
 	}
 

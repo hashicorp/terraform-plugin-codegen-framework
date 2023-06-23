@@ -769,7 +769,7 @@ func TestGeneratorSetNestedAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nSetNestedAttribute types.Set `tfsdk:\"set_nested_attribute\"`",
+			expected: "SetNestedAttribute types.Set `tfsdk:\"set_nested_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorSetNestedAttribute{
@@ -777,7 +777,7 @@ func TestGeneratorSetNestedAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nSetNestedAttribute my_custom_value_type `tfsdk:\"set_nested_attribute\"`",
+			expected: "SetNestedAttribute my_custom_value_type `tfsdk:\"set_nested_attribute\"`",
 		},
 	}
 

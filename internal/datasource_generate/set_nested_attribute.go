@@ -153,7 +153,7 @@ func (g GeneratorSetNestedAttribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return "\n" + field.String(), nil
+	return field.String(), nil
 }
 
 func (g GeneratorSetNestedAttribute) setValidatorsEqual(x, y []specschema.SetValidator) bool {

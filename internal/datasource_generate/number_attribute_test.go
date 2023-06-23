@@ -271,7 +271,7 @@ func TestGeneratorNumberAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nNumberAttribute types.Number `tfsdk:\"number_attribute\"`",
+			expected: "NumberAttribute types.Number `tfsdk:\"number_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorNumberAttribute{
@@ -279,7 +279,7 @@ func TestGeneratorNumberAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nNumberAttribute my_custom_value_type `tfsdk:\"number_attribute\"`",
+			expected: "NumberAttribute my_custom_value_type `tfsdk:\"number_attribute\"`",
 		},
 	}
 

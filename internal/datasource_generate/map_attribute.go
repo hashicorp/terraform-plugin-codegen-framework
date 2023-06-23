@@ -153,7 +153,7 @@ func (g GeneratorMapAttribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return "\n" + field.String(), nil
+	return field.String(), nil
 }
 
 func (g GeneratorMapAttribute) validatorsEqual(x, y []specschema.MapValidator) bool {

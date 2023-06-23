@@ -271,7 +271,7 @@ func TestGeneratorStringAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nStringAttribute types.String `tfsdk:\"string_attribute\"`",
+			expected: "StringAttribute types.String `tfsdk:\"string_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorStringAttribute{
@@ -279,7 +279,7 @@ func TestGeneratorStringAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nStringAttribute my_custom_value_type `tfsdk:\"string_attribute\"`",
+			expected: "StringAttribute my_custom_value_type `tfsdk:\"string_attribute\"`",
 		},
 	}
 

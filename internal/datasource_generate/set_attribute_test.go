@@ -852,7 +852,7 @@ func TestGeneratorSetAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nSetAttribute types.Set `tfsdk:\"set_attribute\"`",
+			expected: "SetAttribute types.Set `tfsdk:\"set_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorSetAttribute{
@@ -860,7 +860,7 @@ func TestGeneratorSetAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nSetAttribute my_custom_value_type `tfsdk:\"set_attribute\"`",
+			expected: "SetAttribute my_custom_value_type `tfsdk:\"set_attribute\"`",
 		},
 	}
 

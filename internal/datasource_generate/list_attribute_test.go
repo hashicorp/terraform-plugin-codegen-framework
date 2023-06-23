@@ -854,7 +854,7 @@ func TestGeneratorListAttribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nListAttribute types.List `tfsdk:\"list_attribute\"`",
+			expected: "ListAttribute types.List `tfsdk:\"list_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorListAttribute{
@@ -862,7 +862,7 @@ func TestGeneratorListAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nListAttribute my_custom_value_type `tfsdk:\"list_attribute\"`",
+			expected: "ListAttribute my_custom_value_type `tfsdk:\"list_attribute\"`",
 		},
 	}
 

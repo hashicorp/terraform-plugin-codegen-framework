@@ -271,7 +271,7 @@ func TestGeneratorFloat64Attribute_ToModel(t *testing.T) {
 		expectedError error
 	}{
 		"default": {
-			expected: "\nFloat64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
+			expected: "Float64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
 		},
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
@@ -279,7 +279,7 @@ func TestGeneratorFloat64Attribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "\nFloat64Attribute my_custom_value_type `tfsdk:\"float64_attribute\"`",
+			expected: "Float64Attribute my_custom_value_type `tfsdk:\"float64_attribute\"`",
 		},
 	}
 
