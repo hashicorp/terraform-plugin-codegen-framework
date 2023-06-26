@@ -11,6 +11,8 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
 type GeneratorSchema interface {
@@ -140,7 +142,7 @@ func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
 func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	// Using sorted keys to guarantee block order as maps are unordered in Go.
 	var keys = make([]string, 0, len(blocks))
 
 	for k := range blocks {
@@ -170,16 +172,22 @@ type GeneratorImport interface {
 	Imports() map[string]struct{}
 }
 
+type GeneratorModel interface {
+	ToModel(string) (string, error)
+}
+
 type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	ToString(string) (string, error)
 	GeneratorImport
+	GeneratorModel
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	ToString(string) (string, error)
 	GeneratorImport
+	GeneratorModel
 }
 
 type GeneratorNestedAttributeObject struct {
@@ -321,4 +329,191 @@ func elementTypeEqual(x, y specschema.ElementType) bool {
 	}
 
 	return false
+}
+
+type ProviderModelsGenerator struct {
+}
+
+func NewProviderModelsGenerator() ProviderModelsGenerator {
+	return ProviderModelsGenerator{}
+}
+
+func (d ProviderModelsGenerator) Process(schemas map[string]GeneratorProviderSchema) (map[string][]byte, error) {
+	providerModels := make(map[string][]byte, len(schemas))
+
+	for name, schema := range schemas {
+		var buf bytes.Buffer
+
+		m, err := generateModel(name, schema.Attributes, schema.Blocks)
+		if err != nil {
+			return nil, err
+		}
+
+		buf.Write(m)
+
+		providerModels[name] = buf.Bytes()
+	}
+
+	return providerModels, nil
+}
+
+func generateModel(name string, attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) ([]byte, error) {
+	var buf bytes.Buffer
+
+	fields, err := generateModelFields(attributes, blocks)
+	if err != nil {
+		return nil, err
+	}
+
+	m := model.Model{
+		Name:   model.LcFirst(name),
+		Fields: fields,
+	}
+
+	buf.WriteString("\n" + m.String() + "\n")
+
+	// Using sorted attributeNames to guarantee attribute order as maps are unordered in Go.
+	var attributeNames = make([]string, 0, len(attributes))
+
+	for attributeName := range attributes {
+		attributeNames = append(attributeNames, attributeName)
+	}
+
+	sort.Strings(attributeNames)
+
+	// If there are any nested attributes, generate model.
+	for _, attributeName := range attributeNames {
+		var modelBytes []byte
+
+		switch t := attributes[attributeName].(type) {
+		case GeneratorListNestedAttribute:
+			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
+			if err != nil {
+				return nil, err
+			}
+		case GeneratorMapNestedAttribute:
+			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
+			if err != nil {
+				return nil, err
+			}
+		case GeneratorSetNestedAttribute:
+			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
+			if err != nil {
+				return nil, err
+			}
+		case GeneratorSingleNestedAttribute:
+			modelBytes, err = generateModel(attributeName, t.Attributes, nil)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		if len(modelBytes) > 0 {
+			buf.Write(modelBytes)
+		}
+	}
+
+	// Using sorted blockNames to guarantee block order as maps are unordered in Go.
+	var blockNames = make([]string, 0, len(blocks))
+
+	for blockName := range blocks {
+		blockNames = append(blockNames, blockName)
+	}
+
+	sort.Strings(blockNames)
+
+	// If there are any nested blocks, generate model.
+	for _, blockName := range blockNames {
+		var modelBytes []byte
+
+		switch t := blocks[blockName].(type) {
+		case GeneratorListNestedBlock:
+			modelBytes, err = generateModel(blockName, t.NestedObject.Attributes, t.NestedObject.Blocks)
+			if err != nil {
+				return nil, err
+			}
+		case GeneratorSetNestedBlock:
+			modelBytes, err = generateModel(blockName, t.NestedObject.Attributes, t.NestedObject.Blocks)
+			if err != nil {
+				return nil, err
+			}
+		case GeneratorSingleNestedBlock:
+			modelBytes, err = generateModel(blockName, t.Attributes, t.Blocks)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		if len(modelBytes) > 0 {
+			buf.Write(modelBytes)
+		}
+	}
+
+	return buf.Bytes(), nil
+}
+
+func generateModelFields(attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) (string, error) {
+	var s strings.Builder
+
+	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+	var attributeKeys = make([]string, 0, len(attributes))
+
+	for k := range attributes {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	totalFields := 0
+
+	for _, k := range attributeKeys {
+		if attributes[k] == nil {
+			continue
+		}
+
+		str, err := attributes[k].ToModel(k)
+
+		if err != nil {
+			return "", err
+		}
+
+		if totalFields > 0 {
+			s.WriteString("\n")
+		}
+
+		s.WriteString(str)
+
+		totalFields++
+	}
+
+	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(blocks))
+
+	for k := range blocks {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	for _, k := range blockKeys {
+		if blocks[k] == nil {
+			continue
+		}
+
+		str, err := blocks[k].ToModel(k)
+
+		if err != nil {
+			return "", err
+		}
+
+		if totalFields > 0 {
+			s.WriteString("\n")
+		}
+
+		s.WriteString(str)
+
+		totalFields++
+	}
+
+	return s.String(), nil
 }
