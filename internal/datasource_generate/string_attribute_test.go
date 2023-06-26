@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -21,7 +22,9 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorStringAttribute{
@@ -54,7 +57,9 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorStringAttribute{
@@ -65,7 +70,9 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorStringAttribute{
@@ -76,7 +83,9 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorStringAttribute{
@@ -93,6 +102,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -241,6 +251,54 @@ my_other_validator.Validate(),
 			t.Parallel()
 
 			got, err := testCase.input.ToString("string_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorStringAttribute_ModelField(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorStringAttribute
+		expected      model.Field
+		expectedError error
+	}{
+		"default": {
+			expected: model.Field{
+				Name:      "StringAttribute",
+				ValueType: "types.String",
+				TfsdkName: "string_attribute",
+			},
+		},
+		"custom-type": {
+			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "StringAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "string_attribute",
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ModelField("string_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

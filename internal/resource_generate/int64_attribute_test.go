@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -21,7 +22,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorInt64Attribute{
@@ -54,7 +57,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorInt64Attribute{
@@ -65,7 +70,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorInt64Attribute{
@@ -76,7 +83,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorInt64Attribute{
@@ -94,6 +103,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 				}},
 			expected: map[string]struct{}{
 				generatorschema.ValidatorImport:                    {},
+				generatorschema.TypesImport:                        {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
@@ -105,7 +115,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorInt64Attribute{
@@ -116,7 +128,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorInt64Attribute{
@@ -127,7 +141,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorInt64Attribute{
@@ -144,20 +160,25 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				planModifierImport: {},
+				generatorschema.TypesImport: {},
+				planModifierImport:          {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
 			},
 		},
 		"default-nil": {
-			input:    GeneratorInt64Attribute{},
-			expected: map[string]struct{}{},
+			input: GeneratorInt64Attribute{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-and-static-nil": {
 			input: GeneratorInt64Attribute{
 				Default: &specschema.Int64Default{},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import-nil": {
 			input: GeneratorInt64Attribute{
@@ -165,7 +186,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorInt64Attribute{
@@ -175,7 +198,9 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import": {
 			input: GeneratorInt64Attribute{
@@ -186,6 +211,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:               {},
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},
@@ -196,7 +222,8 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				defaultInt64Import: {},
+				generatorschema.TypesImport: {},
+				defaultInt64Import:          {},
 			},
 		},
 	}
@@ -392,6 +419,54 @@ Default: my_int64_default.Default(),
 			t.Parallel()
 
 			got, err := testCase.input.ToString("int64_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorInt64Attribute
+		expected      model.Field
+		expectedError error
+	}{
+		"default": {
+			expected: model.Field{
+				Name:      "Int64Attribute",
+				ValueType: "types.Int64",
+				TfsdkName: "int64_attribute",
+			},
+		},
+		"custom-type": {
+			input: GeneratorInt64Attribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "Int64Attribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "int64_attribute",
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ModelField("int64_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

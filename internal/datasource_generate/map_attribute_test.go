@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -21,7 +22,9 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorMapAttribute{
@@ -68,6 +71,7 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -100,6 +104,7 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -109,7 +114,9 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 					Object: []specschema.ObjectAttributeType{},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"elem-type-object-bool": {
 			input: GeneratorMapAttribute{
@@ -143,6 +150,7 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -178,7 +186,9 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorMapAttribute{
@@ -189,7 +199,9 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorMapAttribute{
@@ -200,7 +212,9 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorMapAttribute{
@@ -217,6 +231,7 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -817,6 +832,54 @@ ElementType: stringCustomType,
 			t.Parallel()
 
 			got, err := testCase.input.ToString("map_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorMapAttribute_ModelField(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorMapAttribute
+		expected      model.Field
+		expectedError error
+	}{
+		"default": {
+			expected: model.Field{
+				Name:      "MapAttribute",
+				ValueType: "types.Map",
+				TfsdkName: "map_attribute",
+			},
+		},
+		"custom-type": {
+			input: GeneratorMapAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "MapAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "map_attribute",
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ModelField("map_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

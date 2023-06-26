@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -35,6 +36,8 @@ func (g GeneratorSetAttribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
+	} else {
+		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
 	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType, make(map[string]struct{}))
@@ -130,6 +133,20 @@ func (g GeneratorSetAttribute) ToString(name string) (string, error) {
 	}
 
 	return buf.String(), nil
+}
+
+func (g GeneratorSetAttribute) ModelField(name string) (model.Field, error) {
+	field := model.Field{
+		Name:      model.SnakeCaseToCamelCase(name),
+		TfsdkName: name,
+		ValueType: model.SetValueType,
+	}
+
+	if g.CustomType != nil {
+		field.ValueType = g.CustomType.ValueType
+	}
+
+	return field, nil
 }
 
 func (g GeneratorSetAttribute) validatorsEqual(x, y []specschema.SetValidator) bool {

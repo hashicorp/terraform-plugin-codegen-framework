@@ -7,7 +7,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
+	"github.com/mitchellh/cli"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
@@ -15,8 +19,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
-	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
-	"github.com/mitchellh/cli"
 )
 
 type GenerateResourcesCommand struct {
@@ -138,14 +140,27 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName strin
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
+	// generate model code
+	resourcesModelsGenerator := resource_generate.NewResourcesModelsGenerator()
+	resourcesModels, err := resourcesModelsGenerator.Process(resourceSchemas)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// format schema code
 	formattedResourcesSchema, err := format.Format(resourceSchemaBytes)
 	if err != nil {
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
 
+	// format model code
+	formattedResourcesModels, err := format.Format(resourcesModels)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// write code
-	err = output.WriteResources(formattedResourcesSchema, outputPath)
+	err = output.WriteResources(formattedResourcesSchema, formattedResourcesModels, outputPath)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

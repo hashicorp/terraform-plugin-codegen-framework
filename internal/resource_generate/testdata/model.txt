@@ -1,0 +1,91 @@
+
+type ExampleModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+BoolAttributeCustom my_bool_value_type `tfsdk:"bool_attribute_custom"`
+Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+Float64AttributeCustom my_float64_value_type `tfsdk:"float64_attribute_custom"`
+Int64Attribute types.Int64 `tfsdk:"int64_attribute"`
+Int64AttributeCustom my_int64_value_type `tfsdk:"int64_attribute_custom"`
+ListAttribute types.List `tfsdk:"list_attribute"`
+ListAttributeCustom my_list_value_type `tfsdk:"list_attribute_custom"`
+ListNestedAttribute types.List `tfsdk:"list_nested_attribute"`
+ListNestedAttributeCustom my_list_nested_value_type `tfsdk:"list_nested_attribute_custom"`
+MapAttribute types.Map `tfsdk:"map_attribute"`
+MapAttributeCustom my_map_value_type `tfsdk:"map_attribute_custom"`
+MapNestedAttribute types.Map `tfsdk:"map_nested_attribute"`
+MapNestedAttributeCustom my_map_nested_value_type `tfsdk:"map_nested_attribute_custom"`
+NumberAttribute types.Number `tfsdk:"number_attribute"`
+NumberAttributeCustom my_number_value_type `tfsdk:"number_attribute_custom"`
+ObjectAttribute types.Object `tfsdk:"object_attribute"`
+ObjectAttributeCustom my_object_value_type `tfsdk:"object_attribute_custom"`
+SetAttribute types.Set `tfsdk:"set_attribute"`
+SetAttributeCustom my_set_value_type `tfsdk:"set_attribute_custom"`
+SetNestedAttribute types.Set `tfsdk:"set_nested_attribute"`
+SetNestedAttributeCustom my_set_nested_value_type `tfsdk:"set_nested_attribute_custom"`
+SingleNestedAttribute types.Object `tfsdk:"single_nested_attribute"`
+SingleNestedAttributeCustom my_single_nested_value_type `tfsdk:"single_nested_attribute_custom"`
+StringAttribute types.String `tfsdk:"string_attribute"`
+StringAttributeCustom my_string_value_type `tfsdk:"string_attribute_custom"`
+ListNestedBlock types.List `tfsdk:"list_nested_block"`
+ListNestedBlockCustom my_list_nested_value_type `tfsdk:"list_nested_block_custom"`
+SetNestedBlock types.Set `tfsdk:"set_nested_block"`
+SetNestedBlockCustom my_set_nested_value_type `tfsdk:"set_nested_block_custom"`
+SingleNestedBlock types.Object `tfsdk:"single_nested_block"`
+SingleNestedBlockCustom my_single_nested_value_type `tfsdk:"single_nested_block_custom"`
+}
+
+type ListNestedAttributeModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type ListNestedAttributeCustomModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type MapNestedAttributeModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type MapNestedAttributeCustomModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SetNestedAttributeModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SetNestedAttributeCustomModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SingleNestedAttributeModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SingleNestedAttributeCustomModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type ListNestedBlockModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type ListNestedBlockCustomModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SetNestedBlockModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SetNestedBlockCustomModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SingleNestedBlockModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SingleNestedBlockCustomModel struct {
+BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}

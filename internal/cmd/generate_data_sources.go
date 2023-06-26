@@ -7,7 +7,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
+	"github.com/mitchellh/cli"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
@@ -15,8 +19,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
-	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
-	"github.com/mitchellh/cli"
 )
 
 type GenerateDataSourcesCommand struct {
@@ -138,14 +140,27 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
+	// generate model code
+	dataSourcesModelsGenerator := datasource_generate.NewDataSourcesModelsGenerator()
+	dataSourcesModels, err := dataSourcesModelsGenerator.Process(schema)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// format schema code
 	formattedDataSourcesSchema, err := format.Format(schemaBytes)
 	if err != nil {
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
 
+	// format model code
+	formattedDataSourcesModels, err := format.Format(dataSourcesModels)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// write code
-	err = output.WriteDataSources(formattedDataSourcesSchema, outputPath)
+	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, outputPath)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

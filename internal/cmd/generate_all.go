@@ -9,10 +9,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/mitchellh/cli"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
 
 type GenerateAllCommand struct {
@@ -24,7 +25,7 @@ type GenerateAllCommand struct {
 
 func (cmd *GenerateAllCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("generate all", flag.ExitOnError)
-	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
+	fs.StringVar(&cmd.flagIRInputPath, "input", "", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
 	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for generated code files")
 

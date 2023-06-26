@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -34,6 +35,8 @@ func (g GeneratorFloat64Attribute) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
+	} else {
+		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
 	for _, v := range g.Validators {
@@ -91,6 +94,20 @@ func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {
 	}
 
 	return buf.String(), nil
+}
+
+func (g GeneratorFloat64Attribute) ModelField(name string) (model.Field, error) {
+	field := model.Field{
+		Name:      model.SnakeCaseToCamelCase(name),
+		TfsdkName: name,
+		ValueType: model.Float64ValueType,
+	}
+
+	if g.CustomType != nil {
+		field.ValueType = g.CustomType.ValueType
+	}
+
+	return field, nil
 }
 
 func (g GeneratorFloat64Attribute) validatorsEqual(x, y []specschema.Float64Validator) bool {

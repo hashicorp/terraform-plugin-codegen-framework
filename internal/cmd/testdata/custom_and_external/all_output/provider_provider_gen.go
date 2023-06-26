@@ -7,3 +7,6 @@ import (
 )
 
 var providerProviderSchema = schema.Schema{}
+
+type ProviderModel struct {
+}

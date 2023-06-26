@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -39,6 +40,8 @@ func (g GeneratorSingleNestedBlock) Imports() map[string]struct{} {
 		if g.CustomType.HasImport() {
 			imports[*g.CustomType.Import] = struct{}{}
 		}
+	} else {
+		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
 	for _, v := range g.PlanModifiers {
@@ -132,6 +135,20 @@ func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 	}
 
 	return buf.String(), nil
+}
+
+func (g GeneratorSingleNestedBlock) ModelField(name string) (model.Field, error) {
+	field := model.Field{
+		Name:      model.SnakeCaseToCamelCase(name),
+		TfsdkName: name,
+		ValueType: model.ObjectValueType,
+	}
+
+	if g.CustomType != nil {
+		field.ValueType = g.CustomType.ValueType
+	}
+
+	return field, nil
 }
 
 func (g GeneratorSingleNestedBlock) validatorsEqual(x, y []specschema.ObjectValidator) bool {

@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -21,7 +22,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -72,6 +75,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                    {},
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -93,6 +97,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                    {},
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -126,6 +131,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                      {},
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -150,6 +156,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                      {},
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -161,7 +168,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorSingleNestedAttribute{
@@ -172,7 +181,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorSingleNestedAttribute{
@@ -183,7 +194,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -200,6 +213,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -496,6 +510,54 @@ my_other_validator.Validate(),
 			t.Parallel()
 
 			got, err := testCase.input.ToString("single_nested_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorSingleNestedAttribute_ModelField(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorSingleNestedAttribute
+		expected      model.Field
+		expectedError error
+	}{
+		"default": {
+			expected: model.Field{
+				Name:      "SingleNestedAttribute",
+				ValueType: "types.Object",
+				TfsdkName: "single_nested_attribute",
+			},
+		},
+		"custom-type": {
+			input: GeneratorSingleNestedAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "SingleNestedAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "single_nested_attribute",
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ModelField("single_nested_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

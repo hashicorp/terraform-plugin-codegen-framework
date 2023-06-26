@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -22,7 +23,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorListAttribute{
@@ -69,6 +72,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -101,6 +105,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -110,7 +115,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					Object: []specschema.ObjectAttributeType{},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"elem-type-object-bool": {
 			input: GeneratorListAttribute{
@@ -144,6 +151,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                {},
 				"github.com/my_account/my_project/element": {},
 			},
 		},
@@ -179,7 +187,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorListAttribute{
@@ -190,7 +200,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorListAttribute{
@@ -201,7 +213,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorListAttribute{
@@ -218,6 +232,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -230,7 +245,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorListAttribute{
@@ -241,7 +258,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorListAttribute{
@@ -252,7 +271,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorListAttribute{
@@ -269,20 +290,25 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				planModifierImport: {},
+				generatorschema.TypesImport: {},
+				planModifierImport:          {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
 			},
 		},
 		"default-nil": {
-			input:    GeneratorListAttribute{},
-			expected: map[string]struct{}{},
+			input: GeneratorListAttribute{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-nil": {
 			input: GeneratorListAttribute{
 				Default: &specschema.ListDefault{},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import-nil": {
 			input: GeneratorListAttribute{
@@ -290,7 +316,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorListAttribute{
@@ -300,7 +328,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import": {
 			input: GeneratorListAttribute{
@@ -311,6 +341,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:               {},
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},
@@ -956,6 +987,54 @@ ElementType: stringCustomType,
 			t.Parallel()
 
 			got, err := testCase.input.ToString("list_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorListAttribute_ModelField(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorListAttribute
+		expected      model.Field
+		expectedError error
+	}{
+		"default": {
+			expected: model.Field{
+				Name:      "ListAttribute",
+				ValueType: "types.List",
+				TfsdkName: "list_attribute",
+			},
+		},
+		"custom-type": {
+			input: GeneratorListAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "ListAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "list_attribute",
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ModelField("list_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
