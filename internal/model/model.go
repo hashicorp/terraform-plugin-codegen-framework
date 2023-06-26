@@ -5,6 +5,8 @@ package model
 
 import (
 	"fmt"
+	"strings"
+	"unicode"
 )
 
 const (
@@ -36,4 +38,42 @@ type Model struct {
 
 func (m Model) String() string {
 	return fmt.Sprintf("type %sModel struct {\n%s\n}", m.Name, m.Fields)
+}
+
+// SnakeCaseToCamelCase relies on the convention of using snake-case
+// names in configuration.
+// TODO: A more robust approach is likely required here.
+func SnakeCaseToCamelCase(input string) string {
+	inputSplit := strings.Split(input, "_")
+
+	var ucName string
+
+	for _, v := range inputSplit {
+		if len(v) < 1 {
+			continue
+		}
+
+		firstChar := v[0:1]
+		ucFirstChar := strings.ToUpper(firstChar)
+
+		if len(v) < 2 {
+			ucName += ucFirstChar
+			continue
+		}
+
+		ucName += ucFirstChar + v[1:]
+	}
+
+	return ucName
+}
+
+func LcFirst(input string) string {
+	str := SnakeCaseToCamelCase(input)
+
+	for i, v := range str {
+		preparedStr := string(unicode.ToLower(v)) + str[i+1:]
+		return preparedStr
+	}
+
+	return str
 }

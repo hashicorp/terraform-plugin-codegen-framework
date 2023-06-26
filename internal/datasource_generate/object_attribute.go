@@ -111,7 +111,7 @@ func (g GeneratorObjectAttribute) ToString(name string) (string, error) {
 
 func (g GeneratorObjectAttribute) ToModel(name string) (string, error) {
 	field := model.StructField{
-		Name:      snakeCaseToCamelCase(name),
+		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
 		ValueType: model.ObjectValueType,
 	}

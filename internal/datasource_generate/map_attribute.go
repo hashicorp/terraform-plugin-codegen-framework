@@ -144,7 +144,7 @@ func (g GeneratorMapAttribute) ToString(name string) (string, error) {
 
 func (g GeneratorMapAttribute) ToModel(name string) (string, error) {
 	field := model.StructField{
-		Name:      snakeCaseToCamelCase(name),
+		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
 		ValueType: model.MapValueType,
 	}

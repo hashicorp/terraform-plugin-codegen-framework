@@ -9,7 +9,6 @@ import (
 	"sort"
 	"strings"
 	"text/template"
-	"unicode"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
@@ -367,7 +366,7 @@ func generateModel(name string, attributes map[string]GeneratorAttribute, blocks
 	}
 
 	m := model.Model{
-		Name:   lcFirst(name),
+		Name:   model.LcFirst(name),
 		Fields: fields,
 	}
 
@@ -451,44 +450,6 @@ func generateModel(name string, attributes map[string]GeneratorAttribute, blocks
 	}
 
 	return buf.Bytes(), nil
-}
-
-// snakeCaseToCamelCase relies on the convention of using snake-case
-// names in configuration.
-// TODO: A more robust approach is likely required here.
-func snakeCaseToCamelCase(input string) string {
-	inputSplit := strings.Split(input, "_")
-
-	var ucName string
-
-	for _, v := range inputSplit {
-		if len(v) < 1 {
-			continue
-		}
-
-		firstChar := v[0:1]
-		ucFirstChar := strings.ToUpper(firstChar)
-
-		if len(v) < 2 {
-			ucName += ucFirstChar
-			continue
-		}
-
-		ucName += ucFirstChar + v[1:]
-	}
-
-	return ucName
-}
-
-func lcFirst(input string) string {
-	str := snakeCaseToCamelCase(input)
-
-	for i, v := range str {
-		preparedStr := string(unicode.ToLower(v)) + str[i+1:]
-		return preparedStr
-	}
-
-	return str
 }
 
 func generateModelFields(attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) (string, error) {

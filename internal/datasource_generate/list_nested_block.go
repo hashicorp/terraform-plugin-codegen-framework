@@ -151,7 +151,7 @@ func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
 
 func (g GeneratorListNestedBlock) ToModel(name string) (string, error) {
 	field := model.StructField{
-		Name:      snakeCaseToCamelCase(name),
+		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
 		ValueType: model.ListValueType,
 	}
