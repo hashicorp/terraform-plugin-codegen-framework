@@ -21,7 +21,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorBoolAttribute{
@@ -54,7 +56,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorBoolAttribute{
@@ -65,7 +69,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
@@ -76,7 +82,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorBoolAttribute{
@@ -93,6 +101,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -105,7 +114,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorBoolAttribute{
@@ -116,7 +127,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
@@ -127,7 +140,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorBoolAttribute{
@@ -144,20 +159,25 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
-				planModifierImport: {},
+				generatorschema.TypesImport: {},
+				planModifierImport:          {},
 				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
 				"github.com/myproject/myplanmodifiers/planmodifier":      {},
 			},
 		},
 		"default-nil": {
-			input:    GeneratorBoolAttribute{},
-			expected: map[string]struct{}{},
+			input: GeneratorBoolAttribute{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-and-static-nil": {
 			input: GeneratorBoolAttribute{
 				Default: &specschema.BoolDefault{},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import-nil": {
 			input: GeneratorBoolAttribute{
@@ -165,7 +185,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
@@ -175,7 +197,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"default-custom-import": {
 			input: GeneratorBoolAttribute{
@@ -186,6 +210,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:               {},
 				"github.com/myproject/mydefaults/default": {},
 			},
 		},
@@ -196,7 +221,8 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
-				defaultBoolImport: {},
+				generatorschema.TypesImport: {},
+				defaultBoolImport:           {},
 			},
 		},
 	}

@@ -21,7 +21,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorSingleNestedBlock{
@@ -72,6 +74,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                    {},
 				"github.com/my_account/my_project/nested_list": {},
 			},
 		},
@@ -93,6 +96,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                    {},
 				"github.com/my_account/my_project/nested_list": {},
 				"github.com/my_account/my_project/bool":        {},
 			},
@@ -126,6 +130,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                      {},
 				"github.com/my_account/my_project/nested_object": {},
 			},
 		},
@@ -150,6 +155,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                      {},
 				"github.com/my_account/my_project/nested_object": {},
 				"github.com/my_account/my_project/bool":          {},
 			},
@@ -165,6 +171,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 			},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                     {},
 				"github.com/my_account/my_project/nested_block": {},
 			},
 		},
@@ -175,7 +182,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorSingleNestedBlock{
@@ -186,7 +195,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorSingleNestedBlock{
@@ -197,7 +208,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorSingleNestedBlock{
@@ -214,6 +227,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 					},
 				}},
 			expected: map[string]struct{}{
+				generatorschema.TypesImport:                        {},
 				generatorschema.ValidatorImport:                    {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
@@ -509,6 +523,46 @@ my_other_validator.Validate(),
 
 			if err != nil {
 				t.Error(err)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorSingleNestedBlock_ToModel(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorSingleNestedBlock
+		expected      string
+		expectedError error
+	}{
+		"default": {
+			expected: "SingleNestedBlock types.Object `tfsdk:\"single_nested_block\"`",
+		},
+		"custom-type": {
+			input: GeneratorSingleNestedBlock{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: "SingleNestedBlock my_custom_value_type `tfsdk:\"single_nested_block\"`",
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ToModel("single_nested_block")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
 			}
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {

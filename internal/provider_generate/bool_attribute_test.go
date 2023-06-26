@@ -21,7 +21,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		expected map[string]struct{}
 	}{
 		"default": {
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorBoolAttribute{
@@ -54,7 +56,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorBoolAttribute{
@@ -65,7 +69,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
@@ -76,7 +82,9 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{},
+			expected: map[string]struct{}{
+				generatorschema.TypesImport: {},
+			},
 		},
 		"validator-custom-import": {
 			input: GeneratorBoolAttribute{
@@ -94,6 +102,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				}},
 			expected: map[string]struct{}{
 				generatorschema.ValidatorImport:                    {},
+				generatorschema.TypesImport:                        {},
 				"github.com/myotherproject/myvalidators/validator": {},
 				"github.com/myproject/myvalidators/validator":      {},
 			},
@@ -235,6 +244,46 @@ my_other_validator.Validate(),
 			}
 
 			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         GeneratorBoolAttribute
+		expected      string
+		expectedError error
+	}{
+		"default": {
+			expected: "BoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+		},
+		"custom-type": {
+			input: GeneratorBoolAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: "BoolAttribute my_custom_value_type `tfsdk:\"bool_attribute\"`",
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := testCase.input.ToModel("bool_attribute")
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})
