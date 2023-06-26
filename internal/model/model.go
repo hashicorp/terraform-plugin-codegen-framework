@@ -6,7 +6,6 @@ package model
 import (
 	"fmt"
 	"strings"
-	"unicode"
 )
 
 const (
@@ -65,15 +64,4 @@ func SnakeCaseToCamelCase(input string) string {
 	}
 
 	return ucName
-}
-
-func LcFirst(input string) string {
-	str := SnakeCaseToCamelCase(input)
-
-	for i, v := range str {
-		preparedStr := string(unicode.ToLower(v)) + str[i+1:]
-		return preparedStr
-	}
-
-	return str
 }

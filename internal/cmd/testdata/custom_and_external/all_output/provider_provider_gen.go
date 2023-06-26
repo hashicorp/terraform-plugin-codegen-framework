@@ -8,5 +8,5 @@ import (
 
 var providerProviderSchema = schema.Schema{}
 
-type providerModel struct {
+type ProviderModel struct {
 }

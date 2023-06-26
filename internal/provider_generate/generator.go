@@ -366,7 +366,7 @@ func generateModel(name string, attributes map[string]GeneratorAttribute, blocks
 	}
 
 	m := model.Model{
-		Name:   model.LcFirst(name),
+		Name:   model.SnakeCaseToCamelCase(name),
 		Fields: fields,
 	}
 

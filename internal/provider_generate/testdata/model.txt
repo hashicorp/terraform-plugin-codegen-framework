@@ -1,5 +1,5 @@
 
-type exampleModel struct {
+type ExampleModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 BoolAttributeCustom my_bool_value_type `tfsdk:"bool_attribute_custom"`
 Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
@@ -34,58 +34,58 @@ SingleNestedBlock types.Object `tfsdk:"single_nested_block"`
 SingleNestedBlockCustom my_single_nested_value_type `tfsdk:"single_nested_block_custom"`
 }
 
-type listNestedAttributeModel struct {
+type ListNestedAttributeModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type listNestedAttributeCustomModel struct {
+type ListNestedAttributeCustomModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type mapNestedAttributeModel struct {
+type MapNestedAttributeModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type mapNestedAttributeCustomModel struct {
+type MapNestedAttributeCustomModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type setNestedAttributeModel struct {
+type SetNestedAttributeModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type setNestedAttributeCustomModel struct {
+type SetNestedAttributeCustomModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type singleNestedAttributeModel struct {
+type SingleNestedAttributeModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type singleNestedAttributeCustomModel struct {
+type SingleNestedAttributeCustomModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type listNestedBlockModel struct {
+type ListNestedBlockModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type listNestedBlockCustomModel struct {
+type ListNestedBlockCustomModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type setNestedBlockModel struct {
+type SetNestedBlockModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type setNestedBlockCustomModel struct {
+type SetNestedBlockCustomModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type singleNestedBlockModel struct {
+type SingleNestedBlockModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type singleNestedBlockCustomModel struct {
+type SingleNestedBlockCustomModel struct {
 BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }

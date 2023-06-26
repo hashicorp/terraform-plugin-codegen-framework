@@ -28,6 +28,6 @@ var resourceResourceSchema = schema.Schema{
 	},
 }
 
-type resourceModel struct {
+type ResourceModel struct {
 	BoolAttribute my_bool_value `tfsdk:"bool_attribute"`
 }
