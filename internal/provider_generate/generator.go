@@ -349,12 +349,14 @@ func (d ProviderModelsGenerator) Process(schemas map[string]GeneratorProviderSch
 			Blocks:     schema.Blocks,
 		}
 
-		m, err := generatorProviderSchema.Model(name)
+		models, err := generatorProviderSchema.Model(name)
 		if err != nil {
 			return nil, err
 		}
 
-		buf.Write(m)
+		for _, m := range models {
+			buf.WriteString("\n" + m.String() + "\n")
+		}
 
 		providerModels[name] = buf.Bytes()
 	}
@@ -362,8 +364,8 @@ func (d ProviderModelsGenerator) Process(schemas map[string]GeneratorProviderSch
 	return providerModels, nil
 }
 
-func (g GeneratorProviderSchema) Model(name string) ([]byte, error) {
-	var buf bytes.Buffer
+func (g GeneratorProviderSchema) Model(name string) ([]model.Model, error) {
+	var models []model.Model
 
 	fields, err := g.ModelFields()
 	if err != nil {
@@ -375,7 +377,7 @@ func (g GeneratorProviderSchema) Model(name string) ([]byte, error) {
 		Fields: fields,
 	}
 
-	buf.WriteString("\n" + m.String() + "\n")
+	models = append(models, m)
 
 	// Using sorted attributeNames to guarantee attribute order as maps are unordered in Go.
 	var attributeNames = make([]string, 0, len(g.Attributes))
@@ -388,50 +390,48 @@ func (g GeneratorProviderSchema) Model(name string) ([]byte, error) {
 
 	// If there are any nested attributes, generate model.
 	for _, attributeName := range attributeNames {
-		var modelBytes []byte
+		var nestedModels []model.Model
 
 		switch t := g.Attributes[attributeName].(type) {
 		case GeneratorListNestedAttribute:
-			generatorDataSourceSchema := GeneratorProviderSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: t.NestedObject.Attributes,
 			}
 
-			modelBytes, err = generatorDataSourceSchema.Model(attributeName)
+			nestedModels, err = generatorProviderSchema.Model(attributeName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorMapNestedAttribute:
-			generatorDataSourceSchema := GeneratorProviderSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: t.NestedObject.Attributes,
 			}
 
-			modelBytes, err = generatorDataSourceSchema.Model(attributeName)
+			nestedModels, err = generatorProviderSchema.Model(attributeName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSetNestedAttribute:
-			generatorDataSourceSchema := GeneratorProviderSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: t.NestedObject.Attributes,
 			}
 
-			modelBytes, err = generatorDataSourceSchema.Model(attributeName)
+			nestedModels, err = generatorProviderSchema.Model(attributeName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSingleNestedAttribute:
-			generatorDataSourceSchema := GeneratorProviderSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: t.Attributes,
 			}
 
-			modelBytes, err = generatorDataSourceSchema.Model(attributeName)
+			nestedModels, err = generatorProviderSchema.Model(attributeName)
 			if err != nil {
 				return nil, err
 			}
 		}
 
-		if len(modelBytes) > 0 {
-			buf.Write(modelBytes)
-		}
+		models = append(models, nestedModels...)
 	}
 
 	// Using sorted blockNames to guarantee block order as maps are unordered in Go.
@@ -445,47 +445,45 @@ func (g GeneratorProviderSchema) Model(name string) ([]byte, error) {
 
 	// If there are any nested blocks, generate model.
 	for _, blockName := range blockNames {
-		var modelBytes []byte
+		var nestedModels []model.Model
 
 		switch t := g.Blocks[blockName].(type) {
 		case GeneratorListNestedBlock:
-			generatorDataSourceSchema := GeneratorProviderSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: t.NestedObject.Attributes,
 				Blocks:     t.NestedObject.Blocks,
 			}
 
-			modelBytes, err = generatorDataSourceSchema.Model(blockName)
+			nestedModels, err = generatorProviderSchema.Model(blockName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSetNestedBlock:
-			generatorDataSourceSchema := GeneratorProviderSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: t.NestedObject.Attributes,
 				Blocks:     t.NestedObject.Blocks,
 			}
 
-			modelBytes, err = generatorDataSourceSchema.Model(blockName)
+			nestedModels, err = generatorProviderSchema.Model(blockName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSingleNestedBlock:
-			generatorDataSourceSchema := GeneratorProviderSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: t.Attributes,
 				Blocks:     t.Blocks,
 			}
 
-			modelBytes, err = generatorDataSourceSchema.Model(blockName)
+			nestedModels, err = generatorProviderSchema.Model(blockName)
 			if err != nil {
 				return nil, err
 			}
 		}
 
-		if len(modelBytes) > 0 {
-			buf.Write(modelBytes)
-		}
+		models = append(models, nestedModels...)
 	}
 
-	return buf.Bytes(), nil
+	return models, nil
 }
 
 func (g GeneratorProviderSchema) ModelFields() ([]model.Field, error) {
