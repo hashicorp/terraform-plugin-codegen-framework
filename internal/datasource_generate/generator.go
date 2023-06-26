@@ -344,7 +344,12 @@ func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSour
 	for name, schema := range schemas {
 		var buf bytes.Buffer
 
-		m, err := generateModel(name, schema.Attributes, schema.Blocks)
+		generatorDataSourceSchema := GeneratorDataSourceSchema{
+			Attributes: schema.Attributes,
+			Blocks:     schema.Blocks,
+		}
+
+		m, err := generatorDataSourceSchema.Model(name)
 		if err != nil {
 			return nil, err
 		}
@@ -357,10 +362,10 @@ func (d DataSourcesModelsGenerator) Process(schemas map[string]GeneratorDataSour
 	return dataSourcesModels, nil
 }
 
-func generateModel(name string, attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) ([]byte, error) {
+func (g GeneratorDataSourceSchema) Model(name string) ([]byte, error) {
 	var buf bytes.Buffer
 
-	fields, err := generateModelFields(attributes, blocks)
+	fields, err := g.ModelFields()
 	if err != nil {
 		return nil, err
 	}
@@ -373,9 +378,9 @@ func generateModel(name string, attributes map[string]GeneratorAttribute, blocks
 	buf.WriteString("\n" + m.String() + "\n")
 
 	// Using sorted attributeNames to guarantee attribute order as maps are unordered in Go.
-	var attributeNames = make([]string, 0, len(attributes))
+	var attributeNames = make([]string, 0, len(g.Attributes))
 
-	for attributeName := range attributes {
+	for attributeName := range g.Attributes {
 		attributeNames = append(attributeNames, attributeName)
 	}
 
@@ -385,24 +390,40 @@ func generateModel(name string, attributes map[string]GeneratorAttribute, blocks
 	for _, attributeName := range attributeNames {
 		var modelBytes []byte
 
-		switch t := attributes[attributeName].(type) {
+		switch t := g.Attributes[attributeName].(type) {
 		case GeneratorListNestedAttribute:
-			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
+			generatorDataSourceSchema := GeneratorDataSourceSchema{
+				Attributes: t.NestedObject.Attributes,
+			}
+
+			modelBytes, err = generatorDataSourceSchema.Model(attributeName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorMapNestedAttribute:
-			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
+			generatorDataSourceSchema := GeneratorDataSourceSchema{
+				Attributes: t.NestedObject.Attributes,
+			}
+
+			modelBytes, err = generatorDataSourceSchema.Model(attributeName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSetNestedAttribute:
-			modelBytes, err = generateModel(attributeName, t.NestedObject.Attributes, nil)
+			generatorDataSourceSchema := GeneratorDataSourceSchema{
+				Attributes: t.NestedObject.Attributes,
+			}
+
+			modelBytes, err = generatorDataSourceSchema.Model(attributeName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSingleNestedAttribute:
-			modelBytes, err = generateModel(attributeName, t.Attributes, nil)
+			generatorDataSourceSchema := GeneratorDataSourceSchema{
+				Attributes: t.Attributes,
+			}
+
+			modelBytes, err = generatorDataSourceSchema.Model(attributeName)
 			if err != nil {
 				return nil, err
 			}
@@ -414,9 +435,9 @@ func generateModel(name string, attributes map[string]GeneratorAttribute, blocks
 	}
 
 	// Using sorted blockNames to guarantee block order as maps are unordered in Go.
-	var blockNames = make([]string, 0, len(blocks))
+	var blockNames = make([]string, 0, len(g.Blocks))
 
-	for blockName := range blocks {
+	for blockName := range g.Blocks {
 		blockNames = append(blockNames, blockName)
 	}
 
@@ -426,19 +447,34 @@ func generateModel(name string, attributes map[string]GeneratorAttribute, blocks
 	for _, blockName := range blockNames {
 		var modelBytes []byte
 
-		switch t := blocks[blockName].(type) {
+		switch t := g.Blocks[blockName].(type) {
 		case GeneratorListNestedBlock:
-			modelBytes, err = generateModel(blockName, t.NestedObject.Attributes, t.NestedObject.Blocks)
+			generatorDataSourceSchema := GeneratorDataSourceSchema{
+				Attributes: t.NestedObject.Attributes,
+				Blocks:     t.NestedObject.Blocks,
+			}
+
+			modelBytes, err = generatorDataSourceSchema.Model(blockName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSetNestedBlock:
-			modelBytes, err = generateModel(blockName, t.NestedObject.Attributes, t.NestedObject.Blocks)
+			generatorDataSourceSchema := GeneratorDataSourceSchema{
+				Attributes: t.NestedObject.Attributes,
+				Blocks:     t.NestedObject.Blocks,
+			}
+
+			modelBytes, err = generatorDataSourceSchema.Model(blockName)
 			if err != nil {
 				return nil, err
 			}
 		case GeneratorSingleNestedBlock:
-			modelBytes, err = generateModel(blockName, t.Attributes, t.Blocks)
+			generatorDataSourceSchema := GeneratorDataSourceSchema{
+				Attributes: t.Attributes,
+				Blocks:     t.Blocks,
+			}
+
+			modelBytes, err = generatorDataSourceSchema.Model(blockName)
 			if err != nil {
 				return nil, err
 			}
@@ -452,13 +488,13 @@ func generateModel(name string, attributes map[string]GeneratorAttribute, blocks
 	return buf.Bytes(), nil
 }
 
-func generateModelFields(attributes map[string]GeneratorAttribute, blocks map[string]GeneratorBlock) (string, error) {
+func (g GeneratorDataSourceSchema) ModelFields() (string, error) {
 	var s strings.Builder
 
 	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(attributes))
+	var attributeKeys = make([]string, 0, len(g.Attributes))
 
-	for k := range attributes {
+	for k := range g.Attributes {
 		attributeKeys = append(attributeKeys, k)
 	}
 
@@ -467,11 +503,11 @@ func generateModelFields(attributes map[string]GeneratorAttribute, blocks map[st
 	totalFields := 0
 
 	for _, k := range attributeKeys {
-		if attributes[k] == nil {
+		if g.Attributes[k] == nil {
 			continue
 		}
 
-		str, err := attributes[k].ToModel(k)
+		str, err := g.Attributes[k].ToModel(k)
 
 		if err != nil {
 			return "", err
@@ -487,20 +523,20 @@ func generateModelFields(attributes map[string]GeneratorAttribute, blocks map[st
 	}
 
 	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(blocks))
+	var blockKeys = make([]string, 0, len(g.Blocks))
 
-	for k := range blocks {
+	for k := range g.Blocks {
 		blockKeys = append(blockKeys, k)
 	}
 
 	sort.Strings(blockKeys)
 
 	for _, k := range blockKeys {
-		if blocks[k] == nil {
+		if g.Blocks[k] == nil {
 			continue
 		}
 
-		str, err := blocks[k].ToModel(k)
+		str, err := g.Blocks[k].ToModel(k)
 
 		if err != nil {
 			return "", err
