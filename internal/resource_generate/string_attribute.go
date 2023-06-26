@@ -136,7 +136,7 @@ func (g GeneratorStringAttribute) ToString(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorStringAttribute) ToModel(name string) (string, error) {
+func (g GeneratorStringAttribute) ModelField(name string) (model.Field, error) {
 	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
@@ -147,7 +147,7 @@ func (g GeneratorStringAttribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return field.String(), nil
+	return field, nil
 }
 
 func (g GeneratorStringAttribute) validatorsEqual(x, y []specschema.StringValidator) bool {

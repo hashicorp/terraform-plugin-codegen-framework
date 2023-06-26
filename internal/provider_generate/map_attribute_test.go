@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -827,16 +828,20 @@ ElementType: stringCustomType,
 	}
 }
 
-func TestGeneratorMapAttribute_ToModel(t *testing.T) {
+func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorMapAttribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "MapAttribute types.Map `tfsdk:\"map_attribute\"`",
+			expected: model.Field{
+				Name:      "MapAttribute",
+				ValueType: "types.Map",
+				TfsdkName: "map_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorMapAttribute{
@@ -844,7 +849,11 @@ func TestGeneratorMapAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "MapAttribute my_custom_value_type `tfsdk:\"map_attribute\"`",
+			expected: model.Field{
+				Name:      "MapAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "map_attribute",
+			},
 		},
 	}
 
@@ -854,7 +863,7 @@ func TestGeneratorMapAttribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("map_attribute")
+			got, err := testCase.input.ModelField("map_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

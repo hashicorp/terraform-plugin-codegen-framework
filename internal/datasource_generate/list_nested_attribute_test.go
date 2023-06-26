@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -760,16 +761,20 @@ my_other_validator.Validate(),
 	}
 }
 
-func TestGeneratorListNestedAttribute_ToModel(t *testing.T) {
+func TestGeneratorListNestedAttribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorListNestedAttribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "ListNestedAttribute types.List `tfsdk:\"list_nested_attribute\"`",
+			expected: model.Field{
+				Name:      "ListNestedAttribute",
+				ValueType: "types.List",
+				TfsdkName: "list_nested_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorListNestedAttribute{
@@ -777,7 +782,11 @@ func TestGeneratorListNestedAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "ListNestedAttribute my_custom_value_type `tfsdk:\"list_nested_attribute\"`",
+			expected: model.Field{
+				Name:      "ListNestedAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "list_nested_attribute",
+			},
 		},
 	}
 
@@ -787,7 +796,7 @@ func TestGeneratorListNestedAttribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("list_nested_attribute")
+			got, err := testCase.input.ModelField("list_nested_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

@@ -32,11 +32,19 @@ func (f Field) String() string {
 
 type Model struct {
 	Name   string
-	Fields string
+	Fields []Field
 }
 
 func (m Model) String() string {
-	return fmt.Sprintf("type %sModel struct {\n%s\n}", m.Name, m.Fields)
+	var fieldsStr string
+
+	for _, field := range m.Fields {
+		fieldsStr += field.String() + "\n"
+	}
+
+	fieldsStrTrim := strings.TrimSuffix(fieldsStr, "\n")
+
+	return fmt.Sprintf("type %sModel struct {\n%s\n}", m.Name, fieldsStrTrim)
 }
 
 // SnakeCaseToCamelCase relies on the convention of using snake-case

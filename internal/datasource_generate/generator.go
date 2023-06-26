@@ -173,7 +173,7 @@ type GeneratorImport interface {
 }
 
 type GeneratorModel interface {
-	ToModel(string) (string, error)
+	ModelField(string) (model.Field, error)
 }
 
 type GeneratorAttribute interface {
@@ -488,8 +488,8 @@ func (g GeneratorDataSourceSchema) Model(name string) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorDataSourceSchema) ModelFields() (string, error) {
-	var s strings.Builder
+func (g GeneratorDataSourceSchema) ModelFields() ([]model.Field, error) {
+	var modelFields []model.Field
 
 	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
 	var attributeKeys = make([]string, 0, len(g.Attributes))
@@ -500,26 +500,18 @@ func (g GeneratorDataSourceSchema) ModelFields() (string, error) {
 
 	sort.Strings(attributeKeys)
 
-	totalFields := 0
-
 	for _, k := range attributeKeys {
 		if g.Attributes[k] == nil {
 			continue
 		}
 
-		str, err := g.Attributes[k].ToModel(k)
+		modelField, err := g.Attributes[k].ModelField(k)
 
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 
-		if totalFields > 0 {
-			s.WriteString("\n")
-		}
-
-		s.WriteString(str)
-
-		totalFields++
+		modelFields = append(modelFields, modelField)
 	}
 
 	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
@@ -536,20 +528,14 @@ func (g GeneratorDataSourceSchema) ModelFields() (string, error) {
 			continue
 		}
 
-		str, err := g.Blocks[k].ToModel(k)
+		modelField, err := g.Blocks[k].ModelField(k)
 
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 
-		if totalFields > 0 {
-			s.WriteString("\n")
-		}
-
-		s.WriteString(str)
-
-		totalFields++
+		modelFields = append(modelFields, modelField)
 	}
 
-	return s.String(), nil
+	return modelFields, nil
 }

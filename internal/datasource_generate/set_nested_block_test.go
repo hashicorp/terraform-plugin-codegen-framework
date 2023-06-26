@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -769,16 +770,20 @@ my_other_validator.Validate(),
 	}
 }
 
-func TestGeneratorSetNestedBlock_ToModel(t *testing.T) {
+func TestGeneratorSetNestedBlock_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorSetNestedBlock
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "SetNestedBlock types.Set `tfsdk:\"set_nested_block\"`",
+			expected: model.Field{
+				Name:      "SetNestedBlock",
+				ValueType: "types.Set",
+				TfsdkName: "set_nested_block",
+			},
 		},
 		"custom-type": {
 			input: GeneratorSetNestedBlock{
@@ -786,7 +791,11 @@ func TestGeneratorSetNestedBlock_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "SetNestedBlock my_custom_value_type `tfsdk:\"set_nested_block\"`",
+			expected: model.Field{
+				Name:      "SetNestedBlock",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "set_nested_block",
+			},
 		},
 	}
 
@@ -796,7 +805,7 @@ func TestGeneratorSetNestedBlock_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("set_nested_block")
+			got, err := testCase.input.ModelField("set_nested_block")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

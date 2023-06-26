@@ -96,7 +96,7 @@ func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorBoolAttribute) ToModel(name string) (string, error) {
+func (g GeneratorBoolAttribute) ModelField(name string) (model.Field, error) {
 	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
@@ -107,7 +107,7 @@ func (g GeneratorBoolAttribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return field.String(), nil
+	return field, nil
 }
 
 func (g GeneratorBoolAttribute) validatorsEqual(x, y []specschema.BoolValidator) bool {

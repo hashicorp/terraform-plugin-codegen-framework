@@ -149,7 +149,7 @@ func (g GeneratorSetNestedBlock) ToString(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorSetNestedBlock) ToModel(name string) (string, error) {
+func (g GeneratorSetNestedBlock) ModelField(name string) (model.Field, error) {
 	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
@@ -160,7 +160,7 @@ func (g GeneratorSetNestedBlock) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return field.String(), nil
+	return field, nil
 }
 
 func (g GeneratorSetNestedBlock) setValidatorsEqual(x, y []specschema.SetValidator) bool {

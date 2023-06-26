@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -670,16 +671,20 @@ Default: my_object_default.Default(),
 	}
 }
 
-func TestGeneratorSingleNestedAttribute_ToModel(t *testing.T) {
+func TestGeneratorSingleNestedAttribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorSingleNestedAttribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "SingleNestedAttribute types.Object `tfsdk:\"single_nested_attribute\"`",
+			expected: model.Field{
+				Name:      "SingleNestedAttribute",
+				ValueType: "types.Object",
+				TfsdkName: "single_nested_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorSingleNestedAttribute{
@@ -687,7 +692,11 @@ func TestGeneratorSingleNestedAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "SingleNestedAttribute my_custom_value_type `tfsdk:\"single_nested_attribute\"`",
+			expected: model.Field{
+				Name:      "SingleNestedAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "single_nested_attribute",
+			},
 		},
 	}
 
@@ -697,7 +706,7 @@ func TestGeneratorSingleNestedAttribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("single_nested_attribute")
+			got, err := testCase.input.ModelField("single_nested_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

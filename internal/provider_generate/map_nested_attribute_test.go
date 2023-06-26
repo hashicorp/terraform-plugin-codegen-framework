@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -744,16 +745,20 @@ my_other_validator.Validate(),
 	}
 }
 
-func TestGeneratorMapNestedAttribute_ToModel(t *testing.T) {
+func TestGeneratorMapNestedAttribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorMapNestedAttribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "MapNestedAttribute types.Map `tfsdk:\"map_nested_attribute\"`",
+			expected: model.Field{
+				Name:      "MapNestedAttribute",
+				ValueType: "types.Map",
+				TfsdkName: "map_nested_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorMapNestedAttribute{
@@ -761,7 +766,11 @@ func TestGeneratorMapNestedAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "MapNestedAttribute my_custom_value_type `tfsdk:\"map_nested_attribute\"`",
+			expected: model.Field{
+				Name:      "MapNestedAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "map_nested_attribute",
+			},
 		},
 	}
 
@@ -771,7 +780,7 @@ func TestGeneratorMapNestedAttribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("map_nested_attribute")
+			got, err := testCase.input.ModelField("map_nested_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

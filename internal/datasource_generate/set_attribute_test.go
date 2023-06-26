@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -843,16 +844,20 @@ ElementType: stringCustomType,
 	}
 }
 
-func TestGeneratorSetAttribute_ToModel(t *testing.T) {
+func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorSetAttribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "SetAttribute types.Set `tfsdk:\"set_attribute\"`",
+			expected: model.Field{
+				Name:      "SetAttribute",
+				ValueType: "types.Set",
+				TfsdkName: "set_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorSetAttribute{
@@ -860,7 +865,11 @@ func TestGeneratorSetAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "SetAttribute my_custom_value_type `tfsdk:\"set_attribute\"`",
+			expected: model.Field{
+				Name:      "SetAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "set_attribute",
+			},
 		},
 	}
 
@@ -870,7 +879,7 @@ func TestGeneratorSetAttribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("set_attribute")
+			got, err := testCase.input.ModelField("set_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

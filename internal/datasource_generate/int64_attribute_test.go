@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -262,16 +263,20 @@ my_other_validator.Validate(),
 	}
 }
 
-func TestGeneratorInt64Attribute_ToModel(t *testing.T) {
+func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorInt64Attribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "Int64Attribute types.Int64 `tfsdk:\"int64_attribute\"`",
+			expected: model.Field{
+				Name:      "Int64Attribute",
+				ValueType: "types.Int64",
+				TfsdkName: "int64_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorInt64Attribute{
@@ -279,7 +284,11 @@ func TestGeneratorInt64Attribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "Int64Attribute my_custom_value_type `tfsdk:\"int64_attribute\"`",
+			expected: model.Field{
+				Name:      "Int64Attribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "int64_attribute",
+			},
 		},
 	}
 
@@ -289,7 +298,7 @@ func TestGeneratorInt64Attribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("int64_attribute")
+			got, err := testCase.input.ModelField("int64_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

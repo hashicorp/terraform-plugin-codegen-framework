@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -250,16 +251,20 @@ my_other_validator.Validate(),
 	}
 }
 
-func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
+func TestGeneratorBoolAttribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorBoolAttribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "BoolAttribute types.Bool `tfsdk:\"bool_attribute\"`",
+			expected: model.Field{
+				Name:      "BoolAttribute",
+				ValueType: "types.Bool",
+				TfsdkName: "bool_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorBoolAttribute{
@@ -267,7 +272,11 @@ func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "BoolAttribute my_custom_value_type `tfsdk:\"bool_attribute\"`",
+			expected: model.Field{
+				Name:      "BoolAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "bool_attribute",
+			},
 		},
 	}
 
@@ -277,7 +286,7 @@ func TestGeneratorBoolAttribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("bool_attribute")
+			got, err := testCase.input.ModelField("bool_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

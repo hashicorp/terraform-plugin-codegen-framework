@@ -96,7 +96,7 @@ func (g GeneratorInt64Attribute) ToString(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorInt64Attribute) ToModel(name string) (string, error) {
+func (g GeneratorInt64Attribute) ModelField(name string) (model.Field, error) {
 	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
@@ -107,7 +107,7 @@ func (g GeneratorInt64Attribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return field.String(), nil
+	return field, nil
 }
 
 func (g GeneratorInt64Attribute) validatorsEqual(x, y []specschema.Int64Validator) bool {

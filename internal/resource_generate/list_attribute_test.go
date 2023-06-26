@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -998,16 +999,20 @@ ElementType: stringCustomType,
 	}
 }
 
-func TestGeneratorListAttribute_ToModel(t *testing.T) {
+func TestGeneratorListAttribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorListAttribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "ListAttribute types.List `tfsdk:\"list_attribute\"`",
+			expected: model.Field{
+				Name:      "ListAttribute",
+				ValueType: "types.List",
+				TfsdkName: "list_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorListAttribute{
@@ -1015,7 +1020,11 @@ func TestGeneratorListAttribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "ListAttribute my_custom_value_type `tfsdk:\"list_attribute\"`",
+			expected: model.Field{
+				Name:      "ListAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "list_attribute",
+			},
 		},
 	}
 
@@ -1025,7 +1034,7 @@ func TestGeneratorListAttribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("list_attribute")
+			got, err := testCase.input.ModelField("list_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

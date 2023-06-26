@@ -10,6 +10,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -262,16 +263,20 @@ my_other_validator.Validate(),
 	}
 }
 
-func TestGeneratorFloat64Attribute_ToModel(t *testing.T) {
+func TestGeneratorFloat64Attribute_ModelField(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
 		input         GeneratorFloat64Attribute
-		expected      string
+		expected      model.Field
 		expectedError error
 	}{
 		"default": {
-			expected: "Float64Attribute types.Float64 `tfsdk:\"float64_attribute\"`",
+			expected: model.Field{
+				Name:      "Float64Attribute",
+				ValueType: "types.Float64",
+				TfsdkName: "float64_attribute",
+			},
 		},
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
@@ -279,7 +284,11 @@ func TestGeneratorFloat64Attribute_ToModel(t *testing.T) {
 					ValueType: "my_custom_value_type",
 				},
 			},
-			expected: "Float64Attribute my_custom_value_type `tfsdk:\"float64_attribute\"`",
+			expected: model.Field{
+				Name:      "Float64Attribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "float64_attribute",
+			},
 		},
 	}
 
@@ -289,7 +298,7 @@ func TestGeneratorFloat64Attribute_ToModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToModel("float64_attribute")
+			got, err := testCase.input.ModelField("float64_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

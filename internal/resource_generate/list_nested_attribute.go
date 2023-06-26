@@ -177,7 +177,7 @@ func (g GeneratorListNestedAttribute) ToString(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorListNestedAttribute) ToModel(name string) (string, error) {
+func (g GeneratorListNestedAttribute) ModelField(name string) (model.Field, error) {
 	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
@@ -188,7 +188,7 @@ func (g GeneratorListNestedAttribute) ToModel(name string) (string, error) {
 		field.ValueType = g.CustomType.ValueType
 	}
 
-	return field.String(), nil
+	return field, nil
 }
 
 func (g GeneratorListNestedAttribute) listValidatorsEqual(x, y []specschema.ListValidator) bool {
