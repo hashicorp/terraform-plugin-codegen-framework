@@ -7,7 +7,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
+	"github.com/mitchellh/cli"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
@@ -15,8 +19,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
-	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
-	"github.com/mitchellh/cli"
 )
 
 type GenerateProviderCommand struct {
@@ -138,14 +140,27 @@ func generateProviderCode(spec spec.Specification, outputPath, packageName strin
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
+	// generate model code
+	providerModelsGenerator := provider_generate.NewProviderModelsGenerator()
+	providerModels, err := providerModelsGenerator.Process(providerSchemas)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// format schema code
 	formattedProvidersSchema, err := format.Format(providerSchemaBytes)
 	if err != nil {
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
 
+	// format model code
+	formattedProviderModels, err := format.Format(providerModels)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// write code
-	err = output.WriteProviders(formattedProvidersSchema, outputPath)
+	err = output.WriteProviders(formattedProvidersSchema, formattedProviderModels, outputPath)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}
