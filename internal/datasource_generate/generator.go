@@ -37,11 +37,11 @@ func NewGeneratorDataSourceSchemas(schemas map[string]GeneratorDataSourceSchema)
 	}
 }
 
-func (g GeneratorDataSourceSchemas) ToBytes() (map[string][]byte, error) {
+func (g GeneratorDataSourceSchemas) ToBytes(packageName string) (map[string][]byte, error) {
 	schemasBytes := make(map[string][]byte, len(g.schemas))
 
 	for k, s := range g.schemas {
-		b, err := g.toBytes(k, s)
+		b, err := g.toBytes(k, s, packageName)
 
 		if err != nil {
 			return nil, err
@@ -53,7 +53,7 @@ func (g GeneratorDataSourceSchemas) ToBytes() (map[string][]byte, error) {
 	return schemasBytes, nil
 }
 
-func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSchema) ([]byte, error) {
+func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSchema, packageName string) ([]byte, error) {
 	funcMap := template.FuncMap{
 		"getImports":    getImports,
 		"getAttributes": getAttributes,
@@ -72,9 +72,11 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSc
 	templateData := struct {
 		Name string
 		GeneratorDataSourceSchema
+		PackageName string
 	}{
 		Name:                      name,
 		GeneratorDataSourceSchema: s,
+		PackageName:               packageName,
 	}
 
 	err = t.Execute(&buf, templateData)

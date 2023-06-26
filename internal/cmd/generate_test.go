@@ -9,44 +9,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
-	"github.com/mitchellh/cli"
 )
-
-func TestAllCommand(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		irInputPath   string
-		goldenFileDir string
-	}{
-		"custom_and_external": {
-			irInputPath:   "testdata/custom_and_external/ir.json",
-			goldenFileDir: "testdata/custom_and_external/output",
-		},
-	}
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			testOutputDir := t.TempDir()
-			mockUi := cli.NewMockUi()
-			c := cmd.AllCommand{Ui: mockUi}
-			args := []string{
-				"-input", testCase.irInputPath,
-				"-output", testOutputDir,
-			}
-
-			exitCode := c.Run(args)
-			if exitCode != 0 {
-				t.Fatalf("unexpected error running `all` cmd: %s", mockUi.ErrorWriter.String())
-			}
-
-			compareDirectories(t, testCase.goldenFileDir, testOutputDir)
-		})
-	}
-}
 
 // TODO: currently doesn't compare nested directory files
 func compareDirectories(t *testing.T, wantDirPath, gotDirPath string) {
@@ -63,19 +26,19 @@ func compareDirectories(t *testing.T, wantDirPath, gotDirPath string) {
 	}
 
 	if len(gotDirEntries) != len(wantDirEntries) {
-		t.Fatalf("mismatched files in output directory, wanted: %d file(s), got: %d file(s)", len(wantDirEntries), len(gotDirEntries))
+		t.Fatalf("mismatched file count in output directory, golden directory: %d file(s), test directory: %d file(s)", len(wantDirEntries), len(gotDirEntries))
 	}
 
 	for i, wantEntry := range wantDirEntries {
 		gotEntry := gotDirEntries[i]
 
 		if gotEntry.Name() != wantEntry.Name() {
-			t.Errorf("mismatched file name, wanted: %s, got: %s", wantEntry.Name(), gotEntry.Name())
+			t.Errorf("mismatched file name, golden file name: %s, test file name: %s", wantEntry.Name(), gotEntry.Name())
 			continue
 		}
 
 		if gotEntry.Type() != wantEntry.Type() {
-			t.Errorf("mismatched file type, wanted: %s, got: %s", wantEntry.Type(), gotEntry.Type())
+			t.Errorf("mismatched file type, golden file type: %s, test file type: %s", wantEntry.Type(), gotEntry.Type())
 			continue
 		}
 

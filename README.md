@@ -2,33 +2,60 @@
 
 ## Running the Generator
 
-The generator reads the intermediate representation (IR) from _stdin_ by default in order to 
-facilitate the chaining together of CLI commands.
-
-The following is a contrived example:
-
+### Build (local)
 ```shell
-cat examples/ir.json | go run . all
+# Build the binary from source
+# Creates binary named `terraform-plugin-codegen-framework`
+make build
 ```
 
-An alternative is to use the `-input` flag to specify a file from which the IR can be read.
+### Input
+
+The generator reads an [Intermediate Representation (IR)](https://github.com/hashicorp/terraform-plugin-codegen-spec) of a Terraform Provider. Input is read from **stdin** by default in order to facilitate the chaining together of CLI commands.
+
+The following examples use an IR from the repo's integration tests [internal/cmd/testdata/custom_and_external/ir.json](./internal/cmd/testdata/custom_and_external/ir.json):
+
+```shell
+cat internal/cmd/testdata/custom_and_external/ir.json | ./terraform-plugin-codegen-framework generate all
+```
+
+An alternative is to use the `--input` flag to specify a file from which the IR can be read.
 
 For example:
 
 ```shell
-go run . all -input examples/ir.json
+./terraform-plugin-codegen-framework generate all --input internal/cmd/testdata/custom_and_external/ir.json
 ```
 
-Both cases will process `ir.json`.
+### Commands
+The IR JSON file contains `provider`, `resources`, and `datasources` definitions. These can all be processed together or individually with the following commands:
 
-The generated code will be saved into the `generator/output` directory.
+```shell
+# Generates all code for provider, resources, and data-sources
+./terraform-plugin-codegen-framework generate all --input internal/cmd/testdata/custom_and_external/ir.json
 
-`ir.json` contains a simple intermediate representation (IR).
+# Generates all code for data-sources only.
+./terraform-plugin-codegen-framework generate data-sources --input internal/cmd/testdata/custom_and_external/ir.json
+
+# Generates all code for provider only.
+./terraform-plugin-codegen-framework generate provider --input internal/cmd/testdata/custom_and_external/ir.json
+
+# Generates all code for resources only.
+./terraform-plugin-codegen-framework generate resources --input internal/cmd/testdata/custom_and_external/ir.json
+```
+
+### Output
+
+The generated code will default to the `./output` directory, but can also be specified with the `--output` parameter. Similarly, the name of the Go package in the generated code will default to `provider`, but can be specified with `--package`.
+```shell
+# Generates all code into a Go package named `generated` at the directory path `./internal/provider/generated`
+./terraform-plugin-codegen-framework generate all --input internal/cmd/testdata/custom_and_external/ir.json --output internal/provider/generated --package generated
+```
 
 ## Running the Tests
 
 ```shell
-go test $(go list ./... | grep -v /output) -v -count=1
+make test
 ```
 
 ## Overview
@@ -49,8 +76,5 @@ The general flow is as follows:
 * Generate Go code for schema, models and model helper functions.
 * Format the generated Go code.
 * Write the formatted Go code, one file per data source, provider or resource, into
-  `generator/output`.
+  `./output`.
 
-Currently, the only command that has been implemented is `all`. This is a bit of a misnomer 
-as the `all` command only generates schema for data sources, provider and resources at 
-present.
