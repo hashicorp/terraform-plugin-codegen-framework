@@ -97,7 +97,7 @@ func (g GeneratorInt64Attribute) ToString(name string) (string, error) {
 }
 
 func (g GeneratorInt64Attribute) ToModel(name string) (string, error) {
-	field := model.StructField{
+	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
 		ValueType: model.Int64ValueType,

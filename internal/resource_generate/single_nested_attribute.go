@@ -138,7 +138,7 @@ func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 }
 
 func (g GeneratorSingleNestedAttribute) ToModel(name string) (string, error) {
-	field := model.StructField{
+	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
 		ValueType: model.ObjectValueType,

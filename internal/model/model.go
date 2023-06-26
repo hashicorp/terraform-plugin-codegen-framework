@@ -20,13 +20,13 @@ const (
 	StringValueType  = "types.String"
 )
 
-type StructField struct {
+type Field struct {
 	Name      string
 	TfsdkName string
 	ValueType string
 }
 
-func (f StructField) String() string {
+func (f Field) String() string {
 	return fmt.Sprintf("%s %s `tfsdk:%q`", f.Name, f.ValueType, f.TfsdkName)
 }
 

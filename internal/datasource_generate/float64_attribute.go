@@ -97,7 +97,7 @@ func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {
 }
 
 func (g GeneratorFloat64Attribute) ToModel(name string) (string, error) {
-	field := model.StructField{
+	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
 		ValueType: model.Float64ValueType,

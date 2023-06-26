@@ -177,7 +177,7 @@ func (g GeneratorSetNestedBlock) ToString(name string) (string, error) {
 }
 
 func (g GeneratorSetNestedBlock) ToModel(name string) (string, error) {
-	field := model.StructField{
+	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
 		ValueType: model.SetValueType,
