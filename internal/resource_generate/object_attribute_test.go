@@ -402,10 +402,12 @@ ElemType: types.BoolType,
 						Name: "list",
 						List: &specschema.ListType{
 							ElementType: specschema.ElementType{
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name: "bool",
-										Bool: &specschema.BoolType{},
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name: "bool",
+											Bool: &specschema.BoolType{},
+										},
 									},
 								},
 							},
@@ -486,10 +488,12 @@ ElemType: types.BoolType,
 						Name: "map",
 						Map: &specschema.MapType{
 							ElementType: specschema.ElementType{
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name: "bool",
-										Bool: &specschema.BoolType{},
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name: "bool",
+											Bool: &specschema.BoolType{},
+										},
 									},
 								},
 							},
@@ -516,10 +520,12 @@ AttrTypes: map[string]attr.Type{
 				AttributeTypes: []specschema.ObjectAttributeType{
 					{
 						Name: "obj",
-						Object: []specschema.ObjectAttributeType{
-							{
-								Name: "bool",
-								Bool: &specschema.BoolType{},
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
+								},
 							},
 						},
 					},
@@ -542,13 +548,17 @@ AttrTypes: map[string]attr.Type{
 				AttributeTypes: []specschema.ObjectAttributeType{
 					{
 						Name: "obj",
-						Object: []specschema.ObjectAttributeType{
-							{
-								Name: "obj_obj",
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name: "bool",
-										Bool: &specschema.BoolType{},
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "obj_obj",
+									Object: &specschema.ObjectType{
+										AttributeTypes: []specschema.ObjectAttributeType{
+											{
+												Name: "bool",
+												Bool: &specschema.BoolType{},
+											},
+										},
 									},
 								},
 							},
@@ -577,12 +587,14 @@ AttrTypes: map[string]attr.Type{
 				AttributeTypes: []specschema.ObjectAttributeType{
 					{
 						Name: "obj",
-						Object: []specschema.ObjectAttributeType{
-							{
-								Name: "list",
-								List: &specschema.ListType{
-									ElementType: specschema.ElementType{
-										Bool: &specschema.BoolType{},
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "list",
+									List: &specschema.ListType{
+										ElementType: specschema.ElementType{
+											Bool: &specschema.BoolType{},
+										},
 									},
 								},
 							},
@@ -1007,12 +1019,14 @@ AttributeTypes: map[string]attr.Type{
 				AttributeTypes: []specschema.ObjectAttributeType{
 					{
 						Name: "object",
-						Object: []specschema.ObjectAttributeType{
-							{
-								Name: "bool",
-								Bool: &specschema.BoolType{
-									CustomType: &specschema.CustomType{
-										Type: "boolCustomType",
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{
+										CustomType: &specschema.CustomType{
+											Type: "boolCustomType",
+										},
 									},
 								},
 							},

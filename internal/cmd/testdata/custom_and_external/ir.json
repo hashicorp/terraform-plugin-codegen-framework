@@ -16,7 +16,7 @@
               "computed_optional_required": "computed",
               "element_type": {
                 "list": {
-                  "string":{}
+                  "string": {}
                 }
               }
             }
@@ -37,12 +37,14 @@
             "list": {
               "computed_optional_required": "computed",
               "element_type": {
-                "object": [
-                  {
-                    "name": "obj_string_attr",
-                    "string": {}
-                  }
-                ]
+                "object": {
+                  "attribute_types": [
+                    {
+                      "name": "obj_string_attr",
+                      "string": {}
+                    }
+                  ]
+                }
               }
             }
           },
@@ -51,17 +53,21 @@
             "list": {
               "computed_optional_required": "computed",
               "element_type": {
-                "object": [
-                  {
-                    "name": "obj_obj_attr",
-                    "object": [
-                      {
-                        "name": "obj_obj_string_attr",
-                        "string": {}
+                "object": {
+                  "attribute_types": [
+                    {
+                      "name": "obj_obj_attr",
+                      "object": {
+                        "attribute_types": [
+                          {
+                            "name": "obj_obj_string_attr",
+                            "string": {}
+                          }
+                        ]
                       }
-                    ]
-                  }
-                ]
+                    }
+                  ]
+                }
               }
             }
           },
@@ -99,12 +105,14 @@
                 {
                   "name": "obj_list_attr",
                   "list": {
-                    "object": [
-                      {
-                        "name": "obj_list_obj_attr",
-                        "string": {}
-                      }
-                    ]
+                    "object": {
+                      "attribute_types": [
+                        {
+                          "name": "obj_list_obj_attr",
+                          "string": {}
+                        }
+                      ]
+                    }
                   }
                 }
               ]

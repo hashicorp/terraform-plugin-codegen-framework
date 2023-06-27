@@ -241,9 +241,21 @@ func customTypeEqual(x, y *specschema.CustomType) bool {
 	return true
 }
 
-func objectTypeEqual(x, y []specschema.ObjectAttributeType) bool {
-	for k, v := range x {
-		if v.Name != y[k].Name {
+func objectTypeEqual(x, y *specschema.ObjectType) bool {
+	if x == nil && y == nil {
+		return true
+	}
+
+	if x == nil || y == nil {
+		return false
+	}
+
+	if !customTypeEqual(x.CustomType, y.CustomType) {
+		return false
+	}
+
+	for k, v := range x.AttributeTypes {
+		if v.Name != y.AttributeTypes[k].Name {
 			return false
 		}
 
@@ -260,15 +272,15 @@ func objectTypeEqual(x, y []specschema.ObjectAttributeType) bool {
 		}
 
 		b := specschema.ElementType{
-			Bool:    y[k].Bool,
-			Float64: y[k].Float64,
-			Int64:   y[k].Int64,
-			List:    y[k].List,
-			Map:     y[k].Map,
-			Number:  y[k].Number,
-			Object:  y[k].Object,
-			Set:     y[k].Set,
-			String:  y[k].String,
+			Bool:    y.AttributeTypes[k].Bool,
+			Float64: y.AttributeTypes[k].Float64,
+			Int64:   y.AttributeTypes[k].Int64,
+			List:    y.AttributeTypes[k].List,
+			Map:     y.AttributeTypes[k].Map,
+			Number:  y.AttributeTypes[k].Number,
+			Object:  y.AttributeTypes[k].Object,
+			Set:     y.AttributeTypes[k].Set,
+			String:  y.AttributeTypes[k].String,
 		}
 
 		if !elementTypeEqual(a, b) {

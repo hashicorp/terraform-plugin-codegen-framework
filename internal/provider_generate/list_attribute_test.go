@@ -112,7 +112,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		"elem-type-object": {
 			input: GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{},
+					Object: &specschema.ObjectType{},
 				},
 			},
 			expected: map[string]struct{}{
@@ -122,10 +122,12 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		"elem-type-object-bool": {
 			input: GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "b",
-							Bool: &specschema.BoolType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "b",
+								Bool: &specschema.BoolType{},
+							},
 						},
 					},
 				},
@@ -138,12 +140,14 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		"elem-type-object-bool-with-import": {
 			input: GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "bool",
-							Bool: &specschema.BoolType{
-								CustomType: &specschema.CustomType{
-									Import: pointer("github.com/my_account/my_project/element"),
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "bool",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: pointer("github.com/my_account/my_project/element"),
+									},
 								},
 							},
 						},
@@ -158,16 +162,18 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		"elem-type-object-with-imports": {
 			input: GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "b",
-							Bool: &specschema.BoolType{},
-						},
-						{
-							Name: "c",
-							Bool: &specschema.BoolType{
-								CustomType: &specschema.CustomType{
-									Import: pointer("github.com/my_account/my_project/element"),
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "b",
+								Bool: &specschema.BoolType{},
+							},
+							{
+								Name: "c",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: pointer("github.com/my_account/my_project/element"),
+									},
 								},
 							},
 						},
@@ -322,10 +328,12 @@ ElemType: types.BoolType,
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
-							Object: []specschema.ObjectAttributeType{
-								{
-									Name: "bool",
-									Bool: &specschema.BoolType{},
+							Object: &specschema.ObjectType{
+								AttributeTypes: []specschema.ObjectAttributeType{
+									{
+										Name: "bool",
+										Bool: &specschema.BoolType{},
+									},
 								},
 							},
 						},
@@ -391,10 +399,12 @@ ElemType: types.BoolType,
 				ElementType: specschema.ElementType{
 					Map: &specschema.MapType{
 						ElementType: specschema.ElementType{
-							Object: []specschema.ObjectAttributeType{
-								{
-									Name: "bool",
-									Bool: &specschema.BoolType{},
+							Object: &specschema.ObjectType{
+								AttributeTypes: []specschema.ObjectAttributeType{
+									{
+										Name: "bool",
+										Bool: &specschema.BoolType{},
+									},
 								},
 							},
 						},
@@ -416,10 +426,12 @@ AttrTypes: map[string]attr.Type{
 		"element-type-object": {
 			input: GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "bool",
-							Bool: &specschema.BoolType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "bool",
+								Bool: &specschema.BoolType{},
+							},
 						},
 					},
 				},
@@ -437,13 +449,17 @@ AttrTypes: map[string]attr.Type{
 		"element-type-object-object": {
 			input: GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "obj",
-							Object: []specschema.ObjectAttributeType{
-								{
-									Name: "bool",
-									Bool: &specschema.BoolType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "obj",
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name: "bool",
+											Bool: &specschema.BoolType{},
+										},
+									},
 								},
 							},
 						},
@@ -467,12 +483,14 @@ AttrTypes: map[string]attr.Type{
 		"element-type-object-list": {
 			input: GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "list",
-							List: &specschema.ListType{
-								ElementType: specschema.ElementType{
-									Bool: &specschema.BoolType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "list",
+								List: &specschema.ListType{
+									ElementType: specschema.ElementType{
+										Bool: &specschema.BoolType{},
+									},
 								},
 							},
 						},
@@ -747,12 +765,14 @@ ElementType: numberCustomType,
 		"element-type-object-custom": {
 			input: GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "bool",
-							Bool: &specschema.BoolType{
-								CustomType: &specschema.CustomType{
-									Type: "customBoolType",
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "bool",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Type: "customBoolType",
+									},
 								},
 							},
 						},

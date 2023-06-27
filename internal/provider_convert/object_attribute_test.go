@@ -121,10 +121,12 @@ func TestConvertObjectAttribute(t *testing.T) {
 						Name: "obj_list_object_string",
 						List: &specschema.ListType{
 							ElementType: specschema.ElementType{
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name:   "obj_string",
-										String: &specschema.StringType{},
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name:   "obj_str",
+											String: &specschema.StringType{},
+										},
 									},
 								},
 							},
@@ -138,10 +140,12 @@ func TestConvertObjectAttribute(t *testing.T) {
 						Name: "obj_list_object_string",
 						List: &specschema.ListType{
 							ElementType: specschema.ElementType{
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name:   "obj_string",
-										String: &specschema.StringType{},
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name:   "obj_str",
+											String: &specschema.StringType{},
+										},
 									},
 								},
 							},

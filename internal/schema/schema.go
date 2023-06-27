@@ -45,7 +45,7 @@ func GetElementType(e specschema.ElementType) string {
 		}
 		return "types.NumberType"
 	case e.Object != nil:
-		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(e.Object))
+		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(e.Object.AttributeTypes))
 	case e.Set != nil:
 		if e.Set.CustomType != nil {
 			return fmt.Sprintf("%s{\nElemType: %s,\n}", e.Set.CustomType.Type, GetElementType(e.Set.ElementType))
@@ -111,7 +111,7 @@ func GetAttrTypes(attrTypes []specschema.ObjectAttributeType) string {
 				aTypes.WriteString("types.NumberType")
 			}
 		case v.Object != nil:
-			aTypes.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(v.Object)))
+			aTypes.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(v.Object.AttributeTypes)))
 		case v.Set != nil:
 			if v.Set.CustomType != nil {
 				aTypes.WriteString(fmt.Sprintf("%s{\nElemType: %s,\n}", v.Set.CustomType.Type, GetElementType(v.Set.ElementType)))
@@ -169,7 +169,7 @@ func GetElementTypeImports(e specschema.ElementType, imports map[string]struct{}
 		imports[TypesImport] = struct{}{}
 		return imports
 	case e.Object != nil:
-		return GetAttrTypesImports(e.Object, imports)
+		return GetAttrTypesImports(e.Object.CustomType, e.Object.AttributeTypes, imports)
 	case e.Set != nil:
 		return GetElementTypeImports(e.Set.ElementType, imports)
 	case e.String != nil:
@@ -186,7 +186,11 @@ func GetElementTypeImports(e specschema.ElementType, imports map[string]struct{}
 
 // GetAttrTypesImports generates a map of import declarations for use in generated schema with
 // object attribute types.
-func GetAttrTypesImports(attrTypes []specschema.ObjectAttributeType, imports map[string]struct{}) map[string]struct{} {
+func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specschema.ObjectAttributeType, imports map[string]struct{}) map[string]struct{} {
+	if customType != nil && customType.HasImport() {
+		imports[*customType.Import] = struct{}{}
+	}
+
 	if len(attrTypes) == 0 {
 		return imports
 	}
@@ -238,7 +242,7 @@ func GetAttrTypesImports(attrTypes []specschema.ObjectAttributeType, imports map
 			imports[AttrImport] = struct{}{}
 			imports[TypesImport] = struct{}{}
 		case v.Object != nil:
-			i := GetAttrTypesImports(v.Object, imports)
+			i := GetAttrTypesImports(v.Object.CustomType, v.Object.AttributeTypes, imports)
 			for k, v := range i {
 				imports[k] = v
 			}

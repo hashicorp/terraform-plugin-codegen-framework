@@ -95,10 +95,12 @@ func TestConvertSetAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
-							Object: []specschema.ObjectAttributeType{
-								{
-									Name:   "str",
-									String: &specschema.StringType{},
+							Object: &specschema.ObjectType{
+								AttributeTypes: []specschema.ObjectAttributeType{
+									{
+										Name:   "str",
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -109,10 +111,12 @@ func TestConvertSetAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
-							Object: []specschema.ObjectAttributeType{
-								{
-									Name:   "str",
-									String: &specschema.StringType{},
+							Object: &specschema.ObjectType{
+								AttributeTypes: []specschema.ObjectAttributeType{
+									{
+										Name:   "str",
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -123,20 +127,24 @@ func TestConvertSetAttribute(t *testing.T) {
 		"element-type-object-string": {
 			input: &provider.SetAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name:   "str",
-							String: &specschema.StringType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name:   "str",
+								String: &specschema.StringType{},
+							},
 						},
 					},
 				},
 			},
 			expected: provider_generate.GeneratorSetAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name:   "str",
-							String: &specschema.StringType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name:   "str",
+								String: &specschema.StringType{},
+							},
 						},
 					},
 				},
@@ -145,12 +153,14 @@ func TestConvertSetAttribute(t *testing.T) {
 		"element-type-object-list-string": {
 			input: &provider.SetAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "list",
-							List: &specschema.ListType{
-								ElementType: specschema.ElementType{
-									String: &specschema.StringType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "list",
+								List: &specschema.ListType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -159,12 +169,14 @@ func TestConvertSetAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "list",
-							List: &specschema.ListType{
-								ElementType: specschema.ElementType{
-									String: &specschema.StringType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "list",
+								List: &specschema.ListType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},

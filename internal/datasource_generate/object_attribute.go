@@ -42,7 +42,7 @@ func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
 		imports[generatorschema.TypesImport] = struct{}{}
 	}
 
-	attrTypesImports := generatorschema.GetAttrTypesImports(g.AttributeTypes, make(map[string]struct{}))
+	attrTypesImports := generatorschema.GetAttrTypesImports(g.CustomType, g.AttributeTypes, make(map[string]struct{}))
 
 	for k := range attrTypesImports {
 		imports[k] = struct{}{}
