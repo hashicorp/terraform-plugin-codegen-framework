@@ -48,10 +48,11 @@ func (g GeneratorStringAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[generatorschema.ValidatorImport] = struct{}{}
-
-		for _, w := range v.Custom.Imports {
-			imports[w.Path] = struct{}{}
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports[generatorschema.ValidatorImport] = struct{}{}
+				imports[i.Path] = struct{}{}
+			}
 		}
 	}
 

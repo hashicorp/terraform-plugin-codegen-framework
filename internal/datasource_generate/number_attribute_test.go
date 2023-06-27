@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
@@ -35,7 +36,9 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		"custom-type-with-import-empty-string": {
 			input: GeneratorNumberAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer(""),
+					Import: &code.Import{
+						Path: "",
+					},
 				},
 			},
 			expected: map[string]struct{}{},
@@ -43,7 +46,9 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		"custom-type-with-import": {
 			input: GeneratorNumberAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer("github.com/my_account/my_project/attribute"),
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
 				},
 			},
 			expected: map[string]struct{}{
@@ -65,9 +70,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 			input: GeneratorNumberAttribute{
 				Validators: []specschema.NumberValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							Import: nil,
-						},
+						Custom: &specschema.CustomValidator{},
 					},
 				}},
 			expected: map[string]struct{}{
@@ -79,7 +82,11 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 				Validators: []specschema.NumberValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
@@ -92,12 +99,20 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 				Validators: []specschema.NumberValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 				}},
