@@ -201,7 +201,11 @@
             "name": "single_nested_bool_attribute",
             "single_nested": {
               "associated_external_type": {
-                "import": "example.com/apisdk",
+                "imports": [
+                  {
+                    "path": "example.com/apisdk"
+                  }
+                ],
                 "type": "*apisdk.DataSourceProperty"
               },
               "attributes": [
@@ -433,7 +437,9 @@
             "bool": {
               "computed_optional_required": "computed",
               "custom_type": {
-                "import": "github.com/my_account_my_project/bool",
+                "import": {
+                  "path": "github.com/my_account_my_project/bool"
+                },
                 "type": "my_bool_type",
                 "value_type": "my_bool_value"
               },
@@ -446,7 +452,11 @@
                 },
                 {
                   "custom": {
-                    "import": "github.com/my_account/my_project/boolplanmodifier",
+                    "imports": [
+                      {
+                        "path": "github.com/my_account/my_project/boolplanmodifier"
+                      }
+                    ],
                     "schema_definition": "myboolplanmodifier.Modify()"
                   }
                 }
@@ -454,7 +464,11 @@
               "validators": [
                 {
                   "custom": {
-                    "import": "github.com/my_account/my_project/myboolvalidator",
+                    "imports": [
+                      {
+                        "path": "github.com/my_account/my_project/myboolvalidator"
+                      }
+                    ],
                     "schema_definition": "myboolvalidator.Validate()"
                   }
                 }

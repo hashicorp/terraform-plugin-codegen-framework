@@ -137,9 +137,6 @@ func hasNestedWithAssociatedExternalType(attributes []datasource.Attribute) bool
 	for _, v := range attributes {
 		if v.SingleNested != nil {
 			if v.SingleNested.AssociatedExternalType != nil {
-				if *v.SingleNested.AssociatedExternalType.Import != "" {
-					return true
-				}
 			}
 		}
 
