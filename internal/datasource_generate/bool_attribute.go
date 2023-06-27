@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
@@ -52,6 +53,43 @@ func (g GeneratorBoolAttribute) Imports() map[string]struct{} {
 			if len(i.Path) > 0 {
 				imports[generatorschema.ValidatorImport] = struct{}{}
 				imports[i.Path] = struct{}{}
+			}
+		}
+	}
+
+	return imports
+}
+
+func (g GeneratorBoolAttribute) ImportsNew() []code.Import {
+	var imports []code.Import
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports = append(imports, *g.CustomType.Import)
+		}
+	} else {
+		imports = append(imports, code.Import{
+			Alias: nil,
+			Path:  generatorschema.TypesImport,
+		})
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports = append(imports, code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports = append(imports, i)
 			}
 		}
 	}
@@ -177,9 +215,5 @@ func customValidatorsEqual(x, y *specschema.CustomValidator) bool {
 		}
 	}
 
-	if x.SchemaDefinition != y.SchemaDefinition {
-		return false
-	}
-
-	return true
+	return x.SchemaDefinition == y.SchemaDefinition
 }

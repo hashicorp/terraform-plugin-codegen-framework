@@ -223,9 +223,5 @@ func customValidatorsEqual(x, y *specschema.CustomValidator) bool {
 		}
 	}
 
-	if x.SchemaDefinition != y.SchemaDefinition {
-		return false
-	}
-
-	return true
+	return x.SchemaDefinition == y.SchemaDefinition
 }

@@ -15,10 +15,6 @@ import (
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func pointer[T any](in T) *T {
-	return &in
-}
-
 func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 	t.Parallel()
 
