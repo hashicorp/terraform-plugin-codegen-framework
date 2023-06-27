@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
@@ -54,7 +55,9 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		"custom-type-with-import-empty-string": {
 			input: GeneratorSetNestedBlock{
 				CustomType: &specschema.CustomType{
-					Import: pointer(""),
+					Import: &code.Import{
+						Path: "",
+					},
 				},
 			},
 			expected: map[string]struct{}{},
@@ -63,7 +66,9 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					CustomType: &specschema.CustomType{
-						Import: pointer(""),
+						Import: &code.Import{
+							Path: "",
+						},
 					},
 				},
 			},
@@ -74,11 +79,15 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorSetNestedBlock{
 				CustomType: &specschema.CustomType{
-					Import: pointer(""),
+					Import: &code.Import{
+						Path: "",
+					},
 				},
 				NestedObject: GeneratorNestedBlockObject{
 					CustomType: &specschema.CustomType{
-						Import: pointer(""),
+						Import: &code.Import{
+							Path: "",
+						},
 					},
 				},
 			},
@@ -87,7 +96,9 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		"custom-type-with-import": {
 			input: GeneratorSetNestedBlock{
 				CustomType: &specschema.CustomType{
-					Import: pointer("github.com/my_account/my_project/attribute"),
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
 				},
 			},
 			expected: map[string]struct{}{
@@ -98,7 +109,9 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
 					CustomType: &specschema.CustomType{
-						Import: pointer("github.com/my_account/my_project/attribute"),
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
 					},
 				},
 			},
@@ -110,11 +123,15 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		"custom-type-with-import-with-nested-object-custom-type-with-import": {
 			input: GeneratorSetNestedBlock{
 				CustomType: &specschema.CustomType{
-					Import: pointer("github.com/my_account/my_project/attribute"),
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
 				},
 				NestedObject: GeneratorNestedBlockObject{
 					CustomType: &specschema.CustomType{
-						Import: pointer("github.com/my_account/my_project/nested_object"),
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/nested_object",
+						},
 					},
 				},
 			},
@@ -145,7 +162,9 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Attributes: map[string]GeneratorAttribute{
 						"list": GeneratorListAttribute{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_list"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_list",
+								},
 							},
 						},
 					},
@@ -162,12 +181,16 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Attributes: map[string]GeneratorAttribute{
 						"list": GeneratorListAttribute{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_list"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_list",
+								},
 							},
 							ElementType: specschema.ElementType{
 								Bool: &specschema.BoolType{
 									CustomType: &specschema.CustomType{
-										Import: pointer("github.com/my_account/my_project/bool"),
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/bool",
+										},
 									},
 								},
 							},
@@ -207,7 +230,9 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Attributes: map[string]GeneratorAttribute{
 						"obj": GeneratorObjectAttribute{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_object"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_object",
+								},
 							},
 						},
 					},
@@ -224,14 +249,18 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Attributes: map[string]GeneratorAttribute{
 						"obj": GeneratorObjectAttribute{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_object"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_object",
+								},
 							},
 							AttributeTypes: []specschema.ObjectAttributeType{
 								{
 									Name: "bool",
 									Bool: &specschema.BoolType{
 										CustomType: &specschema.CustomType{
-											Import: pointer("github.com/my_account/my_project/bool"),
+											Import: &code.Import{
+												Path: "github.com/my_account/my_project/bool",
+											},
 										},
 									},
 								},
@@ -252,7 +281,9 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Blocks: map[string]GeneratorBlock{
 						"list-nested-block": GeneratorListNestedBlock{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_block"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_block",
+								},
 							},
 						},
 					},
@@ -279,7 +310,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				Validators: []specschema.SetValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: nil,
+							Imports: []code.Import{},
 						},
 					},
 				}},
@@ -292,7 +323,11 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				Validators: []specschema.SetValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
@@ -305,12 +340,20 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 				Validators: []specschema.SetValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 				}},
@@ -341,7 +384,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Validators: []specschema.ObjectValidator{
 						{
 							Custom: &specschema.CustomValidator{
-								Import: nil,
+								Imports: []code.Import{},
 							},
 						},
 					},
@@ -357,7 +400,11 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Validators: []specschema.ObjectValidator{
 						{
 							Custom: &specschema.CustomValidator{
-								Import: pointer(""),
+								Imports: []code.Import{
+									{
+										Path: "",
+									},
+								},
 							},
 						},
 					},
@@ -373,12 +420,20 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 					Validators: []specschema.ObjectValidator{
 						{
 							Custom: &specschema.CustomValidator{
-								Import: pointer("github.com/myotherproject/myvalidators/validator"),
+								Imports: []code.Import{
+									{
+										Path: "github.com/myotherproject/myvalidators/validator",
+									},
+								},
 							},
 						},
 						{
 							Custom: &specschema.CustomValidator{
-								Import: pointer("github.com/myproject/myvalidators/validator"),
+								Imports: []code.Import{
+									{
+										Path: "github.com/myproject/myvalidators/validator",
+									},
+								},
 							},
 						},
 					},

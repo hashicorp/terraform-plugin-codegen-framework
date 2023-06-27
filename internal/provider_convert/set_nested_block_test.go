@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -314,14 +315,18 @@ func TestConvertSetNestedBlock(t *testing.T) {
 		"custom_type": {
 			input: &provider.SetNestedBlock{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
 			},
 			expected: provider_generate.GeneratorSetNestedBlock{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -353,7 +358,11 @@ func TestConvertSetNestedBlock(t *testing.T) {
 				Validators: []specschema.SetValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -363,7 +372,11 @@ func TestConvertSetNestedBlock(t *testing.T) {
 				Validators: []specschema.SetValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},

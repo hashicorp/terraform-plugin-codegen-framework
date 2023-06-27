@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -49,7 +50,9 @@ func TestConvertFloat64Attribute(t *testing.T) {
 		"custom_type": {
 			input: &provider.Float64Attribute{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -57,7 +60,9 @@ func TestConvertFloat64Attribute(t *testing.T) {
 			expected: provider_generate.GeneratorFloat64Attribute{
 				Float64Attribute: schema.Float64Attribute{},
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -99,7 +104,11 @@ func TestConvertFloat64Attribute(t *testing.T) {
 				Validators: []specschema.Float64Validator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -109,7 +118,11 @@ func TestConvertFloat64Attribute(t *testing.T) {
 				Validators: []specschema.Float64Validator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
