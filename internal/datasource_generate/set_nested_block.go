@@ -36,7 +36,7 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[*g.CustomType.Import] = struct{}{}
+			imports[g.CustomType.Import.Path] = struct{}{}
 		}
 	} else {
 		imports[generatorschema.TypesImport] = struct{}{}
@@ -44,7 +44,7 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 
 	if g.NestedObject.CustomType != nil {
 		if g.NestedObject.CustomType.HasImport() {
-			imports[*g.NestedObject.CustomType.Import] = struct{}{}
+			imports[g.NestedObject.CustomType.Import.Path] = struct{}{}
 		}
 	}
 
@@ -58,7 +58,10 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 		}
 
 		imports[generatorschema.ValidatorImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+
+		for _, w := range v.Custom.Imports {
+			imports[w.Path] = struct{}{}
+		}
 	}
 
 	for _, v := range g.NestedObject.Validators {
@@ -71,7 +74,10 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 		}
 
 		imports[generatorschema.ValidatorImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+
+		for _, w := range v.Custom.Imports {
+			imports[w.Path] = struct{}{}
+		}
 	}
 
 	for _, v := range g.NestedObject.Attributes {
@@ -182,21 +188,7 @@ func (g GeneratorSetNestedBlock) setValidatorsEqual(x, y []specschema.SetValidat
 
 	//TODO: Sort before comparing.
 	for k, v := range x {
-		if v.Custom == nil && y[k].Custom != nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom == nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom != nil {
-			if *v.Custom.Import != *y[k].Custom.Import {
-				return false
-			}
-		}
-
-		if v.Custom.SchemaDefinition != y[k].Custom.SchemaDefinition {
+		if !customValidatorsEqual(v.Custom, y[k].Custom) {
 			return false
 		}
 	}
@@ -223,21 +215,7 @@ func (g GeneratorSetNestedBlock) objectValidatorsEqual(x, y []specschema.ObjectV
 
 	//TODO: Sort before comparing.
 	for k, v := range x {
-		if v.Custom == nil && y[k].Custom != nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom == nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom != nil {
-			if *v.Custom.Import != *y[k].Custom.Import {
-				return false
-			}
-		}
-
-		if v.Custom.SchemaDefinition != y[k].Custom.SchemaDefinition {
+		if !customValidatorsEqual(v.Custom, y[k].Custom) {
 			return false
 		}
 	}

@@ -138,21 +138,21 @@ func GetElementTypeImports(e specschema.ElementType, imports map[string]struct{}
 	switch {
 	case e.Bool != nil:
 		if e.Bool.CustomType != nil && e.Bool.CustomType.HasImport() {
-			imports[*e.Bool.CustomType.Import] = struct{}{}
+			imports[e.Bool.CustomType.Import.Path] = struct{}{}
 			return imports
 		}
 		imports[TypesImport] = struct{}{}
 		return imports
 	case e.Float64 != nil:
 		if e.Float64.CustomType != nil && e.Float64.CustomType.HasImport() {
-			imports[*e.Float64.CustomType.Import] = struct{}{}
+			imports[e.Float64.CustomType.Import.Path] = struct{}{}
 			return imports
 		}
 		imports[TypesImport] = struct{}{}
 		return imports
 	case e.Int64 != nil:
 		if e.Int64.CustomType != nil && e.Int64.CustomType.HasImport() {
-			imports[*e.Int64.CustomType.Import] = struct{}{}
+			imports[e.Int64.CustomType.Import.Path] = struct{}{}
 			return imports
 		}
 		imports[TypesImport] = struct{}{}
@@ -163,7 +163,7 @@ func GetElementTypeImports(e specschema.ElementType, imports map[string]struct{}
 		return GetElementTypeImports(e.Map.ElementType, imports)
 	case e.Number != nil:
 		if e.Number.CustomType != nil && e.Number.CustomType.HasImport() {
-			imports[*e.Number.CustomType.Import] = struct{}{}
+			imports[e.Number.CustomType.Import.Path] = struct{}{}
 			return imports
 		}
 		imports[TypesImport] = struct{}{}
@@ -174,7 +174,7 @@ func GetElementTypeImports(e specschema.ElementType, imports map[string]struct{}
 		return GetElementTypeImports(e.Set.ElementType, imports)
 	case e.String != nil:
 		if e.String.CustomType != nil && e.String.CustomType.HasImport() {
-			imports[*e.String.CustomType.Import] = struct{}{}
+			imports[e.String.CustomType.Import.Path] = struct{}{}
 			return imports
 		}
 		imports[TypesImport] = struct{}{}
@@ -188,7 +188,7 @@ func GetElementTypeImports(e specschema.ElementType, imports map[string]struct{}
 // object attribute types.
 func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specschema.ObjectAttributeType, imports map[string]struct{}) map[string]struct{} {
 	if customType != nil && customType.HasImport() {
-		imports[*customType.Import] = struct{}{}
+		imports[customType.Import.Path] = struct{}{}
 	}
 
 	if len(attrTypes) == 0 {
@@ -199,28 +199,28 @@ func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specsche
 		switch {
 		case v.Bool != nil:
 			if v.Bool.CustomType != nil && v.Bool.CustomType.HasImport() {
-				imports[*v.Bool.CustomType.Import] = struct{}{}
+				imports[v.Bool.CustomType.Import.Path] = struct{}{}
 				continue
 			}
 			imports[AttrImport] = struct{}{}
 			imports[TypesImport] = struct{}{}
 		case v.Float64 != nil:
 			if v.Float64.CustomType != nil && v.Float64.CustomType.HasImport() {
-				imports[*v.Float64.CustomType.Import] = struct{}{}
+				imports[v.Float64.CustomType.Import.Path] = struct{}{}
 				continue
 			}
 			imports[AttrImport] = struct{}{}
 			imports[TypesImport] = struct{}{}
 		case v.Int64 != nil:
 			if v.Int64.CustomType != nil && v.Int64.CustomType.HasImport() {
-				imports[*v.Int64.CustomType.Import] = struct{}{}
+				imports[v.Int64.CustomType.Import.Path] = struct{}{}
 				continue
 			}
 			imports[AttrImport] = struct{}{}
 			imports[TypesImport] = struct{}{}
 		case v.List != nil:
 			if v.List.CustomType != nil && v.List.CustomType.HasImport() {
-				imports[*v.List.CustomType.Import] = struct{}{}
+				imports[v.List.CustomType.Import.Path] = struct{}{}
 			}
 			i := GetElementTypeImports(v.List.ElementType, imports)
 			for k, v := range i {
@@ -228,7 +228,7 @@ func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specsche
 			}
 		case v.Map != nil:
 			if v.Map.CustomType != nil && v.Map.CustomType.HasImport() {
-				imports[*v.Map.CustomType.Import] = struct{}{}
+				imports[v.Map.CustomType.Import.Path] = struct{}{}
 			}
 			i := GetElementTypeImports(v.Map.ElementType, imports)
 			for k, v := range i {
@@ -236,7 +236,7 @@ func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specsche
 			}
 		case v.Number != nil:
 			if v.Number.CustomType != nil && v.Number.CustomType.HasImport() {
-				imports[*v.Number.CustomType.Import] = struct{}{}
+				imports[v.Number.CustomType.Import.Path] = struct{}{}
 				continue
 			}
 			imports[AttrImport] = struct{}{}
@@ -248,7 +248,7 @@ func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specsche
 			}
 		case v.Set != nil:
 			if v.Set.CustomType != nil && v.Set.CustomType.HasImport() {
-				imports[*v.Set.CustomType.Import] = struct{}{}
+				imports[v.Set.CustomType.Import.Path] = struct{}{}
 			}
 			i := GetElementTypeImports(v.Set.ElementType, imports)
 			for k, v := range i {
@@ -256,7 +256,7 @@ func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specsche
 			}
 		case v.String != nil:
 			if v.String.CustomType != nil && v.String.CustomType.HasImport() {
-				imports[*v.Float64.CustomType.Import] = struct{}{}
+				imports[v.Float64.CustomType.Import.Path] = struct{}{}
 				continue
 			}
 			imports[AttrImport] = struct{}{}

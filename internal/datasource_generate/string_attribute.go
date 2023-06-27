@@ -33,7 +33,7 @@ func (g GeneratorStringAttribute) Imports() map[string]struct{} {
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[*g.CustomType.Import] = struct{}{}
+			imports[g.CustomType.Import.Path] = struct{}{}
 		}
 	} else {
 		imports[generatorschema.TypesImport] = struct{}{}
@@ -49,7 +49,10 @@ func (g GeneratorStringAttribute) Imports() map[string]struct{} {
 		}
 
 		imports[generatorschema.ValidatorImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+
+		for _, w := range v.Custom.Imports {
+			imports[w.Path] = struct{}{}
+		}
 	}
 
 	return imports
@@ -129,21 +132,7 @@ func (g GeneratorStringAttribute) validatorsEqual(x, y []specschema.StringValida
 
 	//TODO: Sort before comparing.
 	for k, v := range x {
-		if v.Custom == nil && y[k].Custom != nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom == nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom != nil {
-			if *v.Custom.Import != *y[k].Custom.Import {
-				return false
-			}
-		}
-
-		if v.Custom.SchemaDefinition != y[k].Custom.SchemaDefinition {
+		if !customValidatorsEqual(v.Custom, y[k].Custom) {
 			return false
 		}
 	}

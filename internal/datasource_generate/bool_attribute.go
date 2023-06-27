@@ -33,7 +33,7 @@ func (g GeneratorBoolAttribute) Imports() map[string]struct{} {
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[*g.CustomType.Import] = struct{}{}
+			imports[g.CustomType.Import.Path] = struct{}{}
 		}
 	} else {
 		imports[generatorschema.TypesImport] = struct{}{}
@@ -49,7 +49,10 @@ func (g GeneratorBoolAttribute) Imports() map[string]struct{} {
 		}
 
 		imports[generatorschema.ValidatorImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+
+		for _, w := range v.Custom.Imports {
+			imports[w.Path] = struct{}{}
+		}
 	}
 
 	return imports
@@ -131,23 +134,50 @@ func (g GeneratorBoolAttribute) validatorsEqual(x, y []specschema.BoolValidator)
 
 	//TODO: Sort before comparing.
 	for k, v := range x {
-		if v.Custom == nil && y[k].Custom != nil {
+		if !customValidatorsEqual(v.Custom, y[k].Custom) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func customValidatorsEqual(x, y *specschema.CustomValidator) bool {
+	if x == nil && y == nil {
+		return true
+	}
+
+	if x == nil || y == nil {
+		return false
+	}
+
+	if len(x.Imports) != len(y.Imports) {
+		return false
+	}
+
+	//TODO: Sort before comparing.
+	for k, v := range x.Imports {
+		if v.Path != y.Imports[k].Path {
 			return false
 		}
 
-		if v.Custom != nil && y[k].Custom == nil {
+		if v.Alias != nil && y.Imports[k].Alias == nil {
 			return false
 		}
 
-		if v.Custom != nil && y[k].Custom != nil {
-			if *v.Custom.Import != *y[k].Custom.Import {
+		if v.Alias == nil && y.Imports[k].Alias != nil {
+			return false
+		}
+
+		if v.Alias != nil && y.Imports[k].Alias != nil {
+			if *v.Alias != *y.Imports[k].Alias {
 				return false
 			}
 		}
+	}
 
-		if v.Custom.SchemaDefinition != y[k].Custom.SchemaDefinition {
-			return false
-		}
+	if x.SchemaDefinition != y.SchemaDefinition {
+		return false
 	}
 
 	return true
