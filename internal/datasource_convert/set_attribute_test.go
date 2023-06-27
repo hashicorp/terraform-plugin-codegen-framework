@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -252,7 +253,9 @@ func TestConvertSetAttribute(t *testing.T) {
 		"custom_type": {
 			input: &datasource.SetAttribute{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -262,7 +265,9 @@ func TestConvertSetAttribute(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorSetAttribute{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -328,7 +333,11 @@ func TestConvertSetAttribute(t *testing.T) {
 				Validators: []specschema.SetValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -341,7 +350,11 @@ func TestConvertSetAttribute(t *testing.T) {
 				Validators: []specschema.SetValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
