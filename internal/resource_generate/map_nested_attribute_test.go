@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
@@ -54,7 +55,9 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 		"custom-type-with-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer(""),
+					Import: &code.Import{
+						Path: "",
+					},
 				},
 			},
 			expected: map[string]struct{}{},
@@ -63,7 +66,9 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
 					CustomType: &specschema.CustomType{
-						Import: pointer(""),
+						Import: &code.Import{
+							Path: "",
+						},
 					},
 				},
 			},
@@ -74,11 +79,15 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorMapNestedAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer(""),
+					Import: &code.Import{
+						Path: "",
+					},
 				},
 				NestedObject: GeneratorNestedAttributeObject{
 					CustomType: &specschema.CustomType{
-						Import: pointer(""),
+						Import: &code.Import{
+							Path: "",
+						},
 					},
 				},
 			},
@@ -87,7 +96,9 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 		"custom-type-with-import": {
 			input: GeneratorMapNestedAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer("github.com/my_account/my_project/attribute"),
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
 				},
 			},
 			expected: map[string]struct{}{
@@ -98,7 +109,9 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
 					CustomType: &specschema.CustomType{
-						Import: pointer("github.com/my_account/my_project/attribute"),
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
 					},
 				},
 			},
@@ -110,11 +123,15 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 		"custom-type-with-import-with-nested-object-custom-type-with-import": {
 			input: GeneratorMapNestedAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer("github.com/my_account/my_project/attribute"),
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
 				},
 				NestedObject: GeneratorNestedAttributeObject{
 					CustomType: &specschema.CustomType{
-						Import: pointer("github.com/my_account/my_project/nested_object"),
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/nested_object",
+						},
 					},
 				},
 			},
@@ -145,7 +162,9 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Attributes: map[string]GeneratorAttribute{
 						"list": GeneratorListAttribute{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_list"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_list",
+								},
 							},
 						},
 					},
@@ -162,12 +181,16 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Attributes: map[string]GeneratorAttribute{
 						"list": GeneratorListAttribute{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_list"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_list",
+								},
 							},
 							ElementType: specschema.ElementType{
 								Bool: &specschema.BoolType{
 									CustomType: &specschema.CustomType{
-										Import: pointer("github.com/my_account/my_project/bool"),
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/bool",
+										},
 									},
 								},
 							},
@@ -207,7 +230,9 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Attributes: map[string]GeneratorAttribute{
 						"obj": GeneratorObjectAttribute{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_object"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_object",
+								},
 							},
 						},
 					},
@@ -224,14 +249,18 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Attributes: map[string]GeneratorAttribute{
 						"obj": GeneratorObjectAttribute{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/nested_object"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_object",
+								},
 							},
 							AttributeTypes: []specschema.ObjectAttributeType{
 								{
 									Name: "bool",
 									Bool: &specschema.BoolType{
 										CustomType: &specschema.CustomType{
-											Import: pointer("github.com/my_account/my_project/bool"),
+											Import: &code.Import{
+												Path: "github.com/my_account/my_project/bool",
+											},
 										},
 									},
 								},
@@ -262,7 +291,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				Validators: []specschema.MapValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: nil,
+							Imports: []code.Import{},
 						},
 					},
 				}},
@@ -275,7 +304,11 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				Validators: []specschema.MapValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
@@ -288,12 +321,20 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				Validators: []specschema.MapValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 				}},
@@ -324,7 +365,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Validators: []specschema.ObjectValidator{
 						{
 							Custom: &specschema.CustomValidator{
-								Import: nil,
+								Imports: []code.Import{},
 							},
 						},
 					},
@@ -340,7 +381,11 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Validators: []specschema.ObjectValidator{
 						{
 							Custom: &specschema.CustomValidator{
-								Import: pointer(""),
+								Imports: []code.Import{
+									{
+										Path: "",
+									},
+								},
 							},
 						},
 					},
@@ -356,12 +401,20 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					Validators: []specschema.ObjectValidator{
 						{
 							Custom: &specschema.CustomValidator{
-								Import: pointer("github.com/myotherproject/myvalidators/validator"),
+								Imports: []code.Import{
+									{
+										Path: "github.com/myotherproject/myvalidators/validator",
+									},
+								},
 							},
 						},
 						{
 							Custom: &specschema.CustomValidator{
-								Import: pointer("github.com/myproject/myvalidators/validator"),
+								Imports: []code.Import{
+									{
+										Path: "github.com/myproject/myvalidators/validator",
+									},
+								},
 							},
 						},
 					},
@@ -390,7 +443,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.MapPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: nil,
+							Imports: []code.Import{},
 						},
 					},
 				}},
@@ -403,7 +456,11 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.MapPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
@@ -416,12 +473,20 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.MapPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myplanmodifiers/planmodifier",
+								},
+							},
 						},
 					},
 				}},
@@ -460,7 +525,11 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 			input: GeneratorMapNestedAttribute{
 				Default: &specschema.MapDefault{
 					Custom: &specschema.CustomDefault{
-						Import: pointer(""),
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
 					},
 				},
 			},
@@ -472,7 +541,11 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 			input: GeneratorMapNestedAttribute{
 				Default: &specschema.MapDefault{
 					Custom: &specschema.CustomDefault{
-						Import: pointer("github.com/myproject/mydefaults/default"),
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/mydefaults/default",
+							},
+						},
 					},
 				},
 			},
@@ -501,7 +574,7 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					PlanModifiers: []specschema.ObjectPlanModifier{
 						{
 							Custom: &specschema.CustomPlanModifier{
-								Import: nil,
+								Imports: []code.Import{},
 							},
 						},
 					},
@@ -517,7 +590,11 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					PlanModifiers: []specschema.ObjectPlanModifier{
 						{
 							Custom: &specschema.CustomPlanModifier{
-								Import: pointer(""),
+								Imports: []code.Import{
+									{
+										Path: "",
+									},
+								},
 							},
 						},
 					},
@@ -533,12 +610,20 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 					PlanModifiers: []specschema.ObjectPlanModifier{
 						{
 							Custom: &specschema.CustomPlanModifier{
-								Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+								Imports: []code.Import{
+									{
+										Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+									},
+								},
 							},
 						},
 						{
 							Custom: &specschema.CustomPlanModifier{
-								Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+								Imports: []code.Import{
+									{
+										Path: "github.com/myproject/myplanmodifiers/planmodifier",
+									},
+								},
 							},
 						},
 					},

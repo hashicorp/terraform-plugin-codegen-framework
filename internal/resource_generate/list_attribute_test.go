@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -36,7 +37,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		"custom-type-with-import-empty-string": {
 			input: GeneratorListAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer(""),
+					Import: &code.Import{
+						Path: "",
+					},
 				},
 			},
 			expected: map[string]struct{}{},
@@ -44,7 +47,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		"custom-type-with-import": {
 			input: GeneratorListAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer("github.com/my_account/my_project/attribute"),
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
 				},
 			},
 			expected: map[string]struct{}{
@@ -66,7 +71,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				ElementType: specschema.ElementType{
 					Bool: &specschema.BoolType{
 						CustomType: &specschema.CustomType{
-							Import: pointer("github.com/my_account/my_project/element"),
+							Import: &code.Import{
+								Path: "github.com/my_account/my_project/element",
+							},
 						},
 					},
 				},
@@ -97,7 +104,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{
 								CustomType: &specschema.CustomType{
-									Import: pointer("github.com/my_account/my_project/element"),
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/element",
+									},
 								},
 							},
 						},
@@ -146,7 +155,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 								Name: "bool",
 								Bool: &specschema.BoolType{
 									CustomType: &specschema.CustomType{
-										Import: pointer("github.com/my_account/my_project/element"),
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/element",
+										},
 									},
 								},
 							},
@@ -172,7 +183,9 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 								Name: "c",
 								Bool: &specschema.BoolType{
 									CustomType: &specschema.CustomType{
-										Import: pointer("github.com/my_account/my_project/element"),
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/element",
+										},
 									},
 								},
 							},
@@ -202,7 +215,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				Validators: []specschema.ListValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: nil,
+							Imports: []code.Import{},
 						},
 					},
 				}},
@@ -215,7 +228,11 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				Validators: []specschema.ListValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
@@ -228,12 +245,20 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				Validators: []specschema.ListValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 				}},
@@ -260,7 +285,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.ListPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: nil,
+							Imports: []code.Import{},
 						},
 					},
 				}},
@@ -273,7 +298,11 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.ListPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
@@ -286,12 +315,20 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.ListPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myplanmodifiers/planmodifier",
+								},
+							},
 						},
 					},
 				}},
@@ -330,7 +367,11 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 			input: GeneratorListAttribute{
 				Default: &specschema.ListDefault{
 					Custom: &specschema.CustomDefault{
-						Import: pointer(""),
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
 					},
 				},
 			},
@@ -342,7 +383,11 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 			input: GeneratorListAttribute{
 				Default: &specschema.ListDefault{
 					Custom: &specschema.CustomDefault{
-						Import: pointer("github.com/myproject/mydefaults/default"),
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/mydefaults/default",
+							},
+						},
 					},
 				},
 			},

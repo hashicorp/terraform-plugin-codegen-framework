@@ -38,7 +38,7 @@ func (g GeneratorSingleNestedBlock) Imports() map[string]struct{} {
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[*g.CustomType.Import] = struct{}{}
+			imports[g.CustomType.Import.Path] = struct{}{}
 		}
 	} else {
 		imports[generatorschema.TypesImport] = struct{}{}
@@ -53,8 +53,12 @@ func (g GeneratorSingleNestedBlock) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[planModifierImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports[planModifierImport] = struct{}{}
+				imports[i.Path] = struct{}{}
+			}
+		}
 	}
 
 	for _, v := range g.Validators {
@@ -66,8 +70,12 @@ func (g GeneratorSingleNestedBlock) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[generatorschema.ValidatorImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports[generatorschema.ValidatorImport] = struct{}{}
+				imports[i.Path] = struct{}{}
+			}
+		}
 	}
 
 	for _, v := range g.Attributes {
@@ -170,21 +178,7 @@ func (g GeneratorSingleNestedBlock) validatorsEqual(x, y []specschema.ObjectVali
 
 	//TODO: Sort before comparing.
 	for k, v := range x {
-		if v.Custom == nil && y[k].Custom != nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom == nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom != nil {
-			if *v.Custom.Import != *y[k].Custom.Import {
-				return false
-			}
-		}
-
-		if v.Custom.SchemaDefinition != y[k].Custom.SchemaDefinition {
+		if !customValidatorsEqual(v.Custom, y[k].Custom) {
 			return false
 		}
 	}
