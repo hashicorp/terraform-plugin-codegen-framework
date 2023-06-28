@@ -101,7 +101,13 @@ func getImports(s GeneratorDataSourceSchema) (string, error) {
 	var sb strings.Builder
 
 	for _, i := range imports.All() {
-		sb.WriteString(fmt.Sprintf("%q\n", i.Path))
+		var alias string
+
+		if i.Alias != nil {
+			alias = *i.Alias + " "
+		}
+
+		sb.WriteString(fmt.Sprintf("%s%q\n", alias, i.Path))
 	}
 
 	return sb.String(), nil

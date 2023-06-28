@@ -438,6 +438,7 @@
               "computed_optional_required": "computed",
               "custom_type": {
                 "import": {
+                  "alias": "boolalias",
                   "path": "github.com/my_account_my_project/bool"
                 },
                 "type": "my_bool_type",
@@ -454,7 +455,8 @@
                   "custom": {
                     "imports": [
                       {
-                        "path": "github.com/my_account/my_project/boolplanmodifier"
+                        "alias": "planmodifieralias",
+                        "path": "github.com/my_account/my_project/myboolplanmodifier"
                       }
                     ],
                     "schema_definition": "myboolplanmodifier.Modify()"
@@ -466,6 +468,7 @@
                   "custom": {
                     "imports": [
                       {
+                        "alias": "validatoralias",
                         "path": "github.com/my_account/my_project/myboolvalidator"
                       }
                     ],
