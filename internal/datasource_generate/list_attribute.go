@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
@@ -59,6 +60,46 @@ func (g GeneratorListAttribute) Imports() map[string]struct{} {
 			if len(i.Path) > 0 {
 				imports[generatorschema.ValidatorImport] = struct{}{}
 				imports[i.Path] = struct{}{}
+			}
+		}
+	}
+
+	return imports
+}
+
+func (g GeneratorListAttribute) GetImports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports.Add(*g.CustomType.Import)
+		}
+	} else {
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
+		})
+	}
+
+	elemTypeImports := generatorschema.GetElementTypeImportsStruct(g.ElementType)
+
+	imports.Add(elemTypeImports.Imports()...)
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
 			}
 		}
 	}

@@ -60,17 +60,16 @@ func (g GeneratorBoolAttribute) Imports() map[string]struct{} {
 	return imports
 }
 
-func (g GeneratorBoolAttribute) ImportsNew() []code.Import {
-	var imports []code.Import
+func (g GeneratorBoolAttribute) GetImports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports = append(imports, *g.CustomType.Import)
+			imports.Add(*g.CustomType.Import)
 		}
 	} else {
-		imports = append(imports, code.Import{
-			Alias: nil,
-			Path:  generatorschema.TypesImport,
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
 		})
 	}
 
@@ -85,11 +84,11 @@ func (g GeneratorBoolAttribute) ImportsNew() []code.Import {
 
 		for _, i := range v.Custom.Imports {
 			if len(i.Path) > 0 {
-				imports = append(imports, code.Import{
+				imports.Add(code.Import{
 					Path: generatorschema.ValidatorImport,
 				})
 
-				imports = append(imports, i)
+				imports.Add(i)
 			}
 		}
 	}

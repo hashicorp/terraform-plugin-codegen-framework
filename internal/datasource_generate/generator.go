@@ -13,6 +13,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorSchema interface {
@@ -54,7 +55,7 @@ func (g GeneratorDataSourceSchemas) ToBytes(packageName string) (map[string][]by
 
 func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSchema, packageName string) ([]byte, error) {
 	funcMap := template.FuncMap{
-		"getImports":    getImports,
+		"getImports":    getImportsStr,
 		"getAttributes": getAttributes,
 		"getBlocks":     getBlocks,
 	}
@@ -84,6 +85,26 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSc
 	}
 
 	return buf.Bytes(), nil
+}
+
+func getImportsStr(s GeneratorDataSourceSchema) (string, error) {
+	imports := schema.NewImports()
+
+	for _, v := range s.Attributes {
+		imports.Add(v.GetImports().Imports()...)
+	}
+
+	for _, v := range s.Blocks {
+		imports.Add(v.GetImports().Imports()...)
+	}
+
+	var sb strings.Builder
+
+	for _, i := range imports.Imports() {
+		sb.WriteString(fmt.Sprintf("%q\n", i.Path))
+	}
+
+	return sb.String(), nil
 }
 
 func getImports(schema GeneratorDataSourceSchema) (string, error) {
@@ -168,6 +189,10 @@ func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	return s.String(), nil
 }
 
+type GeneratorImportNew interface {
+	GetImports() *schema.Imports
+}
+
 type GeneratorImport interface {
 	Imports() map[string]struct{}
 }
@@ -181,6 +206,7 @@ type GeneratorAttribute interface {
 	ToString(string) (string, error)
 	GeneratorImport
 	GeneratorModel
+	GeneratorImportNew
 }
 
 type GeneratorBlock interface {
@@ -188,6 +214,7 @@ type GeneratorBlock interface {
 	ToString(string) (string, error)
 	GeneratorImport
 	GeneratorModel
+	GeneratorImportNew
 }
 
 type GeneratorNestedAttributeObject struct {

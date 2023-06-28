@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
@@ -86,6 +87,72 @@ func (g GeneratorSetNestedAttribute) Imports() map[string]struct{} {
 		for k := range v.Imports() {
 			imports[k] = struct{}{}
 		}
+	}
+
+	return imports
+}
+
+func (g GeneratorSetNestedAttribute) GetImports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
+
+	if g.CustomType != nil {
+		if g.CustomType.HasImport() {
+			imports.Add(*g.CustomType.Import)
+		}
+	} else {
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
+		})
+	}
+
+	if g.NestedObject.CustomType != nil {
+		if g.NestedObject.CustomType.HasImport() {
+			imports.Add(*g.NestedObject.CustomType.Import)
+		}
+	}
+
+	for _, v := range g.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
+			}
+		}
+	}
+
+	for _, v := range g.NestedObject.Validators {
+		if v.Custom == nil {
+			continue
+		}
+
+		if !v.Custom.HasImport() {
+			continue
+		}
+
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
+			}
+		}
+	}
+
+	for _, v := range g.NestedObject.Attributes {
+		imports.Add(v.GetImports().Imports()...)
 	}
 
 	return imports

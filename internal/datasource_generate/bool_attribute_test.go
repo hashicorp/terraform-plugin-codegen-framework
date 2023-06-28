@@ -15,6 +15,149 @@ import (
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
+func TestGeneratorBoolAttribute_ImportsNew(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorBoolAttribute
+		expected []code.Import
+	}{
+		"default": {
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorBoolAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorBoolAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "",
+					},
+				},
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorBoolAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{
+					{
+						Custom: &specschema.CustomValidator{},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
+						},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorBoolAttribute{
+				Validators: []specschema.BoolValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
+						},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.GetImports().Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 	t.Parallel()
 

@@ -16,6 +16,320 @@ import (
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
+func TestGeneratorListAttribute_ImportsNew(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorListAttribute
+		expected []code.Import
+	}{
+		"default": {
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorListAttribute{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorListAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "",
+					},
+				},
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorListAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+			},
+		},
+		"elem-type-bool": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-bool-with-import": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{
+						CustomType: &specschema.CustomType{
+							Import: &code.Import{
+								Path: "github.com/my_account/my_project/element",
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-list-bool": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-list-bool-with-import": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/element",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-object": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Object: &specschema.ObjectType{},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-object-bool": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "b",
+								Bool: &specschema.BoolType{},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"elem-type-object-bool-with-import": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "bool",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/element",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-object-with-imports": {
+			input: GeneratorListAttribute{
+				ElementType: specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "b",
+								Bool: &specschema.BoolType{},
+							},
+							{
+								Name: "c",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/element",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorListAttribute{
+				Validators: []specschema.ListValidator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorListAttribute{
+				Validators: []specschema.ListValidator{
+					{
+						Custom: &specschema.CustomValidator{},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorListAttribute{
+				Validators: []specschema.ListValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
+						},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorListAttribute{
+				Validators: []specschema.ListValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
+						},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.GetImports().Imports()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestGeneratorListAttribute_Imports(t *testing.T) {
 	t.Parallel()
 
