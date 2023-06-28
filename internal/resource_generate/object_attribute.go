@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
@@ -26,35 +27,28 @@ type GeneratorObjectAttribute struct {
 	Validators     []specschema.ObjectValidator
 }
 
-// Imports examines the CustomType and if this is not nil then the CustomType.Import
-// will be used if it is not nil. If CustomType.Import is nil then no import will be
-// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
-// be accessible from the same package that the schema.Schema for the data source is
-// defined in. If CustomType is nil, then the datasourceSchemaImport will be used.
-// The imports required for the object attribute types are retrieved by calling
-// getAttrTypesImports.
-func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
-	imports := make(map[string]struct{})
+func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[g.CustomType.Import.Path] = struct{}{}
+			imports.Add(*g.CustomType.Import)
 		}
 	} else {
-		imports[generatorschema.TypesImport] = struct{}{}
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
+		})
 	}
 
-	attrTypesImports := generatorschema.GetAttrTypesImports(g.CustomType, g.AttributeTypes, make(map[string]struct{}))
+	attrTypesImports := generatorschema.GetAttrTypesImports(g.CustomType, g.AttributeTypes)
 
-	for k := range attrTypesImports {
-		imports[k] = struct{}{}
-	}
+	imports.Add(attrTypesImports.All()...)
 
 	if g.Default != nil {
 		if g.Default.Custom != nil && g.Default.Custom.HasImport() {
 			for _, i := range g.Default.Custom.Imports {
 				if len(i.Path) > 0 {
-					imports[i.Path] = struct{}{}
+					imports.Add(i)
 				}
 			}
 		}
@@ -71,8 +65,11 @@ func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
 
 		for _, i := range v.Custom.Imports {
 			if len(i.Path) > 0 {
-				imports[planModifierImport] = struct{}{}
-				imports[i.Path] = struct{}{}
+				imports.Add(code.Import{
+					Path: planModifierImport,
+				})
+
+				imports.Add(i)
 			}
 		}
 	}
@@ -88,8 +85,11 @@ func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
 
 		for _, i := range v.Custom.Imports {
 			if len(i.Path) > 0 {
-				imports[generatorschema.ValidatorImport] = struct{}{}
-				imports[i.Path] = struct{}{}
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
 			}
 		}
 	}

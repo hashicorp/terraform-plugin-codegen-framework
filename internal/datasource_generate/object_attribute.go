@@ -38,7 +38,7 @@ func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 		})
 	}
 
-	attrTypesImports := generatorschema.GetAttrTypesImportsStruct(g.CustomType, g.AttributeTypes)
+	attrTypesImports := generatorschema.GetAttrTypesImports(g.CustomType, g.AttributeTypes)
 
 	imports.Add(attrTypesImports.All()...)
 

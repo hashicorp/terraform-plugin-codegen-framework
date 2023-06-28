@@ -13,6 +13,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorSchema interface {
@@ -84,28 +85,24 @@ func (g GeneratorResourceSchemas) toBytes(name string, s GeneratorResourceSchema
 	return buf.Bytes(), nil
 }
 
-func getImports(schema GeneratorResourceSchema) (string, error) {
-	var s strings.Builder
+func getImports(s GeneratorResourceSchema) (string, error) {
+	imports := schema.NewImports()
 
-	var imports = make(map[string]struct{})
-
-	for _, v := range schema.Attributes {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
-		}
+	for _, v := range s.Attributes {
+		imports.Add(v.Imports().All()...)
 	}
 
-	for _, v := range schema.Blocks {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
-		}
+	for _, v := range s.Blocks {
+		imports.Add(v.Imports().All()...)
 	}
 
-	for a := range imports {
-		s.WriteString(fmt.Sprintf("%q\n", a))
+	var sb strings.Builder
+
+	for _, i := range imports.All() {
+		sb.WriteString(fmt.Sprintf("%q\n", i.Path))
 	}
 
-	return s.String(), nil
+	return sb.String(), nil
 }
 
 func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
@@ -167,7 +164,7 @@ func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 }
 
 type GeneratorImport interface {
-	Imports() map[string]struct{}
+	Imports() *schema.Imports
 }
 
 type GeneratorModel interface {

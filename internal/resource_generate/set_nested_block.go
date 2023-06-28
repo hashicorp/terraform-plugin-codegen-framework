@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
@@ -25,22 +26,17 @@ type GeneratorSetNestedBlock struct {
 	Validators    []specschema.SetValidator
 }
 
-// Imports examines the CustomType and if this is not nil then the CustomType.Import
-// will be used if it is not nil. If CustomType.Import is nil then no import will be
-// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
-// be accessible from the same package that the schema.Schema for the data source is
-// defined in.  The same
-// logic is applied to the NestedObject. Further imports are then retrieved by
-// calling Imports on each of the nested attributes.
-func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
-	imports := make(map[string]struct{})
+func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[g.CustomType.Import.Path] = struct{}{}
+			imports.Add(*g.CustomType.Import)
 		}
 	} else {
-		imports[generatorschema.TypesImport] = struct{}{}
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
+		})
 	}
 
 	for _, v := range g.PlanModifiers {
@@ -54,8 +50,11 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 
 		for _, i := range v.Custom.Imports {
 			if len(i.Path) > 0 {
-				imports[planModifierImport] = struct{}{}
-				imports[i.Path] = struct{}{}
+				imports.Add(code.Import{
+					Path: planModifierImport,
+				})
+
+				imports.Add(i)
 			}
 		}
 	}
@@ -71,15 +70,18 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 
 		for _, i := range v.Custom.Imports {
 			if len(i.Path) > 0 {
-				imports[generatorschema.ValidatorImport] = struct{}{}
-				imports[i.Path] = struct{}{}
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
 			}
 		}
 	}
 
 	if g.NestedObject.CustomType != nil {
 		if g.NestedObject.CustomType.HasImport() {
-			imports[g.NestedObject.CustomType.Import.Path] = struct{}{}
+			imports.Add(*g.NestedObject.CustomType.Import)
 		}
 	}
 
@@ -94,8 +96,11 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 
 		for _, i := range v.Custom.Imports {
 			if len(i.Path) > 0 {
-				imports[planModifierImport] = struct{}{}
-				imports[i.Path] = struct{}{}
+				imports.Add(code.Import{
+					Path: planModifierImport,
+				})
+
+				imports.Add(i)
 			}
 		}
 	}
@@ -111,22 +116,21 @@ func (g GeneratorSetNestedBlock) Imports() map[string]struct{} {
 
 		for _, i := range v.Custom.Imports {
 			if len(i.Path) > 0 {
-				imports[generatorschema.ValidatorImport] = struct{}{}
-				imports[i.Path] = struct{}{}
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
 			}
 		}
 	}
 
 	for _, v := range g.NestedObject.Attributes {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
-		}
+		imports.Add(v.Imports().All()...)
 	}
 
 	for _, v := range g.NestedObject.Blocks {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
-		}
+		imports.Add(v.Imports().All()...)
 	}
 
 	return imports

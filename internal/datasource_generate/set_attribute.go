@@ -38,7 +38,7 @@ func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
 		})
 	}
 
-	elemTypeImports := generatorschema.GetElementTypeImportsStruct(g.ElementType)
+	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType)
 
 	imports.Add(elemTypeImports.All()...)
 
