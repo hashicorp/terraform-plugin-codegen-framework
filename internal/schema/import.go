@@ -37,7 +37,7 @@ func (i *Imports) Add(c ...code.Import) {
 	}
 }
 
-func (i *Imports) Imports() []code.Import {
+func (i *Imports) All() []code.Import {
 	return i.imports
 }
 
@@ -73,10 +73,10 @@ func GetElementTypeImportsStruct(e specschema.ElementType) *Imports {
 		})
 		return imports
 	case e.List != nil:
-		imports.Add(GetElementTypeImportsStruct(e.List.ElementType).Imports()...)
+		imports.Add(GetElementTypeImportsStruct(e.List.ElementType).All()...)
 		return imports
 	case e.Map != nil:
-		imports.Add(GetElementTypeImportsStruct(e.Map.ElementType).Imports()...)
+		imports.Add(GetElementTypeImportsStruct(e.Map.ElementType).All()...)
 		return imports
 	case e.Number != nil:
 		if e.Number.CustomType != nil && e.Number.CustomType.HasImport() {
@@ -88,10 +88,10 @@ func GetElementTypeImportsStruct(e specschema.ElementType) *Imports {
 		})
 		return imports
 	case e.Object != nil:
-		imports.Add(GetAttrTypesImportsStruct(e.Object.CustomType, e.Object.AttributeTypes).Imports()...)
+		imports.Add(GetAttrTypesImportsStruct(e.Object.CustomType, e.Object.AttributeTypes).All()...)
 		return imports
 	case e.Set != nil:
-		imports.Add(GetElementTypeImportsStruct(e.Set.ElementType).Imports()...)
+		imports.Add(GetElementTypeImportsStruct(e.Set.ElementType).All()...)
 		return imports
 	case e.String != nil:
 		if e.String.CustomType != nil && e.String.CustomType.HasImport() {
@@ -157,12 +157,12 @@ func GetAttrTypesImportsStruct(customType *specschema.CustomType, attrTypes []sp
 			if v.List.CustomType != nil && v.List.CustomType.HasImport() {
 				imports.Add(*v.List.CustomType.Import)
 			}
-			imports.Add(GetElementTypeImportsStruct(v.List.ElementType).Imports()...)
+			imports.Add(GetElementTypeImportsStruct(v.List.ElementType).All()...)
 		case v.Map != nil:
 			if v.Map.CustomType != nil && v.Map.CustomType.HasImport() {
 				imports.Add(*v.Map.CustomType.Import)
 			}
-			imports.Add(GetElementTypeImportsStruct(v.Map.ElementType).Imports()...)
+			imports.Add(GetElementTypeImportsStruct(v.Map.ElementType).All()...)
 		case v.Number != nil:
 			if v.Number.CustomType != nil && v.Number.CustomType.HasImport() {
 				imports.Add(*v.Number.CustomType.Import)
@@ -175,12 +175,12 @@ func GetAttrTypesImportsStruct(customType *specschema.CustomType, attrTypes []sp
 				Path: TypesImport,
 			})
 		case v.Object != nil:
-			imports.Add(GetAttrTypesImportsStruct(v.Object.CustomType, v.Object.AttributeTypes).Imports()...)
+			imports.Add(GetAttrTypesImportsStruct(v.Object.CustomType, v.Object.AttributeTypes).All()...)
 		case v.Set != nil:
 			if v.Set.CustomType != nil && v.Set.CustomType.HasImport() {
 				imports.Add(*v.Set.CustomType.Import)
 			}
-			imports.Add(GetElementTypeImportsStruct(v.Set.ElementType).Imports()...)
+			imports.Add(GetElementTypeImportsStruct(v.Set.ElementType).All()...)
 		case v.String != nil:
 			if v.String.CustomType != nil && v.String.CustomType.HasImport() {
 				imports.Add(*v.String.CustomType.Import)

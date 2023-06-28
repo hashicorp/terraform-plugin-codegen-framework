@@ -55,7 +55,7 @@ func (g GeneratorDataSourceSchemas) ToBytes(packageName string) (map[string][]by
 
 func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSchema, packageName string) ([]byte, error) {
 	funcMap := template.FuncMap{
-		"getImports":    getImportsStr,
+		"getImports":    getImports,
 		"getAttributes": getAttributes,
 		"getBlocks":     getBlocks,
 	}
@@ -87,48 +87,24 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSc
 	return buf.Bytes(), nil
 }
 
-func getImportsStr(s GeneratorDataSourceSchema) (string, error) {
+func getImports(s GeneratorDataSourceSchema) (string, error) {
 	imports := schema.NewImports()
 
 	for _, v := range s.Attributes {
-		imports.Add(v.GetImports().Imports()...)
+		imports.Add(v.Imports().All()...)
 	}
 
 	for _, v := range s.Blocks {
-		imports.Add(v.GetImports().Imports()...)
+		imports.Add(v.Imports().All()...)
 	}
 
 	var sb strings.Builder
 
-	for _, i := range imports.Imports() {
+	for _, i := range imports.All() {
 		sb.WriteString(fmt.Sprintf("%q\n", i.Path))
 	}
 
 	return sb.String(), nil
-}
-
-func getImports(schema GeneratorDataSourceSchema) (string, error) {
-	var s strings.Builder
-
-	var imports = make(map[string]struct{})
-
-	for _, v := range schema.Attributes {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
-		}
-	}
-
-	for _, v := range schema.Blocks {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
-		}
-	}
-
-	for a := range imports {
-		s.WriteString(fmt.Sprintf("%q\n", a))
-	}
-
-	return s.String(), nil
 }
 
 func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
@@ -189,12 +165,8 @@ func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	return s.String(), nil
 }
 
-type GeneratorImportNew interface {
-	GetImports() *schema.Imports
-}
-
 type GeneratorImport interface {
-	Imports() map[string]struct{}
+	Imports() *schema.Imports
 }
 
 type GeneratorModel interface {
@@ -204,17 +176,15 @@ type GeneratorModel interface {
 type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	ToString(string) (string, error)
-	GeneratorImport
 	GeneratorModel
-	GeneratorImportNew
+	GeneratorImport
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	ToString(string) (string, error)
-	GeneratorImport
 	GeneratorModel
-	GeneratorImportNew
+	GeneratorImport
 }
 
 type GeneratorNestedAttributeObject struct {

@@ -25,74 +25,7 @@ type GeneratorListNestedAttribute struct {
 	Validators   []specschema.ListValidator
 }
 
-// Imports examines the CustomType and if this is not nil then the CustomType.Import
-// will be used if it is not nil. If CustomType.Import is nil then no import will be
-// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
-// be accessible from the same package that the schema.Schema for the data source is
-// defined in.  The same
-// logic is applied to the NestedObject. Further imports are then retrieved by
-// calling Imports on each of the nested attributes.
-func (g GeneratorListNestedAttribute) Imports() map[string]struct{} {
-	imports := make(map[string]struct{})
-
-	if g.CustomType != nil {
-		if g.CustomType.HasImport() {
-			imports[g.CustomType.Import.Path] = struct{}{}
-		}
-	} else {
-		imports[generatorschema.TypesImport] = struct{}{}
-	}
-
-	if g.NestedObject.CustomType != nil {
-		if g.NestedObject.CustomType.HasImport() {
-			imports[g.NestedObject.CustomType.Import.Path] = struct{}{}
-		}
-	}
-
-	for _, v := range g.Validators {
-		if v.Custom == nil {
-			continue
-		}
-
-		if !v.Custom.HasImport() {
-			continue
-		}
-
-		for _, i := range v.Custom.Imports {
-			if len(i.Path) > 0 {
-				imports[generatorschema.ValidatorImport] = struct{}{}
-				imports[i.Path] = struct{}{}
-			}
-		}
-	}
-
-	for _, v := range g.NestedObject.Validators {
-		if v.Custom == nil {
-			continue
-		}
-
-		if !v.Custom.HasImport() {
-			continue
-		}
-
-		for _, i := range v.Custom.Imports {
-			if len(i.Path) > 0 {
-				imports[generatorschema.ValidatorImport] = struct{}{}
-				imports[i.Path] = struct{}{}
-			}
-		}
-	}
-
-	for _, v := range g.NestedObject.Attributes {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
-		}
-	}
-
-	return imports
-}
-
-func (g GeneratorListNestedAttribute) GetImports() *generatorschema.Imports {
+func (g GeneratorListNestedAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
 	if g.CustomType != nil {
@@ -152,7 +85,7 @@ func (g GeneratorListNestedAttribute) GetImports() *generatorschema.Imports {
 	}
 
 	for _, v := range g.NestedObject.Attributes {
-		imports.Add(v.GetImports().Imports()...)
+		imports.Add(v.Imports().All()...)
 	}
 
 	return imports
