@@ -45,6 +45,9 @@ func GetElementType(e specschema.ElementType) string {
 		}
 		return "types.NumberType"
 	case e.Object != nil:
+		if e.Object.CustomType != nil {
+			return fmt.Sprintf("%s{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", e.Object.CustomType.Type, GetAttrTypes(e.Object.AttributeTypes))
+		}
 		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(e.Object.AttributeTypes))
 	case e.Set != nil:
 		if e.Set.CustomType != nil {
@@ -111,7 +114,11 @@ func GetAttrTypes(attrTypes []specschema.ObjectAttributeType) string {
 				aTypes.WriteString("types.NumberType")
 			}
 		case v.Object != nil:
-			aTypes.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(v.Object.AttributeTypes)))
+			if v.Object.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("%s{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", v.Object.CustomType.Type, GetAttrTypes(v.Object.AttributeTypes)))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(v.Object.AttributeTypes)))
+			}
 		case v.Set != nil:
 			if v.Set.CustomType != nil {
 				aTypes.WriteString(fmt.Sprintf("%s{\nElemType: %s,\n}", v.Set.CustomType.Type, GetElementType(v.Set.ElementType)))

@@ -652,6 +652,37 @@ AttrTypes: map[string]attr.Type{
 },`,
 		},
 
+		"attr-type-obj-custom": {
+			input: GeneratorObjectAttribute{
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "obj",
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
+								},
+							},
+							CustomType: &specschema.CustomType{
+								Type: "objCustomType",
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"object_attribute": schema.ObjectAttribute{
+AttributeTypes: map[string]attr.Type{
+"obj": objCustomType{
+AttrTypes: map[string]attr.Type{
+"bool": types.BoolType,
+},
+},
+},
+},`,
+		},
+
 		"attr-type-object-object": {
 			input: GeneratorObjectAttribute{
 				AttributeTypes: []specschema.ObjectAttributeType{
