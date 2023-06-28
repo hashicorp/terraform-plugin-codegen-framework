@@ -20,18 +20,20 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 
 	testCases := map[string]struct {
 		input    GeneratorBoolAttribute
-		expected map[string]struct{}
+		expected []code.Import
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorBoolAttribute{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorBoolAttribute{
@@ -41,7 +43,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import": {
 			input: GeneratorBoolAttribute{
@@ -51,8 +53,10 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				"github.com/my_account/my_project/attribute": {},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
 			},
 		},
 		"validator-custom-nil": {
@@ -62,21 +66,23 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorBoolAttribute{
 				Validators: []specschema.BoolValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{},
-						},
+						Custom: &specschema.CustomValidator{},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -92,8 +98,10 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import": {
@@ -118,11 +126,19 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.ValidatorImport:                    {},
-				generatorschema.TypesImport:                        {},
-				"github.com/myotherproject/myvalidators/validator": {},
-				"github.com/myproject/myvalidators/validator":      {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
 			},
 		},
 	}
@@ -133,7 +149,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := testCase.input.Imports()
+			got := testCase.input.Imports().All()
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)

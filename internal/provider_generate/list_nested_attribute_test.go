@@ -20,18 +20,20 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 
 	testCases := map[string]struct {
 		input    GeneratorListNestedAttribute
-		expected map[string]struct{}
+		expected []code.Import
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorListNestedAttribute{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"nested-object-custom-type-without-import": {
 			input: GeneratorListNestedAttribute{
@@ -39,8 +41,10 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					CustomType: &specschema.CustomType{},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"custom-type-and-nested-object-custom-type-without-import": {
@@ -50,7 +54,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					CustomType: &specschema.CustomType{},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorListNestedAttribute{
@@ -60,7 +64,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorListNestedAttribute{
@@ -72,8 +76,10 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
@@ -91,7 +97,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import": {
 			input: GeneratorListNestedAttribute{
@@ -101,8 +107,10 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				"github.com/my_account/my_project/attribute": {},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
 			},
 		},
 		"nested-object-custom-type-with-import": {
@@ -115,9 +123,13 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                  {},
-				"github.com/my_account/my_project/attribute": {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
 			},
 		},
 		"custom-type-with-import-with-nested-object-custom-type-with-import": {
@@ -135,9 +147,13 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				"github.com/my_account/my_project/attribute":     {},
-				"github.com/my_account/my_project/nested_object": {},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_object",
+				},
 			},
 		},
 		"nested-list": {
@@ -152,8 +168,10 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"nested-list-with-custom-type": {
@@ -170,9 +188,13 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                    {},
-				"github.com/my_account/my_project/nested_list": {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_list",
+				},
 			},
 		},
 		"nested-list-with-custom-type-with-element-with-custom-type": {
@@ -198,10 +220,16 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                    {},
-				"github.com/my_account/my_project/nested_list": {},
-				"github.com/my_account/my_project/bool":        {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_list",
+				},
+				{
+					Path: "github.com/my_account/my_project/bool",
+				},
 			},
 		},
 		"nested-object": {
@@ -219,9 +247,13 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.AttrImport:  {},
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"nested-object-with-custom-type": {
@@ -238,9 +270,13 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                      {},
-				"github.com/my_account/my_project/nested_object": {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_object",
+				},
 			},
 		},
 		"nested-object-with-custom-type-with-attribute-with-custom-type": {
@@ -269,10 +305,16 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                      {},
-				"github.com/my_account/my_project/nested_object": {},
-				"github.com/my_account/my_project/bool":          {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_object",
+				},
+				{
+					Path: "github.com/my_account/my_project/bool",
+				},
 			},
 		},
 		"validator-custom-nil": {
@@ -282,21 +324,23 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorListNestedAttribute{
 				Validators: []specschema.ListValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{},
-						},
+						Custom: &specschema.CustomValidator{},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -312,8 +356,10 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import": {
@@ -338,11 +384,19 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                        {},
-				generatorschema.ValidatorImport:                    {},
-				"github.com/myotherproject/myvalidators/validator": {},
-				"github.com/myproject/myvalidators/validator":      {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
 			},
 		},
 		"nested-object-validator-custom-nil": {
@@ -355,8 +409,10 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"nested-object-validator-custom-import-nil": {
@@ -364,15 +420,15 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 				NestedObject: GeneratorNestedAttributeObject{
 					Validators: []specschema.ObjectValidator{
 						{
-							Custom: &specschema.CustomValidator{
-								Imports: []code.Import{},
-							},
+							Custom: &specschema.CustomValidator{},
 						},
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"nested-object-validator-custom-import-empty-string": {
@@ -391,8 +447,10 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"nested-object-validator-custom-import": {
@@ -420,11 +478,19 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                        {},
-				generatorschema.ValidatorImport:                    {},
-				"github.com/myotherproject/myvalidators/validator": {},
-				"github.com/myproject/myvalidators/validator":      {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
 			},
 		},
 	}
@@ -435,7 +501,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := testCase.input.Imports()
+			got := testCase.input.Imports().All()
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)

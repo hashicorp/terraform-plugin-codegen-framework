@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
@@ -23,20 +24,17 @@ type GeneratorStringAttribute struct {
 	Validators []specschema.StringValidator
 }
 
-// Imports examines the CustomType and if this is not nil then the CustomType.Import
-// will be used if it is not nil. If CustomType.Import is nil then no import will be
-// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
-// be accessible from the same package that the schema.Schema for the data source is
-// defined in.
-func (g GeneratorStringAttribute) Imports() map[string]struct{} {
-	imports := make(map[string]struct{})
+func (g GeneratorStringAttribute) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[g.CustomType.Import.Path] = struct{}{}
+			imports.Add(*g.CustomType.Import)
 		}
 	} else {
-		imports[generatorschema.TypesImport] = struct{}{}
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
+		})
 	}
 
 	for _, v := range g.Validators {
@@ -50,8 +48,11 @@ func (g GeneratorStringAttribute) Imports() map[string]struct{} {
 
 		for _, i := range v.Custom.Imports {
 			if len(i.Path) > 0 {
-				imports[generatorschema.ValidatorImport] = struct{}{}
-				imports[i.Path] = struct{}{}
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
 			}
 		}
 	}

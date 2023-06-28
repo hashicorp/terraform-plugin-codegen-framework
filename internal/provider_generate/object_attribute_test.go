@@ -20,18 +20,20 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 
 	testCases := map[string]struct {
 		input    GeneratorObjectAttribute
-		expected map[string]struct{}
+		expected []code.Import
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorObjectAttribute{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorObjectAttribute{
@@ -41,7 +43,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import": {
 			input: GeneratorObjectAttribute{
@@ -51,22 +53,28 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				"github.com/my_account/my_project/attribute": {},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
 			},
 		},
 		"object-without-attribute-types": {
 			input: GeneratorObjectAttribute{},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"object-with-empty-attribute-types": {
 			input: GeneratorObjectAttribute{
 				AttributeTypes: []specschema.ObjectAttributeType{},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"object-with-attr-type-bool": {
@@ -78,9 +86,13 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.AttrImport:  {},
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"object-with-attr-type-bool-with-import": {
@@ -98,9 +110,13 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                {},
-				"github.com/my_account/my_project/element": {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
 			},
 		},
 		"object-with-attr-type-bool-with-imports": {
@@ -141,12 +157,22 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				"github.com/my_account/my_project/element":         {},
-				"github.com/my_account/my_project/another_element": {},
-				"github.com/my_account/my_project/list":            {},
-				generatorschema.AttrImport:                         {},
-				generatorschema.TypesImport:                        {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+				{
+					Path: "github.com/my_account/my_project/list",
+				},
+				{
+					Path: "github.com/my_account/my_project/another_element",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"validator-custom-nil": {
@@ -156,21 +182,23 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorObjectAttribute{
 				Validators: []specschema.ObjectValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{},
-						},
+						Custom: &specschema.CustomValidator{},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -186,8 +214,10 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import": {
@@ -212,11 +242,19 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                        {},
-				generatorschema.ValidatorImport:                    {},
-				"github.com/myotherproject/myvalidators/validator": {},
-				"github.com/myproject/myvalidators/validator":      {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
 			},
 		},
 	}
@@ -227,7 +265,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := testCase.input.Imports()
+			got := testCase.input.Imports().All()
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
