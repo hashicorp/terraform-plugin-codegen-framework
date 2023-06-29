@@ -33,7 +33,11 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 			input: GeneratorListNestedAttribute{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: []code.Import{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
 		},
 		"nested-object-custom-type-without-import": {
 			input: GeneratorListNestedAttribute{
@@ -64,7 +68,11 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: []code.Import{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
 		},
 		"nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorListNestedAttribute{
@@ -110,6 +118,9 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: generatorschema.TypesImport,
 				},
 			},
 		},

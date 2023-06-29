@@ -33,7 +33,11 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 			input: GeneratorListNestedBlock{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: []code.Import{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
 		},
 		"nested-object-custom-type-without-import": {
 			input: GeneratorListNestedBlock{
@@ -64,7 +68,11 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: []code.Import{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
 		},
 		"nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorListNestedBlock{
@@ -110,6 +118,9 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: generatorschema.TypesImport,
 				},
 			},
 		},
@@ -590,7 +601,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 					Path: generatorschema.TypesImport,
 				},
 				{
-					Path: planModifierImport,
+					Path: generatorschema.PlanModifierImport,
 				},
 				{
 					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
@@ -686,7 +697,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 					Path: generatorschema.TypesImport,
 				},
 				{
-					Path: planModifierImport,
+					Path: generatorschema.PlanModifierImport,
 				},
 				{
 					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
