@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -121,10 +122,12 @@ func TestConvertObjectAttribute(t *testing.T) {
 						Name: "obj_list_object_string",
 						List: &specschema.ListType{
 							ElementType: specschema.ElementType{
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name:   "obj_string",
-										String: &specschema.StringType{},
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name:   "obj_str",
+											String: &specschema.StringType{},
+										},
 									},
 								},
 							},
@@ -138,10 +141,12 @@ func TestConvertObjectAttribute(t *testing.T) {
 						Name: "obj_list_object_string",
 						List: &specschema.ListType{
 							ElementType: specschema.ElementType{
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name:   "obj_string",
-										String: &specschema.StringType{},
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name:   "obj_str",
+											String: &specschema.StringType{},
+										},
 									},
 								},
 							},
@@ -238,14 +243,18 @@ func TestConvertObjectAttribute(t *testing.T) {
 		"custom_type": {
 			input: &resource.ObjectAttribute{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -287,7 +296,11 @@ func TestConvertObjectAttribute(t *testing.T) {
 				Validators: []specschema.ObjectValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -297,7 +310,11 @@ func TestConvertObjectAttribute(t *testing.T) {
 				Validators: []specschema.ObjectValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -309,7 +326,11 @@ func TestConvertObjectAttribute(t *testing.T) {
 				PlanModifiers: []specschema.ObjectPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import:           pointer("github.com/.../my_planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../my_planmodifier",
+								},
+							},
 							SchemaDefinition: "my_planmodifier.Modify()",
 						},
 					},
@@ -319,7 +340,11 @@ func TestConvertObjectAttribute(t *testing.T) {
 				PlanModifiers: []specschema.ObjectPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import:           pointer("github.com/.../my_planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../my_planmodifier",
+								},
+							},
 							SchemaDefinition: "my_planmodifier.Modify()",
 						},
 					},
@@ -330,7 +355,11 @@ func TestConvertObjectAttribute(t *testing.T) {
 			input: &resource.ObjectAttribute{
 				Default: &specschema.ObjectDefault{
 					Custom: &specschema.CustomDefault{
-						Import:           pointer("github.com/.../my_default"),
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../my_default",
+							},
+						},
 						SchemaDefinition: "my_default.Default()",
 					},
 				},
@@ -338,7 +367,11 @@ func TestConvertObjectAttribute(t *testing.T) {
 			expected: resource_generate.GeneratorObjectAttribute{
 				Default: &specschema.ObjectDefault{
 					Custom: &specschema.CustomDefault{
-						Import:           pointer("github.com/.../my_default"),
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../my_default",
+							},
+						},
 						SchemaDefinition: "my_default.Default()",
 					},
 				},

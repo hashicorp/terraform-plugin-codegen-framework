@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -70,7 +71,9 @@ func TestConvertNumberAttribute(t *testing.T) {
 		"custom_type": {
 			input: &resource.NumberAttribute{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -78,7 +81,9 @@ func TestConvertNumberAttribute(t *testing.T) {
 			expected: resource_generate.GeneratorNumberAttribute{
 				NumberAttribute: schema.NumberAttribute{},
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -120,7 +125,11 @@ func TestConvertNumberAttribute(t *testing.T) {
 				Validators: []specschema.NumberValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -130,7 +139,11 @@ func TestConvertNumberAttribute(t *testing.T) {
 				Validators: []specschema.NumberValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -142,7 +155,11 @@ func TestConvertNumberAttribute(t *testing.T) {
 				PlanModifiers: []specschema.NumberPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import:           pointer("github.com/.../my_planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../my_planmodifier",
+								},
+							},
 							SchemaDefinition: "my_planmodifier.Modify()",
 						},
 					},
@@ -152,7 +169,11 @@ func TestConvertNumberAttribute(t *testing.T) {
 				PlanModifiers: []specschema.NumberPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import:           pointer("github.com/.../my_planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../my_planmodifier",
+								},
+							},
 							SchemaDefinition: "my_planmodifier.Modify()",
 						},
 					},
@@ -163,7 +184,11 @@ func TestConvertNumberAttribute(t *testing.T) {
 			input: &resource.NumberAttribute{
 				Default: &specschema.NumberDefault{
 					Custom: &specschema.CustomDefault{
-						Import:           pointer("github.com/.../my_default"),
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../my_default",
+							},
+						},
 						SchemaDefinition: "my_default.Default()",
 					},
 				},
@@ -171,7 +196,11 @@ func TestConvertNumberAttribute(t *testing.T) {
 			expected: resource_generate.GeneratorNumberAttribute{
 				Default: &specschema.NumberDefault{
 					Custom: &specschema.CustomDefault{
-						Import:           pointer("github.com/.../my_default"),
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../my_default",
+							},
+						},
 						SchemaDefinition: "my_default.Default()",
 					},
 				},

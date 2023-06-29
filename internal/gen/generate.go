@@ -134,14 +134,7 @@ func (d DataSourcesHelpersGenerator) Process(ir spec.Specification) (map[string]
 // it indicates that additional helper functions should be generated for converting to/from
 // external types < = > models.
 func hasNestedWithAssociatedExternalType(attributes []datasource.Attribute) bool {
-	for _, v := range attributes {
-		if v.SingleNested != nil {
-			if v.SingleNested.AssociatedExternalType != nil {
-				if *v.SingleNested.AssociatedExternalType.Import != "" {
-					return true
-				}
-			}
-		}
+	for range attributes {
 
 	}
 

@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
@@ -23,20 +24,17 @@ type GeneratorBoolAttribute struct {
 	Validators []specschema.BoolValidator
 }
 
-// Imports examines the CustomType and if this is not nil then the CustomType.Import
-// will be used if it is not nil. If CustomType.Import is nil then no import will be
-// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
-// be accessible from the same package that the schema.Schema for the data source is
-// defined in.
-func (g GeneratorBoolAttribute) Imports() map[string]struct{} {
-	imports := make(map[string]struct{})
+func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[*g.CustomType.Import] = struct{}{}
+			imports.Add(*g.CustomType.Import)
 		}
 	} else {
-		imports[generatorschema.TypesImport] = struct{}{}
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
+		})
 	}
 
 	for _, v := range g.Validators {
@@ -48,8 +46,15 @@ func (g GeneratorBoolAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[generatorschema.ValidatorImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
+			}
+		}
 	}
 
 	return imports
@@ -131,24 +136,47 @@ func (g GeneratorBoolAttribute) validatorsEqual(x, y []specschema.BoolValidator)
 
 	//TODO: Sort before comparing.
 	for k, v := range x {
-		if v.Custom == nil && y[k].Custom != nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom == nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom != nil {
-			if *v.Custom.Import != *y[k].Custom.Import {
-				return false
-			}
-		}
-
-		if v.Custom.SchemaDefinition != y[k].Custom.SchemaDefinition {
+		if !customValidatorsEqual(v.Custom, y[k].Custom) {
 			return false
 		}
 	}
 
 	return true
+}
+
+func customValidatorsEqual(x, y *specschema.CustomValidator) bool {
+	if x == nil && y == nil {
+		return true
+	}
+
+	if x == nil || y == nil {
+		return false
+	}
+
+	if len(x.Imports) != len(y.Imports) {
+		return false
+	}
+
+	//TODO: Sort before comparing.
+	for k, v := range x.Imports {
+		if v.Path != y.Imports[k].Path {
+			return false
+		}
+
+		if v.Alias != nil && y.Imports[k].Alias == nil {
+			return false
+		}
+
+		if v.Alias == nil && y.Imports[k].Alias != nil {
+			return false
+		}
+
+		if v.Alias != nil && y.Imports[k].Alias != nil {
+			if *v.Alias != *y.Imports[k].Alias {
+				return false
+			}
+		}
+	}
+
+	return x.SchemaDefinition == y.SchemaDefinition
 }

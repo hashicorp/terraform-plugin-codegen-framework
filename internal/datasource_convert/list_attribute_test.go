@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -95,10 +96,12 @@ func TestConvertListAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
-							Object: []specschema.ObjectAttributeType{
-								{
-									Name:   "str",
-									String: &specschema.StringType{},
+							Object: &specschema.ObjectType{
+								AttributeTypes: []specschema.ObjectAttributeType{
+									{
+										Name:   "str",
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -109,10 +112,12 @@ func TestConvertListAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
-							Object: []specschema.ObjectAttributeType{
-								{
-									Name:   "str",
-									String: &specschema.StringType{},
+							Object: &specschema.ObjectType{
+								AttributeTypes: []specschema.ObjectAttributeType{
+									{
+										Name:   "str",
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -123,20 +128,24 @@ func TestConvertListAttribute(t *testing.T) {
 		"element-type-object-string": {
 			input: &datasource.ListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name:   "str",
-							String: &specschema.StringType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name:   "str",
+								String: &specschema.StringType{},
+							},
 						},
 					},
 				},
 			},
 			expected: datasource_generate.GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name:   "str",
-							String: &specschema.StringType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name:   "str",
+								String: &specschema.StringType{},
+							},
 						},
 					},
 				},
@@ -145,12 +154,14 @@ func TestConvertListAttribute(t *testing.T) {
 		"element-type-object-list-string": {
 			input: &datasource.ListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "list",
-							List: &specschema.ListType{
-								ElementType: specschema.ElementType{
-									String: &specschema.StringType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "list",
+								List: &specschema.ListType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -159,12 +170,14 @@ func TestConvertListAttribute(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorListAttribute{
 				ElementType: specschema.ElementType{
-					Object: []specschema.ObjectAttributeType{
-						{
-							Name: "list",
-							List: &specschema.ListType{
-								ElementType: specschema.ElementType{
-									String: &specschema.StringType{},
+					Object: &specschema.ObjectType{
+						AttributeTypes: []specschema.ObjectAttributeType{
+							{
+								Name: "list",
+								List: &specschema.ListType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
 								},
 							},
 						},
@@ -240,7 +253,9 @@ func TestConvertListAttribute(t *testing.T) {
 		"custom_type": {
 			input: &datasource.ListAttribute{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -251,7 +266,9 @@ func TestConvertListAttribute(t *testing.T) {
 			expected: datasource_generate.GeneratorListAttribute{
 				ListAttribute: schema.ListAttribute{},
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -317,7 +334,11 @@ func TestConvertListAttribute(t *testing.T) {
 				Validators: []specschema.ListValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -330,7 +351,11 @@ func TestConvertListAttribute(t *testing.T) {
 				Validators: []specschema.ListValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},

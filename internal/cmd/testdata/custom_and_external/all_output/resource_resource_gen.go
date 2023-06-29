@@ -7,9 +7,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/my_account/my_project/boolplanmodifier"
-	"github.com/my_account/my_project/myboolvalidator"
-	"github.com/my_account_my_project/bool"
+	planmodifieralias "github.com/my_account/my_project/myboolplanmodifier"
+	validatoralias "github.com/my_account/my_project/myboolvalidator"
+	boolalias "github.com/my_account_my_project/bool"
 )
 
 var resourceResourceSchema = schema.Schema{

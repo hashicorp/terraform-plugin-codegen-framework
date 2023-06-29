@@ -13,6 +13,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorSchema interface {
@@ -86,28 +87,30 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSc
 	return buf.Bytes(), nil
 }
 
-func getImports(schema GeneratorDataSourceSchema) (string, error) {
-	var s strings.Builder
+func getImports(s GeneratorDataSourceSchema) (string, error) {
+	imports := schema.NewImports()
 
-	var imports = make(map[string]struct{})
+	for _, v := range s.Attributes {
+		imports.Add(v.Imports().All()...)
+	}
 
-	for _, v := range schema.Attributes {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
+	for _, v := range s.Blocks {
+		imports.Add(v.Imports().All()...)
+	}
+
+	var sb strings.Builder
+
+	for _, i := range imports.All() {
+		var alias string
+
+		if i.Alias != nil {
+			alias = *i.Alias + " "
 		}
+
+		sb.WriteString(fmt.Sprintf("%s%q\n", alias, i.Path))
 	}
 
-	for _, v := range schema.Blocks {
-		for k := range v.Imports() {
-			imports[k] = struct{}{}
-		}
-	}
-
-	for a := range imports {
-		s.WriteString(fmt.Sprintf("%q\n", a))
-	}
-
-	return s.String(), nil
+	return sb.String(), nil
 }
 
 func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
@@ -169,7 +172,7 @@ func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 }
 
 type GeneratorImport interface {
-	Imports() map[string]struct{}
+	Imports() *schema.Imports
 }
 
 type GeneratorModel interface {
@@ -179,15 +182,15 @@ type GeneratorModel interface {
 type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	ToString(string) (string, error)
-	GeneratorImport
 	GeneratorModel
+	GeneratorImport
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	ToString(string) (string, error)
-	GeneratorImport
 	GeneratorModel
+	GeneratorImport
 }
 
 type GeneratorNestedAttributeObject struct {
@@ -241,9 +244,21 @@ func customTypeEqual(x, y *specschema.CustomType) bool {
 	return true
 }
 
-func objectTypeEqual(x, y []specschema.ObjectAttributeType) bool {
-	for k, v := range x {
-		if v.Name != y[k].Name {
+func objectTypeEqual(x, y *specschema.ObjectType) bool {
+	if x == nil && y == nil {
+		return true
+	}
+
+	if x == nil || y == nil {
+		return false
+	}
+
+	if !customTypeEqual(x.CustomType, y.CustomType) {
+		return false
+	}
+
+	for k, v := range x.AttributeTypes {
+		if v.Name != y.AttributeTypes[k].Name {
 			return false
 		}
 
@@ -260,15 +275,15 @@ func objectTypeEqual(x, y []specschema.ObjectAttributeType) bool {
 		}
 
 		b := specschema.ElementType{
-			Bool:    y[k].Bool,
-			Float64: y[k].Float64,
-			Int64:   y[k].Int64,
-			List:    y[k].List,
-			Map:     y[k].Map,
-			Number:  y[k].Number,
-			Object:  y[k].Object,
-			Set:     y[k].Set,
-			String:  y[k].String,
+			Bool:    y.AttributeTypes[k].Bool,
+			Float64: y.AttributeTypes[k].Float64,
+			Int64:   y.AttributeTypes[k].Int64,
+			List:    y.AttributeTypes[k].List,
+			Map:     y.AttributeTypes[k].Map,
+			Number:  y.AttributeTypes[k].Number,
+			Object:  y.AttributeTypes[k].Object,
+			Set:     y.AttributeTypes[k].Set,
+			String:  y.AttributeTypes[k].String,
 		}
 
 		if !elementTypeEqual(a, b) {

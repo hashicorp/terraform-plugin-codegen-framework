@@ -16,7 +16,9 @@
               "computed_optional_required": "computed",
               "element_type": {
                 "list": {
-                  "string":{}
+                  "element_type": {
+                    "string": {}
+                  }
                 }
               }
             }
@@ -27,7 +29,9 @@
               "computed_optional_required": "computed",
               "element_type": {
                 "map": {
-                  "string": {}
+                  "element_type": {
+                    "string": {}
+                  }
                 }
               }
             }
@@ -37,12 +41,14 @@
             "list": {
               "computed_optional_required": "computed",
               "element_type": {
-                "object": [
-                  {
-                    "name": "obj_string_attr",
-                    "string": {}
-                  }
-                ]
+                "object": {
+                  "attribute_types": [
+                    {
+                      "name": "obj_string_attr",
+                      "string": {}
+                    }
+                  ]
+                }
               }
             }
           },
@@ -51,17 +57,21 @@
             "list": {
               "computed_optional_required": "computed",
               "element_type": {
-                "object": [
-                  {
-                    "name": "obj_obj_attr",
-                    "object": [
-                      {
-                        "name": "obj_obj_string_attr",
-                        "string": {}
+                "object": {
+                  "attribute_types": [
+                    {
+                      "name": "obj_obj_attr",
+                      "object": {
+                        "attribute_types": [
+                          {
+                            "name": "obj_obj_string_attr",
+                            "string": {}
+                          }
+                        ]
                       }
-                    ]
-                  }
-                ]
+                    }
+                  ]
+                }
               }
             }
           },
@@ -85,7 +95,9 @@
                 {
                   "name": "obj_list_attr",
                   "list": {
-                    "string": {}
+                    "element_type": {
+                      "string": {}
+                    }
                   }
                 }
               ]
@@ -99,12 +111,16 @@
                 {
                   "name": "obj_list_attr",
                   "list": {
-                    "object": [
-                      {
-                        "name": "obj_list_obj_attr",
-                        "string": {}
+                    "element_type": {
+                      "object": {
+                        "attribute_types": [
+                          {
+                            "name": "obj_list_obj_attr",
+                            "string": {}
+                          }
+                        ]
                       }
-                    ]
+                    }
                   }
                 }
               ]
@@ -185,7 +201,11 @@
             "name": "single_nested_bool_attribute",
             "single_nested": {
               "associated_external_type": {
-                "import": "example.com/apisdk",
+                "imports": [
+                  {
+                    "path": "example.com/apisdk"
+                  }
+                ],
                 "type": "*apisdk.DataSourceProperty"
               },
               "attributes": [
@@ -417,7 +437,10 @@
             "bool": {
               "computed_optional_required": "computed",
               "custom_type": {
-                "import": "github.com/my_account_my_project/bool",
+                "import": {
+                  "alias": "boolalias",
+                  "path": "github.com/my_account_my_project/bool"
+                },
                 "type": "my_bool_type",
                 "value_type": "my_bool_value"
               },
@@ -430,7 +453,12 @@
                 },
                 {
                   "custom": {
-                    "import": "github.com/my_account/my_project/boolplanmodifier",
+                    "imports": [
+                      {
+                        "alias": "planmodifieralias",
+                        "path": "github.com/my_account/my_project/myboolplanmodifier"
+                      }
+                    ],
                     "schema_definition": "myboolplanmodifier.Modify()"
                   }
                 }
@@ -438,7 +466,12 @@
               "validators": [
                 {
                   "custom": {
-                    "import": "github.com/my_account/my_project/myboolvalidator",
+                    "imports": [
+                      {
+                        "alias": "validatoralias",
+                        "path": "github.com/my_account/my_project/myboolvalidator"
+                      }
+                    ],
                     "schema_definition": "myboolvalidator.Validate()"
                   }
                 }

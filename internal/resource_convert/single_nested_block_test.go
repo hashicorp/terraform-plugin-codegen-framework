@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -278,14 +279,18 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 		"custom_type": {
 			input: &resource.SingleNestedBlock{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedBlock{
 				CustomType: &specschema.CustomType{
-					Import:    pointer("github.com/"),
+					Import: &code.Import{
+						Path: "github.com/",
+					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
@@ -317,7 +322,11 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				Validators: []specschema.ObjectValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -327,7 +336,11 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				Validators: []specschema.ObjectValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import:           pointer("github.com/.../myvalidator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
 							SchemaDefinition: "myvalidator.Validate()",
 						},
 					},
@@ -339,7 +352,11 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				PlanModifiers: []specschema.ObjectPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import:           pointer("github.com/.../my_planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../my_planmodifier",
+								},
+							},
 							SchemaDefinition: "my_planmodifier.Modify()",
 						},
 					},
@@ -349,7 +366,11 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				PlanModifiers: []specschema.ObjectPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import:           pointer("github.com/.../my_planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../my_planmodifier",
+								},
+							},
 							SchemaDefinition: "my_planmodifier.Modify()",
 						},
 					},

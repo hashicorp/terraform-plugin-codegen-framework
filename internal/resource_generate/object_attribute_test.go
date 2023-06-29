@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
@@ -19,49 +20,61 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 
 	testCases := map[string]struct {
 		input    GeneratorObjectAttribute
-		expected map[string]struct{}
+		expected []code.Import
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorObjectAttribute{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorObjectAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer(""),
+					Import: &code.Import{
+						Path: "",
+					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import": {
 			input: GeneratorObjectAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer("github.com/my_account/my_project/attribute"),
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
 				},
 			},
-			expected: map[string]struct{}{
-				"github.com/my_account/my_project/attribute": {},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
 			},
 		},
 		"object-without-attribute-types": {
 			input: GeneratorObjectAttribute{},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"object-with-empty-attribute-types": {
 			input: GeneratorObjectAttribute{
 				AttributeTypes: []specschema.ObjectAttributeType{},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"object-with-attr-type-bool": {
@@ -73,9 +86,13 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.AttrImport:  {},
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"object-with-attr-type-bool-with-import": {
@@ -85,15 +102,21 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Name: "bool",
 						Bool: &specschema.BoolType{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/element"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/element",
+								},
 							},
 						},
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                {},
-				"github.com/my_account/my_project/element": {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
 			},
 		},
 		"object-with-attr-type-bool-with-imports": {
@@ -103,7 +126,9 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Name: "bool",
 						Bool: &specschema.BoolType{
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/element"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/element",
+								},
 							},
 						},
 					},
@@ -113,12 +138,16 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 							ElementType: specschema.ElementType{
 								Bool: &specschema.BoolType{
 									CustomType: &specschema.CustomType{
-										Import: pointer("github.com/my_account/my_project/another_element"),
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/another_element",
+										},
 									},
 								},
 							},
 							CustomType: &specschema.CustomType{
-								Import: pointer("github.com/my_account/my_project/list"),
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/list",
+								},
 							},
 						},
 					},
@@ -128,12 +157,22 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				"github.com/my_account/my_project/element":         {},
-				"github.com/my_account/my_project/another_element": {},
-				"github.com/my_account/my_project/list":            {},
-				generatorschema.AttrImport:                         {},
-				generatorschema.TypesImport:                        {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+				{
+					Path: "github.com/my_account/my_project/list",
+				},
+				{
+					Path: "github.com/my_account/my_project/another_element",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"validator-custom-nil": {
@@ -143,21 +182,23 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorObjectAttribute{
 				Validators: []specschema.ObjectValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							Import: nil,
-						},
+						Custom: &specschema.CustomValidator{},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -165,12 +206,18 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				Validators: []specschema.ObjectValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import": {
@@ -178,20 +225,36 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				Validators: []specschema.ObjectValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                        {},
-				generatorschema.ValidatorImport:                    {},
-				"github.com/myotherproject/myvalidators/validator": {},
-				"github.com/myproject/myvalidators/validator":      {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
 			},
 		},
 		"plan-modifier-custom-nil": {
@@ -201,8 +264,10 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"plan-modifier-custom-import-nil": {
@@ -210,12 +275,14 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.ObjectPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: nil,
+							Imports: []code.Import{},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"plan-modifiers-custom-import-empty-string": {
@@ -223,12 +290,18 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.ObjectPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"plan-modifier-custom-import": {
@@ -236,34 +309,54 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.ObjectPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myplanmodifiers/planmodifier",
+								},
+							},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
-				planModifierImport:          {},
-				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
-				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: planModifierImport,
+				},
+				{
+					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+				},
+				{
+					Path: "github.com/myproject/myplanmodifiers/planmodifier",
+				},
 			},
 		},
 		"default-nil": {
 			input: GeneratorObjectAttribute{},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"default-custom-nil": {
 			input: GeneratorObjectAttribute{
 				Default: &specschema.ObjectDefault{},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"default-custom-import-nil": {
@@ -272,33 +365,49 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorObjectAttribute{
 				Default: &specschema.ObjectDefault{
 					Custom: &specschema.CustomDefault{
-						Import: pointer(""),
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"default-custom-import": {
 			input: GeneratorObjectAttribute{
 				Default: &specschema.ObjectDefault{
 					Custom: &specschema.CustomDefault{
-						Import: pointer("github.com/myproject/mydefaults/default"),
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/mydefaults/default",
+							},
+						},
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:               {},
-				"github.com/myproject/mydefaults/default": {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/myproject/mydefaults/default",
+				},
 			},
 		},
 	}
@@ -309,7 +418,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := testCase.input.Imports()
+			got := testCase.input.Imports().All()
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
@@ -402,10 +511,12 @@ ElemType: types.BoolType,
 						Name: "list",
 						List: &specschema.ListType{
 							ElementType: specschema.ElementType{
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name: "bool",
-										Bool: &specschema.BoolType{},
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name: "bool",
+											Bool: &specschema.BoolType{},
+										},
 									},
 								},
 							},
@@ -486,10 +597,12 @@ ElemType: types.BoolType,
 						Name: "map",
 						Map: &specschema.MapType{
 							ElementType: specschema.ElementType{
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name: "bool",
-										Bool: &specschema.BoolType{},
+								Object: &specschema.ObjectType{
+									AttributeTypes: []specschema.ObjectAttributeType{
+										{
+											Name: "bool",
+											Bool: &specschema.BoolType{},
+										},
 									},
 								},
 							},
@@ -516,10 +629,12 @@ AttrTypes: map[string]attr.Type{
 				AttributeTypes: []specschema.ObjectAttributeType{
 					{
 						Name: "obj",
-						Object: []specschema.ObjectAttributeType{
-							{
-								Name: "bool",
-								Bool: &specschema.BoolType{},
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
+								},
 							},
 						},
 					},
@@ -537,18 +652,53 @@ AttrTypes: map[string]attr.Type{
 },`,
 		},
 
+		"attr-type-obj-custom": {
+			input: GeneratorObjectAttribute{
+				AttributeTypes: []specschema.ObjectAttributeType{
+					{
+						Name: "obj",
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
+								},
+							},
+							CustomType: &specschema.CustomType{
+								Type: "objCustomType",
+							},
+						},
+					},
+				},
+			},
+			expected: `
+"object_attribute": schema.ObjectAttribute{
+AttributeTypes: map[string]attr.Type{
+"obj": objCustomType{
+AttrTypes: map[string]attr.Type{
+"bool": types.BoolType,
+},
+},
+},
+},`,
+		},
+
 		"attr-type-object-object": {
 			input: GeneratorObjectAttribute{
 				AttributeTypes: []specschema.ObjectAttributeType{
 					{
 						Name: "obj",
-						Object: []specschema.ObjectAttributeType{
-							{
-								Name: "obj_obj",
-								Object: []specschema.ObjectAttributeType{
-									{
-										Name: "bool",
-										Bool: &specschema.BoolType{},
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "obj_obj",
+									Object: &specschema.ObjectType{
+										AttributeTypes: []specschema.ObjectAttributeType{
+											{
+												Name: "bool",
+												Bool: &specschema.BoolType{},
+											},
+										},
 									},
 								},
 							},
@@ -577,12 +727,14 @@ AttrTypes: map[string]attr.Type{
 				AttributeTypes: []specschema.ObjectAttributeType{
 					{
 						Name: "obj",
-						Object: []specschema.ObjectAttributeType{
-							{
-								Name: "list",
-								List: &specschema.ListType{
-									ElementType: specschema.ElementType{
-										Bool: &specschema.BoolType{},
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "list",
+									List: &specschema.ListType{
+										ElementType: specschema.ElementType{
+											Bool: &specschema.BoolType{},
+										},
 									},
 								},
 							},
@@ -1007,12 +1159,14 @@ AttributeTypes: map[string]attr.Type{
 				AttributeTypes: []specschema.ObjectAttributeType{
 					{
 						Name: "object",
-						Object: []specschema.ObjectAttributeType{
-							{
-								Name: "bool",
-								Bool: &specschema.BoolType{
-									CustomType: &specschema.CustomType{
-										Type: "boolCustomType",
+						Object: &specschema.ObjectType{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{
+										CustomType: &specschema.CustomType{
+											Type: "boolCustomType",
+										},
 									},
 								},
 							},

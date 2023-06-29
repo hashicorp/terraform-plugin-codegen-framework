@@ -45,7 +45,10 @@ func GetElementType(e specschema.ElementType) string {
 		}
 		return "types.NumberType"
 	case e.Object != nil:
-		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(e.Object))
+		if e.Object.CustomType != nil {
+			return fmt.Sprintf("%s{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", e.Object.CustomType.Type, GetAttrTypes(e.Object.AttributeTypes))
+		}
+		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(e.Object.AttributeTypes))
 	case e.Set != nil:
 		if e.Set.CustomType != nil {
 			return fmt.Sprintf("%s{\nElemType: %s,\n}", e.Set.CustomType.Type, GetElementType(e.Set.ElementType))
@@ -111,7 +114,11 @@ func GetAttrTypes(attrTypes []specschema.ObjectAttributeType) string {
 				aTypes.WriteString("types.NumberType")
 			}
 		case v.Object != nil:
-			aTypes.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(v.Object)))
+			if v.Object.CustomType != nil {
+				aTypes.WriteString(fmt.Sprintf("%s{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", v.Object.CustomType.Type, GetAttrTypes(v.Object.AttributeTypes)))
+			} else {
+				aTypes.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(v.Object.AttributeTypes)))
+			}
 		case v.Set != nil:
 			if v.Set.CustomType != nil {
 				aTypes.WriteString(fmt.Sprintf("%s{\nElemType: %s,\n}", v.Set.CustomType.Type, GetElementType(v.Set.ElementType)))
@@ -130,135 +137,4 @@ func GetAttrTypes(attrTypes []specschema.ObjectAttributeType) string {
 	}
 
 	return aTypes.String()
-}
-
-// GetElementTypeImports generates a map of import declarations for use in generated schema with
-// collection (i.e., list, map and set) element types.
-func GetElementTypeImports(e specschema.ElementType, imports map[string]struct{}) map[string]struct{} {
-	switch {
-	case e.Bool != nil:
-		if e.Bool.CustomType != nil && e.Bool.CustomType.HasImport() {
-			imports[*e.Bool.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[TypesImport] = struct{}{}
-		return imports
-	case e.Float64 != nil:
-		if e.Float64.CustomType != nil && e.Float64.CustomType.HasImport() {
-			imports[*e.Float64.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[TypesImport] = struct{}{}
-		return imports
-	case e.Int64 != nil:
-		if e.Int64.CustomType != nil && e.Int64.CustomType.HasImport() {
-			imports[*e.Int64.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[TypesImport] = struct{}{}
-		return imports
-	case e.List != nil:
-		return GetElementTypeImports(e.List.ElementType, imports)
-	case e.Map != nil:
-		return GetElementTypeImports(e.Map.ElementType, imports)
-	case e.Number != nil:
-		if e.Number.CustomType != nil && e.Number.CustomType.HasImport() {
-			imports[*e.Number.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[TypesImport] = struct{}{}
-		return imports
-	case e.Object != nil:
-		return GetAttrTypesImports(e.Object, imports)
-	case e.Set != nil:
-		return GetElementTypeImports(e.Set.ElementType, imports)
-	case e.String != nil:
-		if e.String.CustomType != nil && e.String.CustomType.HasImport() {
-			imports[*e.String.CustomType.Import] = struct{}{}
-			return imports
-		}
-		imports[TypesImport] = struct{}{}
-		return imports
-	default:
-		return imports
-	}
-}
-
-// GetAttrTypesImports generates a map of import declarations for use in generated schema with
-// object attribute types.
-func GetAttrTypesImports(attrTypes []specschema.ObjectAttributeType, imports map[string]struct{}) map[string]struct{} {
-	if len(attrTypes) == 0 {
-		return imports
-	}
-
-	for _, v := range attrTypes {
-		switch {
-		case v.Bool != nil:
-			if v.Bool.CustomType != nil && v.Bool.CustomType.HasImport() {
-				imports[*v.Bool.CustomType.Import] = struct{}{}
-				continue
-			}
-			imports[AttrImport] = struct{}{}
-			imports[TypesImport] = struct{}{}
-		case v.Float64 != nil:
-			if v.Float64.CustomType != nil && v.Float64.CustomType.HasImport() {
-				imports[*v.Float64.CustomType.Import] = struct{}{}
-				continue
-			}
-			imports[AttrImport] = struct{}{}
-			imports[TypesImport] = struct{}{}
-		case v.Int64 != nil:
-			if v.Int64.CustomType != nil && v.Int64.CustomType.HasImport() {
-				imports[*v.Int64.CustomType.Import] = struct{}{}
-				continue
-			}
-			imports[AttrImport] = struct{}{}
-			imports[TypesImport] = struct{}{}
-		case v.List != nil:
-			if v.List.CustomType != nil && v.List.CustomType.HasImport() {
-				imports[*v.List.CustomType.Import] = struct{}{}
-			}
-			i := GetElementTypeImports(v.List.ElementType, imports)
-			for k, v := range i {
-				imports[k] = v
-			}
-		case v.Map != nil:
-			if v.Map.CustomType != nil && v.Map.CustomType.HasImport() {
-				imports[*v.Map.CustomType.Import] = struct{}{}
-			}
-			i := GetElementTypeImports(v.Map.ElementType, imports)
-			for k, v := range i {
-				imports[k] = v
-			}
-		case v.Number != nil:
-			if v.Number.CustomType != nil && v.Number.CustomType.HasImport() {
-				imports[*v.Number.CustomType.Import] = struct{}{}
-				continue
-			}
-			imports[AttrImport] = struct{}{}
-			imports[TypesImport] = struct{}{}
-		case v.Object != nil:
-			i := GetAttrTypesImports(v.Object, imports)
-			for k, v := range i {
-				imports[k] = v
-			}
-		case v.Set != nil:
-			if v.Set.CustomType != nil && v.Set.CustomType.HasImport() {
-				imports[*v.Set.CustomType.Import] = struct{}{}
-			}
-			i := GetElementTypeImports(v.Set.ElementType, imports)
-			for k, v := range i {
-				imports[k] = v
-			}
-		case v.String != nil:
-			if v.String.CustomType != nil && v.String.CustomType.HasImport() {
-				imports[*v.Float64.CustomType.Import] = struct{}{}
-				continue
-			}
-			imports[AttrImport] = struct{}{}
-			imports[TypesImport] = struct{}{}
-		}
-	}
-
-	return imports
 }

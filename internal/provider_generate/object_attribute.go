@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
@@ -24,29 +25,22 @@ type GeneratorObjectAttribute struct {
 	Validators     []specschema.ObjectValidator
 }
 
-// Imports examines the CustomType and if this is not nil then the CustomType.Import
-// will be used if it is not nil. If CustomType.Import is nil then no import will be
-// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
-// be accessible from the same package that the schema.Schema for the data source is
-// defined in. If CustomType is nil, then the datasourceSchemaImport will be used.
-// The imports required for the object attribute types are retrieved by calling
-// getAttrTypesImports.
-func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
-	imports := make(map[string]struct{})
+func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[*g.CustomType.Import] = struct{}{}
+			imports.Add(*g.CustomType.Import)
 		}
 	} else {
-		imports[generatorschema.TypesImport] = struct{}{}
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
+		})
 	}
 
-	attrTypesImports := generatorschema.GetAttrTypesImports(g.AttributeTypes, make(map[string]struct{}))
+	attrTypesImports := generatorschema.GetAttrTypesImports(g.CustomType, g.AttributeTypes)
 
-	for k := range attrTypesImports {
-		imports[k] = struct{}{}
-	}
+	imports.Add(attrTypesImports.All()...)
 
 	for _, v := range g.Validators {
 		if v.Custom == nil {
@@ -57,8 +51,15 @@ func (g GeneratorObjectAttribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[generatorschema.ValidatorImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
+			}
+		}
 	}
 
 	return imports
@@ -142,21 +143,7 @@ func (g GeneratorObjectAttribute) validatorsEqual(x, y []specschema.ObjectValida
 
 	//TODO: Sort before comparing.
 	for k, v := range x {
-		if v.Custom == nil && y[k].Custom != nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom == nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom != nil {
-			if *v.Custom.Import != *y[k].Custom.Import {
-				return false
-			}
-		}
-
-		if v.Custom.SchemaDefinition != y[k].Custom.SchemaDefinition {
+		if !customValidatorsEqual(v.Custom, y[k].Custom) {
 			return false
 		}
 	}

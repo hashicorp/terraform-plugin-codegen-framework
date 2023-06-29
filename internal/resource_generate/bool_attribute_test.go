@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
@@ -19,35 +20,43 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 
 	testCases := map[string]struct {
 		input    GeneratorBoolAttribute
-		expected map[string]struct{}
+		expected []code.Import
 	}{
 		"default": {
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorBoolAttribute{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorBoolAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer(""),
+					Import: &code.Import{
+						Path: "",
+					},
 				},
 			},
-			expected: map[string]struct{}{},
+			expected: []code.Import{},
 		},
 		"custom-type-with-import": {
 			input: GeneratorBoolAttribute{
 				CustomType: &specschema.CustomType{
-					Import: pointer("github.com/my_account/my_project/attribute"),
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
 				},
 			},
-			expected: map[string]struct{}{
-				"github.com/my_account/my_project/attribute": {},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
 			},
 		},
 		"validator-custom-nil": {
@@ -57,21 +66,23 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorBoolAttribute{
 				Validators: []specschema.BoolValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							Import: nil,
-						},
+						Custom: &specschema.CustomValidator{},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import-empty-string": {
@@ -79,12 +90,18 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				Validators: []specschema.BoolValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"validator-custom-import": {
@@ -92,20 +109,36 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				Validators: []specschema.BoolValidator{
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myotherproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomValidator{
-							Import: pointer("github.com/myproject/myvalidators/validator"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:                        {},
-				generatorschema.ValidatorImport:                    {},
-				"github.com/myotherproject/myvalidators/validator": {},
-				"github.com/myproject/myvalidators/validator":      {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
 			},
 		},
 		"plan-modifier-custom-nil": {
@@ -115,8 +148,10 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						Custom: nil,
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"plan-modifier-custom-import-nil": {
@@ -124,12 +159,14 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.BoolPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: nil,
+							Imports: []code.Import{},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"plan-modifiers-custom-import-empty-string": {
@@ -137,12 +174,18 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.BoolPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer(""),
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"plan-modifier-custom-import": {
@@ -150,34 +193,54 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				PlanModifiers: []specschema.BoolPlanModifier{
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer("github.com/myotherproject/myplanmodifiers/planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+								},
+							},
 						},
 					},
 					{
 						Custom: &specschema.CustomPlanModifier{
-							Import: pointer("github.com/myproject/myplanmodifiers/planmodifier"),
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myplanmodifiers/planmodifier",
+								},
+							},
 						},
 					},
 				}},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
-				planModifierImport:          {},
-				"github.com/myotherproject/myplanmodifiers/planmodifier": {},
-				"github.com/myproject/myplanmodifiers/planmodifier":      {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: planModifierImport,
+				},
+				{
+					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+				},
+				{
+					Path: "github.com/myproject/myplanmodifiers/planmodifier",
+				},
 			},
 		},
 		"default-nil": {
 			input: GeneratorBoolAttribute{},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"default-custom-and-static-nil": {
 			input: GeneratorBoolAttribute{
 				Default: &specschema.BoolDefault{},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"default-custom-import-nil": {
@@ -186,33 +249,49 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					Custom: &specschema.CustomDefault{},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
 				Default: &specschema.BoolDefault{
 					Custom: &specschema.CustomDefault{
-						Import: pointer(""),
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
 			},
 		},
 		"default-custom-import": {
 			input: GeneratorBoolAttribute{
 				Default: &specschema.BoolDefault{
 					Custom: &specschema.CustomDefault{
-						Import: pointer("github.com/myproject/mydefaults/default"),
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/mydefaults/default",
+							},
+						},
 					},
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport:               {},
-				"github.com/myproject/mydefaults/default": {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/myproject/mydefaults/default",
+				},
 			},
 		},
 		"default-static": {
@@ -221,9 +300,13 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					Static: pointer(true),
 				},
 			},
-			expected: map[string]struct{}{
-				generatorschema.TypesImport: {},
-				defaultBoolImport:           {},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: defaultBoolImport,
+				},
 			},
 		},
 	}
@@ -234,7 +317,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := testCase.input.Imports()
+			got := testCase.input.Imports().All()
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)

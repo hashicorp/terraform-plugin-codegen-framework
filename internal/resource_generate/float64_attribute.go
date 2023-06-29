@@ -9,6 +9,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
@@ -27,27 +28,30 @@ type GeneratorFloat64Attribute struct {
 	Validators    []specschema.Float64Validator
 }
 
-// Imports examines the CustomType and if this is not nil then the CustomType.Import
-// will be used if it is not nil. If CustomType.Import is nil then no import will be
-// specified as it is assumed that the CustomType.Type and CustomType.ValueType will
-// be accessible from the same package that the schema.Schema for the data source is
-// defined in.
-func (g GeneratorFloat64Attribute) Imports() map[string]struct{} {
-	imports := make(map[string]struct{})
+func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
 
 	if g.CustomType != nil {
 		if g.CustomType.HasImport() {
-			imports[*g.CustomType.Import] = struct{}{}
+			imports.Add(*g.CustomType.Import)
 		}
 	} else {
-		imports[generatorschema.TypesImport] = struct{}{}
+		imports.Add(code.Import{
+			Path: generatorschema.TypesImport,
+		})
 	}
 
 	if g.Default != nil {
 		if g.Default.Static != nil {
-			imports[defaultFloat64Import] = struct{}{}
+			imports.Add(code.Import{
+				Path: defaultBoolImport,
+			})
 		} else if g.Default.Custom != nil && g.Default.Custom.HasImport() {
-			imports[*g.Default.Custom.Import] = struct{}{}
+			for _, i := range g.Default.Custom.Imports {
+				if len(i.Path) > 0 {
+					imports.Add(i)
+				}
+			}
 		}
 	}
 
@@ -60,8 +64,15 @@ func (g GeneratorFloat64Attribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[planModifierImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: planModifierImport,
+				})
+
+				imports.Add(i)
+			}
+		}
 	}
 
 	for _, v := range g.Validators {
@@ -73,8 +84,15 @@ func (g GeneratorFloat64Attribute) Imports() map[string]struct{} {
 			continue
 		}
 
-		imports[generatorschema.ValidatorImport] = struct{}{}
-		imports[*v.Custom.Import] = struct{}{}
+		for _, i := range v.Custom.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: generatorschema.ValidatorImport,
+				})
+
+				imports.Add(i)
+			}
+		}
 	}
 
 	return imports
@@ -170,21 +188,7 @@ func (g GeneratorFloat64Attribute) validatorsEqual(x, y []specschema.Float64Vali
 
 	//TODO: Sort before comparing.
 	for k, v := range x {
-		if v.Custom == nil && y[k].Custom != nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom == nil {
-			return false
-		}
-
-		if v.Custom != nil && y[k].Custom != nil {
-			if *v.Custom.Import != *y[k].Custom.Import {
-				return false
-			}
-		}
-
-		if v.Custom.SchemaDefinition != y[k].Custom.SchemaDefinition {
+		if !customValidatorsEqual(v.Custom, y[k].Custom) {
 			return false
 		}
 	}
