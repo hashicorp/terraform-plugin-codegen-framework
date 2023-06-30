@@ -47,6 +47,39 @@ func (m Model) String() string {
 	return fmt.Sprintf("type %sModel struct {\n%s\n}", m.Name, fieldsStrTrim)
 }
 
+type ObjectHelper struct {
+	Name      string
+	AttrTypes map[string]string
+}
+
+func (o ObjectHelper) String() string {
+	var sb strings.Builder
+
+	sb.WriteString(fmt.Sprintf(objectType, o.Name))
+
+	var attrTypes []string
+
+	for k, v := range o.AttrTypes {
+		attrTypes = append(attrTypes, fmt.Sprintf("%q: %s,", k, v))
+	}
+
+	objAttributeTypes := fmt.Sprintf(objectAttributeTypes, o.Name, strings.Join(attrTypes, "\n"))
+
+	sb.WriteString(fmt.Sprintf("\n\n%s", objAttributeTypes))
+
+	return sb.String()
+}
+
+var objectType = `func (m %sModel) objectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+}`
+
+var objectAttributeTypes = `func (m %sModel) objectAttributeTypes() map[string]attr.Type {
+return map[string]attr.Type{
+%s
+}
+}`
+
 // SnakeCaseToCamelCase relies on the convention of using snake-case
 // names in configuration.
 // TODO: A more robust approach is likely required here.
