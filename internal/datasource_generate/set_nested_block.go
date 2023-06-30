@@ -4,11 +4,14 @@
 package datasource_generate
 
 import (
+	"sort"
 	"strings"
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -22,6 +25,56 @@ type GeneratorSetNestedBlock struct {
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedBlockObject
 	Validators   []specschema.SetValidator
+}
+
+func (g GeneratorSetNestedBlock) GeneratorAttrType() (GeneratorAttrType, error) {
+	attrTypes := make(map[string]attr.Type)
+
+	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+	var attributeKeys = make([]string, 0, len(g.NestedObject.Attributes))
+
+	for k := range g.NestedObject.Attributes {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	for _, k := range attributeKeys {
+		generatorAttrType, err := g.NestedObject.Attributes[k].GeneratorAttrType()
+		if err != nil {
+			return GeneratorAttrType{}, err
+		}
+
+		attrTypes[k] = generatorAttrType
+	}
+
+	// Using sorted blockKeys to guarantee attribute order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g.NestedObject.Blocks))
+
+	for k := range g.NestedObject.Blocks {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	for _, k := range blockKeys {
+		generatorAttrType, err := g.NestedObject.Blocks[k].GeneratorAttrType()
+		if err != nil {
+			return GeneratorAttrType{}, err
+		}
+
+		attrTypes[k] = generatorAttrType
+	}
+
+	return GeneratorAttrType{
+		Type: types.ListType{
+			ElemType: GeneratorAttrType{
+				Type: types.ObjectType{
+					AttrTypes: attrTypes,
+				},
+			},
+		},
+	}, nil
 }
 
 func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {

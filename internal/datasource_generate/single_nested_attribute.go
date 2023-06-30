@@ -4,11 +4,14 @@
 package datasource_generate
 
 import (
+	"sort"
 	"strings"
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -22,6 +25,34 @@ type GeneratorSingleNestedAttribute struct {
 	Attributes map[string]GeneratorAttribute
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
+}
+
+func (g GeneratorSingleNestedAttribute) GeneratorAttrType() (GeneratorAttrType, error) {
+	attrTypes := make(map[string]attr.Type)
+
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var keys = make([]string, 0, len(g.Attributes))
+
+	for k := range g.Attributes {
+		keys = append(keys, k)
+	}
+
+	sort.Strings(keys)
+
+	for _, k := range keys {
+		generatorAttrType, err := g.Attributes[k].GeneratorAttrType()
+		if err != nil {
+			return GeneratorAttrType{}, err
+		}
+
+		attrTypes[k] = generatorAttrType
+	}
+
+	return GeneratorAttrType{
+		Type: types.ObjectType{
+			AttrTypes: attrTypes,
+		},
+	}, nil
 }
 
 func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
