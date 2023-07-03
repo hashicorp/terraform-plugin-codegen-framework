@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	AttrImport      = "github.com/hashicorp/terraform-plugin-framework/attr"
-	TypesImport     = "github.com/hashicorp/terraform-plugin-framework/types"
-	ValidatorImport = "github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	AttrImport         = "github.com/hashicorp/terraform-plugin-framework/attr"
+	TypesImport        = "github.com/hashicorp/terraform-plugin-framework/types"
+	PlanModifierImport = "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	ValidatorImport    = "github.com/hashicorp/terraform-plugin-framework/schema/validator"
 )
 
 type Imports struct {
@@ -39,6 +40,19 @@ func (i *Imports) Add(c ...code.Import) {
 
 func (i *Imports) All() []code.Import {
 	return i.imports
+}
+
+func (i *Imports) Append(imps ...*Imports) {
+	for _, imp := range imps {
+		for _, c := range imp.imports {
+			if _, ok := i.paths[c.Path]; ok {
+				continue
+			}
+
+			i.imports = append(i.imports, c)
+			i.paths[c.Path] = struct{}{}
+		}
+	}
 }
 
 func GetElementTypeImports(e specschema.ElementType) *Imports {
@@ -192,6 +206,90 @@ func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specsche
 			imports.Add(code.Import{
 				Path: TypesImport,
 			})
+		}
+	}
+
+	return imports
+}
+
+func CustomTypeImports(c *specschema.CustomType) *Imports {
+	imports := NewImports()
+
+	if c != nil {
+		if c.HasImport() {
+			imports.Add(*c.Import)
+		}
+	} else {
+		imports.Add(code.Import{
+			Path: TypesImport,
+		})
+	}
+
+	return imports
+}
+
+func CustomDefaultImports(c *specschema.CustomDefault) *Imports {
+	imports := NewImports()
+
+	if c == nil {
+		return imports
+	}
+
+	if !c.HasImport() {
+		return imports
+	}
+
+	for _, i := range c.Imports {
+		if len(i.Path) > 0 {
+			imports.Add(i)
+		}
+	}
+
+	return imports
+}
+
+func CustomPlanModifierImports(c *specschema.CustomPlanModifier) *Imports {
+	imports := NewImports()
+
+	if c == nil {
+		return imports
+	}
+
+	if !c.HasImport() {
+		return imports
+	}
+
+	for _, i := range c.Imports {
+		if len(i.Path) > 0 {
+			imports.Add(code.Import{
+				Path: PlanModifierImport,
+			})
+
+			imports.Add(i)
+		}
+	}
+
+	return imports
+}
+
+func CustomValidatorImports(cv *specschema.CustomValidator) *Imports {
+	imports := NewImports()
+
+	if cv == nil {
+		return imports
+	}
+
+	if !cv.HasImport() {
+		return imports
+	}
+
+	for _, i := range cv.Imports {
+		if len(i.Path) > 0 {
+			imports.Add(code.Import{
+				Path: ValidatorImport,
+			})
+
+			imports.Add(i)
 		}
 	}
 

@@ -8,5 +8,4 @@ const (
 	defaultFloat64Import = "github.com/hashicorp/terraform-plugin-framework/resource/schema/float64default"
 	defaultInt64Import   = "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	defaultStringImport  = "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
-	planModifierImport   = "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )

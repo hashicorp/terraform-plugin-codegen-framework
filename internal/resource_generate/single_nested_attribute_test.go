@@ -364,7 +364,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 					Path: generatorschema.TypesImport,
 				},
 				{
-					Path: planModifierImport,
+					Path: generatorschema.PlanModifierImport,
 				},
 				{
 					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",

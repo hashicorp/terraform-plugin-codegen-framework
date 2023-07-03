@@ -7,7 +7,6 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
@@ -29,42 +28,20 @@ type GeneratorSingleNestedBlock struct {
 func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	if g.CustomType != nil {
-		if g.CustomType.HasImport() {
-			imports.Add(*g.CustomType.Import)
-		}
-	} else {
-		imports.Add(code.Import{
-			Path: generatorschema.TypesImport,
-		})
-	}
+	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
+	imports.Append(customTypeImports)
 
 	for _, v := range g.Validators {
-		if v.Custom == nil {
-			continue
-		}
-
-		if !v.Custom.HasImport() {
-			continue
-		}
-
-		for _, i := range v.Custom.Imports {
-			if len(i.Path) > 0 {
-				imports.Add(code.Import{
-					Path: generatorschema.ValidatorImport,
-				})
-
-				imports.Add(i)
-			}
-		}
+		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
+		imports.Append(customValidatorImports)
 	}
 
 	for _, v := range g.Attributes {
-		imports.Add(v.Imports().All()...)
+		imports.Append(v.Imports())
 	}
 
 	for _, v := range g.Blocks {
-		imports.Add(v.Imports().All()...)
+		imports.Append(v.Imports())
 	}
 
 	return imports

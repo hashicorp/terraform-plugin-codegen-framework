@@ -30,68 +30,28 @@ type GeneratorStringAttribute struct {
 func (g GeneratorStringAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	if g.CustomType != nil {
-		if g.CustomType.HasImport() {
-			imports.Add(*g.CustomType.Import)
-		}
-	} else {
-		imports.Add(code.Import{
-			Path: generatorschema.TypesImport,
-		})
-	}
+	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
+	imports.Append(customTypeImports)
 
 	if g.Default != nil {
 		if g.Default.Static != nil {
 			imports.Add(code.Import{
-				Path: defaultBoolImport,
+				Path: defaultStringImport,
 			})
-		} else if g.Default.Custom != nil && g.Default.Custom.HasImport() {
-			for _, i := range g.Default.Custom.Imports {
-				if len(i.Path) > 0 {
-					imports.Add(i)
-				}
-			}
+		} else {
+			customDefaultImports := generatorschema.CustomDefaultImports(g.Default.Custom)
+			imports.Append(customDefaultImports)
 		}
 	}
 
 	for _, v := range g.PlanModifiers {
-		if v.Custom == nil {
-			continue
-		}
-
-		if !v.Custom.HasImport() {
-			continue
-		}
-
-		for _, i := range v.Custom.Imports {
-			if len(i.Path) > 0 {
-				imports.Add(code.Import{
-					Path: planModifierImport,
-				})
-
-				imports.Add(i)
-			}
-		}
+		customPlanModifierImports := generatorschema.CustomPlanModifierImports(v.Custom)
+		imports.Append(customPlanModifierImports)
 	}
 
 	for _, v := range g.Validators {
-		if v.Custom == nil {
-			continue
-		}
-
-		if !v.Custom.HasImport() {
-			continue
-		}
-
-		for _, i := range v.Custom.Imports {
-			if len(i.Path) > 0 {
-				imports.Add(code.Import{
-					Path: generatorschema.ValidatorImport,
-				})
-
-				imports.Add(i)
-			}
-		}
+		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
+		imports.Append(customValidatorImports)
 	}
 
 	return imports
