@@ -135,7 +135,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 
 	// convert framework schema to []byte
 	g := datasource_generate.NewGeneratorDataSourceSchemas(schema)
-	schemaBytes, err := g.ToBytes(packageName)
+	schemaBytes, err := g.SchemasBytes(packageName)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}

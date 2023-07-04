@@ -16,7 +16,7 @@ func NewGeneratorDataSourceSchemas(schemas map[string]GeneratorDataSourceSchema)
 	}
 }
 
-func (g GeneratorDataSourceSchemas) ToBytes(packageName string) (map[string][]byte, error) {
+func (g GeneratorDataSourceSchemas) SchemasBytes(packageName string) (map[string][]byte, error) {
 	schemasBytes := make(map[string][]byte, len(g.schemas))
 
 	for k, s := range g.schemas {
