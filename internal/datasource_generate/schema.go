@@ -1,8 +1,10 @@
 package datasource_generate
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
+	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -36,4 +38,38 @@ func (g GeneratorDataSourceSchema) ImportsString() (string, error) {
 	}
 
 	return sb.String(), nil
+}
+
+func (g GeneratorDataSourceSchema) SchemaBytes(name, packageName string) ([]byte, error) {
+	funcMap := template.FuncMap{
+		"ImportsString":    g.ImportsString,
+		"AttributesString": g.Attributes.String,
+		"BlocksString":     g.Blocks.String,
+	}
+
+	t, err := template.New("schema").Funcs(funcMap).Parse(
+		schemaGoTemplate,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	var buf bytes.Buffer
+
+	templateData := struct {
+		Name string
+		GeneratorDataSourceSchema
+		PackageName string
+	}{
+		Name:                      name,
+		GeneratorDataSourceSchema: g,
+		PackageName:               packageName,
+	}
+
+	err = t.Execute(&buf, templateData)
+	if err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
 }
