@@ -23,7 +23,7 @@ type GeneratorSingleNestedBlock struct {
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	Attributes GeneratorAttributes
-	Blocks     map[string]GeneratorBlock
+	Blocks     GeneratorBlocks
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
 }
@@ -126,7 +126,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga GeneratorBlock) bool {
 func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
 		"AttributesString": g.Attributes.String,
-		"getBlocks":        getBlocks,
+		"BlocksString":     g.Blocks.String,
 	}
 
 	t, err := template.New("single_nested_block").Funcs(funcMap).Parse(singleNestedBlockGoTemplate)

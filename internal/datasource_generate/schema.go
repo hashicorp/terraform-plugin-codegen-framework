@@ -9,7 +9,7 @@ import (
 
 type GeneratorDataSourceSchema struct {
 	Attributes GeneratorAttributes
-	Blocks     map[string]GeneratorBlock
+	Blocks     GeneratorBlocks
 }
 
 func (g GeneratorDataSourceSchema) ImportsString() (string, error) {

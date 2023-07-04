@@ -36,7 +36,7 @@ func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSc
 	funcMap := template.FuncMap{
 		"ImportsString":    s.ImportsString,
 		"AttributesString": s.Attributes.String,
-		"getBlocks":        getBlocks,
+		"BlocksString":     s.Blocks.String,
 	}
 
 	t, err := template.New("schema").Funcs(funcMap).Parse(

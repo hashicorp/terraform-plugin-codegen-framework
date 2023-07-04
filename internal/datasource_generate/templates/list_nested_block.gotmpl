@@ -8,7 +8,7 @@ Attributes: map[string]schema.Attribute{
 {{- end}}
 {{- if gt (len $value.NestedObject.Blocks) 0 }}
 Blocks: map[string]schema.Block{
-{{- getBlocks $value.NestedObject.Blocks}}
+{{- BlocksString}}
 },
 {{- end}}
 {{- if $value.NestedObject.CustomType}}

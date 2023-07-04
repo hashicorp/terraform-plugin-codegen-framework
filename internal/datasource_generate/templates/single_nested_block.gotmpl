@@ -7,7 +7,7 @@ Attributes: map[string]schema.Attribute{
 {{- end}}
 {{- if gt (len $value.Blocks) 0 }}
 Blocks: map[string]schema.Block{
-{{- getBlocks $value.Blocks}}
+{{- BlocksString}}
 },
 {{- end}}
 {{- template "common_block" $value }}

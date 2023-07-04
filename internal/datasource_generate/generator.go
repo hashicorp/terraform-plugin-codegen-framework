@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"errors"
 	"sort"
-	"strings"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -16,35 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
-
-func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
-	var s strings.Builder
-
-	// Using sorted keys to guarantee block order as maps are unordered in Go.
-	var keys = make([]string, 0, len(blocks))
-
-	for k := range blocks {
-		keys = append(keys, k)
-	}
-
-	sort.Strings(keys)
-
-	for _, k := range keys {
-		if blocks[k] == nil {
-			continue
-		}
-
-		str, err := blocks[k].ToString(k)
-
-		if err != nil {
-			return "", err
-		}
-
-		s.WriteString(str)
-	}
-
-	return s.String(), nil
-}
 
 type AttrType interface {
 	GeneratorAttrType() (GeneratorAttrType, error)
@@ -82,7 +52,7 @@ type GeneratorNestedAttributeObject struct {
 
 type GeneratorNestedBlockObject struct {
 	Attributes GeneratorAttributes
-	Blocks     map[string]GeneratorBlock
+	Blocks     GeneratorBlocks
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
 }
