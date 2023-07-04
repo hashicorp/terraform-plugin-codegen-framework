@@ -5,20 +5,13 @@ package datasource_generate
 
 import (
 	"bytes"
-	"errors"
 	"sort"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
-	fwtypes "github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
-
-type AttrType interface {
-	GeneratorAttrType() (GeneratorAttrType, error)
-}
 
 type GeneratorImport interface {
 	Imports() *schema.Imports
@@ -33,7 +26,6 @@ type GeneratorAttribute interface {
 	ToString(string) (string, error)
 	GeneratorModel
 	GeneratorImport
-	AttrType
 }
 
 type GeneratorBlock interface {
@@ -41,7 +33,6 @@ type GeneratorBlock interface {
 	ToString(string) (string, error)
 	GeneratorModel
 	GeneratorImport
-	AttrType
 }
 
 type GeneratorNestedAttributeObject struct {
@@ -55,14 +46,6 @@ type GeneratorNestedBlockObject struct {
 	Blocks     GeneratorBlocks
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
-}
-
-type GeneratorAttrType struct {
-	attr.Type
-}
-
-func (g GeneratorAttrType) Equal(t attr.Type) bool {
-	return t.Equal(g.Type)
 }
 
 func customTypeEqual(x, y *specschema.CustomType) bool {
@@ -471,150 +454,4 @@ func (d DataSourcesModelObjectHelpersGenerator) Process(schemas map[string]Gener
 	}
 
 	return dataSourcesModelObjectHelpers, nil
-}
-
-func ElementTypeGeneratorAttrType(e specschema.ElementType) (GeneratorAttrType, error) {
-	switch {
-	case e.Bool != nil:
-		return GeneratorAttrType{
-			fwtypes.BoolType,
-		}, nil
-	case e.Float64 != nil:
-		return GeneratorAttrType{
-			fwtypes.Float64Type,
-		}, nil
-	case e.Int64 != nil:
-		return GeneratorAttrType{
-			fwtypes.Int64Type,
-		}, nil
-	case e.List != nil:
-		elemType, err := ElementTypeGeneratorAttrType(e.List.ElementType)
-		if err != nil {
-			return GeneratorAttrType{}, err
-		}
-
-		return GeneratorAttrType{
-			fwtypes.ListType{
-				ElemType: elemType,
-			},
-		}, nil
-	case e.Map != nil:
-		elemType, err := ElementTypeGeneratorAttrType(e.Map.ElementType)
-		if err != nil {
-			return GeneratorAttrType{}, err
-		}
-
-		return GeneratorAttrType{
-			fwtypes.MapType{
-				ElemType: elemType,
-			},
-		}, nil
-	case e.Number != nil:
-		return GeneratorAttrType{
-			fwtypes.NumberType,
-		}, nil
-	case e.Object != nil:
-		objAttrTypes, err := ObjectAttributeTypesGeneratorAttrType(e.Object.AttributeTypes)
-		if err != nil {
-			return GeneratorAttrType{}, err
-		}
-
-		return GeneratorAttrType{
-			fwtypes.ObjectType{
-				AttrTypes: objAttrTypes,
-			},
-		}, nil
-	case e.Set != nil:
-		elemType, err := ElementTypeGeneratorAttrType(e.Set.ElementType)
-		if err != nil {
-			return GeneratorAttrType{}, err
-		}
-
-		return GeneratorAttrType{
-			fwtypes.SetType{
-				ElemType: elemType,
-			},
-		}, nil
-	case e.String != nil:
-		return GeneratorAttrType{
-			fwtypes.StringType,
-		}, nil
-	}
-
-	return GeneratorAttrType{}, errors.New("element type is not set")
-}
-
-func ObjectAttributeTypesGeneratorAttrType(o specschema.ObjectAttributeTypes) (map[string]attr.Type, error) {
-	objAttrTypes := make(map[string]attr.Type)
-
-	for _, v := range o {
-		switch {
-		case v.Bool != nil:
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.BoolType,
-			}
-		case v.Int64 != nil:
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.Int64Type,
-			}
-		case v.Float64 != nil:
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.Float64Type,
-			}
-		case v.List != nil:
-			elemType, err := ElementTypeGeneratorAttrType(v.List.ElementType)
-			if err != nil {
-				return nil, err
-			}
-
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.ListType{
-					ElemType: elemType,
-				},
-			}
-		case v.Map != nil:
-			elemType, err := ElementTypeGeneratorAttrType(v.Map.ElementType)
-			if err != nil {
-				return nil, err
-			}
-
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.MapType{
-					ElemType: elemType,
-				},
-			}
-		case v.Number != nil:
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.NumberType,
-			}
-		case v.Object != nil:
-			objectAttrTypes, err := ObjectAttributeTypesGeneratorAttrType(v.Object.AttributeTypes)
-			if err != nil {
-				return nil, err
-			}
-
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.ObjectType{
-					AttrTypes: objectAttrTypes,
-				},
-			}
-		case v.Set != nil:
-			elemType, err := ElementTypeGeneratorAttrType(v.Set.ElementType)
-			if err != nil {
-				return nil, err
-			}
-
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.SetType{
-					ElemType: elemType,
-				},
-			}
-		case v.String != nil:
-			objAttrTypes[v.Name] = GeneratorAttrType{
-				fwtypes.StringType,
-			}
-		}
-	}
-
-	return objAttrTypes, nil
 }

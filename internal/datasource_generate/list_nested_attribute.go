@@ -10,9 +10,7 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -26,38 +24,6 @@ type GeneratorListNestedAttribute struct {
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedAttributeObject
 	Validators   []specschema.ListValidator
-}
-
-func (g GeneratorListNestedAttribute) GeneratorAttrType() (GeneratorAttrType, error) {
-	attrTypes := make(map[string]attr.Type)
-
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var keys = make([]string, 0, len(g.NestedObject.Attributes))
-
-	for k := range g.NestedObject.Attributes {
-		keys = append(keys, k)
-	}
-
-	sort.Strings(keys)
-
-	for _, k := range keys {
-		generatorAttrType, err := g.NestedObject.Attributes[k].GeneratorAttrType()
-		if err != nil {
-			return GeneratorAttrType{}, err
-		}
-
-		attrTypes[k] = generatorAttrType
-	}
-
-	return GeneratorAttrType{
-		Type: types.ListType{
-			ElemType: GeneratorAttrType{
-				Type: types.ObjectType{
-					AttrTypes: attrTypes,
-				},
-			},
-		},
-	}, nil
 }
 
 func (g GeneratorListNestedAttribute) Imports() *generatorschema.Imports {

@@ -9,7 +9,6 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -22,12 +21,6 @@ type GeneratorStringAttribute struct {
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
 	Validators []specschema.StringValidator
-}
-
-func (g GeneratorStringAttribute) GeneratorAttrType() (GeneratorAttrType, error) {
-	return GeneratorAttrType{
-		types.StringType,
-	}, nil
 }
 
 func (g GeneratorStringAttribute) Imports() *generatorschema.Imports {
