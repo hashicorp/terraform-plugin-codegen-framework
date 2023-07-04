@@ -1,6 +1,9 @@
 package datasource_generate
 
-import "bytes"
+import (
+	"bytes"
+	"sort"
+)
 
 // TODO: Field(s) could be added to handle end-user supplying their own templates to allow overriding.
 type GeneratorDataSourceSchemas struct {
@@ -54,4 +57,58 @@ func (g GeneratorDataSourceSchemas) ModelsBytes() (map[string][]byte, error) {
 	}
 
 	return modelsBytes, nil
+}
+
+func (g GeneratorDataSourceSchemas) ModelsObjectHelpersBytes() (map[string][]byte, error) {
+	modelsObjectHelpersBytes := make(map[string][]byte, len(g.schemas))
+
+	for name, s := range g.schemas {
+		var buf bytes.Buffer
+
+		schema := GeneratorDataSourceSchema{
+			Attributes: s.Attributes,
+			Blocks:     s.Blocks,
+		}
+
+		var attributeKeys = make([]string, 0, len(schema.Attributes))
+
+		for k := range schema.Attributes {
+			attributeKeys = append(attributeKeys, k)
+		}
+
+		sort.Strings(attributeKeys)
+
+		for _, k := range attributeKeys {
+			if schema.Attributes[k] == nil {
+				continue
+			}
+
+			switch t := schema.Attributes[k].(type) {
+			case GeneratorListNestedAttribute:
+				var hasNestedAttribute bool
+
+				for _, v := range t.NestedObject.Attributes {
+					switch v.(type) {
+					case GeneratorListNestedAttribute:
+						hasNestedAttribute = true
+						break
+					}
+				}
+
+				if hasNestedAttribute {
+					modelObjectHelpers, err := t.ModelObjectHelpersString(k)
+
+					if err != nil {
+						return nil, err
+					}
+
+					buf.WriteString(modelObjectHelpers)
+				}
+			}
+		}
+
+		modelsObjectHelpersBytes[name] = buf.Bytes()
+	}
+
+	return modelsObjectHelpersBytes, nil
 }

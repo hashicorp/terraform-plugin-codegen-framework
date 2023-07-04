@@ -147,8 +147,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 	}
 
 	// generate model object helpers code
-	dataSourcesModelObjectHelpersGenerator := datasource_generate.NewDataSourcesModelObjectHelpersGenerator()
-	dataSourcesModelObjectHelpers, err := dataSourcesModelObjectHelpersGenerator.Process(schema)
+	modelsObjectHelpersBytes, err := g.ModelsObjectHelpersBytes()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -166,7 +165,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 	}
 
 	// format model object helpers code
-	formattedDataSourcesModelObjectHelpers, err := format.Format(dataSourcesModelObjectHelpers)
+	formattedDataSourcesModelObjectHelpers, err := format.Format(modelsObjectHelpersBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
