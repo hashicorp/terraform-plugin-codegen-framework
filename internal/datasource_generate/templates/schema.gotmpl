@@ -10,7 +10,7 @@ import (
 var {{.Name}}DataSourceSchema = schema.Schema{
 {{- if gt (len .GeneratorDataSourceSchema.Attributes) 0 }}
     Attributes: map[string]schema.Attribute{
-        {{- getAttributes .GeneratorDataSourceSchema.Attributes}}
+        {{- AttributesString}}
     },
 {{- end}}
 {{- if gt (len .GeneratorDataSourceSchema.Blocks) 0 }}

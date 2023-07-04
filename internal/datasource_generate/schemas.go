@@ -5,10 +5,9 @@ import (
 	"text/template"
 )
 
+// TODO: Field(s) could be added to handle end-user supplying their own templates to allow overriding.
 type GeneratorDataSourceSchemas struct {
 	schemas map[string]GeneratorDataSourceSchema
-	// TODO: Could add a field to hold custom templates that are used in calls toBytes() to allow overriding.
-	// getAttributes() and getBlocks() funcs.
 }
 
 func NewGeneratorDataSourceSchemas(schemas map[string]GeneratorDataSourceSchema) GeneratorDataSourceSchemas {
@@ -35,9 +34,9 @@ func (g GeneratorDataSourceSchemas) ToBytes(packageName string) (map[string][]by
 
 func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSchema, packageName string) ([]byte, error) {
 	funcMap := template.FuncMap{
-		"ImportsString": s.ImportsString,
-		"getAttributes": getAttributes,
-		"getBlocks":     getBlocks,
+		"ImportsString":    s.ImportsString,
+		"AttributesString": s.Attributes.String,
+		"getBlocks":        getBlocks,
 	}
 
 	t, err := template.New("schema").Funcs(funcMap).Parse(

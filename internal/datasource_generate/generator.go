@@ -17,35 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
-	var s strings.Builder
-
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var keys = make([]string, 0, len(attributes))
-
-	for k := range attributes {
-		keys = append(keys, k)
-	}
-
-	sort.Strings(keys)
-
-	for _, k := range keys {
-		if attributes[k] == nil {
-			continue
-		}
-
-		str, err := attributes[k].ToString(k)
-
-		if err != nil {
-			return "", err
-		}
-
-		s.WriteString(str)
-	}
-
-	return s.String(), nil
-}
-
 func getBlocks(blocks map[string]GeneratorBlock) (string, error) {
 	var s strings.Builder
 
@@ -104,13 +75,13 @@ type GeneratorBlock interface {
 }
 
 type GeneratorNestedAttributeObject struct {
-	Attributes map[string]GeneratorAttribute
+	Attributes GeneratorAttributes
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
 }
 
 type GeneratorNestedBlockObject struct {
-	Attributes map[string]GeneratorAttribute
+	Attributes GeneratorAttributes
 	Blocks     map[string]GeneratorBlock
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator

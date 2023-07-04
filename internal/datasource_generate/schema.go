@@ -8,7 +8,7 @@ import (
 )
 
 type GeneratorDataSourceSchema struct {
-	Attributes map[string]GeneratorAttribute
+	Attributes GeneratorAttributes
 	Blocks     map[string]GeneratorBlock
 }
 

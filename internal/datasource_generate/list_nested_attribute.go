@@ -119,7 +119,7 @@ func (g GeneratorListNestedAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorListNestedAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": getAttributes,
+		"AttributesString": g.NestedObject.Attributes.String,
 	}
 
 	t, err := template.New("list_nested_attribute").Funcs(funcMap).Parse(listNestedAttributeGoTemplate)

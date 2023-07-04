@@ -2,7 +2,7 @@
 "{{$key}}": schema.SingleNestedBlock{
 {{- if gt (len $value.Attributes) 0 }}
 Attributes: map[string]schema.Attribute{
-{{- getAttributes $value.Attributes}}
+{{- AttributesString}}
 },
 {{- end}}
 {{- if gt (len $value.Blocks) 0 }}

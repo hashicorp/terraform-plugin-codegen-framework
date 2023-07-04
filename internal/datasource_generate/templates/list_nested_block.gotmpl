@@ -3,7 +3,7 @@
 NestedObject: schema.NestedBlockObject{
 {{- if gt (len $value.NestedObject.Attributes) 0 }}
 Attributes: map[string]schema.Attribute{
-{{- getAttributes $value.NestedObject.Attributes}}
+{{- AttributesString}}
 },
 {{- end}}
 {{- if gt (len $value.NestedObject.Blocks) 0 }}
