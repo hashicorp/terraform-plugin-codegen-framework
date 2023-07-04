@@ -4,7 +4,7 @@ package {{.PackageName}}
 
 import (
     "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-{{getImports .GeneratorDataSourceSchema}}
+{{ImportsString}}
 )
 
 var {{.Name}}DataSourceSchema = schema.Schema{

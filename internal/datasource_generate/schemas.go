@@ -35,7 +35,7 @@ func (g GeneratorDataSourceSchemas) ToBytes(packageName string) (map[string][]by
 
 func (g GeneratorDataSourceSchemas) toBytes(name string, s GeneratorDataSourceSchema, packageName string) ([]byte, error) {
 	funcMap := template.FuncMap{
-		"getImports":    getImports,
+		"ImportsString": s.ImportsString,
 		"getAttributes": getAttributes,
 		"getBlocks":     getBlocks,
 	}

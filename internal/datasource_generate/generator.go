@@ -6,7 +6,6 @@ package datasource_generate
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"sort"
 	"strings"
 
@@ -17,32 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
-
-func getImports(s GeneratorDataSourceSchema) (string, error) {
-	imports := schema.NewImports()
-
-	for _, v := range s.Attributes {
-		imports.Add(v.Imports().All()...)
-	}
-
-	for _, v := range s.Blocks {
-		imports.Add(v.Imports().All()...)
-	}
-
-	var sb strings.Builder
-
-	for _, i := range imports.All() {
-		var alias string
-
-		if i.Alias != nil {
-			alias = *i.Alias + " "
-		}
-
-		sb.WriteString(fmt.Sprintf("%s%q\n", alias, i.Path))
-	}
-
-	return sb.String(), nil
-}
 
 func getAttributes(attributes map[string]GeneratorAttribute) (string, error) {
 	var s strings.Builder
