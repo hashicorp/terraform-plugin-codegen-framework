@@ -13,26 +13,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-type GeneratorImport interface {
-	Imports() *schema.Imports
-}
-
-type GeneratorModel interface {
-	ModelField(string) (model.Field, error)
-}
-
 type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
+	Imports() *schema.Imports
+	ModelField(string) (model.Field, error)
 	ToString(string) (string, error)
-	GeneratorModel
-	GeneratorImport
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
+	Imports() *schema.Imports
+	ModelField(string) (model.Field, error)
 	ToString(string) (string, error)
-	GeneratorModel
-	GeneratorImport
 }
 
 type GeneratorNestedAttributeObject struct {
