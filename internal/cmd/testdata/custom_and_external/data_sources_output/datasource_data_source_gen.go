@@ -25,7 +25,7 @@ var datasourceDataSourceSchema = schema.Schema{
 			},
 			Computed: true,
 		},
-		"list_nested_bool_attribute": schema.ListNestedAttribute{
+		"list_nested_one": schema.ListNestedAttribute{
 			NestedObject: schema.NestedAttributeObject{
 				Attributes: map[string]schema.Attribute{
 					"bool_attribute": schema.BoolAttribute{
@@ -35,14 +35,15 @@ var datasourceDataSourceSchema = schema.Schema{
 			},
 			Computed: true,
 		},
-		"list_nested_list_nested_bool_attribute": schema.ListNestedAttribute{
+		"list_nested_three": schema.ListNestedAttribute{
 			NestedObject: schema.NestedAttributeObject{
 				Attributes: map[string]schema.Attribute{
-					"list_nested_attribute": schema.ListNestedAttribute{
+					"list_nested_three_list_nested_one": schema.ListNestedAttribute{
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
-								"bool_attribute": schema.BoolAttribute{
-									Computed: true,
+								"list_attribute": schema.ListAttribute{
+									ElementType: types.StringType,
+									Computed:    true,
 								},
 							},
 						},
@@ -52,15 +53,14 @@ var datasourceDataSourceSchema = schema.Schema{
 			},
 			Computed: true,
 		},
-		"list_nested_list_nested_list_attribute": schema.ListNestedAttribute{
+		"list_nested_two": schema.ListNestedAttribute{
 			NestedObject: schema.NestedAttributeObject{
 				Attributes: map[string]schema.Attribute{
-					"list_nested_attribute": schema.ListNestedAttribute{
+					"list_nested_two_list_nested_one": schema.ListNestedAttribute{
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
-								"list_attribute": schema.ListAttribute{
-									ElementType: types.StringType,
-									Computed:    true,
+								"bool_attribute": schema.BoolAttribute{
+									Computed: true,
 								},
 							},
 						},
@@ -248,9 +248,9 @@ type DatasourceModel struct {
 	BoolAttribute                                                            types.Bool   `tfsdk:"bool_attribute"`
 	ListListAttribute                                                        types.List   `tfsdk:"list_list_attribute"`
 	ListMapAttribute                                                         types.List   `tfsdk:"list_map_attribute"`
-	ListNestedBoolAttribute                                                  types.List   `tfsdk:"list_nested_bool_attribute"`
-	ListNestedListNestedBoolAttribute                                        types.List   `tfsdk:"list_nested_list_nested_bool_attribute"`
-	ListNestedListNestedListAttribute                                        types.List   `tfsdk:"list_nested_list_nested_list_attribute"`
+	ListNestedOne                                                            types.List   `tfsdk:"list_nested_one"`
+	ListNestedThree                                                          types.List   `tfsdk:"list_nested_three"`
+	ListNestedTwo                                                            types.List   `tfsdk:"list_nested_two"`
 	ListObjectAttribute                                                      types.List   `tfsdk:"list_object_attribute"`
 	ListObjectObjectAttribute                                                types.List   `tfsdk:"list_object_object_attribute"`
 	ObjectAttribute                                                          types.Object `tfsdk:"object_attribute"`
@@ -267,24 +267,24 @@ type DatasourceModel struct {
 	SingleNestedSingleNestedBlockBoolAttribute                               types.Object `tfsdk:"single_nested_single_nested_block_bool_attribute"`
 }
 
-type ListNestedBoolAttributeModel struct {
+type ListNestedOneModel struct {
 	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-type ListNestedListNestedBoolAttributeModel struct {
-	ListNestedAttribute types.List `tfsdk:"list_nested_attribute"`
+type ListNestedThreeModel struct {
+	ListNestedThreeListNestedOne types.List `tfsdk:"list_nested_three_list_nested_one"`
 }
 
-type ListNestedAttributeModel struct {
-	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
-}
-
-type ListNestedListNestedListAttributeModel struct {
-	ListNestedAttribute types.List `tfsdk:"list_nested_attribute"`
-}
-
-type ListNestedAttributeModel struct {
+type ListNestedThreeListNestedOneModel struct {
 	ListAttribute types.List `tfsdk:"list_attribute"`
+}
+
+type ListNestedTwoModel struct {
+	ListNestedTwoListNestedOne types.List `tfsdk:"list_nested_two_list_nested_one"`
+}
+
+type ListNestedTwoListNestedOneModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
 type SingleNestedBoolAttributeModel struct {
@@ -347,4 +347,49 @@ type SingleNestedSingleNestedBlockBoolAttributeModel struct {
 
 type SingleNestedBlockModel struct {
 	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+func (m ListNestedThreeModel) objectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+}
+
+func (m ListNestedThreeModel) objectAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"list_nested_three_list_nested_one": types.ListType{
+			ElemType: ListNestedThreeListNestedOneModel{}.objectType(),
+		},
+	}
+}
+
+func (m ListNestedThreeListNestedOneModel) objectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+}
+
+func (m ListNestedThreeListNestedOneModel) objectAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"list_attribute": types.ListType{
+			ElemType: types.StringType,
+		},
+	}
+}
+func (m ListNestedTwoModel) objectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+}
+
+func (m ListNestedTwoModel) objectAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"list_nested_two_list_nested_one": types.ListType{
+			ElemType: ListNestedTwoListNestedOneModel{}.objectType(),
+		},
+	}
+}
+
+func (m ListNestedTwoListNestedOneModel) objectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+}
+
+func (m ListNestedTwoListNestedOneModel) objectAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute": types.BoolType,
+	}
 }

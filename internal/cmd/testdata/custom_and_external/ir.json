@@ -127,7 +127,7 @@
             }
           },
           {
-            "name": "list_nested_bool_attribute",
+            "name": "list_nested_one",
             "list_nested": {
               "computed_optional_required": "computed",
               "nested_object": {
@@ -143,13 +143,13 @@
             }
           },
           {
-            "name": "list_nested_list_nested_bool_attribute",
+            "name": "list_nested_two",
             "list_nested": {
               "computed_optional_required": "computed",
               "nested_object": {
                 "attributes": [
                   {
-                    "name": "list_nested_attribute",
+                    "name": "list_nested_two_list_nested_one",
                     "list_nested": {
                       "computed_optional_required": "computed",
                       "nested_object": {
@@ -169,13 +169,13 @@
             }
           },
           {
-            "name": "list_nested_list_nested_list_attribute",
+            "name": "list_nested_three",
             "list_nested": {
               "computed_optional_required": "computed",
               "nested_object": {
                 "attributes": [
                   {
-                    "name": "list_nested_attribute",
+                    "name": "list_nested_three_list_nested_one",
                     "list_nested": {
                       "computed_optional_required": "computed",
                       "nested_object": {

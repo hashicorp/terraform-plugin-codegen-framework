@@ -570,55 +570,65 @@ func (g GeneratorDataSourceSchema) ModelFields() ([]model.Field, error) {
 	return modelFields, nil
 }
 
-func (g GeneratorDataSourceSchema) ModelObjectHelpers(name string) ([]model.ObjectHelper, error) {
-	var modelObjectHelpers []model.ObjectHelper
+type DataSourcesModelObjectHelpersGenerator struct {
+}
 
-	//Assumption is that if this is called then we have already detected nested attribute or block.
-	//Could do the recursion (below) first to ensure that this is the case, would also avoid generation of
-	//model object helpers for top-level.
+func NewDataSourcesModelObjectHelpersGenerator() DataSourcesModelObjectHelpersGenerator {
+	return DataSourcesModelObjectHelpersGenerator{}
+}
 
-	var attributeKeys = make([]string, 0, len(g.Attributes))
+func (d DataSourcesModelObjectHelpersGenerator) Process(schemas map[string]GeneratorDataSourceSchema) (map[string][]byte, error) {
+	dataSourcesModelObjectHelpers := make(map[string][]byte, len(schemas))
 
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
+	for name, s := range schemas {
+		var buf bytes.Buffer
 
-	sort.Strings(attributeKeys)
-
-	modelObjectHelperAttrTypes := make(map[string]string)
-
-	for _, k := range attributeKeys {
-		if g.Attributes[k] == nil {
-			continue
+		g := GeneratorDataSourceSchema{
+			Attributes: s.Attributes,
+			Blocks:     s.Blocks,
 		}
 
-		//g.Attributes[k].ModelField()
+		var attributeKeys = make([]string, 0, len(g.Attributes))
 
-		modelObjectHelperAttrTypes[k] = ""
+		for k := range g.Attributes {
+			attributeKeys = append(attributeKeys, k)
+		}
+
+		sort.Strings(attributeKeys)
+
+		for _, k := range attributeKeys {
+			if g.Attributes[k] == nil {
+				continue
+			}
+
+			switch t := g.Attributes[k].(type) {
+			case GeneratorListNestedAttribute:
+				var hasNestedAttribute bool
+
+				for _, v := range t.NestedObject.Attributes {
+					switch v.(type) {
+					case GeneratorListNestedAttribute:
+						hasNestedAttribute = true
+						break
+					}
+				}
+
+				if hasNestedAttribute {
+					modelObjectHelpers, err := t.ModelObjectHelpersString(k)
+
+					if err != nil {
+						return nil, err
+					}
+
+					buf.WriteString(modelObjectHelpers)
+				}
+			}
+		}
+
+		dataSourcesModelObjectHelpers[name] = buf.Bytes()
 	}
 
-	//// TODO: Following is required for recursion
-	//// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-	//var attributeKeys = make([]string, 0, len(g.Attributes))
-	//
-	//for k := range g.Attributes {
-	//	attributeKeys = append(attributeKeys, k)
-	//}
-	//
-	//sort.Strings(attributeKeys)
-	//
-	//for _, k := range attributeKeys {
-	//	if g.Attributes[k] == nil {
-	//		continue
-	//	}
-	//
-	//	switch g.Attributes[k].(type) {
-	//	case GeneratorListNestedAttribute:
-	//
-	//	}
-	//}
-
-	return modelObjectHelpers, nil
+	return dataSourcesModelObjectHelpers, nil
 }
 
 func ElementTypeGeneratorAttrType(e specschema.ElementType) (GeneratorAttrType, error) {
