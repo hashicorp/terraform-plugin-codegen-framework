@@ -4,8 +4,6 @@
 package datasource_generate
 
 import (
-	"fmt"
-	"sort"
 	"strings"
 	"text/template"
 
@@ -123,74 +121,6 @@ func (g GeneratorListNestedAttribute) ModelField(name string) (model.Field, erro
 	}
 
 	return field, nil
-}
-
-func (g GeneratorListNestedAttribute) ModelObjectHelpersString(name string) (string, error) {
-	attrTypeStrings := make(map[string]string)
-
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var keys = make([]string, 0, len(g.NestedObject.Attributes))
-
-	for k := range g.NestedObject.Attributes {
-		keys = append(keys, k)
-	}
-
-	sort.Strings(keys)
-
-	// Populate attrTypeStrings map for use in template.
-	// TODO: Add in remaining attribute types.
-	for _, k := range keys {
-		switch t := g.NestedObject.Attributes[k].(type) {
-		case GeneratorBoolAttribute:
-			attrTypeStrings[k] = "types.BoolType"
-		case GeneratorListAttribute:
-			var elemType string
-
-			switch {
-			case t.ElementType.String != nil:
-				elemType = "types.StringType"
-			}
-
-			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %s,\n}", elemType)
-		case GeneratorListNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.objectType(),\n}", model.SnakeCaseToCamelCase(k))
-		}
-	}
-
-	t, err := template.New("list_nested_attribute").Parse(listNestedAttributeModelObjectHelpers)
-	if err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	templateData := struct {
-		Name      string
-		AttrTypes map[string]string
-	}{
-		Name:      model.SnakeCaseToCamelCase(name),
-		AttrTypes: attrTypeStrings,
-	}
-
-	err = t.Execute(&buf, templateData)
-	if err != nil {
-		return "", err
-	}
-
-	// Recursively call ModelObjectHelpersString() for each attribute that is a nested attribute or nested block.
-	for _, k := range keys {
-		switch t := g.NestedObject.Attributes[k].(type) {
-		case GeneratorListNestedAttribute:
-			str, err := t.ModelObjectHelpersString(k)
-			if err != nil {
-				return "", err
-			}
-
-			buf.WriteString("\n" + str)
-		}
-	}
-
-	return buf.String(), nil
 }
 
 func (g GeneratorListNestedAttribute) listValidatorsEqual(x, y []specschema.ListValidator) bool {

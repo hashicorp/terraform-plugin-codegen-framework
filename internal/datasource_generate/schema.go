@@ -280,14 +280,90 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 			}
 
 			if hasNestedAttribute {
-				modelObjectHelpers, err := t.ModelObjectHelpersString(k)
+				ng := GeneratorDataSourceSchema{
+					Attributes: t.NestedObject.Attributes,
+				}
 
+				modelObjectHelpers, err := ng.ModelsObjectHelpersTemplate(k)
 				if err != nil {
 					return nil, err
 				}
 
-				buf.WriteString(modelObjectHelpers)
+				buf.Write(modelObjectHelpers)
 			}
+		}
+	}
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorDataSourceSchema) ModelsObjectHelpersTemplate(name string) ([]byte, error) {
+	attrTypeStrings := make(map[string]string)
+
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var keys = make([]string, 0, len(g.Attributes))
+
+	for k := range g.Attributes {
+		keys = append(keys, k)
+	}
+
+	sort.Strings(keys)
+
+	// Populate attrTypeStrings map for use in template.
+	// TODO: Add in remaining attribute types.
+	for _, k := range keys {
+		switch t := g.Attributes[k].(type) {
+		case GeneratorBoolAttribute:
+			attrTypeStrings[k] = "types.BoolType"
+		case GeneratorListAttribute:
+			var elemType string
+
+			switch {
+			case t.ElementType.String != nil:
+				elemType = "types.StringType"
+			}
+
+			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %s,\n}", elemType)
+		case GeneratorListNestedAttribute:
+			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.objectType(),\n}", model.SnakeCaseToCamelCase(k))
+		}
+	}
+
+	t, err := template.New("list_nested_attribute").Parse(listNestedAttributeModelObjectHelpers)
+	if err != nil {
+		return nil, err
+	}
+
+	var buf bytes.Buffer
+
+	templateData := struct {
+		Name      string
+		AttrTypes map[string]string
+	}{
+		Name:      model.SnakeCaseToCamelCase(name),
+		AttrTypes: attrTypeStrings,
+	}
+
+	err = t.Execute(&buf, templateData)
+	if err != nil {
+		return nil, err
+	}
+
+	// Recursively call ModelsObjectHelpersTemplate() for each attribute that is a nested attribute or nested block.
+	for _, k := range keys {
+		switch t := g.Attributes[k].(type) {
+		case GeneratorListNestedAttribute:
+			ng := GeneratorDataSourceSchema{
+				Attributes: t.NestedObject.Attributes,
+			}
+
+			b, err := ng.ModelsObjectHelpersTemplate(k)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.WriteString("\n")
+			buf.Write(b)
 		}
 	}
 
