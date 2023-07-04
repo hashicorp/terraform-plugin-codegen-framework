@@ -83,7 +83,7 @@ return map[string]attr.Type{
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ModelsObjectHelpersTemplate("example")
+			got, err := testCase.input.ModelObjectHelpersTemplate("example")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

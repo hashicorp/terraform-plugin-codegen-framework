@@ -250,6 +250,10 @@ func (g GeneratorDataSourceSchema) ModelFields() ([]model.Field, error) {
 	return modelFields, nil
 }
 
+// ModelsObjectHelpersBytes iterates over all the attributes and blocks to determine whether
+// any of them are nested attributes or nested blocks. If any of the attributes or blocks
+// are nested attributes or nested blocks, and they have attributes or blocks which are
+// themselves nested attributes or nested blocks then ModelObjectHelpersTemplate is called.
 func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
@@ -284,7 +288,7 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 					Attributes: t.NestedObject.Attributes,
 				}
 
-				modelObjectHelpers, err := ng.ModelsObjectHelpersTemplate(k)
+				modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
 				if err != nil {
 					return nil, err
 				}
@@ -297,7 +301,11 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorDataSourceSchema) ModelsObjectHelpersTemplate(name string) ([]byte, error) {
+// ModelObjectHelpersTemplate iterates over all the attributes and blocks adding the string representation of
+// the attr.Type for each attribute or block. A template is then used to generate the model object helpers code.
+// If any of the attributes or blocks are nested attributes or nested blocks, respectively, then
+// ModelObjectHelpersTemplate is called recursively.
+func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]byte, error) {
 	attrTypeStrings := make(map[string]string)
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
@@ -329,7 +337,9 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersTemplate(name string) ([]b
 		}
 	}
 
-	t, err := template.New("list_nested_attribute").Parse(listNestedAttributeModelObjectHelpers)
+	// TODO: Handle blocks
+
+	t, err := template.New("model_object_helpers").Parse(modelObjectHelpersTemplate)
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +359,7 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersTemplate(name string) ([]b
 		return nil, err
 	}
 
-	// Recursively call ModelsObjectHelpersTemplate() for each attribute that is a nested attribute or nested block.
+	// Recursively call ModelObjectHelpersTemplate() for each attribute that is a nested attribute or nested block.
 	for _, k := range keys {
 		switch t := g.Attributes[k].(type) {
 		case GeneratorListNestedAttribute:
@@ -357,7 +367,7 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersTemplate(name string) ([]b
 				Attributes: t.NestedObject.Attributes,
 			}
 
-			b, err := ng.ModelsObjectHelpersTemplate(k)
+			b, err := ng.ModelObjectHelpersTemplate(k)
 			if err != nil {
 				return nil, err
 			}
@@ -366,6 +376,8 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersTemplate(name string) ([]b
 			buf.Write(b)
 		}
 	}
+
+	// TODO: Handle blocks
 
 	return buf.Bytes(), nil
 }
