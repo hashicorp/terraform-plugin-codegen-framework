@@ -249,3 +249,47 @@ func (g GeneratorDataSourceSchema) ModelFields() ([]model.Field, error) {
 
 	return modelFields, nil
 }
+
+func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
+	var buf bytes.Buffer
+
+	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+	var attributeKeys = make([]string, 0, len(g.Attributes))
+
+	for k := range g.Attributes {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	for _, k := range attributeKeys {
+		if g.Attributes[k] == nil {
+			continue
+		}
+
+		switch t := g.Attributes[k].(type) {
+		case GeneratorListNestedAttribute:
+			var hasNestedAttribute bool
+
+			for _, v := range t.NestedObject.Attributes {
+				switch v.(type) {
+				case GeneratorListNestedAttribute:
+					hasNestedAttribute = true
+					break
+				}
+			}
+
+			if hasNestedAttribute {
+				modelObjectHelpers, err := t.ModelObjectHelpersString(k)
+
+				if err != nil {
+					return nil, err
+				}
+
+				buf.WriteString(modelObjectHelpers)
+			}
+		}
+	}
+
+	return buf.Bytes(), nil
+}
