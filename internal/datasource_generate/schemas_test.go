@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 )
 
-func TestDataSourcesModelsGenerator_Process(t *testing.T) {
+func TestGeneratorDataSourceSchemas_ModelsBytes(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -203,8 +203,8 @@ func TestDataSourcesModelsGenerator_Process(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			g := NewDataSourcesModelsGenerator()
-			got, err := g.Process(testCase.input)
+			g := NewGeneratorDataSourceSchemas(testCase.input)
+			got, err := g.ModelsBytes()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

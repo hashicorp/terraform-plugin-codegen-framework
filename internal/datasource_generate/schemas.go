@@ -1,5 +1,7 @@
 package datasource_generate
 
+import "bytes"
+
 // TODO: Field(s) could be added to handle end-user supplying their own templates to allow overriding.
 type GeneratorDataSourceSchemas struct {
 	schemas map[string]GeneratorDataSourceSchema
@@ -26,4 +28,30 @@ func (g GeneratorDataSourceSchemas) SchemasBytes(packageName string) (map[string
 	}
 
 	return schemasBytes, nil
+}
+
+func (g GeneratorDataSourceSchemas) ModelsBytes() (map[string][]byte, error) {
+	modelsBytes := make(map[string][]byte, len(g.schemas))
+
+	for name, schema := range g.schemas {
+		var buf bytes.Buffer
+
+		generatorDataSourceSchema := GeneratorDataSourceSchema{
+			Attributes: schema.Attributes,
+			Blocks:     schema.Blocks,
+		}
+
+		models, err := generatorDataSourceSchema.Models(name)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, m := range models {
+			buf.WriteString("\n" + m.String() + "\n")
+		}
+
+		modelsBytes[name] = buf.Bytes()
+	}
+
+	return modelsBytes, nil
 }

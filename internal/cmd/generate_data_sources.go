@@ -141,8 +141,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 	}
 
 	// generate model code
-	dataSourcesModelsGenerator := datasource_generate.NewDataSourcesModelsGenerator()
-	dataSourcesModels, err := dataSourcesModelsGenerator.Process(schema)
+	modelsBytes, err := g.ModelsBytes()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -161,7 +160,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 	}
 
 	// format model code
-	formattedDataSourcesModels, err := format.Format(dataSourcesModels)
+	formattedDataSourcesModels, err := format.Format(modelsBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
