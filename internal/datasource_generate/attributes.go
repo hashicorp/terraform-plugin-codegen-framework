@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+type Attributes interface {
+	GetAttributes() GeneratorAttributes
+}
+
 type GeneratorAttributes map[string]GeneratorAttribute
 
 func (g GeneratorAttributes) String() (string, error) {

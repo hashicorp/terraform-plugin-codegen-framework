@@ -198,7 +198,7 @@
             }
           },
           {
-            "name": "single_nested_bool_attribute",
+            "name": "single_nested_one",
             "single_nested": {
               "associated_external_type": {
                 "imports": [
@@ -220,11 +220,11 @@
             }
           },
           {
-            "name": "single_nested_single_nested_bool_attribute",
+            "name": "single_nested_two",
             "single_nested": {
               "attributes": [
                 {
-                  "name": "single_nested_attribute",
+                  "name": "single_nested_two_single_nested_one",
                   "single_nested": {
                     "attributes": [
                       {
@@ -242,11 +242,11 @@
             }
           },
           {
-            "name": "single_nested_single_nested_list_attribute",
+            "name": "single_nested_three",
             "single_nested": {
               "attributes": [
                 {
-                  "name": "single_nested_attribute",
+                  "name": "single_nested_three_single_nested_one",
                   "single_nested": {
                     "attributes": [
                       {

@@ -123,6 +123,10 @@ func (g GeneratorListNestedAttribute) ModelField(name string) (model.Field, erro
 	return field, nil
 }
 
+func (g GeneratorListNestedAttribute) GetAttributes() GeneratorAttributes {
+	return g.NestedObject.Attributes
+}
+
 func (g GeneratorListNestedAttribute) listValidatorsEqual(x, y []specschema.ListValidator) bool {
 	if x == nil && y == nil {
 		return true

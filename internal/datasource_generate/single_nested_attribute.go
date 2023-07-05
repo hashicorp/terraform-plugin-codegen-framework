@@ -107,6 +107,10 @@ func (g GeneratorSingleNestedAttribute) ModelField(name string) (model.Field, er
 	return field, nil
 }
 
+func (g GeneratorSingleNestedAttribute) GetAttributes() GeneratorAttributes {
+	return g.Attributes
+}
+
 func (g GeneratorSingleNestedAttribute) validatorsEqual(x, y []specschema.ObjectValidator) bool {
 	if x == nil && y == nil {
 		return true
