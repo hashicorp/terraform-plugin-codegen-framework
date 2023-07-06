@@ -364,7 +364,7 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 			}
 			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %s,\n}", elemType)
 		case GeneratorListNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.ObjectType(),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
 		case GeneratorMapAttribute:
 			elemType, err := elementTypeString(t.ElementType)
 			if err != nil {
@@ -372,7 +372,7 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 			}
 			attrTypeStrings[k] = fmt.Sprintf("types.MapType{\nElemType: %s,\n}", elemType)
 		case GeneratorMapNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.MapType{\nElemType: %sModel{}.ObjectType(),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypeStrings[k] = fmt.Sprintf("types.MapType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
 		case GeneratorNumberAttribute:
 			attrTypeStrings[k] = "types.NumberType"
 		case GeneratorObjectAttribute:
@@ -388,9 +388,9 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 			}
 			attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %s,\n}", elemType)
 		case GeneratorSetNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %sModel{}.ObjectType(),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
 		case GeneratorSingleNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: %sModel{}.ObjectAttributeTypes(),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: %sModel{}.ObjectAttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k))
 		case GeneratorStringAttribute:
 			attrTypeStrings[k] = "types.StringType"
 		}
@@ -409,11 +409,11 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 	for _, k := range blockKeys {
 		switch g.Blocks[k].(type) {
 		case GeneratorListNestedBlock:
-			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.ObjectType(),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
 		case GeneratorSetNestedBlock:
-			attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %sModel{}.ObjectType(),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
 		case GeneratorSingleNestedBlock:
-			attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: %sModel{}.ObjectAttributeTypes(),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: %sModel{}.ObjectAttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k))
 		}
 	}
 

@@ -25,11 +25,11 @@ func TestGeneratorDataSourceSchema_ModelObjectHelpersTemplate(t *testing.T) {
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -42,11 +42,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -59,11 +59,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -80,11 +80,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -103,11 +103,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.Float64Type,
@@ -126,11 +126,11 @@ ElemType: types.Float64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.Int64Type,
@@ -153,11 +153,11 @@ ElemType: types.Int64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.ListType{
@@ -182,11 +182,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.MapType{
@@ -207,11 +207,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.NumberType,
@@ -237,11 +237,11 @@ ElemType: types.NumberType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.ObjectType{
@@ -268,11 +268,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.SetType{
@@ -293,11 +293,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.StringType,
@@ -318,23 +318,23 @@ ElemType: types.StringType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -353,23 +353,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -388,23 +388,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -427,23 +427,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -470,35 +470,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute_outer": types.ListType{
-ElemType: ListNestedAttributeOuterModel{}.ObjectType(),
+ElemType: ListNestedAttributeOuterModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeOuterModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeOuterModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeOuterModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeOuterModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute_inner": types.ListType{
-ElemType: ListNestedAttributeInnerModel{}.ObjectType(),
+ElemType: ListNestedAttributeInnerModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeInnerModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeInnerModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeInnerModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeInnerModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -521,23 +521,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -564,35 +564,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -611,23 +611,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -653,23 +653,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -696,23 +696,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -739,35 +739,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -790,35 +790,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -837,23 +837,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -872,23 +872,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -907,23 +907,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -942,23 +942,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -981,23 +981,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -1024,35 +1024,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1077,35 +1077,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block_outer": types.ListType{
-ElemType: ListNestedBlockOuterModel{}.ObjectType(),
+ElemType: ListNestedBlockOuterModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockOuterModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockOuterModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockOuterModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockOuterModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block_inner": types.ListType{
-ElemType: ListNestedBlockInnerModel{}.ObjectType(),
+ElemType: ListNestedBlockInnerModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockInnerModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockInnerModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockInnerModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockInnerModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1128,23 +1128,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -1171,35 +1171,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1218,23 +1218,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -1260,23 +1260,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -1303,23 +1303,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -1346,35 +1346,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1399,35 +1399,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1450,35 +1450,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1501,35 +1501,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1548,23 +1548,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -1581,11 +1581,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -1604,11 +1604,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.Float64Type,
@@ -1627,11 +1627,11 @@ ElemType: types.Float64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.Int64Type,
@@ -1654,11 +1654,11 @@ ElemType: types.Int64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.ListType{
@@ -1683,11 +1683,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.MapType{
@@ -1708,11 +1708,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.NumberType,
@@ -1738,11 +1738,11 @@ ElemType: types.NumberType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.ObjectType{
@@ -1769,11 +1769,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.SetType{
@@ -1794,11 +1794,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.StringType,
@@ -1819,23 +1819,23 @@ ElemType: types.StringType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1854,23 +1854,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -1889,23 +1889,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -1928,23 +1928,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -1971,35 +1971,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2022,23 +2022,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -2065,35 +2065,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute_outer": types.MapType{
-ElemType: MapNestedAttributeOuterModel{}.ObjectType(),
+ElemType: MapNestedAttributeOuterModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeOuterModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeOuterModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeOuterModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeOuterModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute_inner": types.MapType{
-ElemType: MapNestedAttributeInnerModel{}.ObjectType(),
+ElemType: MapNestedAttributeInnerModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeInnerModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeInnerModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeInnerModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeInnerModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2112,23 +2112,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -2154,23 +2154,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2197,23 +2197,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -2240,35 +2240,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2291,35 +2291,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2338,23 +2338,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -2367,11 +2367,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -2391,11 +2391,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2419,11 +2419,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2447,11 +2447,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2479,11 +2479,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2513,11 +2513,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2543,11 +2543,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2575,11 +2575,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2605,11 +2605,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2630,11 +2630,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -2653,11 +2653,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.Float64Type,
@@ -2676,11 +2676,11 @@ ElemType: types.Float64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.Int64Type,
@@ -2703,11 +2703,11 @@ ElemType: types.Int64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.ListType{
@@ -2732,11 +2732,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.MapType{
@@ -2757,11 +2757,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.NumberType,
@@ -2787,11 +2787,11 @@ ElemType: types.NumberType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.ObjectType{
@@ -2818,11 +2818,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.SetType{
@@ -2843,11 +2843,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.StringType,
@@ -2868,23 +2868,23 @@ ElemType: types.StringType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2903,23 +2903,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -2938,23 +2938,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -2977,23 +2977,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -3020,35 +3020,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3071,23 +3071,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -3114,35 +3114,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3161,23 +3161,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -3203,23 +3203,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -3246,23 +3246,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -3289,35 +3289,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute_outer": types.SetType{
-ElemType: SetNestedAttributeOuterModel{}.ObjectType(),
+ElemType: SetNestedAttributeOuterModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeOuterModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeOuterModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeOuterModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeOuterModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute_inner": types.SetType{
-ElemType: SetNestedAttributeInnerModel{}.ObjectType(),
+ElemType: SetNestedAttributeInnerModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeInnerModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeInnerModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeInnerModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeInnerModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3340,35 +3340,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3387,23 +3387,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -3422,23 +3422,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3457,23 +3457,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -3492,23 +3492,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -3531,23 +3531,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -3574,35 +3574,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3627,35 +3627,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3678,23 +3678,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -3721,35 +3721,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3768,23 +3768,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -3810,23 +3810,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -3853,23 +3853,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -3896,35 +3896,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3949,35 +3949,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block_outer": types.SetType{
-ElemType: SetNestedBlockOuterModel{}.ObjectType(),
+ElemType: SetNestedBlockOuterModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockOuterModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockOuterModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockOuterModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockOuterModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block_inner": types.SetType{
-ElemType: SetNestedBlockInnerModel{}.ObjectType(),
+ElemType: SetNestedBlockInnerModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockInnerModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockInnerModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockInnerModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockInnerModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4000,35 +4000,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4051,35 +4051,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4098,23 +4098,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -4131,23 +4131,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4164,23 +4164,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -4197,23 +4197,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -4234,23 +4234,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -4275,35 +4275,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4324,23 +4324,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -4365,35 +4365,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4410,23 +4410,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -4450,23 +4450,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -4491,23 +4491,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -4532,35 +4532,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4581,35 +4581,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute_outer": types.ObjectType{
-AttrTypes: SingleNestedAttributeOuterModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeOuterModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeOuterModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeOuterModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeOuterModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeOuterModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute_inner": types.ObjectType{
-AttrTypes: SingleNestedAttributeInnerModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeInnerModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeInnerModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeInnerModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeInnerModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeInnerModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4626,23 +4626,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -4659,23 +4659,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4692,23 +4692,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -4725,23 +4725,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -4762,23 +4762,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -4803,35 +4803,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.ObjectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4854,35 +4854,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.ObjectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m ListNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4903,23 +4903,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -4944,35 +4944,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.ObjectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4989,23 +4989,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -5029,23 +5029,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -5070,23 +5070,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -5111,35 +5111,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.ObjectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -5162,35 +5162,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.ObjectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 },
 }
 }
 
-func (m SetNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -5211,35 +5211,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -5260,35 +5260,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block_outer": types.ObjectType{
-AttrTypes: SingleNestedBlockOuterModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockOuterModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockOuterModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockOuterModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockOuterModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockOuterModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block_inner": types.ObjectType{
-AttrTypes: SingleNestedBlockInnerModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockInnerModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockInnerModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockInnerModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockInnerModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockInnerModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -5305,23 +5305,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 },
 }
 }
 
-func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -5334,11 +5334,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) ObjectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ExampleModel) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
