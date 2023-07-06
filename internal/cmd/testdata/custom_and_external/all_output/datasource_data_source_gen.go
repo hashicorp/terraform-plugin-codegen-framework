@@ -349,102 +349,102 @@ type SingleNestedBlockTwoSingleNestedBlockOneModel struct {
 	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-func (m ListNestedAttributeThreeModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeThreeModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeThreeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeThreeModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_nested_attribute_three_list_nested_attribute_one": types.ListType{
-			ElemType: ListNestedAttributeThreeListNestedAttributeOneModel{}.objectType(),
+			ElemType: ListNestedAttributeThreeListNestedAttributeOneModel{}.ObjectType(),
 		},
 	}
 }
 
-func (m ListNestedAttributeThreeListNestedAttributeOneModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeThreeListNestedAttributeOneModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_attribute": types.ListType{
 			ElemType: types.StringType,
 		},
 	}
 }
-func (m ListNestedAttributeTwoModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeTwoModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeTwoModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeTwoModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_nested_attribute_two_list_nested_attribute_one": types.ListType{
-			ElemType: ListNestedAttributeTwoListNestedAttributeOneModel{}.objectType(),
+			ElemType: ListNestedAttributeTwoListNestedAttributeOneModel{}.ObjectType(),
 		},
 	}
 }
 
-func (m ListNestedAttributeTwoListNestedAttributeOneModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeTwoListNestedAttributeOneModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m SingleNestedAttributeThreeModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeThreeModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeThreeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeThreeModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"single_nested_attribute_three_single_nested_attribute_one": types.ObjectType{
-			AttrTypes: SingleNestedAttributeThreeSingleNestedAttributeOneModel{}.objectAttributeTypes(),
+			AttrTypes: SingleNestedAttributeThreeSingleNestedAttributeOneModel{}.ObjectAttributeTypes(),
 		},
 	}
 }
 
-func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_attribute": types.ListType{
 			ElemType: types.StringType,
 		},
 	}
 }
-func (m SingleNestedAttributeTwoModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeTwoModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeTwoModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeTwoModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"single_nested_attribute_two_single_nested_attribute_one": types.ObjectType{
-			AttrTypes: SingleNestedAttributeTwoSingleNestedAttributeOneModel{}.objectAttributeTypes(),
+			AttrTypes: SingleNestedAttributeTwoSingleNestedAttributeOneModel{}.ObjectAttributeTypes(),
 		},
 	}
 }
 
-func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m ListNestedBlockThreeModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockThreeModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockThreeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockThreeModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_nested_block_three_list_nested_block_one": types.ListType{
-			ElemType: ListNestedBlockThreeListNestedBlockOneModel{}.objectType(),
+			ElemType: ListNestedBlockThreeListNestedBlockOneModel{}.ObjectType(),
 		},
 		"object_attribute": types.ObjectType{
 			AttrTypes: map[string]attr.Type{
@@ -454,43 +454,43 @@ func (m ListNestedBlockThreeModel) objectAttributeTypes() map[string]attr.Type {
 	}
 }
 
-func (m ListNestedBlockThreeListNestedBlockOneModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockThreeListNestedBlockOneModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_attribute": types.ListType{
 			ElemType: types.StringType,
 		},
 	}
 }
-func (m ListNestedBlockTwoModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockTwoModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockTwoModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockTwoModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_nested_block_two_list_nested_block_one": types.ListType{
-			ElemType: ListNestedBlockTwoListNestedBlockOneModel{}.objectType(),
+			ElemType: ListNestedBlockTwoListNestedBlockOneModel{}.ObjectType(),
 		},
 	}
 }
 
-func (m ListNestedBlockTwoListNestedBlockOneModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockTwoListNestedBlockOneModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m SingleNestedBlockThreeModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockThreeModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockThreeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockThreeModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"object_attribute": types.ObjectType{
 			AttrTypes: map[string]attr.Type{
@@ -498,39 +498,39 @@ func (m SingleNestedBlockThreeModel) objectAttributeTypes() map[string]attr.Type
 			},
 		},
 		"single_nested_block_three_list_nested_block_one": types.ListType{
-			ElemType: SingleNestedBlockThreeListNestedBlockOneModel{}.objectType(),
+			ElemType: SingleNestedBlockThreeListNestedBlockOneModel{}.ObjectType(),
 		},
 	}
 }
 
-func (m SingleNestedBlockThreeListNestedBlockOneModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockThreeListNestedBlockOneModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_attribute": types.ListType{
 			ElemType: types.StringType,
 		},
 	}
 }
-func (m SingleNestedBlockTwoModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockTwoModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockTwoModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockTwoModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"single_nested_block_two_single_nested_block_one": types.ObjectType{
-			AttrTypes: SingleNestedBlockTwoSingleNestedBlockOneModel{}.objectAttributeTypes(),
+			AttrTypes: SingleNestedBlockTwoSingleNestedBlockOneModel{}.ObjectAttributeTypes(),
 		},
 	}
 }
 
-func (m SingleNestedBlockTwoSingleNestedBlockOneModel) objectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockTwoSingleNestedBlockOneModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}

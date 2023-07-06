@@ -1,9 +1,9 @@
 
-func (m {{.Name}}Model) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m {{.Name}}Model) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m {{.Name}}Model) objectAttributeTypes() map[string]attr.Type {
+func (m {{.Name}}Model) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 {{- range $key, $value := .AttrTypes }}
 "{{$key}}": {{$value}},

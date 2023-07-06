@@ -20,16 +20,16 @@ func TestGeneratorDataSourceSchema_ModelObjectHelpersTemplate(t *testing.T) {
 	}{
 		"bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"bool": GeneratorBoolAttribute{},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -37,16 +37,16 @@ return map[string]attr.Type{
 		},
 		"float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"float64": GeneratorFloat64Attribute{},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -54,16 +54,16 @@ return map[string]attr.Type{
 		},
 		"int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"int64": GeneratorInt64Attribute{},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -71,7 +71,7 @@ return map[string]attr.Type{
 		},
 		"list_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
@@ -80,11 +80,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -94,7 +94,7 @@ ElemType: types.BoolType,
 		},
 		"list_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Float64: &specschema.Float64Type{},
@@ -103,11 +103,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.Float64Type,
@@ -117,7 +117,7 @@ ElemType: types.Float64Type,
 		},
 		"list_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Int64: &specschema.Int64Type{},
@@ -126,11 +126,11 @@ ElemType: types.Float64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.Int64Type,
@@ -140,7 +140,7 @@ ElemType: types.Int64Type,
 		},
 		"list_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							List: &specschema.ListType{
@@ -153,11 +153,11 @@ ElemType: types.Int64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.ListType{
@@ -169,7 +169,7 @@ ElemType: types.BoolType,
 		},
 		"list_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Map: &specschema.MapType{
@@ -182,11 +182,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.MapType{
@@ -198,7 +198,7 @@ ElemType: types.BoolType,
 		},
 		"list_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Number: &specschema.NumberType{},
@@ -207,11 +207,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.NumberType,
@@ -221,7 +221,7 @@ ElemType: types.NumberType,
 		},
 		"list_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
@@ -237,11 +237,11 @@ ElemType: types.NumberType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.ObjectType{
@@ -255,7 +255,7 @@ AttrTypes: map[string]attr.Type{
 		},
 		"list_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Set: &specschema.SetType{
@@ -268,11 +268,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.SetType{
@@ -284,7 +284,7 @@ ElemType: types.BoolType,
 		},
 		"list_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							String: &specschema.StringType{},
@@ -293,11 +293,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.StringType,
@@ -307,10 +307,10 @@ ElemType: types.StringType,
 		},
 		"list_nested_attribute_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{},
 							},
 						},
@@ -318,23 +318,23 @@ ElemType: types.StringType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -342,10 +342,10 @@ return map[string]attr.Type{
 		},
 		"list_nested_attribute_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -353,23 +353,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -377,10 +377,10 @@ return map[string]attr.Type{
 		},
 		"list_nested_attribute_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -388,23 +388,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -412,10 +412,10 @@ return map[string]attr.Type{
 		},
 		"list_nested_attribute_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -427,23 +427,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -453,13 +453,13 @@ ElemType: types.BoolType,
 		},
 		"list_nested_attribute_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute_outer": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list_nested_attribute_inner": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -470,35 +470,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute_outer": types.ListType{
-ElemType: ListNestedAttributeOuterModel{}.objectType(),
+ElemType: ListNestedAttributeOuterModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeOuterModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeOuterModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeOuterModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeOuterModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute_inner": types.ListType{
-ElemType: ListNestedAttributeInnerModel{}.objectType(),
+ElemType: ListNestedAttributeInnerModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeInnerModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeInnerModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeInnerModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeInnerModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -506,10 +506,10 @@ return map[string]attr.Type{
 		},
 		"list_nested_attribute_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -521,23 +521,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -547,13 +547,13 @@ ElemType: types.BoolType,
 		},
 		"list_nested_attribute_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map_nested_attribute": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -564,35 +564,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -600,10 +600,10 @@ return map[string]attr.Type{
 		},
 		"list_nested_attribute_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -611,23 +611,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -635,10 +635,10 @@ return map[string]attr.Type{
 		},
 		"list_nested_attribute_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -653,23 +653,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -681,10 +681,10 @@ AttrTypes: map[string]attr.Type{
 		},
 		"list_nested_attribute_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -696,23 +696,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -722,13 +722,13 @@ ElemType: types.BoolType,
 		},
 		"list_nested_attribute_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set_nested_attribute": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -739,35 +739,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -775,12 +775,12 @@ return map[string]attr.Type{
 		},
 		"list_nested_attribute_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -790,35 +790,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -826,10 +826,10 @@ return map[string]attr.Type{
 		},
 		"list_nested_attribute_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -837,23 +837,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -872,23 +872,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -899,7 +899,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -907,23 +907,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -934,7 +934,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -942,23 +942,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -969,7 +969,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -981,23 +981,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -1010,10 +1010,10 @@ ElemType: types.BoolType,
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list_nested_attribute": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1024,35 +1024,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1066,7 +1066,7 @@ return map[string]attr.Type{
 							Blocks: GeneratorBlocks{
 								"list_nested_block_inner": GeneratorListNestedBlock{
 									NestedObject: GeneratorNestedBlockObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1077,35 +1077,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block_outer": types.ListType{
-ElemType: ListNestedBlockOuterModel{}.objectType(),
+ElemType: ListNestedBlockOuterModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockOuterModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockOuterModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockOuterModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockOuterModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block_inner": types.ListType{
-ElemType: ListNestedBlockInnerModel{}.objectType(),
+ElemType: ListNestedBlockInnerModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockInnerModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockInnerModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockInnerModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockInnerModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1116,7 +1116,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -1128,23 +1128,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -1157,10 +1157,10 @@ ElemType: types.BoolType,
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map_nested_attribute": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1171,35 +1171,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1210,7 +1210,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -1218,23 +1218,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -1245,7 +1245,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -1260,23 +1260,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -1291,7 +1291,7 @@ AttrTypes: map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -1303,23 +1303,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -1332,10 +1332,10 @@ ElemType: types.BoolType,
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set_nested_attribute": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1346,35 +1346,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1388,7 +1388,7 @@ return map[string]attr.Type{
 							Blocks: GeneratorBlocks{
 								"set_nested_block": GeneratorSetNestedBlock{
 									NestedObject: GeneratorNestedBlockObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1399,35 +1399,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1438,9 +1438,9 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -1450,35 +1450,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1491,7 +1491,7 @@ return map[string]attr.Type{
 						NestedObject: GeneratorNestedBlockObject{
 							Blocks: GeneratorBlocks{
 								"single_nested_block": GeneratorSingleNestedBlock{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -1501,35 +1501,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1540,7 +1540,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -1548,23 +1548,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -1572,7 +1572,7 @@ return map[string]attr.Type{
 		},
 		"map_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
@@ -1581,11 +1581,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -1595,7 +1595,7 @@ ElemType: types.BoolType,
 		},
 		"map_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Float64: &specschema.Float64Type{},
@@ -1604,11 +1604,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.Float64Type,
@@ -1618,7 +1618,7 @@ ElemType: types.Float64Type,
 		},
 		"map_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Int64: &specschema.Int64Type{},
@@ -1627,11 +1627,11 @@ ElemType: types.Float64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.Int64Type,
@@ -1641,7 +1641,7 @@ ElemType: types.Int64Type,
 		},
 		"map_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							List: &specschema.ListType{
@@ -1654,11 +1654,11 @@ ElemType: types.Int64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.ListType{
@@ -1670,7 +1670,7 @@ ElemType: types.BoolType,
 		},
 		"map_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Map: &specschema.MapType{
@@ -1683,11 +1683,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.MapType{
@@ -1699,7 +1699,7 @@ ElemType: types.BoolType,
 		},
 		"map_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Number: &specschema.NumberType{},
@@ -1708,11 +1708,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.NumberType,
@@ -1722,7 +1722,7 @@ ElemType: types.NumberType,
 		},
 		"map_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
@@ -1738,11 +1738,11 @@ ElemType: types.NumberType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.ObjectType{
@@ -1756,7 +1756,7 @@ AttrTypes: map[string]attr.Type{
 		},
 		"map_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Set: &specschema.SetType{
@@ -1769,11 +1769,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.SetType{
@@ -1785,7 +1785,7 @@ ElemType: types.BoolType,
 		},
 		"map_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							String: &specschema.StringType{},
@@ -1794,11 +1794,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.StringType,
@@ -1808,10 +1808,10 @@ ElemType: types.StringType,
 		},
 		"map_nested_attribute_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{},
 							},
 						},
@@ -1819,23 +1819,23 @@ ElemType: types.StringType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -1843,10 +1843,10 @@ return map[string]attr.Type{
 		},
 		"map_nested_attribute_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -1854,23 +1854,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -1878,10 +1878,10 @@ return map[string]attr.Type{
 		},
 		"map_nested_attribute_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -1889,23 +1889,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -1913,10 +1913,10 @@ return map[string]attr.Type{
 		},
 		"map_nested_attribute_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -1928,23 +1928,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -1954,13 +1954,13 @@ ElemType: types.BoolType,
 		},
 		"map_nested_attribute_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list_nested_attribute": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1971,35 +1971,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2007,10 +2007,10 @@ return map[string]attr.Type{
 		},
 		"map_nested_attribute_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -2022,23 +2022,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -2048,13 +2048,13 @@ ElemType: types.BoolType,
 		},
 		"map_nested_attribute_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute_outer": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map_nested_attribute_inner": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -2065,35 +2065,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute_outer": types.MapType{
-ElemType: MapNestedAttributeOuterModel{}.objectType(),
+ElemType: MapNestedAttributeOuterModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeOuterModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeOuterModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeOuterModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeOuterModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute_inner": types.MapType{
-ElemType: MapNestedAttributeInnerModel{}.objectType(),
+ElemType: MapNestedAttributeInnerModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeInnerModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeInnerModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeInnerModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeInnerModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2101,10 +2101,10 @@ return map[string]attr.Type{
 		},
 		"map_nested_attribute_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -2112,23 +2112,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -2136,10 +2136,10 @@ return map[string]attr.Type{
 		},
 		"map_nested_attribute_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -2154,23 +2154,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2182,10 +2182,10 @@ AttrTypes: map[string]attr.Type{
 		},
 		"map_nested_attribute_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -2197,23 +2197,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -2223,13 +2223,13 @@ ElemType: types.BoolType,
 		},
 		"map_nested_attribute_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set_nested_attribute": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -2240,35 +2240,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2276,12 +2276,12 @@ return map[string]attr.Type{
 		},
 		"map_nested_attribute_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -2291,35 +2291,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2327,10 +2327,10 @@ return map[string]attr.Type{
 		},
 		"map_nested_attribute_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -2338,23 +2338,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -2362,16 +2362,16 @@ return map[string]attr.Type{
 		},
 		"number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"number": GeneratorNumberAttribute{},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -2379,7 +2379,7 @@ return map[string]attr.Type{
 		},
 		"object_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -2391,11 +2391,11 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2407,7 +2407,7 @@ AttrTypes: map[string]attr.Type{
 		},
 		"object_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -2419,11 +2419,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2435,7 +2435,7 @@ AttrTypes: map[string]attr.Type{
 		},
 		"object_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -2447,11 +2447,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2463,7 +2463,7 @@ AttrTypes: map[string]attr.Type{
 		},
 		"object_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -2479,11 +2479,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2497,7 +2497,7 @@ ElemType: types.BoolType,
 		},
 		"object_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -2513,11 +2513,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2531,7 +2531,7 @@ ElemType: types.BoolType,
 		},
 		"object_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -2543,11 +2543,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2559,7 +2559,7 @@ AttrTypes: map[string]attr.Type{
 		},
 		"object_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -2575,11 +2575,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2593,7 +2593,7 @@ ElemType: types.BoolType,
 		},
 		"object_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -2605,11 +2605,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -2621,7 +2621,7 @@ AttrTypes: map[string]attr.Type{
 		},
 		"set_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
@@ -2630,11 +2630,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -2644,7 +2644,7 @@ ElemType: types.BoolType,
 		},
 		"set_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Float64: &specschema.Float64Type{},
@@ -2653,11 +2653,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.Float64Type,
@@ -2667,7 +2667,7 @@ ElemType: types.Float64Type,
 		},
 		"set_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Int64: &specschema.Int64Type{},
@@ -2676,11 +2676,11 @@ ElemType: types.Float64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.Int64Type,
@@ -2690,7 +2690,7 @@ ElemType: types.Int64Type,
 		},
 		"set_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							List: &specschema.ListType{
@@ -2703,11 +2703,11 @@ ElemType: types.Int64Type,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.ListType{
@@ -2719,7 +2719,7 @@ ElemType: types.BoolType,
 		},
 		"set_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Map: &specschema.MapType{
@@ -2732,11 +2732,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.MapType{
@@ -2748,7 +2748,7 @@ ElemType: types.BoolType,
 		},
 		"set_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Number: &specschema.NumberType{},
@@ -2757,11 +2757,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.NumberType,
@@ -2771,7 +2771,7 @@ ElemType: types.NumberType,
 		},
 		"set_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
@@ -2787,11 +2787,11 @@ ElemType: types.NumberType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.ObjectType{
@@ -2805,7 +2805,7 @@ AttrTypes: map[string]attr.Type{
 		},
 		"set_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Set: &specschema.SetType{
@@ -2818,11 +2818,11 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.SetType{
@@ -2834,7 +2834,7 @@ ElemType: types.BoolType,
 		},
 		"set_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							String: &specschema.StringType{},
@@ -2843,11 +2843,11 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.StringType,
@@ -2857,10 +2857,10 @@ ElemType: types.StringType,
 		},
 		"set_nested_attribute_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{},
 							},
 						},
@@ -2868,23 +2868,23 @@ ElemType: types.StringType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -2892,10 +2892,10 @@ return map[string]attr.Type{
 		},
 		"set_nested_attribute_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -2903,23 +2903,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -2927,10 +2927,10 @@ return map[string]attr.Type{
 		},
 		"set_nested_attribute_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -2938,23 +2938,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -2962,10 +2962,10 @@ return map[string]attr.Type{
 		},
 		"set_nested_attribute_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -2977,23 +2977,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -3003,13 +3003,13 @@ ElemType: types.BoolType,
 		},
 		"set_nested_attribute_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list_nested_attribute": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3020,35 +3020,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3056,10 +3056,10 @@ return map[string]attr.Type{
 		},
 		"set_nested_attribute_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -3071,23 +3071,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -3097,13 +3097,13 @@ ElemType: types.BoolType,
 		},
 		"set_nested_attribute_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map_nested_attribute": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3114,35 +3114,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3150,10 +3150,10 @@ return map[string]attr.Type{
 		},
 		"set_nested_attribute_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -3161,23 +3161,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -3185,10 +3185,10 @@ return map[string]attr.Type{
 		},
 		"set_nested_attribute_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -3203,23 +3203,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -3231,10 +3231,10 @@ AttrTypes: map[string]attr.Type{
 		},
 		"set_nested_attribute_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -3246,23 +3246,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -3272,13 +3272,13 @@ ElemType: types.BoolType,
 		},
 		"set_nested_attribute_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute_outer": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set_nested_attribute_inner": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3289,35 +3289,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute_outer": types.SetType{
-ElemType: SetNestedAttributeOuterModel{}.objectType(),
+ElemType: SetNestedAttributeOuterModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeOuterModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeOuterModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeOuterModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeOuterModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute_inner": types.SetType{
-ElemType: SetNestedAttributeInnerModel{}.objectType(),
+ElemType: SetNestedAttributeInnerModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeInnerModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeInnerModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeInnerModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeInnerModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3325,12 +3325,12 @@ return map[string]attr.Type{
 		},
 		"set_nested_attribute_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -3340,35 +3340,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3376,10 +3376,10 @@ return map[string]attr.Type{
 		},
 		"set_nested_attribute_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -3387,23 +3387,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -3422,23 +3422,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3449,7 +3449,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -3457,23 +3457,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -3484,7 +3484,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -3492,23 +3492,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -3519,7 +3519,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -3531,23 +3531,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -3560,10 +3560,10 @@ ElemType: types.BoolType,
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"list_nested_attribute": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3574,35 +3574,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3616,7 +3616,7 @@ return map[string]attr.Type{
 							Blocks: GeneratorBlocks{
 								"list_nested_block": GeneratorListNestedBlock{
 									NestedObject: GeneratorNestedBlockObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3627,35 +3627,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3666,7 +3666,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -3678,23 +3678,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -3707,10 +3707,10 @@ ElemType: types.BoolType,
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"map_nested_attribute": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3721,35 +3721,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3760,7 +3760,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -3768,23 +3768,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -3795,7 +3795,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -3810,23 +3810,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -3841,7 +3841,7 @@ AttrTypes: map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -3853,23 +3853,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -3882,10 +3882,10 @@ ElemType: types.BoolType,
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"set_nested_attribute": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3896,35 +3896,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3938,7 +3938,7 @@ return map[string]attr.Type{
 							Blocks: GeneratorBlocks{
 								"set_nested_block_inner": GeneratorSetNestedBlock{
 									NestedObject: GeneratorNestedBlockObject{
-										Attributes: map[string]GeneratorAttribute{
+										Attributes: GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3949,35 +3949,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block_outer": types.SetType{
-ElemType: SetNestedBlockOuterModel{}.objectType(),
+ElemType: SetNestedBlockOuterModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockOuterModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockOuterModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockOuterModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockOuterModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block_inner": types.SetType{
-ElemType: SetNestedBlockInnerModel{}.objectType(),
+ElemType: SetNestedBlockInnerModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockInnerModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockInnerModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockInnerModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockInnerModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -3988,9 +3988,9 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -4000,35 +4000,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4041,7 +4041,7 @@ return map[string]attr.Type{
 						NestedObject: GeneratorNestedBlockObject{
 							Blocks: GeneratorBlocks{
 								"single_nested_block": GeneratorSingleNestedBlock{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -4051,35 +4051,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4090,7 +4090,7 @@ return map[string]attr.Type{
 				Blocks: GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -4098,23 +4098,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -4122,32 +4122,32 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"bool": GeneratorBoolAttribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4155,32 +4155,32 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"float64": GeneratorFloat64Attribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -4188,32 +4188,32 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"int64": GeneratorInt64Attribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -4221,9 +4221,9 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"list": GeneratorListAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -4234,23 +4234,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -4260,12 +4260,12 @@ ElemType: types.BoolType,
 		},
 		"single_nested_attribute_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"list_nested_attribute": GeneratorListNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -4275,35 +4275,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4311,9 +4311,9 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"map": GeneratorMapAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -4324,23 +4324,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -4350,12 +4350,12 @@ ElemType: types.BoolType,
 		},
 		"single_nested_attribute_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"map_nested_attribute": GeneratorMapNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -4365,35 +4365,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4401,32 +4401,32 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"number": GeneratorNumberAttribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -4434,9 +4434,9 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"object": GeneratorObjectAttribute{
 								AttributeTypes: specschema.ObjectAttributeTypes{
 									{
@@ -4450,23 +4450,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -4478,9 +4478,9 @@ AttrTypes: map[string]attr.Type{
 		},
 		"single_nested_attribute_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"set": GeneratorSetAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -4491,23 +4491,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -4517,12 +4517,12 @@ ElemType: types.BoolType,
 		},
 		"single_nested_attribute_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"set_nested_attribute": GeneratorSetNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -4532,35 +4532,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4568,11 +4568,11 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute_outer": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"single_nested_attribute_inner": GeneratorSingleNestedAttribute{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{},
 								},
 							},
@@ -4581,35 +4581,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute_outer": types.ObjectType{
-AttrTypes: SingleNestedAttributeOuterModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeOuterModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeOuterModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeOuterModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeOuterModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeOuterModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute_inner": types.ObjectType{
-AttrTypes: SingleNestedAttributeInnerModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeInnerModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeInnerModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeInnerModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeInnerModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeInnerModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4617,32 +4617,32 @@ return map[string]attr.Type{
 		},
 		"single_nested_attribute_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"string": GeneratorStringAttribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -4659,23 +4659,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4685,30 +4685,30 @@ return map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"float64": GeneratorFloat64Attribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
@@ -4718,30 +4718,30 @@ return map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"int64": GeneratorInt64Attribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
@@ -4751,7 +4751,7 @@ return map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"list": GeneratorListAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -4762,23 +4762,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list": types.ListType{
 ElemType: types.BoolType,
@@ -4790,10 +4790,10 @@ ElemType: types.BoolType,
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"list_nested_attribute": GeneratorListNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -4803,35 +4803,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_attribute": types.ListType{
-ElemType: ListNestedAttributeModel{}.objectType(),
+ElemType: ListNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4844,7 +4844,7 @@ return map[string]attr.Type{
 						Blocks: GeneratorBlocks{
 							"list_nested_block": GeneratorListNestedBlock{
 								NestedObject: GeneratorNestedBlockObject{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -4854,35 +4854,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "list_nested_block": types.ListType{
-ElemType: ListNestedBlockModel{}.objectType(),
+ElemType: ListNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m ListNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ListNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ListNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4892,7 +4892,7 @@ return map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"map": GeneratorMapAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -4903,23 +4903,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map": types.MapType{
 ElemType: types.BoolType,
@@ -4931,10 +4931,10 @@ ElemType: types.BoolType,
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"map_nested_attribute": GeneratorMapNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -4944,35 +4944,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "map_nested_attribute": types.MapType{
-ElemType: MapNestedAttributeModel{}.objectType(),
+ElemType: MapNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m MapNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m MapNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m MapNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m MapNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -4982,30 +4982,30 @@ return map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"number": GeneratorNumberAttribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "number": types.NumberType,
 }
@@ -5015,7 +5015,7 @@ return map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"object": GeneratorObjectAttribute{
 								AttributeTypes: specschema.ObjectAttributeTypes{
 									{
@@ -5029,23 +5029,23 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "object": types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -5059,7 +5059,7 @@ AttrTypes: map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"set": GeneratorSetAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -5070,23 +5070,23 @@ AttrTypes: map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set": types.SetType{
 ElemType: types.BoolType,
@@ -5098,10 +5098,10 @@ ElemType: types.BoolType,
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"set_nested_attribute": GeneratorSetNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -5111,35 +5111,35 @@ ElemType: types.BoolType,
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_attribute": types.SetType{
-ElemType: SetNestedAttributeModel{}.objectType(),
+ElemType: SetNestedAttributeModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -5152,7 +5152,7 @@ return map[string]attr.Type{
 						Blocks: GeneratorBlocks{
 							"set_nested_block": GeneratorSetNestedBlock{
 								NestedObject: GeneratorNestedBlockObject{
-									Attributes: map[string]GeneratorAttribute{
+									Attributes: GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -5162,35 +5162,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "set_nested_block": types.SetType{
-ElemType: SetNestedBlockModel{}.objectType(),
+ElemType: SetNestedBlockModel{}.ObjectType(),
 },
 }
 }
 
-func (m SetNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SetNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SetNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SetNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -5200,9 +5200,9 @@ return map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"single_nested_attribute": GeneratorSingleNestedAttribute{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{},
 								},
 							},
@@ -5211,35 +5211,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_attribute": types.ObjectType{
-AttrTypes: SingleNestedAttributeModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedAttributeModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedAttributeModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedAttributeModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -5251,7 +5251,7 @@ return map[string]attr.Type{
 					"single_nested_block_outer": GeneratorSingleNestedBlock{
 						Blocks: GeneratorBlocks{
 							"single_nested_block_inner": GeneratorSingleNestedBlock{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{},
 								},
 							},
@@ -5260,35 +5260,35 @@ return map[string]attr.Type{
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block_outer": types.ObjectType{
-AttrTypes: SingleNestedBlockOuterModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockOuterModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockOuterModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockOuterModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockOuterModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockOuterModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block_inner": types.ObjectType{
-AttrTypes: SingleNestedBlockInnerModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockInnerModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockInnerModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockInnerModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockInnerModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockInnerModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
@@ -5298,30 +5298,30 @@ return map[string]attr.Type{
 			input: GeneratorDataSourceSchema{
 				Blocks: GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"string": GeneratorStringAttribute{},
 						},
 					},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "single_nested_block": types.ObjectType{
-AttrTypes: SingleNestedBlockModel{}.objectAttributeTypes(),
+AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(),
 },
 }
 }
 
-func (m SingleNestedBlockModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m SingleNestedBlockModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m SingleNestedBlockModel) objectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
@@ -5329,16 +5329,16 @@ return map[string]attr.Type{
 		},
 		"string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"string": GeneratorStringAttribute{},
 				},
 			},
 			expected: []byte(`
-func (m ExampleModel) objectType() types.ObjectType {
-return types.ObjectType{AttrTypes: m.objectAttributeTypes()}
+func (m ExampleModel) ObjectType() types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
 
-func (m ExampleModel) objectAttributeTypes() map[string]attr.Type {
+func (m ExampleModel) ObjectAttributeTypes() map[string]attr.Type {
 return map[string]attr.Type{
 "string": types.StringType,
 }
