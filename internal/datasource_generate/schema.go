@@ -15,6 +15,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templates"
 )
 
 type Attributes interface {
@@ -367,7 +368,7 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 		}
 	}
 
-	t, err := template.New("model_object_helpers").Parse(modelObjectHelpersTemplate)
+	t, err := template.New("model_object_helpers").Parse(templates.ModelObjectHelpersTemplate)
 	if err != nil {
 		return nil, err
 	}

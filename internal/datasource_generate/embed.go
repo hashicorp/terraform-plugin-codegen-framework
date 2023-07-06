@@ -81,6 +81,3 @@ func addCommonBlockTemplate(t *template.Template) (*template.Template, error) {
 
 	return t.New("common_block").Funcs(commonTemplateFuncs).Parse(commonBlockGoTemplate)
 }
-
-//go:embed templates/model_object_helpers.gotmpl
-var modelObjectHelpersTemplate string
