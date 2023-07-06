@@ -115,50 +115,21 @@ func (g GeneratorDataSourceSchema) Models(name string) ([]model.Model, error) {
 
 	sort.Strings(attributeNames)
 
-	// If there are any nested attributes, generate model.
+	// If there are any attributes which implement the Attributes interface
+	// (i.e., nested attributes), generate model.
 	for _, attributeName := range attributeNames {
-		var nestedModels []model.Model
-
-		switch t := g.Attributes[attributeName].(type) {
-		case GeneratorListNestedAttribute:
+		if nestedAttribute, ok := g.Attributes[attributeName].(Attributes); ok {
 			generatorDataSourceSchema := GeneratorDataSourceSchema{
-				Attributes: t.NestedObject.Attributes,
+				Attributes: nestedAttribute.GetAttributes(),
 			}
 
-			nestedModels, err = generatorDataSourceSchema.Models(attributeName)
+			nestedModels, err := generatorDataSourceSchema.Models(attributeName)
 			if err != nil {
 				return nil, err
 			}
-		case GeneratorMapNestedAttribute:
-			generatorDataSourceSchema := GeneratorDataSourceSchema{
-				Attributes: t.NestedObject.Attributes,
-			}
 
-			nestedModels, err = generatorDataSourceSchema.Models(attributeName)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSetNestedAttribute:
-			generatorDataSourceSchema := GeneratorDataSourceSchema{
-				Attributes: t.NestedObject.Attributes,
-			}
-
-			nestedModels, err = generatorDataSourceSchema.Models(attributeName)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSingleNestedAttribute:
-			generatorDataSourceSchema := GeneratorDataSourceSchema{
-				Attributes: t.Attributes,
-			}
-
-			nestedModels, err = generatorDataSourceSchema.Models(attributeName)
-			if err != nil {
-				return nil, err
-			}
+			models = append(models, nestedModels...)
 		}
-
-		models = append(models, nestedModels...)
 	}
 
 	// Using sorted blockNames to guarantee block order as maps are unordered in Go.
@@ -172,42 +143,19 @@ func (g GeneratorDataSourceSchema) Models(name string) ([]model.Model, error) {
 
 	// If there are any nested blocks, generate model.
 	for _, blockName := range blockNames {
-		var nestedModels []model.Model
-
-		switch t := g.Blocks[blockName].(type) {
-		case GeneratorListNestedBlock:
+		if nestedBlock, ok := g.Blocks[blockName].(Blocks); ok {
 			generatorDataSourceSchema := GeneratorDataSourceSchema{
-				Attributes: t.NestedObject.Attributes,
-				Blocks:     t.NestedObject.Blocks,
+				Attributes: nestedBlock.GetAttributes(),
+				Blocks:     nestedBlock.GetBlocks(),
 			}
 
-			nestedModels, err = generatorDataSourceSchema.Models(blockName)
+			nestedModels, err := generatorDataSourceSchema.Models(blockName)
 			if err != nil {
 				return nil, err
 			}
-		case GeneratorSetNestedBlock:
-			generatorDataSourceSchema := GeneratorDataSourceSchema{
-				Attributes: t.NestedObject.Attributes,
-				Blocks:     t.NestedObject.Blocks,
-			}
 
-			nestedModels, err = generatorDataSourceSchema.Models(blockName)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSingleNestedBlock:
-			generatorDataSourceSchema := GeneratorDataSourceSchema{
-				Attributes: t.Attributes,
-				Blocks:     t.Blocks,
-			}
-
-			nestedModels, err = generatorDataSourceSchema.Models(blockName)
-			if err != nil {
-				return nil, err
-			}
+			models = append(models, nestedModels...)
 		}
-
-		models = append(models, nestedModels...)
 	}
 
 	return models, nil
