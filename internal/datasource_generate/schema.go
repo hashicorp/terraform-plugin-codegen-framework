@@ -11,6 +11,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -41,6 +42,46 @@ func (g GeneratorDataSourceSchema) ImportsString() (string, error) {
 
 	for _, v := range g.Blocks {
 		imports.Add(v.Imports().All()...)
+	}
+
+	// Both context and terraform-plugin-framework/diag packages are required if
+	// model object helpers are generated. Refer to the logic in
+	// ModelsObjectHelpersBytes() method.
+	for _, a := range g.Attributes {
+		if a == nil {
+			continue
+		}
+
+		if _, ok := a.(Attributes); ok {
+			imports.Add([]code.Import{
+				{
+					Path: schema.ContextImport,
+				},
+				{
+					Path: schema.DiagImport,
+				},
+			}...)
+		}
+	}
+
+	// Both context and terraform-plugin-framework/diag packages are required if
+	// model object helpers are generated. Refer to the logic in
+	// ModelsObjectHelpersBytes() method.
+	for _, b := range g.Blocks {
+		if b == nil {
+			continue
+		}
+
+		if _, ok := b.(Blocks); ok {
+			imports.Add([]code.Import{
+				{
+					Path: schema.ContextImport,
+				},
+				{
+					Path: schema.DiagImport,
+				},
+			}...)
+		}
 	}
 
 	var sb strings.Builder
