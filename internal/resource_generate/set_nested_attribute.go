@@ -100,8 +100,8 @@ func (g GeneratorSetNestedAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorSetNestedAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": getAttributes,
-		"getSetDefault": getSetDefault,
+		"AttributesString": g.NestedObject.Attributes.String,
+		"getSetDefault":    getSetDefault,
 	}
 
 	t, err := template.New("set_nested_attribute").Funcs(funcMap).Parse(setNestedAttributeGoTemplate)
@@ -139,6 +139,10 @@ func (g GeneratorSetNestedAttribute) ModelField(name string) (model.Field, error
 	}
 
 	return field, nil
+}
+
+func (g GeneratorSetNestedAttribute) GetAttributes() GeneratorAttributes {
+	return g.NestedObject.Attributes
 }
 
 func (g GeneratorSetNestedAttribute) setValidatorsEqual(x, y []specschema.SetValidator) bool {

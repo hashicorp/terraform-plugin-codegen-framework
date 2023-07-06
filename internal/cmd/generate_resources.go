@@ -127,40 +127,51 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context) error {
 
 func generateResourceCode(spec spec.Specification, outputPath, packageName string) error {
 	// convert IR to framework schema
-	resourceSchemaConverter := resource_convert.NewConverter(spec)
-	resourceSchemas, err := resourceSchemaConverter.ToGeneratorResourceSchema()
+	c := resource_convert.NewConverter(spec)
+	schema, err := c.ToGeneratorResourceSchema()
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
 
 	// convert framework schema to []byte
-	resourceSchemaGenerator := resource_generate.NewGeneratorResourceSchemas(resourceSchemas)
-	resourceSchemaBytes, err := resourceSchemaGenerator.ToBytes(packageName)
+	g := resource_generate.NewGeneratorResourceSchemas(schema)
+	schemaBytes, err := g.SchemasBytes(packageName)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
 	// generate model code
-	resourcesModelsGenerator := resource_generate.NewResourcesModelsGenerator()
-	resourcesModels, err := resourcesModelsGenerator.Process(resourceSchemas)
+	modelsBytes, err := g.ModelsBytes()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// generate model object helpers code
+	modelsObjectHelpersBytes, err := g.ModelsObjectHelpersBytes()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// format schema code
-	formattedResourcesSchema, err := format.Format(resourceSchemaBytes)
+	formattedResourcesSchema, err := format.Format(schemaBytes)
 	if err != nil {
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
 
 	// format model code
-	formattedResourcesModels, err := format.Format(resourcesModels)
+	formattedResourcesModels, err := format.Format(modelsBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// format model object helpers code
+	formattedResourcesModelObjectHelpers, err := format.Format(modelsObjectHelpersBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// write code
-	err = output.WriteResources(formattedResourcesSchema, formattedResourcesModels, outputPath)
+	err = output.WriteResources(formattedResourcesSchema, formattedResourcesModels, formattedResourcesModelObjectHelpers, outputPath)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

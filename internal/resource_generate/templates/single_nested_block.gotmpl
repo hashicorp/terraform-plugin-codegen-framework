@@ -2,12 +2,12 @@
 "{{$key}}": schema.SingleNestedBlock{
 {{- if gt (len $value.Attributes) 0 }}
 Attributes: map[string]schema.Attribute{
-{{- getAttributes $value.Attributes}}
+{{- AttributesString}}
 },
 {{- end}}
 {{- if gt (len $value.Blocks) 0 }}
 Blocks: map[string]schema.Block{
-{{- getBlocks $value.Blocks}}
+{{- BlocksString}}
 },
 {{- end}}
 {{- template "common_block" $value }}

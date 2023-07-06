@@ -37,7 +37,7 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObje
 	return nil
 }
 
-func WriteResources(resourcesSchema, resourcesModels map[string][]byte, outputDir string) error {
+func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelpers map[string][]byte, outputDir string) error {
 	for k, v := range resourcesSchema {
 		filename := fmt.Sprintf("%s_resource_gen.go", k)
 
@@ -52,6 +52,11 @@ func WriteResources(resourcesSchema, resourcesModels map[string][]byte, outputDi
 		}
 
 		_, err = f.Write(resourcesModels[k])
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(resourcesModelObjectHelpers[k])
 		if err != nil {
 			return err
 		}
