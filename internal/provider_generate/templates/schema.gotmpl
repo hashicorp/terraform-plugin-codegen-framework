@@ -3,19 +3,22 @@
 package {{.PackageName}}
 
 import (
+	"context"
+
     "github.com/hashicorp/terraform-plugin-framework/provider/schema"
-{{getImports .GeneratorProviderSchema}}
+    "github.com/hashicorp/terraform-plugin-framework/diag"
+{{ImportsString}}
 )
 
 var {{.Name}}ProviderSchema = schema.Schema{
 {{- if gt (len .GeneratorProviderSchema.Attributes) 0 }}
     Attributes: map[string]schema.Attribute{
-        {{- getAttributes .GeneratorProviderSchema.Attributes}}
+        {{- AttributesString}}
     },
 {{- end}}
 {{- if gt (len .GeneratorProviderSchema.Blocks) 0 }}
     Blocks: map[string]schema.Block{
-        {{- getBlocks .GeneratorProviderSchema.Blocks}}
+        {{- BlocksString}}
     },
 {{- end}}
 }

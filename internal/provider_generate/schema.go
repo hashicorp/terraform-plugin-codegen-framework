@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package datasource_generate
+package provider_generate
 
 import (
 	"bytes"
@@ -27,12 +27,12 @@ type Blocks interface {
 	GetBlocks() GeneratorBlocks
 }
 
-type GeneratorDataSourceSchema struct {
+type GeneratorProviderSchema struct {
 	Attributes GeneratorAttributes
 	Blocks     GeneratorBlocks
 }
 
-func (g GeneratorDataSourceSchema) ImportsString() (string, error) {
+func (g GeneratorProviderSchema) ImportsString() (string, error) {
 	imports := schema.NewImports()
 
 	for _, v := range g.Attributes {
@@ -58,7 +58,7 @@ func (g GeneratorDataSourceSchema) ImportsString() (string, error) {
 	return sb.String(), nil
 }
 
-func (g GeneratorDataSourceSchema) SchemaBytes(name, packageName string) ([]byte, error) {
+func (g GeneratorProviderSchema) SchemaBytes(name, packageName string) ([]byte, error) {
 	funcMap := template.FuncMap{
 		"ImportsString":    g.ImportsString,
 		"AttributesString": g.Attributes.String,
@@ -76,12 +76,12 @@ func (g GeneratorDataSourceSchema) SchemaBytes(name, packageName string) ([]byte
 
 	templateData := struct {
 		Name string
-		GeneratorDataSourceSchema
+		GeneratorProviderSchema
 		PackageName string
 	}{
-		Name:                      name,
-		GeneratorDataSourceSchema: g,
-		PackageName:               packageName,
+		Name:                    name,
+		GeneratorProviderSchema: g,
+		PackageName:             packageName,
 	}
 
 	err = t.Execute(&buf, templateData)
@@ -92,7 +92,7 @@ func (g GeneratorDataSourceSchema) SchemaBytes(name, packageName string) ([]byte
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorDataSourceSchema) Models(name string) ([]model.Model, error) {
+func (g GeneratorProviderSchema) Models(name string) ([]model.Model, error) {
 	var models []model.Model
 
 	fields, err := g.ModelFields()
@@ -120,11 +120,11 @@ func (g GeneratorDataSourceSchema) Models(name string) ([]model.Model, error) {
 	// (i.e., nested attributes), generate model.
 	for _, attributeName := range attributeNames {
 		if nestedAttribute, ok := g.Attributes[attributeName].(Attributes); ok {
-			generatorDataSourceSchema := GeneratorDataSourceSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: nestedAttribute.GetAttributes(),
 			}
 
-			nestedModels, err := generatorDataSourceSchema.Models(attributeName)
+			nestedModels, err := generatorProviderSchema.Models(attributeName)
 			if err != nil {
 				return nil, err
 			}
@@ -145,12 +145,12 @@ func (g GeneratorDataSourceSchema) Models(name string) ([]model.Model, error) {
 	// If there are any nested blocks, generate model.
 	for _, blockName := range blockNames {
 		if nestedBlock, ok := g.Blocks[blockName].(Blocks); ok {
-			generatorDataSourceSchema := GeneratorDataSourceSchema{
+			generatorProviderSchema := GeneratorProviderSchema{
 				Attributes: nestedBlock.GetAttributes(),
 				Blocks:     nestedBlock.GetBlocks(),
 			}
 
-			nestedModels, err := generatorDataSourceSchema.Models(blockName)
+			nestedModels, err := generatorProviderSchema.Models(blockName)
 			if err != nil {
 				return nil, err
 			}
@@ -162,7 +162,7 @@ func (g GeneratorDataSourceSchema) Models(name string) ([]model.Model, error) {
 	return models, nil
 }
 
-func (g GeneratorDataSourceSchema) ModelFields() ([]model.Field, error) {
+func (g GeneratorProviderSchema) ModelFields() ([]model.Field, error) {
 	var modelFields []model.Field
 
 	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
@@ -218,7 +218,7 @@ func (g GeneratorDataSourceSchema) ModelFields() ([]model.Field, error) {
 // any of them implement the Attributes interface (i.e., they are nested attributes or
 // nested blocks). If any of the attributes or blocks fill the Attributes interface,
 // then ModelObjectHelpersTemplate is called.
-func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
+func (g GeneratorProviderSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
 	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
@@ -236,7 +236,7 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 		}
 
 		if a, ok := g.Attributes[k].(Attributes); ok {
-			ng := GeneratorDataSourceSchema{
+			ng := GeneratorProviderSchema{
 				Attributes: a.GetAttributes(),
 			}
 
@@ -264,7 +264,7 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 		}
 
 		if b, ok := g.Blocks[k].(Blocks); ok {
-			ng := GeneratorDataSourceSchema{
+			ng := GeneratorProviderSchema{
 				Attributes: b.GetAttributes(),
 				Blocks:     b.GetBlocks(),
 			}
@@ -289,7 +289,7 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 // the attr.Type for each attribute or block. A template is then used to generate the model object helpers code.
 // If any of the attributes or blocks are nested attributes or nested blocks, respectively, then
 // ModelObjectHelpersTemplate is called recursively.
-func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]byte, error) {
+func (g GeneratorProviderSchema) ModelObjectHelpersTemplate(name string) ([]byte, error) {
 	attrTypeStrings := make(map[string]string)
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
@@ -394,7 +394,7 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 	// Attributes interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
 		if a, ok := g.Attributes[k].(Attributes); ok {
-			ng := GeneratorDataSourceSchema{
+			ng := GeneratorProviderSchema{
 				Attributes: a.GetAttributes(),
 			}
 
@@ -412,7 +412,7 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 	// Blocks interface (i.e, nested blocks).
 	for _, k := range blockKeys {
 		if b, ok := g.Blocks[k].(Blocks); ok {
-			ng := GeneratorDataSourceSchema{
+			ng := GeneratorProviderSchema{
 				Attributes: b.GetAttributes(),
 				Blocks:     b.GetBlocks(),
 			}

@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 )
 
-func TestProviderModelsGenerator_Process(t *testing.T) {
+func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -22,7 +22,7 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 		"all": {
 			input: map[string]GeneratorProviderSchema{
 				"example": {
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{},
 						"bool_attribute_custom": GeneratorBoolAttribute{
 							CustomType: &schema.CustomType{
@@ -49,7 +49,7 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 						},
 						"list_nested_attribute": GeneratorListNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -59,7 +59,7 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 								ValueType: "my_list_nested_value_type",
 							},
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -72,7 +72,7 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 						},
 						"map_nested_attribute": GeneratorMapNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -82,7 +82,7 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 								ValueType: "my_map_nested_value_type",
 							},
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -107,7 +107,7 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 						},
 						"set_nested_attribute": GeneratorSetNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -117,13 +117,13 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 								ValueType: "my_set_nested_value_type",
 							},
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
 						},
 						"single_nested_attribute": GeneratorSingleNestedAttribute{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
@@ -131,7 +131,7 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 							CustomType: &schema.CustomType{
 								ValueType: "my_single_nested_value_type",
 							},
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
@@ -142,10 +142,10 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 							},
 						},
 					},
-					Blocks: map[string]GeneratorBlock{
+					Blocks: GeneratorBlocks{
 						"list_nested_block": GeneratorListNestedBlock{
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -155,14 +155,14 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 								ValueType: "my_list_nested_value_type",
 							},
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
 						},
 						"set_nested_block": GeneratorSetNestedBlock{
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -172,13 +172,13 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 								ValueType: "my_set_nested_value_type",
 							},
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
 						},
 						"single_nested_block": GeneratorSingleNestedBlock{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
@@ -186,7 +186,7 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 							CustomType: &schema.CustomType{
 								ValueType: "my_single_nested_value_type",
 							},
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
@@ -203,8 +203,8 @@ func TestProviderModelsGenerator_Process(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			g := NewProviderModelsGenerator()
-			got, err := g.Process(testCase.input)
+			g := NewGeneratorProviderSchemas(testCase.input)
+			got, err := g.ModelsBytes()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
