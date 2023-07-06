@@ -128,6 +128,14 @@ func (g GeneratorListNestedBlock) ModelField(name string) (model.Field, error) {
 	return field, nil
 }
 
+func (g GeneratorListNestedBlock) GetAttributes() GeneratorAttributes {
+	return g.NestedObject.Attributes
+}
+
+func (g GeneratorListNestedBlock) GetBlocks() GeneratorBlocks {
+	return g.NestedObject.Blocks
+}
+
 func (g GeneratorListNestedBlock) listValidatorsEqual(x, y []specschema.ListValidator) bool {
 	if x == nil && y == nil {
 		return true

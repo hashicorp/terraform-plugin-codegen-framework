@@ -17,6 +17,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
+type Attributes interface {
+	GetAttributes() GeneratorAttributes
+}
+
+type Blocks interface {
+	Attributes
+	GetBlocks() GeneratorBlocks
+}
+
 type GeneratorDataSourceSchema struct {
 	Attributes GeneratorAttributes
 	Blocks     GeneratorBlocks
@@ -296,7 +305,54 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 		}
 	}
 
-	// TODO: Handle blocks
+	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g.Blocks))
+
+	for k := range g.Blocks {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	for _, k := range blockKeys {
+		if g.Blocks[k] == nil {
+			continue
+		}
+
+		if b, ok := g.Blocks[k].(Blocks); ok {
+			for _, attribute := range b.GetAttributes() {
+				if _, ok := attribute.(Attributes); ok {
+					ng := GeneratorDataSourceSchema{
+						Attributes: b.GetAttributes(),
+						Blocks:     b.GetBlocks(),
+					}
+
+					modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
+					if err != nil {
+						return nil, err
+					}
+
+					buf.Write(modelObjectHelpers)
+				}
+			}
+
+			for _, block := range b.GetBlocks() {
+				if _, ok := block.(Attributes); ok {
+					ng := GeneratorDataSourceSchema{
+						Attributes: b.GetAttributes(),
+						Blocks:     b.GetBlocks(),
+					}
+
+					modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
+					if err != nil {
+						return nil, err
+					}
+
+					buf.Write(modelObjectHelpers)
+				}
+			}
+		}
+	}
 
 	return buf.Bytes(), nil
 }
@@ -309,16 +365,16 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 	attrTypeStrings := make(map[string]string)
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var keys = make([]string, 0, len(g.Attributes))
+	var attributeKeys = make([]string, 0, len(g.Attributes))
 
 	for k := range g.Attributes {
-		keys = append(keys, k)
+		attributeKeys = append(attributeKeys, k)
 	}
 
-	sort.Strings(keys)
+	sort.Strings(attributeKeys)
 
 	// Populate attrTypeStrings map for use in template.
-	for _, k := range keys {
+	for _, k := range attributeKeys {
 		switch t := g.Attributes[k].(type) {
 		case GeneratorBoolAttribute:
 			attrTypeStrings[k] = "types.BoolType"
@@ -365,7 +421,26 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 		}
 	}
 
-	// TODO: Handle blocks
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g.Blocks))
+
+	for k := range g.Blocks {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	// Populate attrTypeStrings map for use in template.
+	for _, k := range blockKeys {
+		switch g.Blocks[k].(type) {
+		case GeneratorListNestedBlock:
+			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.objectType(),\n}", model.SnakeCaseToCamelCase(k))
+		case GeneratorSetNestedBlock:
+			attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %sModel{}.objectType(),\n}", model.SnakeCaseToCamelCase(k))
+		case GeneratorSingleNestedBlock:
+			attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: %sModel{}.objectAttributeTypes(),\n}", model.SnakeCaseToCamelCase(k))
+		}
+	}
 
 	t, err := template.New("model_object_helpers").Parse(modelObjectHelpersTemplate)
 	if err != nil {
@@ -387,8 +462,9 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 		return nil, err
 	}
 
-	// Recursively call ModelObjectHelpersTemplate() for each attribute that has attributes (i.e, nested attributes).
-	for _, k := range keys {
+	// Recursively call ModelObjectHelpersTemplate() for each attribute that implements
+	// Attributes interface (i.e, nested attributes).
+	for _, k := range attributeKeys {
 		if a, ok := g.Attributes[k].(Attributes); ok {
 			ng := GeneratorDataSourceSchema{
 				Attributes: a.GetAttributes(),
@@ -404,8 +480,24 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 		}
 	}
 
-	// TODO: Handle blocks
-	// Recursively call ModelObjectHelpersTemplate() for each block that has blocks (i.e, nested blocks).
+	// Recursively call ModelObjectHelpersTemplate() for each block that implements
+	// Blocks interface (i.e, nested blocks).
+	for _, k := range blockKeys {
+		if b, ok := g.Blocks[k].(Blocks); ok {
+			ng := GeneratorDataSourceSchema{
+				Attributes: b.GetAttributes(),
+				Blocks:     b.GetBlocks(),
+			}
+
+			byt, err := ng.ModelObjectHelpersTemplate(k)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.WriteString("\n")
+			buf.Write(byt)
+		}
+	}
 
 	return buf.Bytes(), nil
 }

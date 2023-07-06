@@ -113,6 +113,14 @@ func (g GeneratorSingleNestedBlock) ModelField(name string) (model.Field, error)
 	return field, nil
 }
 
+func (g GeneratorSingleNestedBlock) GetAttributes() GeneratorAttributes {
+	return g.Attributes
+}
+
+func (g GeneratorSingleNestedBlock) GetBlocks() GeneratorBlocks {
+	return g.Blocks
+}
+
 func (g GeneratorSingleNestedBlock) validatorsEqual(x, y []specschema.ObjectValidator) bool {
 	if x == nil && y == nil {
 		return true
