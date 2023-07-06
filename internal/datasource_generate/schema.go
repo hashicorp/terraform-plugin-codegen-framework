@@ -277,6 +277,8 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 		}
 	}
 
+	buf.WriteString("\n")
+
 	return buf.Bytes(), nil
 }
 
