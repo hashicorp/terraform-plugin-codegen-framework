@@ -268,7 +268,6 @@ func (g GeneratorDataSourceSchema) ModelFields() ([]model.Field, error) {
 // ModelsObjectHelpersBytes iterates over all the attributes and blocks to determine whether
 // any of them implement the Attributes interface (i.e., they are nested attributes or
 // nested blocks). If any of the attributes or blocks fill the Attributes interface,
-// and they have attributes or blocks which themselves fill the Attributes interface,
 // then ModelObjectHelpersTemplate is called.
 func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 	var buf bytes.Buffer
@@ -288,20 +287,16 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 		}
 
 		if a, ok := g.Attributes[k].(Attributes); ok {
-			for _, attribute := range a.GetAttributes() {
-				if _, ok := attribute.(Attributes); ok {
-					ng := GeneratorDataSourceSchema{
-						Attributes: a.GetAttributes(),
-					}
-
-					modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
-					if err != nil {
-						return nil, err
-					}
-
-					buf.Write(modelObjectHelpers)
-				}
+			ng := GeneratorDataSourceSchema{
+				Attributes: a.GetAttributes(),
 			}
+
+			modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(modelObjectHelpers)
 		}
 	}
 
@@ -320,37 +315,17 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 		}
 
 		if b, ok := g.Blocks[k].(Blocks); ok {
-			for _, attribute := range b.GetAttributes() {
-				if _, ok := attribute.(Attributes); ok {
-					ng := GeneratorDataSourceSchema{
-						Attributes: b.GetAttributes(),
-						Blocks:     b.GetBlocks(),
-					}
-
-					modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
-					if err != nil {
-						return nil, err
-					}
-
-					buf.Write(modelObjectHelpers)
-				}
+			ng := GeneratorDataSourceSchema{
+				Attributes: b.GetAttributes(),
+				Blocks:     b.GetBlocks(),
 			}
 
-			for _, block := range b.GetBlocks() {
-				if _, ok := block.(Attributes); ok {
-					ng := GeneratorDataSourceSchema{
-						Attributes: b.GetAttributes(),
-						Blocks:     b.GetBlocks(),
-					}
-
-					modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
-					if err != nil {
-						return nil, err
-					}
-
-					buf.Write(modelObjectHelpers)
-				}
+			modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
+			if err != nil {
+				return nil, err
 			}
+
+			buf.Write(modelObjectHelpers)
 		}
 	}
 

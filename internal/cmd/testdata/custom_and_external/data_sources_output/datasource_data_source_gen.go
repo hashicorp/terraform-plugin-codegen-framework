@@ -349,6 +349,15 @@ type SingleNestedBlockTwoSingleNestedBlockOneModel struct {
 	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
+func (m ListNestedAttributeOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+}
+
+func (m ListNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute": types.BoolType,
+	}
+}
 func (m ListNestedAttributeThreeModel) ObjectType() types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
@@ -393,6 +402,15 @@ func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectAttributeTypes(
 		"bool_attribute": types.BoolType,
 	}
 }
+func (m SingleNestedAttributeOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+}
+
+func (m SingleNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute": types.BoolType,
+	}
+}
 func (m SingleNestedAttributeThreeModel) ObjectType() types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
 }
@@ -433,6 +451,15 @@ func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectType() type
 }
 
 func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute": types.BoolType,
+	}
+}
+func (m ListNestedBlockOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+}
+
+func (m ListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
@@ -482,6 +509,15 @@ func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectType() types.ObjectType
 }
 
 func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute": types.BoolType,
+	}
+}
+func (m SingleNestedBlockOneModel) ObjectType() types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+}
+
+func (m SingleNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
