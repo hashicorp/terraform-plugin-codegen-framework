@@ -33,6 +33,20 @@ func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"float64": {
@@ -50,6 +64,20 @@ func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"int64": {
@@ -67,6 +95,20 @@ func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_bool": {
@@ -90,6 +132,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_float64": {
@@ -113,6 +169,20 @@ return map[string]attr.Type{
 ElemType: types.Float64Type,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_int64": {
@@ -136,6 +206,20 @@ return map[string]attr.Type{
 ElemType: types.Int64Type,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_list": {
@@ -165,6 +249,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_map": {
@@ -194,6 +292,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_number": {
@@ -217,6 +329,20 @@ return map[string]attr.Type{
 ElemType: types.NumberType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_object": {
@@ -251,6 +377,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_set": {
@@ -280,6 +420,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_string": {
@@ -303,6 +457,20 @@ return map[string]attr.Type{
 ElemType: types.StringType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_bool": {
@@ -330,6 +498,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -338,6 +520,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_float64": {
@@ -365,6 +561,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -373,6 +583,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_int64": {
@@ -400,6 +624,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -408,6 +646,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_list": {
@@ -439,6 +691,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -449,6 +715,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_list_nested_attribute": {
@@ -482,6 +762,20 @@ ElemType: ListNestedAttributeOuterModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeOuterModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -494,6 +788,20 @@ ElemType: ListNestedAttributeInnerModel{}.ObjectType(ctx),
 }
 }
 
+func (m ListNestedAttributeOuterModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeOuterModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeInnerModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -502,6 +810,20 @@ func (m ListNestedAttributeInnerModel) ObjectAttributeTypes(ctx context.Context)
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedAttributeInnerModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeInnerModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_map": {
@@ -533,6 +855,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -543,6 +879,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_map_nested_attribute": {
@@ -576,6 +926,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -588,6 +952,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -596,6 +974,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_number": {
@@ -623,6 +1015,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -631,6 +1037,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "number": types.NumberType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_object": {
@@ -665,6 +1085,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -677,6 +1111,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_set": {
@@ -708,6 +1156,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -718,6 +1180,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_set_nested_attribute": {
@@ -751,6 +1227,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -763,6 +1253,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -771,6 +1275,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_single_nested_attribute": {
@@ -802,6 +1320,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -814,6 +1346,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -822,6 +1368,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_attribute_string": {
@@ -849,6 +1409,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -857,6 +1431,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "string": types.StringType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_bool": {
@@ -884,6 +1472,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -892,6 +1494,20 @@ func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[stri
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_float64": {
@@ -919,6 +1535,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -927,6 +1557,20 @@ func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[stri
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_int64": {
@@ -954,6 +1598,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -962,6 +1620,20 @@ func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[stri
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_list": {
@@ -993,6 +1665,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1003,6 +1689,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_list_nested_attribute": {
@@ -1036,6 +1736,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1048,6 +1762,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1056,6 +1784,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_list_nested_block": {
@@ -1089,6 +1831,20 @@ ElemType: ListNestedBlockOuterModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockOuterModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1101,6 +1857,20 @@ ElemType: ListNestedBlockInnerModel{}.ObjectType(ctx),
 }
 }
 
+func (m ListNestedBlockOuterModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockOuterModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockInnerModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1109,6 +1879,20 @@ func (m ListNestedBlockInnerModel) ObjectAttributeTypes(ctx context.Context) map
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedBlockInnerModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockInnerModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_map": {
@@ -1140,6 +1924,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1150,6 +1948,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_map_nested_attribute": {
@@ -1183,6 +1995,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1195,6 +2021,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1203,6 +2043,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_number": {
@@ -1230,6 +2084,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1238,6 +2106,20 @@ func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[stri
 return map[string]attr.Type{
 "number": types.NumberType,
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_object": {
@@ -1272,6 +2154,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1284,6 +2180,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_set": {
@@ -1315,6 +2225,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1325,6 +2249,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_set_nested_attribute": {
@@ -1358,6 +2296,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1370,6 +2322,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1378,6 +2344,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_set_nested_block": {
@@ -1411,6 +2391,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1423,6 +2417,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1431,6 +2439,20 @@ func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[strin
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_single_nested_attribute": {
@@ -1462,6 +2484,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1474,6 +2510,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1482,6 +2532,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_single_nested_block": {
@@ -1513,6 +2577,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1525,6 +2603,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1533,6 +2625,20 @@ func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[st
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"list_nested_block_string": {
@@ -1560,6 +2666,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1568,6 +2688,20 @@ func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[stri
 return map[string]attr.Type{
 "string": types.StringType,
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_bool": {
@@ -1591,6 +2725,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_float64": {
@@ -1614,6 +2762,20 @@ return map[string]attr.Type{
 ElemType: types.Float64Type,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_int64": {
@@ -1637,6 +2799,20 @@ return map[string]attr.Type{
 ElemType: types.Int64Type,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_list": {
@@ -1666,6 +2842,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_map": {
@@ -1695,6 +2885,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_number": {
@@ -1718,6 +2922,20 @@ return map[string]attr.Type{
 ElemType: types.NumberType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_object": {
@@ -1752,6 +2970,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_set": {
@@ -1781,6 +3013,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_string": {
@@ -1804,6 +3050,20 @@ return map[string]attr.Type{
 ElemType: types.StringType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_bool": {
@@ -1831,6 +3091,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1839,6 +3113,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_float64": {
@@ -1866,6 +3154,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1874,6 +3176,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_int64": {
@@ -1901,6 +3217,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1909,6 +3239,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_list": {
@@ -1940,6 +3284,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1950,6 +3308,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_list_nested_attribute": {
@@ -1983,6 +3355,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1995,6 +3381,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2003,6 +3403,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_map": {
@@ -2034,6 +3448,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2044,6 +3472,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_map_nested_attribute": {
@@ -2077,6 +3519,20 @@ ElemType: MapNestedAttributeOuterModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeOuterModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2089,6 +3545,20 @@ ElemType: MapNestedAttributeInnerModel{}.ObjectType(ctx),
 }
 }
 
+func (m MapNestedAttributeOuterModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeOuterModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeInnerModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2097,6 +3567,20 @@ func (m MapNestedAttributeInnerModel) ObjectAttributeTypes(ctx context.Context) 
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m MapNestedAttributeInnerModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeInnerModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_number": {
@@ -2124,6 +3608,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2132,6 +3630,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "number": types.NumberType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_object": {
@@ -2166,6 +3678,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2178,6 +3704,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_set": {
@@ -2209,6 +3749,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2219,6 +3773,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_set_nested_attribute": {
@@ -2252,6 +3820,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2264,6 +3846,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2272,6 +3868,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_single_nested_attribute": {
@@ -2303,6 +3913,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2315,6 +3939,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2323,6 +3961,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"map_nested_attribute_string": {
@@ -2350,6 +4002,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2358,6 +4024,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "string": types.StringType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"number": {
@@ -2375,6 +4055,20 @@ func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.
 return map[string]attr.Type{
 "number": types.NumberType,
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"object_bool": {
@@ -2403,6 +4097,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"object_float64": {
@@ -2431,6 +4139,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"object_int64": {
@@ -2459,6 +4181,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"object_list": {
@@ -2493,6 +4229,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"object_map": {
@@ -2527,6 +4277,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"object_number": {
@@ -2555,6 +4319,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"object_set": {
@@ -2589,6 +4367,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"object_string": {
@@ -2617,6 +4409,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_bool": {
@@ -2640,6 +4446,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_float64": {
@@ -2663,6 +4483,20 @@ return map[string]attr.Type{
 ElemType: types.Float64Type,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_int64": {
@@ -2686,6 +4520,20 @@ return map[string]attr.Type{
 ElemType: types.Int64Type,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_list": {
@@ -2715,6 +4563,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_map": {
@@ -2744,6 +4606,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_number": {
@@ -2767,6 +4643,20 @@ return map[string]attr.Type{
 ElemType: types.NumberType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_object": {
@@ -2801,6 +4691,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_set": {
@@ -2830,6 +4734,20 @@ ElemType: types.BoolType,
 },
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_string": {
@@ -2853,6 +4771,20 @@ return map[string]attr.Type{
 ElemType: types.StringType,
 },
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_bool": {
@@ -2880,6 +4812,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2888,6 +4834,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_float64": {
@@ -2915,6 +4875,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2923,6 +4897,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_int64": {
@@ -2950,6 +4938,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2958,6 +4960,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_list": {
@@ -2989,6 +5005,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -2999,6 +5029,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_list_nested_attribute": {
@@ -3032,6 +5076,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3044,6 +5102,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3052,6 +5124,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_map": {
@@ -3083,6 +5169,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3093,6 +5193,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_map_nested_attribute": {
@@ -3126,6 +5240,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3138,6 +5266,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3146,6 +5288,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_number": {
@@ -3173,6 +5329,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3181,6 +5351,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "number": types.NumberType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_object": {
@@ -3215,6 +5399,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3227,6 +5425,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_set": {
@@ -3258,6 +5470,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3268,6 +5494,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_set_nested_attribute": {
@@ -3301,6 +5541,20 @@ ElemType: SetNestedAttributeOuterModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeOuterModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3313,6 +5567,20 @@ ElemType: SetNestedAttributeInnerModel{}.ObjectType(ctx),
 }
 }
 
+func (m SetNestedAttributeOuterModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeOuterModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeInnerModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3321,6 +5589,20 @@ func (m SetNestedAttributeInnerModel) ObjectAttributeTypes(ctx context.Context) 
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedAttributeInnerModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeInnerModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_single_nested_attribute": {
@@ -3352,6 +5634,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3364,6 +5660,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3372,6 +5682,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_attribute_string": {
@@ -3399,6 +5723,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3407,6 +5745,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "string": types.StringType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_bool": {
@@ -3434,6 +5786,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3442,6 +5808,20 @@ func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[strin
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_float64": {
@@ -3469,6 +5849,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3477,6 +5871,20 @@ func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[strin
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_int64": {
@@ -3504,6 +5912,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3512,6 +5934,20 @@ func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[strin
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_list": {
@@ -3543,6 +5979,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3553,6 +6003,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_list_nested_attribute": {
@@ -3586,6 +6050,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3598,6 +6076,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3606,6 +6098,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_list_nested_block": {
@@ -3639,6 +6145,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3651,6 +6171,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3659,6 +6193,20 @@ func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[stri
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_map": {
@@ -3690,6 +6238,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3700,6 +6262,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_map_nested_attribute": {
@@ -3733,6 +6309,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3745,6 +6335,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3753,6 +6357,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_number": {
@@ -3780,6 +6398,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3788,6 +6420,20 @@ func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[strin
 return map[string]attr.Type{
 "number": types.NumberType,
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_object": {
@@ -3822,6 +6468,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3834,6 +6494,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_set": {
@@ -3865,6 +6539,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3875,6 +6563,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_set_nested_attribute": {
@@ -3908,6 +6610,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3920,6 +6636,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3928,6 +6658,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_set_nested_block": {
@@ -3961,6 +6705,20 @@ ElemType: SetNestedBlockOuterModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockOuterModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3973,6 +6731,20 @@ ElemType: SetNestedBlockInnerModel{}.ObjectType(ctx),
 }
 }
 
+func (m SetNestedBlockOuterModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockOuterModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockInnerModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -3981,6 +6753,20 @@ func (m SetNestedBlockInnerModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedBlockInnerModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockInnerModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_single_nested_attribute": {
@@ -4012,6 +6798,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4024,6 +6824,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4032,6 +6846,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_single_nested_block": {
@@ -4063,6 +6891,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4075,6 +6917,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4083,6 +6939,20 @@ func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[st
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"set_nested_block_string": {
@@ -4110,6 +6980,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4118,6 +7002,20 @@ func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[strin
 return map[string]attr.Type{
 "string": types.StringType,
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_bool": {
@@ -4143,6 +7041,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4151,6 +7063,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_float64": {
@@ -4176,6 +7102,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4184,6 +7124,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_int64": {
@@ -4209,6 +7163,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4217,6 +7185,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_list": {
@@ -4246,6 +7228,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4256,6 +7252,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_list_nested_attribute": {
@@ -4287,6 +7297,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4299,6 +7323,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4307,6 +7345,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_map": {
@@ -4336,6 +7388,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4346,6 +7412,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_map_nested_attribute": {
@@ -4377,6 +7457,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4389,6 +7483,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4397,6 +7505,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_number": {
@@ -4422,6 +7544,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4430,6 +7566,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "number": types.NumberType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_object": {
@@ -4462,6 +7612,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4474,6 +7638,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_set": {
@@ -4503,6 +7681,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4513,6 +7705,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_set_nested_attribute": {
@@ -4544,6 +7750,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4556,6 +7776,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4564,6 +7798,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_single_nested_attribute": {
@@ -4593,6 +7841,20 @@ AttrTypes: SingleNestedAttributeOuterModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeOuterModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4605,6 +7867,20 @@ AttrTypes: SingleNestedAttributeInnerModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m SingleNestedAttributeOuterModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeOuterModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeInnerModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4613,6 +7889,20 @@ func (m SingleNestedAttributeInnerModel) ObjectAttributeTypes(ctx context.Contex
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedAttributeInnerModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeInnerModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_attribute_string": {
@@ -4638,6 +7928,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4646,6 +7950,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "string": types.StringType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_bool": {
@@ -4671,6 +7989,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4679,6 +8011,20 @@ func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[st
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_float64": {
@@ -4704,6 +8050,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4712,6 +8072,20 @@ func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[st
 return map[string]attr.Type{
 "float64": types.Float64Type,
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_int64": {
@@ -4737,6 +8111,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4745,6 +8133,20 @@ func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[st
 return map[string]attr.Type{
 "int64": types.Int64Type,
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_list": {
@@ -4774,6 +8176,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4784,6 +8200,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_list_nested_attribute": {
@@ -4815,6 +8245,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4827,6 +8271,20 @@ ElemType: ListNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4835,6 +8293,20 @@ func (m ListNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_list_nested_block": {
@@ -4866,6 +8338,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4878,6 +8364,20 @@ ElemType: ListNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m ListNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4886,6 +8386,20 @@ func (m ListNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[stri
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m ListNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ListNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_map": {
@@ -4915,6 +8429,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4925,6 +8453,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_map_nested_attribute": {
@@ -4956,6 +8498,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4968,6 +8524,20 @@ ElemType: MapNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m MapNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -4976,6 +8546,20 @@ func (m MapNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m MapNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m MapNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_number": {
@@ -5001,6 +8585,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5009,6 +8607,20 @@ func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[st
 return map[string]attr.Type{
 "number": types.NumberType,
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_object": {
@@ -5041,6 +8653,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5053,6 +8679,20 @@ AttrTypes: map[string]attr.Type{
 },
 },
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_set": {
@@ -5082,6 +8722,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5092,6 +8746,20 @@ return map[string]attr.Type{
 ElemType: types.BoolType,
 },
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_set_nested_attribute": {
@@ -5123,6 +8791,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5135,6 +8817,20 @@ ElemType: SetNestedAttributeModel{}.ObjectType(ctx),
 }
 }
 
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5143,6 +8839,20 @@ func (m SetNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) map[s
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_set_nested_block": {
@@ -5174,6 +8884,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5186,6 +8910,20 @@ ElemType: SetNestedBlockModel{}.ObjectType(ctx),
 }
 }
 
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SetNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5194,6 +8932,20 @@ func (m SetNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[strin
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SetNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SetNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_single_nested_attribute": {
@@ -5223,6 +8975,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5235,6 +9001,20 @@ AttrTypes: SingleNestedAttributeModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedAttributeModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5243,6 +9023,20 @@ func (m SingleNestedAttributeModel) ObjectAttributeTypes(ctx context.Context) ma
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedAttributeModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedAttributeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_single_nested_block": {
@@ -5272,6 +9066,20 @@ AttrTypes: SingleNestedBlockOuterModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockOuterModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5284,6 +9092,20 @@ AttrTypes: SingleNestedBlockInnerModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m SingleNestedBlockOuterModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockOuterModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockInnerModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5292,6 +9114,20 @@ func (m SingleNestedBlockInnerModel) ObjectAttributeTypes(ctx context.Context) m
 return map[string]attr.Type{
 "bool": types.BoolType,
 }
+}
+
+func (m SingleNestedBlockInnerModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockInnerModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"single_nested_block_string": {
@@ -5317,6 +9153,20 @@ AttrTypes: SingleNestedBlockModel{}.ObjectAttributeTypes(ctx),
 }
 }
 
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
+
 func (m SingleNestedBlockModel) ObjectType(ctx context.Context) types.ObjectType {
 return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -5325,6 +9175,20 @@ func (m SingleNestedBlockModel) ObjectAttributeTypes(ctx context.Context) map[st
 return map[string]attr.Type{
 "string": types.StringType,
 }
+}
+
+func (m SingleNestedBlockModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m SingleNestedBlockModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 		"string": {
@@ -5342,6 +9206,20 @@ func (m ExampleModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.
 return map[string]attr.Type{
 "string": types.StringType,
 }
+}
+
+func (m ExampleModel) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m ExampleModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
 }`),
 		},
 	}

@@ -3,8 +3,11 @@
 package generated
 
 import (
+	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -349,129 +352,283 @@ type SingleNestedBlockTwoSingleNestedBlockOneModel struct {
 	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
-func (m ListNestedAttributeOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
 
-func (m ListNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m ListNestedAttributeThreeModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m ListNestedAttributeOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedAttributeThreeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m ListNestedAttributeThreeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedAttributeThreeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_nested_attribute_three_list_nested_attribute_one": types.ListType{
-			ElemType: ListNestedAttributeThreeListNestedAttributeOneModel{}.ObjectType(),
+			ElemType: ListNestedAttributeThreeListNestedAttributeOneModel{}.ObjectType(ctx),
 		},
 	}
 }
 
-func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeThreeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeThreeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_attribute": types.ListType{
 			ElemType: types.StringType,
 		},
 	}
 }
-func (m ListNestedAttributeTwoModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedAttributeTwoModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m ListNestedAttributeTwoModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedAttributeTwoModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_nested_attribute_two_list_nested_attribute_one": types.ListType{
-			ElemType: ListNestedAttributeTwoListNestedAttributeOneModel{}.ObjectType(),
+			ElemType: ListNestedAttributeTwoListNestedAttributeOneModel{}.ObjectType(ctx),
 		},
 	}
 }
 
-func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedAttributeTwoModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeTwoModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m SingleNestedAttributeOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SingleNestedAttributeOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedAttributeOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m SingleNestedAttributeThreeModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m SingleNestedAttributeOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedAttributeThreeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SingleNestedAttributeThreeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedAttributeThreeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"single_nested_attribute_three_single_nested_attribute_one": types.ObjectType{
-			AttrTypes: SingleNestedAttributeThreeSingleNestedAttributeOneModel{}.ObjectAttributeTypes(),
+			AttrTypes: SingleNestedAttributeThreeSingleNestedAttributeOneModel{}.ObjectAttributeTypes(ctx),
 		},
 	}
 }
 
-func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeThreeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeThreeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_attribute": types.ListType{
 			ElemType: types.StringType,
 		},
 	}
 }
-func (m SingleNestedAttributeTwoModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedAttributeTwoModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SingleNestedAttributeTwoModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedAttributeTwoModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"single_nested_attribute_two_single_nested_attribute_one": types.ObjectType{
-			AttrTypes: SingleNestedAttributeTwoSingleNestedAttributeOneModel{}.ObjectAttributeTypes(),
+			AttrTypes: SingleNestedAttributeTwoSingleNestedAttributeOneModel{}.ObjectAttributeTypes(ctx),
 		},
 	}
 }
 
-func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedAttributeTwoModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeTwoModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m ListNestedBlockOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m ListNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedBlockOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m ListNestedBlockThreeModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m ListNestedBlockOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedBlockThreeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m ListNestedBlockThreeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedBlockThreeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_nested_block_three_list_nested_block_one": types.ListType{
-			ElemType: ListNestedBlockThreeListNestedBlockOneModel{}.ObjectType(),
+			ElemType: ListNestedBlockThreeListNestedBlockOneModel{}.ObjectType(ctx),
 		},
 		"object_attribute": types.ObjectType{
 			AttrTypes: map[string]attr.Type{
@@ -481,52 +638,122 @@ func (m ListNestedBlockThreeModel) ObjectAttributeTypes() map[string]attr.Type {
 	}
 }
 
-func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockThreeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockThreeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_attribute": types.ListType{
 			ElemType: types.StringType,
 		},
 	}
 }
-func (m ListNestedBlockTwoModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedBlockTwoModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m ListNestedBlockTwoModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedBlockTwoModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_nested_block_two_list_nested_block_one": types.ListType{
-			ElemType: ListNestedBlockTwoListNestedBlockOneModel{}.ObjectType(),
+			ElemType: ListNestedBlockTwoListNestedBlockOneModel{}.ObjectType(ctx),
 		},
 	}
 }
 
-func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m ListNestedBlockTwoModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockTwoModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m SingleNestedBlockOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SingleNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedBlockOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
 }
-func (m SingleNestedBlockThreeModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m SingleNestedBlockOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedBlockThreeModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SingleNestedBlockThreeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedBlockThreeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"object_attribute": types.ObjectType{
 			AttrTypes: map[string]attr.Type{
@@ -534,40 +761,96 @@ func (m SingleNestedBlockThreeModel) ObjectAttributeTypes() map[string]attr.Type
 			},
 		},
 		"single_nested_block_three_list_nested_block_one": types.ListType{
-			ElemType: SingleNestedBlockThreeListNestedBlockOneModel{}.ObjectType(),
+			ElemType: SingleNestedBlockThreeListNestedBlockOneModel{}.ObjectType(ctx),
 		},
 	}
 }
 
-func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockThreeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockThreeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"list_attribute": types.ListType{
 			ElemType: types.StringType,
 		},
 	}
 }
-func (m SingleNestedBlockTwoModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+
+func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedBlockTwoModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SingleNestedBlockTwoModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedBlockTwoModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"single_nested_block_two_single_nested_block_one": types.ObjectType{
-			AttrTypes: SingleNestedBlockTwoSingleNestedBlockOneModel{}.ObjectAttributeTypes(),
+			AttrTypes: SingleNestedBlockTwoSingleNestedBlockOneModel{}.ObjectAttributeTypes(ctx),
 		},
 	}
 }
 
-func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectType() types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes()}
+func (m SingleNestedBlockTwoModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
 }
 
-func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectAttributeTypes() map[string]attr.Type {
+func (m SingleNestedBlockTwoModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
 		"bool_attribute": types.BoolType,
 	}
+}
+
+func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
 }
