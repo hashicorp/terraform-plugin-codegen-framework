@@ -13,6 +13,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -335,48 +337,95 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 
 	// Populate attrTypeStrings map for use in template.
 	for _, k := range attributeKeys {
-		switch t := g.Attributes[k].(type) {
-		case GeneratorBoolAttribute:
+		if g.Attributes[k].AttrType() == types.BoolType {
 			attrTypeStrings[k] = "types.BoolType"
-		case GeneratorFloat64Attribute:
+		}
+
+		if g.Attributes[k].AttrType() == types.Float64Type {
 			attrTypeStrings[k] = "types.Float64Type"
-		case GeneratorInt64Attribute:
+		}
+
+		if g.Attributes[k].AttrType() == types.Int64Type {
 			attrTypeStrings[k] = "types.Int64Type"
-		case GeneratorListAttribute:
-			elemType, err := elementTypeString(t.ElementType)
-			if err != nil {
-				return nil, err
+		}
+
+		// ListType could either be a ListAttribute or a ListNestedAttribute.
+		if _, ok := g.Attributes[k].AttrType().(basetypes.ListType); ok {
+			// If attribute does not implement Attributes interface it is a ListAttribute else it is a ListNestedAttribute.
+			if _, ok := g.Attributes[k].(schema.Attributes); !ok {
+				if e, ok := g.Attributes[k].(schema.Elements); ok {
+					elemType, err := elementTypeString(e.ElemType())
+					if err != nil {
+						return nil, err
+					}
+					attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %s,\n}", elemType)
+				} else {
+					return nil, fmt.Errorf("%s.%s attribute is a ListType but does not implement Elements interface", name, k)
+				}
+			} else {
+				attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
 			}
-			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %s,\n}", elemType)
-		case GeneratorListNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.ListType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
-		case GeneratorMapAttribute:
-			elemType, err := elementTypeString(t.ElementType)
-			if err != nil {
-				return nil, err
+		}
+
+		// MapType could either be a MapAttribute or a MapNestedAttribute.
+		if _, ok := g.Attributes[k].AttrType().(basetypes.MapType); ok {
+			// If attribute does not implement Attributes interface it is a MapAttribute else it is a MapNestedAttribute.
+			if _, ok := g.Attributes[k].(schema.Attributes); !ok {
+				if e, ok := g.Attributes[k].(schema.Elements); ok {
+					elemType, err := elementTypeString(e.ElemType())
+					if err != nil {
+						return nil, err
+					}
+					attrTypeStrings[k] = fmt.Sprintf("types.MapType{\nElemType: %s,\n}", elemType)
+				} else {
+					return nil, fmt.Errorf("%s.%s attribute is a MapType but does not implement Elements interface", name, k)
+				}
+			} else {
+				attrTypeStrings[k] = fmt.Sprintf("types.MapType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
 			}
-			attrTypeStrings[k] = fmt.Sprintf("types.MapType{\nElemType: %s,\n}", elemType)
-		case GeneratorMapNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.MapType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
-		case GeneratorNumberAttribute:
+		}
+
+		if g.Attributes[k].AttrType() == types.NumberType {
 			attrTypeStrings[k] = "types.NumberType"
-		case GeneratorObjectAttribute:
-			attrTypes, err := attrTypesString(t.AttributeTypes)
-			if err != nil {
-				return nil, err
+		}
+
+		// ObjectType could either be an ObjectAttribute or a SingleNestedAttribute.
+		if _, ok := g.Attributes[k].AttrType().(basetypes.ObjectType); ok {
+			// If attribute does not implement Attributes interface it is an ObjectAttribute else it is a SingleNestedAttribute.
+			if _, ok := g.Attributes[k].(schema.Attributes); !ok {
+				if o, ok := g.Attributes[k].(schema.Attrs); ok {
+					attrTypes, err := attrTypesString(o.AttrTypes())
+					if err != nil {
+						return nil, err
+					}
+					attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", attrTypes)
+				} else {
+					return nil, fmt.Errorf("%s.%s attribute is an ObjectType but does not implement Attrs interface", name, k)
+				}
+			} else {
+				attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: %sModel{}.ObjectAttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k))
 			}
-			attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", attrTypes)
-		case GeneratorSetAttribute:
-			elemType, err := elementTypeString(t.ElementType)
-			if err != nil {
-				return nil, err
+		}
+
+		// SetType could either be a SetAttribute or a SetNestedAttribute.
+		if _, ok := g.Attributes[k].AttrType().(basetypes.SetType); ok {
+			// If attribute does not implement Attributes interface it is a SetAttribute else it is a SetNestedAttribute.
+			if _, ok := g.Attributes[k].(schema.Attributes); !ok {
+				if e, ok := g.Attributes[k].(schema.Elements); ok {
+					elemType, err := elementTypeString(e.ElemType())
+					if err != nil {
+						return nil, err
+					}
+					attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %s,\n}", elemType)
+				} else {
+					return nil, fmt.Errorf("%s.%s attribute is a SetType but does not implement Elements interface", name, k)
+				}
+			} else {
+				attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
 			}
-			attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %s,\n}", elemType)
-		case GeneratorSetNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.SetType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k))
-		case GeneratorSingleNestedAttribute:
-			attrTypeStrings[k] = fmt.Sprintf("types.ObjectType{\nAttrTypes: %sModel{}.ObjectAttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k))
-		case GeneratorStringAttribute:
+		}
+
+		if g.Attributes[k].AttrType() == types.StringType {
 			attrTypeStrings[k] = "types.StringType"
 		}
 	}

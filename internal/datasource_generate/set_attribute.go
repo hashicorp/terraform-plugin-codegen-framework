@@ -32,6 +32,10 @@ func (g GeneratorSetAttribute) AttrType() attr.Type {
 	}
 }
 
+func (g GeneratorSetAttribute) ElemType() specschema.ElementType {
+	return g.ElementType
+}
+
 func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 

@@ -26,7 +26,7 @@ type GeneratorFloat64Attribute struct {
 }
 
 func (g GeneratorFloat64Attribute) AttrType() attr.Type {
-	return types.BoolType
+	return types.Float64Type
 }
 
 func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {

@@ -4,6 +4,7 @@
 package schema
 
 import (
+	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -13,9 +14,17 @@ type Attributes interface {
 	GetAttributes() GeneratorAttributes
 }
 
+type Attrs interface {
+	AttrTypes() specschema.ObjectAttributeTypes
+}
+
 type Blocks interface {
 	Attributes
 	GetBlocks() GeneratorBlocks
+}
+
+type Elements interface {
+	ElemType() specschema.ElementType
 }
 
 type GeneratorAttribute interface {

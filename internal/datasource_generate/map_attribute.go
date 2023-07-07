@@ -32,6 +32,10 @@ func (g GeneratorMapAttribute) AttrType() attr.Type {
 	}
 }
 
+func (g GeneratorMapAttribute) ElemType() specschema.ElementType {
+	return g.ElementType
+}
+
 func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
