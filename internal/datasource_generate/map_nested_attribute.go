@@ -50,7 +50,7 @@ func (g GeneratorMapNestedAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorMapNestedAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorMapNestedAttribute)
 	if !ok {
 		return false
@@ -123,7 +123,7 @@ func (g GeneratorMapNestedAttribute) ModelField(name string) (model.Field, error
 	return field, nil
 }
 
-func (g GeneratorMapNestedAttribute) GetAttributes() GeneratorAttributes {
+func (g GeneratorMapNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.NestedObject.Attributes
 }
 

@@ -54,7 +54,7 @@ func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorSetNestedBlock) Equal(ga GeneratorBlock) bool {
+func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 	h, ok := ga.(GeneratorSetNestedBlock)
 	if !ok {
 		return false
@@ -128,11 +128,11 @@ func (g GeneratorSetNestedBlock) ModelField(name string) (model.Field, error) {
 	return field, nil
 }
 
-func (g GeneratorSetNestedBlock) GetAttributes() GeneratorAttributes {
+func (g GeneratorSetNestedBlock) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.NestedObject.Attributes
 }
 
-func (g GeneratorSetNestedBlock) GetBlocks() GeneratorBlocks {
+func (g GeneratorSetNestedBlock) GetBlocks() generatorschema.GeneratorBlocks {
 	return g.NestedObject.Blocks
 }
 

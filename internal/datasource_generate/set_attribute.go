@@ -41,7 +41,7 @@ func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorSetAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSetAttribute)
 	if !ok {
 		return false

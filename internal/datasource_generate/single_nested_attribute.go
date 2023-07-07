@@ -19,7 +19,7 @@ type GeneratorSingleNestedAttribute struct {
 
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
-	Attributes GeneratorAttributes
+	Attributes generatorschema.GeneratorAttributes
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
 }
@@ -42,7 +42,7 @@ func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorSingleNestedAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSingleNestedAttribute)
 	if !ok {
 		return false
@@ -107,7 +107,7 @@ func (g GeneratorSingleNestedAttribute) ModelField(name string) (model.Field, er
 	return field, nil
 }
 
-func (g GeneratorSingleNestedAttribute) GetAttributes() GeneratorAttributes {
+func (g GeneratorSingleNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.Attributes
 }
 

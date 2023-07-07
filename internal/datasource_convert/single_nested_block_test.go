@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestConvertSingleNestedBlock(t *testing.T) {
@@ -51,7 +52,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]datasource_generate.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"bool_attribute": datasource_generate.GeneratorBoolAttribute{
 						BoolAttribute: schema.BoolAttribute{
 							Optional: true,
@@ -75,7 +76,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]datasource_generate.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"list_attribute": datasource_generate.GeneratorListAttribute{
 						ListAttribute: schema.ListAttribute{
 							Optional: true,
@@ -109,10 +110,10 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]datasource_generate.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"nested_attribute": datasource_generate.GeneratorListNestedAttribute{
 						NestedObject: datasource_generate.GeneratorNestedAttributeObject{
-							Attributes: map[string]datasource_generate.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": datasource_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Computed: true,
@@ -145,7 +146,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]datasource_generate.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"object_attribute": datasource_generate.GeneratorObjectAttribute{
 						ObjectAttribute: schema.ObjectAttribute{
 							Optional: true,
@@ -180,9 +181,9 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]datasource_generate.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"nested_attribute": datasource_generate.GeneratorSingleNestedAttribute{
-						Attributes: map[string]datasource_generate.GeneratorAttribute{
+						Attributes: generatorschema.GeneratorAttributes{
 							"nested_bool": datasource_generate.GeneratorBoolAttribute{
 								BoolAttribute: schema.BoolAttribute{
 									Computed: true,
@@ -229,10 +230,10 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorSingleNestedBlock{
-				Blocks: map[string]datasource_generate.GeneratorBlock{
+				Blocks: map[string]generatorschema.GeneratorBlock{
 					"nested_block": datasource_generate.GeneratorListNestedBlock{
 						NestedObject: datasource_generate.GeneratorNestedBlockObject{
-							Attributes: map[string]datasource_generate.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": datasource_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -263,9 +264,9 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorSingleNestedBlock{
-				Blocks: map[string]datasource_generate.GeneratorBlock{
+				Blocks: map[string]generatorschema.GeneratorBlock{
 					"nested_block": datasource_generate.GeneratorSingleNestedBlock{
-						Attributes: map[string]datasource_generate.GeneratorAttribute{
+						Attributes: generatorschema.GeneratorAttributes{
 							"bool_attribute": datasource_generate.GeneratorBoolAttribute{
 								BoolAttribute: schema.BoolAttribute{
 									Optional: true,

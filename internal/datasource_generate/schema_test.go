@@ -8,6 +8,8 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorDataSourceSchema_ModelObjectHelpersTemplate(t *testing.T) {
@@ -20,7 +22,7 @@ func TestGeneratorDataSourceSchema_ModelObjectHelpersTemplate(t *testing.T) {
 	}{
 		"bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"bool": GeneratorBoolAttribute{},
 				},
 			},
@@ -51,7 +53,7 @@ data,
 		},
 		"float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"float64": GeneratorFloat64Attribute{},
 				},
 			},
@@ -82,7 +84,7 @@ data,
 		},
 		"int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"int64": GeneratorInt64Attribute{},
 				},
 			},
@@ -113,7 +115,7 @@ data,
 		},
 		"list_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
@@ -150,7 +152,7 @@ data,
 		},
 		"list_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Float64: &specschema.Float64Type{},
@@ -187,7 +189,7 @@ data,
 		},
 		"list_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Int64: &specschema.Int64Type{},
@@ -224,7 +226,7 @@ data,
 		},
 		"list_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							List: &specschema.ListType{
@@ -267,7 +269,7 @@ data,
 		},
 		"list_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Map: &specschema.MapType{
@@ -310,7 +312,7 @@ data,
 		},
 		"list_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Number: &specschema.NumberType{},
@@ -347,7 +349,7 @@ data,
 		},
 		"list_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
@@ -395,7 +397,7 @@ data,
 		},
 		"list_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Set: &specschema.SetType{
@@ -438,7 +440,7 @@ data,
 		},
 		"list_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							String: &specschema.StringType{},
@@ -475,10 +477,10 @@ data,
 		},
 		"list_nested_attribute_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{},
 							},
 						},
@@ -538,10 +540,10 @@ data,
 		},
 		"list_nested_attribute_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -601,10 +603,10 @@ data,
 		},
 		"list_nested_attribute_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -664,10 +666,10 @@ data,
 		},
 		"list_nested_attribute_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -733,13 +735,13 @@ data,
 		},
 		"list_nested_attribute_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute_outer": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list_nested_attribute_inner": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -828,10 +830,10 @@ data,
 		},
 		"list_nested_attribute_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -897,13 +899,13 @@ data,
 		},
 		"list_nested_attribute_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map_nested_attribute": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -992,10 +994,10 @@ data,
 		},
 		"list_nested_attribute_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -1055,10 +1057,10 @@ data,
 		},
 		"list_nested_attribute_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -1129,10 +1131,10 @@ data,
 		},
 		"list_nested_attribute_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -1198,13 +1200,13 @@ data,
 		},
 		"list_nested_attribute_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set_nested_attribute": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1293,12 +1295,12 @@ data,
 		},
 		"list_nested_attribute_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -1386,10 +1388,10 @@ data,
 		},
 		"list_nested_attribute_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -1449,10 +1451,10 @@ data,
 		},
 		"list_nested_block_bool": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{},
 							},
 						},
@@ -1512,10 +1514,10 @@ data,
 		},
 		"list_nested_block_float64": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -1575,10 +1577,10 @@ data,
 		},
 		"list_nested_block_int64": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -1638,10 +1640,10 @@ data,
 		},
 		"list_nested_block_list": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -1707,13 +1709,13 @@ data,
 		},
 		"list_nested_block_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list_nested_attribute": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1802,13 +1804,13 @@ data,
 		},
 		"list_nested_block_list_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block_outer": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Blocks: GeneratorBlocks{
+							Blocks: schema.GeneratorBlocks{
 								"list_nested_block_inner": GeneratorListNestedBlock{
 									NestedObject: GeneratorNestedBlockObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -1897,10 +1899,10 @@ data,
 		},
 		"list_nested_block_map": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -1966,13 +1968,13 @@ data,
 		},
 		"list_nested_block_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map_nested_attribute": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -2061,10 +2063,10 @@ data,
 		},
 		"list_nested_block_number": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -2124,10 +2126,10 @@ data,
 		},
 		"list_nested_block_object": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -2198,10 +2200,10 @@ data,
 		},
 		"list_nested_block_set": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -2267,13 +2269,13 @@ data,
 		},
 		"list_nested_block_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set_nested_attribute": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -2362,13 +2364,13 @@ data,
 		},
 		"list_nested_block_set_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Blocks: GeneratorBlocks{
+							Blocks: schema.GeneratorBlocks{
 								"set_nested_block": GeneratorSetNestedBlock{
 									NestedObject: GeneratorNestedBlockObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -2457,12 +2459,12 @@ data,
 		},
 		"list_nested_block_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -2550,12 +2552,12 @@ data,
 		},
 		"list_nested_block_single_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Blocks: GeneratorBlocks{
+							Blocks: schema.GeneratorBlocks{
 								"single_nested_block": GeneratorSingleNestedBlock{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -2643,10 +2645,10 @@ data,
 		},
 		"list_nested_block_string": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -2706,7 +2708,7 @@ data,
 		},
 		"map_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
@@ -2743,7 +2745,7 @@ data,
 		},
 		"map_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Float64: &specschema.Float64Type{},
@@ -2780,7 +2782,7 @@ data,
 		},
 		"map_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Int64: &specschema.Int64Type{},
@@ -2817,7 +2819,7 @@ data,
 		},
 		"map_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							List: &specschema.ListType{
@@ -2860,7 +2862,7 @@ data,
 		},
 		"map_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Map: &specschema.MapType{
@@ -2903,7 +2905,7 @@ data,
 		},
 		"map_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Number: &specschema.NumberType{},
@@ -2940,7 +2942,7 @@ data,
 		},
 		"map_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
@@ -2988,7 +2990,7 @@ data,
 		},
 		"map_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							Set: &specschema.SetType{
@@ -3031,7 +3033,7 @@ data,
 		},
 		"map_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
 							String: &specschema.StringType{},
@@ -3068,10 +3070,10 @@ data,
 		},
 		"map_nested_attribute_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{},
 							},
 						},
@@ -3131,10 +3133,10 @@ data,
 		},
 		"map_nested_attribute_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -3194,10 +3196,10 @@ data,
 		},
 		"map_nested_attribute_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -3257,10 +3259,10 @@ data,
 		},
 		"map_nested_attribute_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -3326,13 +3328,13 @@ data,
 		},
 		"map_nested_attribute_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list_nested_attribute": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3421,10 +3423,10 @@ data,
 		},
 		"map_nested_attribute_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -3490,13 +3492,13 @@ data,
 		},
 		"map_nested_attribute_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute_outer": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map_nested_attribute_inner": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3585,10 +3587,10 @@ data,
 		},
 		"map_nested_attribute_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -3648,10 +3650,10 @@ data,
 		},
 		"map_nested_attribute_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -3722,10 +3724,10 @@ data,
 		},
 		"map_nested_attribute_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -3791,13 +3793,13 @@ data,
 		},
 		"map_nested_attribute_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set_nested_attribute": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -3886,12 +3888,12 @@ data,
 		},
 		"map_nested_attribute_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -3979,10 +3981,10 @@ data,
 		},
 		"map_nested_attribute_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -4042,7 +4044,7 @@ data,
 		},
 		"number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"number": GeneratorNumberAttribute{},
 				},
 			},
@@ -4073,7 +4075,7 @@ data,
 		},
 		"object_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -4115,7 +4117,7 @@ data,
 		},
 		"object_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -4157,7 +4159,7 @@ data,
 		},
 		"object_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -4199,7 +4201,7 @@ data,
 		},
 		"object_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -4247,7 +4249,7 @@ data,
 		},
 		"object_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -4295,7 +4297,7 @@ data,
 		},
 		"object_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -4337,7 +4339,7 @@ data,
 		},
 		"object_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -4385,7 +4387,7 @@ data,
 		},
 		"object_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -4427,7 +4429,7 @@ data,
 		},
 		"set_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
@@ -4464,7 +4466,7 @@ data,
 		},
 		"set_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Float64: &specschema.Float64Type{},
@@ -4501,7 +4503,7 @@ data,
 		},
 		"set_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Int64: &specschema.Int64Type{},
@@ -4538,7 +4540,7 @@ data,
 		},
 		"set_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							List: &specschema.ListType{
@@ -4581,7 +4583,7 @@ data,
 		},
 		"set_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Map: &specschema.MapType{
@@ -4624,7 +4626,7 @@ data,
 		},
 		"set_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Number: &specschema.NumberType{},
@@ -4661,7 +4663,7 @@ data,
 		},
 		"set_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
@@ -4709,7 +4711,7 @@ data,
 		},
 		"set_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							Set: &specschema.SetType{
@@ -4752,7 +4754,7 @@ data,
 		},
 		"set_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
 							String: &specschema.StringType{},
@@ -4789,10 +4791,10 @@ data,
 		},
 		"set_nested_attribute_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{},
 							},
 						},
@@ -4852,10 +4854,10 @@ data,
 		},
 		"set_nested_attribute_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -4915,10 +4917,10 @@ data,
 		},
 		"set_nested_attribute_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -4978,10 +4980,10 @@ data,
 		},
 		"set_nested_attribute_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -5047,13 +5049,13 @@ data,
 		},
 		"set_nested_attribute_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list_nested_attribute": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -5142,10 +5144,10 @@ data,
 		},
 		"set_nested_attribute_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -5211,13 +5213,13 @@ data,
 		},
 		"set_nested_attribute_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map_nested_attribute": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -5306,10 +5308,10 @@ data,
 		},
 		"set_nested_attribute_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -5369,10 +5371,10 @@ data,
 		},
 		"set_nested_attribute_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -5443,10 +5445,10 @@ data,
 		},
 		"set_nested_attribute_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -5512,13 +5514,13 @@ data,
 		},
 		"set_nested_attribute_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute_outer": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set_nested_attribute_inner": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -5607,12 +5609,12 @@ data,
 		},
 		"set_nested_attribute_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -5700,10 +5702,10 @@ data,
 		},
 		"set_nested_attribute_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -5763,10 +5765,10 @@ data,
 		},
 		"set_nested_block_bool": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{},
 							},
 						},
@@ -5826,10 +5828,10 @@ data,
 		},
 		"set_nested_block_float64": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"float64": GeneratorFloat64Attribute{},
 							},
 						},
@@ -5889,10 +5891,10 @@ data,
 		},
 		"set_nested_block_int64": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"int64": GeneratorInt64Attribute{},
 							},
 						},
@@ -5952,10 +5954,10 @@ data,
 		},
 		"set_nested_block_list": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list": GeneratorListAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -6021,13 +6023,13 @@ data,
 		},
 		"set_nested_block_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"list_nested_attribute": GeneratorListNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -6116,13 +6118,13 @@ data,
 		},
 		"set_nested_block_list_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Blocks: GeneratorBlocks{
+							Blocks: schema.GeneratorBlocks{
 								"list_nested_block": GeneratorListNestedBlock{
 									NestedObject: GeneratorNestedBlockObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -6211,10 +6213,10 @@ data,
 		},
 		"set_nested_block_map": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map": GeneratorMapAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -6280,13 +6282,13 @@ data,
 		},
 		"set_nested_block_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"map_nested_attribute": GeneratorMapNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -6375,10 +6377,10 @@ data,
 		},
 		"set_nested_block_number": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"number": GeneratorNumberAttribute{},
 							},
 						},
@@ -6438,10 +6440,10 @@ data,
 		},
 		"set_nested_block_object": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"object": GeneratorObjectAttribute{
 									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
@@ -6512,10 +6514,10 @@ data,
 		},
 		"set_nested_block_set": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set": GeneratorSetAttribute{
 									ElementType: specschema.ElementType{
 										Bool: &specschema.BoolType{},
@@ -6581,13 +6583,13 @@ data,
 		},
 		"set_nested_block_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"set_nested_attribute": GeneratorSetNestedAttribute{
 									NestedObject: GeneratorNestedAttributeObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -6676,13 +6678,13 @@ data,
 		},
 		"set_nested_block_set_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block_outer": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Blocks: GeneratorBlocks{
+							Blocks: schema.GeneratorBlocks{
 								"set_nested_block_inner": GeneratorSetNestedBlock{
 									NestedObject: GeneratorNestedBlockObject{
-										Attributes: GeneratorAttributes{
+										Attributes: schema.GeneratorAttributes{
 											"bool": GeneratorBoolAttribute{},
 										},
 									},
@@ -6771,12 +6773,12 @@ data,
 		},
 		"set_nested_block_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"single_nested_attribute": GeneratorSingleNestedAttribute{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -6864,12 +6866,12 @@ data,
 		},
 		"set_nested_block_single_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Blocks: GeneratorBlocks{
+							Blocks: schema.GeneratorBlocks{
 								"single_nested_block": GeneratorSingleNestedBlock{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -6957,10 +6959,10 @@ data,
 		},
 		"set_nested_block_string": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: GeneratorAttributes{
+							Attributes: schema.GeneratorAttributes{
 								"string": GeneratorStringAttribute{},
 							},
 						},
@@ -7020,9 +7022,9 @@ data,
 		},
 		"single_nested_attribute_bool": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"bool": GeneratorBoolAttribute{},
 						},
 					},
@@ -7081,9 +7083,9 @@ data,
 		},
 		"single_nested_attribute_float64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"float64": GeneratorFloat64Attribute{},
 						},
 					},
@@ -7142,9 +7144,9 @@ data,
 		},
 		"single_nested_attribute_int64": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"int64": GeneratorInt64Attribute{},
 						},
 					},
@@ -7203,9 +7205,9 @@ data,
 		},
 		"single_nested_attribute_list": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"list": GeneratorListAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -7270,12 +7272,12 @@ data,
 		},
 		"single_nested_attribute_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"list_nested_attribute": GeneratorListNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -7363,9 +7365,9 @@ data,
 		},
 		"single_nested_attribute_map": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"map": GeneratorMapAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -7430,12 +7432,12 @@ data,
 		},
 		"single_nested_attribute_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"map_nested_attribute": GeneratorMapNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -7523,9 +7525,9 @@ data,
 		},
 		"single_nested_attribute_number": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"number": GeneratorNumberAttribute{},
 						},
 					},
@@ -7584,9 +7586,9 @@ data,
 		},
 		"single_nested_attribute_object": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"object": GeneratorObjectAttribute{
 								AttributeTypes: specschema.ObjectAttributeTypes{
 									{
@@ -7656,9 +7658,9 @@ data,
 		},
 		"single_nested_attribute_set": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"set": GeneratorSetAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -7723,12 +7725,12 @@ data,
 		},
 		"single_nested_attribute_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"set_nested_attribute": GeneratorSetNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -7816,11 +7818,11 @@ data,
 		},
 		"single_nested_attribute_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute_outer": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"single_nested_attribute_inner": GeneratorSingleNestedAttribute{
-								Attributes: GeneratorAttributes{
+								Attributes: schema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{},
 								},
 							},
@@ -7907,9 +7909,9 @@ data,
 		},
 		"single_nested_attribute_string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"string": GeneratorStringAttribute{},
 						},
 					},
@@ -7968,9 +7970,9 @@ data,
 		},
 		"single_nested_block_bool": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"bool": GeneratorBoolAttribute{},
 						},
 					},
@@ -8029,9 +8031,9 @@ data,
 		},
 		"single_nested_block_float64": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"float64": GeneratorFloat64Attribute{},
 						},
 					},
@@ -8090,9 +8092,9 @@ data,
 		},
 		"single_nested_block_int64": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"int64": GeneratorInt64Attribute{},
 						},
 					},
@@ -8151,9 +8153,9 @@ data,
 		},
 		"single_nested_block_list": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"list": GeneratorListAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -8218,12 +8220,12 @@ data,
 		},
 		"single_nested_block_list_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"list_nested_attribute": GeneratorListNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -8311,12 +8313,12 @@ data,
 		},
 		"single_nested_block_list_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Blocks: GeneratorBlocks{
+						Blocks: schema.GeneratorBlocks{
 							"list_nested_block": GeneratorListNestedBlock{
 								NestedObject: GeneratorNestedBlockObject{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -8404,9 +8406,9 @@ data,
 		},
 		"single_nested_block_map": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"map": GeneratorMapAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -8471,12 +8473,12 @@ data,
 		},
 		"single_nested_block_map_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"map_nested_attribute": GeneratorMapNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -8564,9 +8566,9 @@ data,
 		},
 		"single_nested_block_number": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"number": GeneratorNumberAttribute{},
 						},
 					},
@@ -8625,9 +8627,9 @@ data,
 		},
 		"single_nested_block_object": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"object": GeneratorObjectAttribute{
 								AttributeTypes: specschema.ObjectAttributeTypes{
 									{
@@ -8697,9 +8699,9 @@ data,
 		},
 		"single_nested_block_set": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"set": GeneratorSetAttribute{
 								ElementType: specschema.ElementType{
 									Bool: &specschema.BoolType{},
@@ -8764,12 +8766,12 @@ data,
 		},
 		"single_nested_block_set_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"set_nested_attribute": GeneratorSetNestedAttribute{
 								NestedObject: GeneratorNestedAttributeObject{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -8857,12 +8859,12 @@ data,
 		},
 		"single_nested_block_set_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Blocks: GeneratorBlocks{
+						Blocks: schema.GeneratorBlocks{
 							"set_nested_block": GeneratorSetNestedBlock{
 								NestedObject: GeneratorNestedBlockObject{
-									Attributes: GeneratorAttributes{
+									Attributes: schema.GeneratorAttributes{
 										"bool": GeneratorBoolAttribute{},
 									},
 								},
@@ -8950,11 +8952,11 @@ data,
 		},
 		"single_nested_block_single_nested_attribute": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"single_nested_attribute": GeneratorSingleNestedAttribute{
-								Attributes: GeneratorAttributes{
+								Attributes: schema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{},
 								},
 							},
@@ -9041,11 +9043,11 @@ data,
 		},
 		"single_nested_block_single_nested_block": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block_outer": GeneratorSingleNestedBlock{
-						Blocks: GeneratorBlocks{
+						Blocks: schema.GeneratorBlocks{
 							"single_nested_block_inner": GeneratorSingleNestedBlock{
-								Attributes: GeneratorAttributes{
+								Attributes: schema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{},
 								},
 							},
@@ -9132,9 +9134,9 @@ data,
 		},
 		"single_nested_block_string": {
 			input: GeneratorDataSourceSchema{
-				Blocks: GeneratorBlocks{
+				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
-						Attributes: GeneratorAttributes{
+						Attributes: schema.GeneratorAttributes{
 							"string": GeneratorStringAttribute{},
 						},
 					},
@@ -9193,7 +9195,7 @@ data,
 		},
 		"string": {
 			input: GeneratorDataSourceSchema{
-				Attributes: GeneratorAttributes{
+				Attributes: schema.GeneratorAttributes{
 					"string": GeneratorStringAttribute{},
 				},
 			},

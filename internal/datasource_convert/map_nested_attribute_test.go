@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestConvertMapNestedAttribute(t *testing.T) {
@@ -56,7 +57,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorMapNestedAttribute{
 				NestedObject: datasource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]datasource_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": datasource_generate.GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional: true,
@@ -84,7 +85,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorMapNestedAttribute{
 				NestedObject: datasource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]datasource_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list_attribute": datasource_generate.GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Optional: true,
@@ -122,10 +123,10 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorMapNestedAttribute{
 				NestedObject: datasource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]datasource_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_attribute": datasource_generate.GeneratorMapNestedAttribute{
 							NestedObject: datasource_generate.GeneratorNestedAttributeObject{
-								Attributes: map[string]datasource_generate.GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": datasource_generate.GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Computed: true,
@@ -162,7 +163,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorMapNestedAttribute{
 				NestedObject: datasource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]datasource_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"object_attribute": datasource_generate.GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
@@ -201,9 +202,9 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorMapNestedAttribute{
 				NestedObject: datasource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]datasource_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_attribute": datasource_generate.GeneratorSingleNestedAttribute{
-							Attributes: map[string]datasource_generate.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": datasource_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Computed: true,

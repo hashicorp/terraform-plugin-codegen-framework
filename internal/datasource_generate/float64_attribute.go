@@ -37,7 +37,7 @@ func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorFloat64Attribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorFloat64Attribute)
 	if !ok {
 		return false

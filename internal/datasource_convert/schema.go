@@ -7,13 +7,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertSchema(d datasource.DataSource) (datasource_generate.GeneratorDataSourceSchema, error) {
 	var s datasource_generate.GeneratorDataSourceSchema
 
-	attributes := make(map[string]datasource_generate.GeneratorAttribute, len(d.Schema.Attributes))
-	blocks := make(map[string]datasource_generate.GeneratorBlock, len(d.Schema.Blocks))
+	attributes := make(generatorschema.GeneratorAttributes, len(d.Schema.Attributes))
+	blocks := make(map[string]generatorschema.GeneratorBlock, len(d.Schema.Blocks))
 
 	for _, v := range d.Schema.Attributes {
 		a, err := convertAttribute(v)

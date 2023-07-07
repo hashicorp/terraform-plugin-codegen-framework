@@ -1,19 +1,19 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package datasource_generate
+package schema
 
 import (
 	"sort"
 	"strings"
 )
 
-type GeneratorAttributes map[string]GeneratorAttribute
+type GeneratorBlocks map[string]GeneratorBlock
 
-func (g GeneratorAttributes) String() (string, error) {
+func (g GeneratorBlocks) String() (string, error) {
 	var s strings.Builder
 
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	// Using sorted keys to guarantee block order as maps are unordered in Go.
 	var keys = make([]string, 0, len(g))
 
 	for k := range g {

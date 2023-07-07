@@ -19,18 +19,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templates"
 )
 
-type Attributes interface {
-	GetAttributes() GeneratorAttributes
-}
-
-type Blocks interface {
-	Attributes
-	GetBlocks() GeneratorBlocks
-}
-
 type GeneratorDataSourceSchema struct {
-	Attributes GeneratorAttributes
-	Blocks     GeneratorBlocks
+	Attributes schema.GeneratorAttributes
+	Blocks     schema.GeneratorBlocks
 }
 
 func (g GeneratorDataSourceSchema) ImportsString() (string, error) {
@@ -52,7 +43,7 @@ func (g GeneratorDataSourceSchema) ImportsString() (string, error) {
 			continue
 		}
 
-		if _, ok := a.(Attributes); ok {
+		if _, ok := a.(schema.Attributes); ok {
 			imports.Add([]code.Import{
 				{
 					Path: schema.ContextImport,
@@ -72,7 +63,7 @@ func (g GeneratorDataSourceSchema) ImportsString() (string, error) {
 			continue
 		}
 
-		if _, ok := b.(Blocks); ok {
+		if _, ok := b.(schema.Blocks); ok {
 			imports.Add([]code.Import{
 				{
 					Path: schema.ContextImport,
@@ -160,7 +151,7 @@ func (g GeneratorDataSourceSchema) Models(name string) ([]model.Model, error) {
 	// If there are any attributes which implement the Attributes interface
 	// (i.e., nested attributes), generate model.
 	for _, attributeName := range attributeNames {
-		if nestedAttribute, ok := g.Attributes[attributeName].(Attributes); ok {
+		if nestedAttribute, ok := g.Attributes[attributeName].(schema.Attributes); ok {
 			generatorDataSourceSchema := GeneratorDataSourceSchema{
 				Attributes: nestedAttribute.GetAttributes(),
 			}
@@ -185,7 +176,7 @@ func (g GeneratorDataSourceSchema) Models(name string) ([]model.Model, error) {
 
 	// If there are any nested blocks, generate model.
 	for _, blockName := range blockNames {
-		if nestedBlock, ok := g.Blocks[blockName].(Blocks); ok {
+		if nestedBlock, ok := g.Blocks[blockName].(schema.Blocks); ok {
 			generatorDataSourceSchema := GeneratorDataSourceSchema{
 				Attributes: nestedBlock.GetAttributes(),
 				Blocks:     nestedBlock.GetBlocks(),
@@ -276,7 +267,7 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 			continue
 		}
 
-		if a, ok := g.Attributes[k].(Attributes); ok {
+		if a, ok := g.Attributes[k].(schema.Attributes); ok {
 			ng := GeneratorDataSourceSchema{
 				Attributes: a.GetAttributes(),
 			}
@@ -304,7 +295,7 @@ func (g GeneratorDataSourceSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 			continue
 		}
 
-		if b, ok := g.Blocks[k].(Blocks); ok {
+		if b, ok := g.Blocks[k].(schema.Blocks); ok {
 			ng := GeneratorDataSourceSchema{
 				Attributes: b.GetAttributes(),
 				Blocks:     b.GetBlocks(),
@@ -434,7 +425,7 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 	// Recursively call ModelObjectHelpersTemplate() for each attribute that implements
 	// Attributes interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
-		if a, ok := g.Attributes[k].(Attributes); ok {
+		if a, ok := g.Attributes[k].(schema.Attributes); ok {
 			ng := GeneratorDataSourceSchema{
 				Attributes: a.GetAttributes(),
 			}
@@ -452,7 +443,7 @@ func (g GeneratorDataSourceSchema) ModelObjectHelpersTemplate(name string) ([]by
 	// Recursively call ModelObjectHelpersTemplate() for each block that implements
 	// Blocks interface (i.e, nested blocks).
 	for _, k := range blockKeys {
-		if b, ok := g.Blocks[k].(Blocks); ok {
+		if b, ok := g.Blocks[k].(schema.Blocks); ok {
 			ng := GeneratorDataSourceSchema{
 				Attributes: b.GetAttributes(),
 				Blocks:     b.GetBlocks(),
