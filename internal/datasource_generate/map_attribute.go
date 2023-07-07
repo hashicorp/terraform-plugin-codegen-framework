@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -22,6 +24,12 @@ type GeneratorMapAttribute struct {
 	CustomType  *specschema.CustomType
 	ElementType specschema.ElementType
 	Validators  []specschema.MapValidator
+}
+
+func (g GeneratorMapAttribute) AttrType() attr.Type {
+	return types.MapType{
+		//TODO: Add ElemType?
+	}
 }
 
 func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {

@@ -4,6 +4,8 @@
 package schema
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
@@ -17,6 +19,7 @@ type Blocks interface {
 }
 
 type GeneratorAttribute interface {
+	AttrType() attr.Type
 	Equal(GeneratorAttribute) bool
 	Imports() *Imports
 	ModelField(string) (model.Field, error)
@@ -24,6 +27,7 @@ type GeneratorAttribute interface {
 }
 
 type GeneratorBlock interface {
+	AttrType() attr.Type
 	Equal(GeneratorBlock) bool
 	Imports() *Imports
 	ModelField(string) (model.Field, error)

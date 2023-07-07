@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -22,6 +24,12 @@ type GeneratorSingleNestedAttribute struct {
 	Attributes generatorschema.GeneratorAttributes
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
+}
+
+func (g GeneratorSingleNestedAttribute) AttrType() attr.Type {
+	return types.ObjectType{
+		//TODO: Add AttrTypes?
+	}
 }
 
 func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
