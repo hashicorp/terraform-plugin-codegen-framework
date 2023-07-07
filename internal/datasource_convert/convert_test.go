@@ -25,7 +25,7 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 
 	testCases := map[string]struct {
 		spec           spec.Specification
-		expectedSchema map[string]datasource_generate.GeneratorDataSourceSchema
+		expectedSchema map[string]generatorschema.GeneratorSchema
 	}{
 		"success": {
 			spec: spec.Specification{
@@ -183,7 +183,7 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 					},
 				},
 			},
-			expectedSchema: map[string]datasource_generate.GeneratorDataSourceSchema{
+			expectedSchema: map[string]generatorschema.GeneratorSchema{
 				"example": {
 					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": datasource_generate.GeneratorBoolAttribute{

@@ -112,7 +112,7 @@ func (cmd *GenerateAllCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateDataSourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
+	err = generateDataSourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource")
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
 	}

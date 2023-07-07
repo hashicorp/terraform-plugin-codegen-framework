@@ -16,12 +16,12 @@ func TestGeneratorDataSourceSchema_ModelObjectHelpersTemplate(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		input         GeneratorDataSourceSchema
+		input         schema.GeneratorSchema
 		expected      []byte
 		expectedError error
 	}{
 		"bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"bool": GeneratorBoolAttribute{},
 				},
@@ -52,7 +52,7 @@ data,
 }`),
 		},
 		"float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"float64": GeneratorFloat64Attribute{},
 				},
@@ -83,7 +83,7 @@ data,
 }`),
 		},
 		"int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"int64": GeneratorInt64Attribute{},
 				},
@@ -114,7 +114,7 @@ data,
 }`),
 		},
 		"list_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -151,7 +151,7 @@ data,
 }`),
 		},
 		"list_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -188,7 +188,7 @@ data,
 }`),
 		},
 		"list_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -225,7 +225,7 @@ data,
 }`),
 		},
 		"list_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -268,7 +268,7 @@ data,
 }`),
 		},
 		"list_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -311,7 +311,7 @@ data,
 }`),
 		},
 		"list_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -348,7 +348,7 @@ data,
 }`),
 		},
 		"list_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -396,7 +396,7 @@ data,
 }`),
 		},
 		"list_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -439,7 +439,7 @@ data,
 }`),
 		},
 		"list_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
@@ -476,7 +476,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -539,7 +539,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -602,7 +602,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -665,7 +665,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -734,7 +734,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_list_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute_outer": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -829,7 +829,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -898,7 +898,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_map_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -993,7 +993,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -1056,7 +1056,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -1130,7 +1130,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -1199,7 +1199,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_set_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -1294,7 +1294,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_single_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -1387,7 +1387,7 @@ data,
 }`),
 		},
 		"list_nested_attribute_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"list_nested_attribute": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -1450,7 +1450,7 @@ data,
 }`),
 		},
 		"list_nested_block_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -1513,7 +1513,7 @@ data,
 }`),
 		},
 		"list_nested_block_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -1576,7 +1576,7 @@ data,
 }`),
 		},
 		"list_nested_block_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -1639,7 +1639,7 @@ data,
 }`),
 		},
 		"list_nested_block_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -1708,7 +1708,7 @@ data,
 }`),
 		},
 		"list_nested_block_list_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -1803,7 +1803,7 @@ data,
 }`),
 		},
 		"list_nested_block_list_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block_outer": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -1898,7 +1898,7 @@ data,
 }`),
 		},
 		"list_nested_block_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -1967,7 +1967,7 @@ data,
 }`),
 		},
 		"list_nested_block_map_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2062,7 +2062,7 @@ data,
 }`),
 		},
 		"list_nested_block_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2125,7 +2125,7 @@ data,
 }`),
 		},
 		"list_nested_block_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2199,7 +2199,7 @@ data,
 }`),
 		},
 		"list_nested_block_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2268,7 +2268,7 @@ data,
 }`),
 		},
 		"list_nested_block_set_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2363,7 +2363,7 @@ data,
 }`),
 		},
 		"list_nested_block_set_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2458,7 +2458,7 @@ data,
 }`),
 		},
 		"list_nested_block_single_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2551,7 +2551,7 @@ data,
 }`),
 		},
 		"list_nested_block_single_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2644,7 +2644,7 @@ data,
 }`),
 		},
 		"list_nested_block_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"list_nested_block": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -2707,7 +2707,7 @@ data,
 }`),
 		},
 		"map_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -2744,7 +2744,7 @@ data,
 }`),
 		},
 		"map_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -2781,7 +2781,7 @@ data,
 }`),
 		},
 		"map_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -2818,7 +2818,7 @@ data,
 }`),
 		},
 		"map_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -2861,7 +2861,7 @@ data,
 }`),
 		},
 		"map_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -2904,7 +2904,7 @@ data,
 }`),
 		},
 		"map_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -2941,7 +2941,7 @@ data,
 }`),
 		},
 		"map_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -2989,7 +2989,7 @@ data,
 }`),
 		},
 		"map_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -3032,7 +3032,7 @@ data,
 }`),
 		},
 		"map_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map": GeneratorMapAttribute{
 						ElementType: specschema.ElementType{
@@ -3069,7 +3069,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3132,7 +3132,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3195,7 +3195,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3258,7 +3258,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3327,7 +3327,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_list_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3422,7 +3422,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3491,7 +3491,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_map_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute_outer": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3586,7 +3586,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3649,7 +3649,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3723,7 +3723,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3792,7 +3792,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_set_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3887,7 +3887,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_single_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -3980,7 +3980,7 @@ data,
 }`),
 		},
 		"map_nested_attribute_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"map_nested_attribute": GeneratorMapNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -4043,7 +4043,7 @@ data,
 }`),
 		},
 		"number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"number": GeneratorNumberAttribute{},
 				},
@@ -4074,7 +4074,7 @@ data,
 }`),
 		},
 		"object_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -4116,7 +4116,7 @@ data,
 }`),
 		},
 		"object_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -4158,7 +4158,7 @@ data,
 }`),
 		},
 		"object_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -4200,7 +4200,7 @@ data,
 }`),
 		},
 		"object_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -4248,7 +4248,7 @@ data,
 }`),
 		},
 		"object_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -4296,7 +4296,7 @@ data,
 }`),
 		},
 		"object_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -4338,7 +4338,7 @@ data,
 }`),
 		},
 		"object_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -4386,7 +4386,7 @@ data,
 }`),
 		},
 		"object_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -4428,7 +4428,7 @@ data,
 }`),
 		},
 		"set_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4465,7 +4465,7 @@ data,
 }`),
 		},
 		"set_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4502,7 +4502,7 @@ data,
 }`),
 		},
 		"set_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4539,7 +4539,7 @@ data,
 }`),
 		},
 		"set_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4582,7 +4582,7 @@ data,
 }`),
 		},
 		"set_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4625,7 +4625,7 @@ data,
 }`),
 		},
 		"set_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4662,7 +4662,7 @@ data,
 }`),
 		},
 		"set_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4710,7 +4710,7 @@ data,
 }`),
 		},
 		"set_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4753,7 +4753,7 @@ data,
 }`),
 		},
 		"set_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set": GeneratorSetAttribute{
 						ElementType: specschema.ElementType{
@@ -4790,7 +4790,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -4853,7 +4853,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -4916,7 +4916,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -4979,7 +4979,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5048,7 +5048,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_list_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5143,7 +5143,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5212,7 +5212,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_map_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5307,7 +5307,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5370,7 +5370,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5444,7 +5444,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5513,7 +5513,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_set_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute_outer": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5608,7 +5608,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_single_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5701,7 +5701,7 @@ data,
 }`),
 		},
 		"set_nested_attribute_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"set_nested_attribute": GeneratorSetNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
@@ -5764,7 +5764,7 @@ data,
 }`),
 		},
 		"set_nested_block_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -5827,7 +5827,7 @@ data,
 }`),
 		},
 		"set_nested_block_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -5890,7 +5890,7 @@ data,
 }`),
 		},
 		"set_nested_block_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -5953,7 +5953,7 @@ data,
 }`),
 		},
 		"set_nested_block_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6022,7 +6022,7 @@ data,
 }`),
 		},
 		"set_nested_block_list_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6117,7 +6117,7 @@ data,
 }`),
 		},
 		"set_nested_block_list_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6212,7 +6212,7 @@ data,
 }`),
 		},
 		"set_nested_block_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6281,7 +6281,7 @@ data,
 }`),
 		},
 		"set_nested_block_map_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6376,7 +6376,7 @@ data,
 }`),
 		},
 		"set_nested_block_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6439,7 +6439,7 @@ data,
 }`),
 		},
 		"set_nested_block_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6513,7 +6513,7 @@ data,
 }`),
 		},
 		"set_nested_block_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6582,7 +6582,7 @@ data,
 }`),
 		},
 		"set_nested_block_set_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6677,7 +6677,7 @@ data,
 }`),
 		},
 		"set_nested_block_set_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block_outer": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6772,7 +6772,7 @@ data,
 }`),
 		},
 		"set_nested_block_single_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6865,7 +6865,7 @@ data,
 }`),
 		},
 		"set_nested_block_single_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -6958,7 +6958,7 @@ data,
 }`),
 		},
 		"set_nested_block_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"set_nested_block": GeneratorSetNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
@@ -7021,7 +7021,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7082,7 +7082,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7143,7 +7143,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7204,7 +7204,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7271,7 +7271,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_list_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7364,7 +7364,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7431,7 +7431,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_map_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7524,7 +7524,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7585,7 +7585,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7657,7 +7657,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7724,7 +7724,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_set_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7817,7 +7817,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_single_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute_outer": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7908,7 +7908,7 @@ data,
 }`),
 		},
 		"single_nested_attribute_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"single_nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: schema.GeneratorAttributes{
@@ -7969,7 +7969,7 @@ data,
 }`),
 		},
 		"single_nested_block_bool": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8030,7 +8030,7 @@ data,
 }`),
 		},
 		"single_nested_block_float64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8091,7 +8091,7 @@ data,
 }`),
 		},
 		"single_nested_block_int64": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8152,7 +8152,7 @@ data,
 }`),
 		},
 		"single_nested_block_list": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8219,7 +8219,7 @@ data,
 }`),
 		},
 		"single_nested_block_list_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8312,7 +8312,7 @@ data,
 }`),
 		},
 		"single_nested_block_list_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Blocks: schema.GeneratorBlocks{
@@ -8405,7 +8405,7 @@ data,
 }`),
 		},
 		"single_nested_block_map": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8472,7 +8472,7 @@ data,
 }`),
 		},
 		"single_nested_block_map_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8565,7 +8565,7 @@ data,
 }`),
 		},
 		"single_nested_block_number": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8626,7 +8626,7 @@ data,
 }`),
 		},
 		"single_nested_block_object": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8698,7 +8698,7 @@ data,
 }`),
 		},
 		"single_nested_block_set": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8765,7 +8765,7 @@ data,
 }`),
 		},
 		"single_nested_block_set_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -8858,7 +8858,7 @@ data,
 }`),
 		},
 		"single_nested_block_set_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Blocks: schema.GeneratorBlocks{
@@ -8951,7 +8951,7 @@ data,
 }`),
 		},
 		"single_nested_block_single_nested_attribute": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -9042,7 +9042,7 @@ data,
 }`),
 		},
 		"single_nested_block_single_nested_block": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block_outer": GeneratorSingleNestedBlock{
 						Blocks: schema.GeneratorBlocks{
@@ -9133,7 +9133,7 @@ data,
 }`),
 		},
 		"single_nested_block_string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Blocks: schema.GeneratorBlocks{
 					"single_nested_block": GeneratorSingleNestedBlock{
 						Attributes: schema.GeneratorAttributes{
@@ -9194,7 +9194,7 @@ data,
 }`),
 		},
 		"string": {
-			input: GeneratorDataSourceSchema{
+			input: schema.GeneratorSchema{
 				Attributes: schema.GeneratorAttributes{
 					"string": GeneratorStringAttribute{},
 				},

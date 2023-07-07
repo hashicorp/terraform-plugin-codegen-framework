@@ -3,17 +3,19 @@
 package {{.PackageName}}
 
 import (
+	{{- if eq .GeneratorType "DataSource"}}
     "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	{{- end}}
 {{ImportsString}}
 )
 
-var {{.Name}}DataSourceSchema = schema.Schema{
-{{- if gt (len .GeneratorDataSourceSchema.Attributes) 0 }}
+var {{.Name}}{{.GeneratorType}}Schema = schema.Schema{
+{{- if gt (len .GeneratorSchema.Attributes) 0 }}
     Attributes: map[string]schema.Attribute{
         {{- AttributesString}}
     },
 {{- end}}
-{{- if gt (len .GeneratorDataSourceSchema.Blocks) 0 }}
+{{- if gt (len .GeneratorSchema.Blocks) 0 }}
     Blocks: map[string]schema.Block{
         {{- BlocksString}}
     },
