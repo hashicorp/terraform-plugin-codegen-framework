@@ -31,46 +31,6 @@ func main() {
 	))
 }
 
-func initCommands(ui cli.Ui) map[string]cli.CommandFactory {
-	generateFactory := func() (cli.Command, error) {
-		return &cmd.GenerateCommand{
-			UI: ui,
-		}, nil
-	}
-
-	generateAllFactory := func() (cli.Command, error) {
-		return &cmd.GenerateAllCommand{
-			UI: ui,
-		}, nil
-	}
-
-	generateResourcesFactory := func() (cli.Command, error) {
-		return &cmd.GenerateResourcesCommand{
-			UI: ui,
-		}, nil
-	}
-
-	generateDataSourcesFactory := func() (cli.Command, error) {
-		return &cmd.GenerateDataSourcesCommand{
-			UI: ui,
-		}, nil
-	}
-
-	generateProviderFactory := func() (cli.Command, error) {
-		return &cmd.GenerateProviderCommand{
-			UI: ui,
-		}, nil
-	}
-
-	return map[string]cli.CommandFactory{
-		"generate":              generateFactory,
-		"generate all":          generateAllFactory,
-		"generate resources":    generateResourcesFactory,
-		"generate data-sources": generateDataSourcesFactory,
-		"generate provider":     generateProviderFactory,
-	}
-}
-
 func runCLI(name, version string, args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	ui := &cli.ColoredUi{
 		ErrorColor: cli.UiColorRed,
@@ -98,4 +58,26 @@ func runCLI(name, version string, args []string, stdin io.Reader, stdout, stderr
 	}
 
 	return exitCode
+}
+
+func initCommands(ui cli.Ui) map[string]cli.CommandFactory {
+	return map[string]cli.CommandFactory{
+		// Code generation commands
+		"generate":              commandFactory(&cmd.GenerateCommand{UI: ui}),
+		"generate all":          commandFactory(&cmd.GenerateAllCommand{UI: ui}),
+		"generate resources":    commandFactory(&cmd.GenerateResourcesCommand{UI: ui}),
+		"generate data-sources": commandFactory(&cmd.GenerateDataSourcesCommand{UI: ui}),
+		"generate provider":     commandFactory(&cmd.GenerateProviderCommand{UI: ui}),
+		// Code scaffolding commands
+		"scaffold":             commandFactory(&cmd.ScaffoldCommand{UI: ui}),
+		"scaffold resource":    commandFactory(&cmd.ScaffoldResourceCommand{UI: ui}),
+		"scaffold data-source": commandFactory(&cmd.ScaffoldDataSourceCommand{UI: ui}),
+		"scaffold provider":    commandFactory(&cmd.ScaffoldProviderCommand{UI: ui}),
+	}
+}
+
+func commandFactory(cmd cli.Command) cli.CommandFactory {
+	return func() (cli.Command, error) {
+		return cmd, nil
+	}
 }

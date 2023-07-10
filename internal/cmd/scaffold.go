@@ -1,0 +1,33 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
+package cmd
+
+import (
+	"strings"
+
+	"github.com/mitchellh/cli"
+)
+
+type ScaffoldCommand struct {
+	UI cli.Ui
+}
+
+func (cmd *ScaffoldCommand) Help() string {
+	helpText := `
+	Usage: terraform-plugin-codegen-framework scaffold <subcommand> [<args>]
+	
+	  This command has subcommands for scaffolding Terraform Plugin Framework code.
+	
+	`
+	return strings.TrimSpace(helpText)
+}
+
+func (a *ScaffoldCommand) Synopsis() string {
+	// TODO: doc
+	return "Terraform Plugin Framework code scaffolding commands"
+}
+
+func (cmd *ScaffoldCommand) Run(args []string) int {
+	return cli.RunResultHelp
+}
