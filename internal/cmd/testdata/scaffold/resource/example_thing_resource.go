@@ -6,34 +6,34 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 )
 
-var _ resource.Resource = (*ExampleThingResource)(nil)
+var _ resource.Resource = (*exampleThingResource)(nil)
 
-func NewexampleThingResource() resource.Resource {
-	return &ExampleThingResource{}
+func NewExampleThingResource() resource.Resource {
+	return &exampleThingResource{}
 }
 
-type ExampleThingResource struct{}
+type exampleThingResource struct{}
 
-func (r *ExampleThingResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *exampleThingResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_example_thing"
 }
 
-func (r *ExampleThingResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *exampleThingResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 
 }
 
-func (r *ExampleThingResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *exampleThingResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 
 }
 
-func (r *ExampleThingResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *exampleThingResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 
 }
 
-func (r *ExampleThingResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *exampleThingResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 
 }
 
-func (r *ExampleThingResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *exampleThingResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 
 }

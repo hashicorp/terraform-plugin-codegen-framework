@@ -24,8 +24,8 @@ func ResourceBytes(resourceIdentifier util.FrameworkIdentifer, packageName strin
 	}{
 		PackageName: packageName,
 		NameSnake:   string(resourceIdentifier),
-		NameCamel:   resourceIdentifier.ToPascalCase(),
-		NamePascal:  resourceIdentifier.ToCamelCase(),
+		NameCamel:   resourceIdentifier.ToCamelCase(),
+		NamePascal:  resourceIdentifier.ToPascalCase(),
 	}
 
 	err = t.Execute(&buf, templateData)

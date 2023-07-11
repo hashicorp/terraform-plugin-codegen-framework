@@ -24,8 +24,8 @@ func DataSourceBytes(dataSourceIdentifier util.FrameworkIdentifer, packageName s
 	}{
 		PackageName: packageName,
 		NameSnake:   string(dataSourceIdentifier),
-		NameCamel:   dataSourceIdentifier.ToPascalCase(),
-		NamePascal:  dataSourceIdentifier.ToCamelCase(),
+		NameCamel:   dataSourceIdentifier.ToCamelCase(),
+		NamePascal:  dataSourceIdentifier.ToPascalCase(),
 	}
 
 	err = t.Execute(&buf, templateData)
