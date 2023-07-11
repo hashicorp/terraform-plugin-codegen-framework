@@ -14,14 +14,14 @@ func New{{.NamePascal}}DataSource() datasource.DataSource {
 
 type {{.NameCamel}}DataSource struct{}
 
-func (r *{{.NameCamel}}DataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *{{.NameCamel}}DataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_{{.NameSnake}}"
 }
 
-func (r *{{.NameCamel}}DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *{{.NameCamel}}DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 
 }
 
-func (r *{{.NameCamel}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *{{.NameCamel}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 
 }
