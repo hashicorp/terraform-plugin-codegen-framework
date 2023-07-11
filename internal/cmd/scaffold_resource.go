@@ -9,11 +9,10 @@ import (
 	"flag"
 	"fmt"
 	"go/format"
-	"io/fs"
-	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/scaffold"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
 	"github.com/mitchellh/cli"
@@ -120,7 +119,7 @@ func (cmd *ScaffoldResourceCommand) runInternal(_ context.Context) error {
 		return fmt.Errorf("error formatting scaffolding resource Go code: %w", err)
 	}
 
-	err = writeToFile(cmd.getOutputFilePath(), formattedGoBytes, cmd.flagForceOverwrite)
+	err = output.WriteBytes(cmd.getOutputFilePath(), formattedGoBytes, cmd.flagForceOverwrite)
 	if err != nil {
 		return fmt.Errorf("error writing scaffolding resource Go code: %w", err)
 	}
@@ -135,23 +134,4 @@ func (cmd *ScaffoldResourceCommand) getOutputFilePath() string {
 	}
 
 	return filepath.Join(cmd.flagOutputDir, filename)
-}
-
-func writeToFile(outputFilePath string, outputBytes []byte, forceOverwrite bool) error {
-	if _, err := os.Stat(outputFilePath); !errors.Is(err, fs.ErrNotExist) && !forceOverwrite {
-		return fmt.Errorf("file (%s) already exists and --force is false", outputFilePath)
-	}
-
-	f, err := os.Create(outputFilePath)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	_, err = f.Write(outputBytes)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

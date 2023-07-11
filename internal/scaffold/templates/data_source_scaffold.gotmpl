@@ -1,0 +1,27 @@
+package {{.PackageName}}
+
+import (
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+)
+
+var _ datasource.DataSource = (*{{.NameCamel}}DataSource)(nil)
+
+func New{{.NamePascal}}DataSource() datasource.DataSource {
+	return &{{.NameCamel}}DataSource{}
+}
+
+type {{.NameCamel}}DataSource struct{}
+
+func (r *{{.NameCamel}}DataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_{{.NameSnake}}"
+}
+
+func (r *{{.NameCamel}}DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+
+}
+
+func (r *{{.NameCamel}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+
+}
