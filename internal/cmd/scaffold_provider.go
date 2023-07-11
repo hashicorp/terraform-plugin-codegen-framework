@@ -5,19 +5,36 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"go/format"
+	"path/filepath"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/scaffold"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
 	"github.com/mitchellh/cli"
 )
 
 type ScaffoldProviderCommand struct {
-	UI cli.Ui
+	UI                    cli.Ui
+	flagProviderNameSnake string
+	flagOutputDir         string
+	flagOutputFile        string
+	flagPackageName       string
+	flagForceOverwrite    bool
 }
 
 func (cmd *ScaffoldProviderCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("scaffold provider", flag.ExitOnError)
+
+	fs.StringVar(&cmd.flagProviderNameSnake, "name", "", "name of provider in snake case, required")
+	fs.BoolVar(&cmd.flagForceOverwrite, "force", false, "force creation, overwriting existing files")
+	fs.StringVar(&cmd.flagOutputDir, "output-dir", ".", "directory path to output scaffolded code file")
+	fs.StringVar(&cmd.flagOutputFile, "output-file", "", "file name and extension to write scaffolded code to, default is 'provider.go'")
+	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for scaffolded code file")
 	return fs
 }
 
@@ -60,8 +77,7 @@ func (cmd *ScaffoldProviderCommand) Help() string {
 }
 
 func (a *ScaffoldProviderCommand) Synopsis() string {
-	// TODO: doc
-	return "TBD"
+	return "Create scaffolding code for a Terraform Plugin Framework provider."
 }
 
 func (cmd *ScaffoldProviderCommand) Run(args []string) int {
@@ -83,8 +99,39 @@ func (cmd *ScaffoldProviderCommand) Run(args []string) int {
 	return 0
 }
 
-func (cmd *ScaffoldProviderCommand) runInternal(ctx context.Context) error {
-	fmt.Println("scaffold provider")
+func (cmd *ScaffoldProviderCommand) runInternal(_ context.Context) error {
+	if cmd.flagProviderNameSnake == "" {
+		return errors.New("--name flag is required")
+	}
+
+	providerIdentifier := util.FrameworkIdentifer(cmd.flagProviderNameSnake)
+	if !providerIdentifier.Valid() {
+		return fmt.Errorf("'%s' is not a valid Terraform provider identifier", cmd.flagProviderNameSnake)
+	}
+
+	goBytes, err := scaffold.ProviderBytes(providerIdentifier, cmd.flagPackageName)
+	if err != nil {
+		return fmt.Errorf("error creating scaffolding provider Go code: %w", err)
+	}
+
+	formattedGoBytes, err := format.Source(goBytes)
+	if err != nil {
+		return fmt.Errorf("error formatting scaffolding provider Go code: %w", err)
+	}
+
+	err = output.WriteBytes(cmd.getOutputFilePath(), formattedGoBytes, cmd.flagForceOverwrite)
+	if err != nil {
+		return fmt.Errorf("error writing scaffolding provider Go code: %w", err)
+	}
 
 	return nil
+}
+
+func (cmd *ScaffoldProviderCommand) getOutputFilePath() string {
+	filename := "provider.go"
+	if cmd.flagOutputFile != "" {
+		filename = cmd.flagOutputFile
+	}
+
+	return filepath.Join(cmd.flagOutputDir, filename)
 }

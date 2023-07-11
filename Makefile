@@ -48,4 +48,10 @@ testdata:
 		--package scaffold \
 		--output-dir ./internal/cmd/testdata/scaffold/data_source
 
+	go run ./cmd/terraform-plugin-codegen-framework scaffold provider \
+		--name example_thing \
+		--force \
+		--package scaffold \
+		--output-dir ./internal/cmd/testdata/scaffold/provider
+
 .PHONY: lint fmt test
