@@ -5,19 +5,37 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"go/format"
+	"io/fs"
+	"os"
+	"path/filepath"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/scaffold"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
 	"github.com/mitchellh/cli"
 )
 
 type ScaffoldResourceCommand struct {
-	UI cli.Ui
+	UI                    cli.Ui
+	flagResourceNameSnake string
+	flagOutputDir         string
+	flagOutputFile        string
+	flagPackageName       string
+	flagForceOverwrite    bool
 }
 
 func (cmd *ScaffoldResourceCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("scaffold resource", flag.ExitOnError)
+
+	fs.StringVar(&cmd.flagResourceNameSnake, "name", "", "name of resource in snake case, required")
+	fs.BoolVar(&cmd.flagForceOverwrite, "force", false, "force creation, overwriting existing files")
+	fs.StringVar(&cmd.flagOutputDir, "output-dir", ".", "directory path to output scaffolded code file")
+	fs.StringVar(&cmd.flagOutputFile, "output-file", "", "file name and extension to write scaffolded code to, default will use the --name flag and '.go' extension")
+	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for scaffolded code file")
 	return fs
 }
 
@@ -60,8 +78,7 @@ func (cmd *ScaffoldResourceCommand) Help() string {
 }
 
 func (a *ScaffoldResourceCommand) Synopsis() string {
-	// TODO: doc
-	return "TBD"
+	return "Create scaffolding code for a Terraform Plugin Framework resource."
 }
 
 func (cmd *ScaffoldResourceCommand) Run(args []string) int {
@@ -83,8 +100,58 @@ func (cmd *ScaffoldResourceCommand) Run(args []string) int {
 	return 0
 }
 
-func (cmd *ScaffoldResourceCommand) runInternal(ctx context.Context) error {
-	fmt.Println("scaffold resource")
+func (cmd *ScaffoldResourceCommand) runInternal(_ context.Context) error {
+	if cmd.flagResourceNameSnake == "" {
+		return errors.New("--name flag is required")
+	}
+
+	resourceIdentifier := util.FrameworkIdentifer(cmd.flagResourceNameSnake)
+	if !resourceIdentifier.Valid() {
+		return fmt.Errorf("'%s' is not a valid Terraform resource identifier", cmd.flagResourceNameSnake)
+	}
+
+	goBytes, err := scaffold.ResourceBytes(resourceIdentifier, cmd.flagPackageName)
+	if err != nil {
+		return fmt.Errorf("error creating scaffolding resource Go code: %w", err)
+	}
+
+	formattedGoBytes, err := format.Source(goBytes)
+	if err != nil {
+		return fmt.Errorf("error formatting scaffolding resource Go code: %w", err)
+	}
+
+	err = writeToFile(cmd.getOutputFilePath(), formattedGoBytes, cmd.flagForceOverwrite)
+	if err != nil {
+		return fmt.Errorf("error writing scaffolding resource Go code: %w", err)
+	}
+
+	return nil
+}
+
+func (cmd *ScaffoldResourceCommand) getOutputFilePath() string {
+	filename := fmt.Sprintf("%s_resource.go", cmd.flagResourceNameSnake)
+	if cmd.flagOutputFile != "" {
+		filename = cmd.flagOutputFile
+	}
+
+	return filepath.Join(cmd.flagOutputDir, filename)
+}
+
+func writeToFile(outputFilePath string, outputBytes []byte, forceOverwrite bool) error {
+	if _, err := os.Stat(outputFilePath); !errors.Is(err, fs.ErrNotExist) && !forceOverwrite {
+		return fmt.Errorf("file (%s) already exists and --force is false", outputFilePath)
+	}
+
+	f, err := os.Create(outputFilePath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.Write(outputBytes)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

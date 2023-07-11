@@ -1,0 +1,39 @@
+package {{.PackageName}}
+
+import (
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+)
+
+var _ resource.Resource = (*{{.NameCamel}}Resource)(nil)
+
+func New{{.NamePascal}}Resource() resource.Resource {
+	return &{{.NameCamel}}Resource{}
+}
+
+type {{.NameCamel}}Resource struct{}
+
+func (r *{{.NameCamel}}Resource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_{{.NameSnake}}"
+}
+
+func (r *{{.NameCamel}}Resource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+
+}
+
+func (r *{{.NameCamel}}Resource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+}
+
+func (r *{{.NameCamel}}Resource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+
+}
+
+func (r *{{.NameCamel}}Resource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+
+}
+
+func (r *{{.NameCamel}}Resource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+
+}
