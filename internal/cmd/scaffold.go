@@ -24,7 +24,6 @@ func (cmd *ScaffoldCommand) Help() string {
 }
 
 func (a *ScaffoldCommand) Synopsis() string {
-	// TODO: doc
 	return "Terraform Plugin Framework code scaffolding commands"
 }
 
