@@ -6,14 +6,14 @@ package resource_convert
 import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func convertSchema(d resource.Resource) (resource_generate.GeneratorResourceSchema, error) {
-	var s resource_generate.GeneratorResourceSchema
+func convertSchema(d resource.Resource) (generatorschema.GeneratorSchema, error) {
+	var s generatorschema.GeneratorSchema
 
-	attributes := make(map[string]resource_generate.GeneratorAttribute, len(d.Schema.Attributes))
-	blocks := make(map[string]resource_generate.GeneratorBlock, len(d.Schema.Blocks))
+	attributes := make(map[string]generatorschema.GeneratorAttribute, len(d.Schema.Attributes))
+	blocks := make(map[string]generatorschema.GeneratorBlock, len(d.Schema.Blocks))
 
 	for _, v := range d.Schema.Attributes {
 		a, err := convertAttribute(v)

@@ -7,7 +7,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type converter struct {
@@ -20,8 +20,8 @@ func NewConverter(spec spec.Specification) converter {
 	}
 }
 
-func (c converter) ToGeneratorProviderSchema() (map[string]provider_generate.GeneratorProviderSchema, error) {
-	providerSchemas := make(map[string]provider_generate.GeneratorProviderSchema, len(c.spec.DataSources))
+func (c converter) ToGeneratorProviderSchema() (map[string]schema.GeneratorSchema, error) {
+	providerSchemas := make(map[string]schema.GeneratorSchema, len(c.spec.DataSources))
 
 	s, err := convertSchema(c.spec.Provider)
 	if err != nil {

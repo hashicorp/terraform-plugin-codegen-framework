@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_convert"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
 
@@ -117,7 +117,7 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateResourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
+	err = generateResourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName, "Resource")
 	if err != nil {
 		return fmt.Errorf("error generating resource code: %w", err)
 	}
@@ -125,17 +125,17 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context) error {
 	return nil
 }
 
-func generateResourceCode(spec spec.Specification, outputPath, packageName string) error {
+func generateResourceCode(spec spec.Specification, outputPath, packageName, generatorType string) error {
 	// convert IR to framework schema
 	c := resource_convert.NewConverter(spec)
-	schema, err := c.ToGeneratorResourceSchema()
+	s, err := c.ToGeneratorResourceSchema()
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
 
 	// convert framework schema to []byte
-	g := resource_generate.NewGeneratorResourceSchemas(schema)
-	schemaBytes, err := g.SchemasBytes(packageName)
+	g := schema.NewGeneratorSchemas(s)
+	schemaBytes, err := g.SchemasBytes(packageName, generatorType)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}

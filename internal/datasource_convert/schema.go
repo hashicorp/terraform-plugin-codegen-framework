@@ -13,7 +13,7 @@ func convertSchema(d datasource.DataSource) (generatorschema.GeneratorSchema, er
 	var s generatorschema.GeneratorSchema
 
 	attributes := make(generatorschema.GeneratorAttributes, len(d.Schema.Attributes))
-	blocks := make(map[string]generatorschema.GeneratorBlock, len(d.Schema.Blocks))
+	blocks := make(generatorschema.GeneratorBlocks, len(d.Schema.Blocks))
 
 	for _, v := range d.Schema.Attributes {
 		a, err := convertAttribute(v)

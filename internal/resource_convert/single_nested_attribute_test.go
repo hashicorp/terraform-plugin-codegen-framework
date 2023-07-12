@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestConvertSingleNestedAttribute(t *testing.T) {
@@ -51,7 +52,7 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedAttribute{
-				Attributes: map[string]resource_generate.GeneratorAttribute{
+				Attributes: map[string]generatorschema.GeneratorAttribute{
 					"bool_attribute": resource_generate.GeneratorBoolAttribute{
 						BoolAttribute: schema.BoolAttribute{
 							Optional: true,
@@ -75,7 +76,7 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedAttribute{
-				Attributes: map[string]resource_generate.GeneratorAttribute{
+				Attributes: map[string]generatorschema.GeneratorAttribute{
 					"list_attribute": resource_generate.GeneratorListAttribute{
 						ListAttribute: schema.ListAttribute{
 							Optional: true,
@@ -109,10 +110,10 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedAttribute{
-				Attributes: map[string]resource_generate.GeneratorAttribute{
+				Attributes: map[string]generatorschema.GeneratorAttribute{
 					"nested_attribute": resource_generate.GeneratorListNestedAttribute{
 						NestedObject: resource_generate.GeneratorNestedAttributeObject{
-							Attributes: map[string]resource_generate.GeneratorAttribute{
+							Attributes: map[string]generatorschema.GeneratorAttribute{
 								"nested_bool": resource_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Computed: true,
@@ -145,7 +146,7 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedAttribute{
-				Attributes: map[string]resource_generate.GeneratorAttribute{
+				Attributes: map[string]generatorschema.GeneratorAttribute{
 					"object_attribute": resource_generate.GeneratorObjectAttribute{
 						ObjectAttribute: schema.ObjectAttribute{
 							Optional: true,
@@ -180,9 +181,9 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedAttribute{
-				Attributes: map[string]resource_generate.GeneratorAttribute{
+				Attributes: map[string]generatorschema.GeneratorAttribute{
 					"nested_attribute": resource_generate.GeneratorSingleNestedAttribute{
-						Attributes: map[string]resource_generate.GeneratorAttribute{
+						Attributes: map[string]generatorschema.GeneratorAttribute{
 							"nested_bool": resource_generate.GeneratorBoolAttribute{
 								BoolAttribute: schema.BoolAttribute{
 									Computed: true,

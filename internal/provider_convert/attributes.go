@@ -8,10 +8,10 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func convertAttribute(a provider.Attribute) (provider_generate.GeneratorAttribute, error) {
+func convertAttribute(a provider.Attribute) (schema.GeneratorAttribute, error) {
 	switch {
 	case a.Bool != nil:
 		return convertBoolAttribute(a.Bool)

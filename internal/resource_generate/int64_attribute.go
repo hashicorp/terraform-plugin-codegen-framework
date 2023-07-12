@@ -10,7 +10,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -25,6 +27,10 @@ type GeneratorInt64Attribute struct {
 	Default       *specschema.Int64Default
 	PlanModifiers []specschema.Int64PlanModifier
 	Validators    []specschema.Int64Validator
+}
+
+func (g GeneratorInt64Attribute) AttrType() attr.Type {
+	return types.Int64Type
 }
 
 func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
@@ -57,7 +63,7 @@ func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorInt64Attribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorInt64Attribute)
 	if !ok {
 		return false
