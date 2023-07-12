@@ -62,7 +62,7 @@ func convertSingleNestedBlock(b *datasource.SingleNestedBlock) (datasource_gener
 		attributes[v.Name] = attribute
 	}
 
-	blocks := make(map[string]generatorschema.GeneratorBlock, len(b.Blocks))
+	blocks := make(generatorschema.GeneratorBlocks, len(b.Blocks))
 
 	for _, v := range b.Blocks {
 		var block generatorschema.GeneratorBlock

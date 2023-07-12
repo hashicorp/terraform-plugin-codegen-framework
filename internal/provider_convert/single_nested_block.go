@@ -18,7 +18,7 @@ func convertSingleNestedBlock(b *provider.SingleNestedBlock) (provider_generate.
 		return provider_generate.GeneratorSingleNestedBlock{}, fmt.Errorf("*provider.SingleNestedBlock is nil")
 	}
 
-	attributes := make(map[string]generatorschema.GeneratorAttribute, len(b.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(b.Attributes))
 
 	for _, v := range b.Attributes {
 		var attribute generatorschema.GeneratorAttribute
@@ -62,7 +62,7 @@ func convertSingleNestedBlock(b *provider.SingleNestedBlock) (provider_generate.
 		attributes[v.Name] = attribute
 	}
 
-	blocks := make(map[string]generatorschema.GeneratorBlock, len(b.Blocks))
+	blocks := make(generatorschema.GeneratorBlocks, len(b.Blocks))
 
 	for _, v := range b.Blocks {
 		var block generatorschema.GeneratorBlock

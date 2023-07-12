@@ -18,7 +18,7 @@ func convertSetNestedAttribute(a *provider.SetNestedAttribute) (provider_generat
 		return provider_generate.GeneratorSetNestedAttribute{}, fmt.Errorf("*provider.SetNestedAttribute is nil")
 	}
 
-	attributes := make(map[string]generatorschema.GeneratorAttribute, len(a.NestedObject.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
 
 	for _, v := range a.NestedObject.Attributes {
 		var attribute generatorschema.GeneratorAttribute

@@ -62,7 +62,7 @@ func convertListNestedBlock(b *datasource.ListNestedBlock) (datasource_generate.
 		attributes[v.Name] = attribute
 	}
 
-	blocks := make(map[string]generatorschema.GeneratorBlock, len(b.NestedObject.Blocks))
+	blocks := make(generatorschema.GeneratorBlocks, len(b.NestedObject.Blocks))
 
 	for _, v := range b.NestedObject.Blocks {
 		var block generatorschema.GeneratorBlock

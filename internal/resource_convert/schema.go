@@ -12,8 +12,8 @@ import (
 func convertSchema(d resource.Resource) (generatorschema.GeneratorSchema, error) {
 	var s generatorschema.GeneratorSchema
 
-	attributes := make(map[string]generatorschema.GeneratorAttribute, len(d.Schema.Attributes))
-	blocks := make(map[string]generatorschema.GeneratorBlock, len(d.Schema.Blocks))
+	attributes := make(generatorschema.GeneratorAttributes, len(d.Schema.Attributes))
+	blocks := make(generatorschema.GeneratorBlocks, len(d.Schema.Blocks))
 
 	for _, v := range d.Schema.Attributes {
 		a, err := convertAttribute(v)

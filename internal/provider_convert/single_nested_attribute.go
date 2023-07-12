@@ -18,7 +18,7 @@ func convertSingleNestedAttribute(a *provider.SingleNestedAttribute) (provider_g
 		return provider_generate.GeneratorSingleNestedAttribute{}, fmt.Errorf("*provider.SingleNestedAttribute is nil")
 	}
 
-	attributes := make(map[string]generatorschema.GeneratorAttribute, len(a.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(a.Attributes))
 
 	for _, v := range a.Attributes {
 		var attribute generatorschema.GeneratorAttribute

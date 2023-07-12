@@ -18,7 +18,7 @@ func convertMapNestedAttribute(a *resource.MapNestedAttribute) (resource_generat
 		return resource_generate.GeneratorMapNestedAttribute{}, fmt.Errorf("*resource.MapNestedAttribute is nil")
 	}
 
-	attributes := make(map[string]generatorschema.GeneratorAttribute, len(a.NestedObject.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
 
 	for _, v := range a.NestedObject.Attributes {
 		var attribute generatorschema.GeneratorAttribute

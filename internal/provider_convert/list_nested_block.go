@@ -18,7 +18,7 @@ func convertListNestedBlock(b *provider.ListNestedBlock) (provider_generate.Gene
 		return provider_generate.GeneratorListNestedBlock{}, fmt.Errorf("*provider.ListNestedBlock is nil")
 	}
 
-	attributes := make(map[string]generatorschema.GeneratorAttribute, len(b.NestedObject.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(b.NestedObject.Attributes))
 
 	for _, v := range b.NestedObject.Attributes {
 		var attribute generatorschema.GeneratorAttribute
@@ -62,7 +62,7 @@ func convertListNestedBlock(b *provider.ListNestedBlock) (provider_generate.Gene
 		attributes[v.Name] = attribute
 	}
 
-	blocks := make(map[string]generatorschema.GeneratorBlock, len(b.NestedObject.Blocks))
+	blocks := make(generatorschema.GeneratorBlocks, len(b.NestedObject.Blocks))
 
 	for _, v := range b.NestedObject.Blocks {
 		var block generatorschema.GeneratorBlock

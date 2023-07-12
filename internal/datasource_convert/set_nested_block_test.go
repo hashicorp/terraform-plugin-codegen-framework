@@ -259,7 +259,7 @@ func TestConvertSetNestedBlock(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorSetNestedBlock{
 				NestedObject: datasource_generate.GeneratorNestedBlockObject{
-					Blocks: map[string]generatorschema.GeneratorBlock{
+					Blocks: generatorschema.GeneratorBlocks{
 						"nested_block": datasource_generate.GeneratorSetNestedBlock{
 							NestedObject: datasource_generate.GeneratorNestedBlockObject{
 								Attributes: generatorschema.GeneratorAttributes{
@@ -298,7 +298,7 @@ func TestConvertSetNestedBlock(t *testing.T) {
 			},
 			expected: datasource_generate.GeneratorSetNestedBlock{
 				NestedObject: datasource_generate.GeneratorNestedBlockObject{
-					Blocks: map[string]generatorschema.GeneratorBlock{
+					Blocks: generatorschema.GeneratorBlocks{
 						"nested_block": datasource_generate.GeneratorSingleNestedBlock{
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": datasource_generate.GeneratorBoolAttribute{

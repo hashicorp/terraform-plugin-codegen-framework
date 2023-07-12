@@ -52,7 +52,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]generatorschema.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"bool_attribute": provider_generate.GeneratorBoolAttribute{
 						BoolAttribute: schema.BoolAttribute{
 							Optional: true,
@@ -76,7 +76,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]generatorschema.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"list_attribute": provider_generate.GeneratorListAttribute{
 						ListAttribute: schema.ListAttribute{
 							Optional: true,
@@ -110,10 +110,10 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]generatorschema.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"nested_attribute": provider_generate.GeneratorListNestedAttribute{
 						NestedObject: provider_generate.GeneratorNestedAttributeObject{
-							Attributes: map[string]generatorschema.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": provider_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -146,7 +146,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]generatorschema.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"object_attribute": provider_generate.GeneratorObjectAttribute{
 						ObjectAttribute: schema.ObjectAttribute{
 							Optional: true,
@@ -181,9 +181,9 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSingleNestedBlock{
-				Attributes: map[string]generatorschema.GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"nested_attribute": provider_generate.GeneratorSingleNestedAttribute{
-						Attributes: map[string]generatorschema.GeneratorAttribute{
+						Attributes: generatorschema.GeneratorAttributes{
 							"nested_bool": provider_generate.GeneratorBoolAttribute{
 								BoolAttribute: schema.BoolAttribute{
 									Optional: true,
@@ -230,10 +230,10 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSingleNestedBlock{
-				Blocks: map[string]generatorschema.GeneratorBlock{
+				Blocks: generatorschema.GeneratorBlocks{
 					"nested_block": provider_generate.GeneratorListNestedBlock{
 						NestedObject: provider_generate.GeneratorNestedBlockObject{
-							Attributes: map[string]generatorschema.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": provider_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -264,9 +264,9 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorSingleNestedBlock{
-				Blocks: map[string]generatorschema.GeneratorBlock{
+				Blocks: generatorschema.GeneratorBlocks{
 					"nested_block": provider_generate.GeneratorSingleNestedBlock{
-						Attributes: map[string]generatorschema.GeneratorAttribute{
+						Attributes: generatorschema.GeneratorAttributes{
 							"bool_attribute": provider_generate.GeneratorBoolAttribute{
 								BoolAttribute: schema.BoolAttribute{
 									Optional: true,

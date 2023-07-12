@@ -290,7 +290,7 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 							},
 						},
 					},
-					Blocks: map[string]generatorschema.GeneratorBlock{
+					Blocks: generatorschema.GeneratorBlocks{
 						"list_nested_block": datasource_generate.GeneratorListNestedBlock{
 							NestedObject: datasource_generate.GeneratorNestedBlockObject{
 								Attributes: generatorschema.GeneratorAttributes{

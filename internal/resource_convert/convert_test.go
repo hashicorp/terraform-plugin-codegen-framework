@@ -185,7 +185,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 			},
 			expectedSchema: map[string]generatorschema.GeneratorSchema{
 				"example": {
-					Attributes: map[string]generatorschema.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": resource_generate.GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional:  true,
@@ -230,7 +230,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 						},
 						"list_nested_attribute": resource_generate.GeneratorListNestedAttribute{
 							NestedObject: resource_generate.GeneratorNestedAttributeObject{
-								Attributes: map[string]generatorschema.GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": resource_generate.GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -270,7 +270,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 							},
 						},
 						"single_nested_attribute": resource_generate.GeneratorSingleNestedAttribute{
-							Attributes: map[string]generatorschema.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool_attribute": resource_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -290,10 +290,10 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 							},
 						},
 					},
-					Blocks: map[string]generatorschema.GeneratorBlock{
+					Blocks: generatorschema.GeneratorBlocks{
 						"list_nested_block": resource_generate.GeneratorListNestedBlock{
 							NestedObject: resource_generate.GeneratorNestedBlockObject{
-								Attributes: map[string]generatorschema.GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": resource_generate.GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -303,7 +303,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 							},
 						},
 						"single_nested_block": resource_generate.GeneratorSingleNestedBlock{
-							Attributes: map[string]generatorschema.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool_attribute": resource_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,

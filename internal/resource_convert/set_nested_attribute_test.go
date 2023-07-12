@@ -57,7 +57,7 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorSetNestedAttribute{
 				NestedObject: resource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]generatorschema.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": resource_generate.GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional: true,
@@ -85,7 +85,7 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorSetNestedAttribute{
 				NestedObject: resource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]generatorschema.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list_attribute": resource_generate.GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Optional: true,
@@ -123,10 +123,10 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorSetNestedAttribute{
 				NestedObject: resource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]generatorschema.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_attribute": resource_generate.GeneratorSetNestedAttribute{
 							NestedObject: resource_generate.GeneratorNestedAttributeObject{
-								Attributes: map[string]generatorschema.GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": resource_generate.GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Computed: true,
@@ -163,7 +163,7 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorSetNestedAttribute{
 				NestedObject: resource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]generatorschema.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"object_attribute": resource_generate.GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
@@ -202,9 +202,9 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: resource_generate.GeneratorSetNestedAttribute{
 				NestedObject: resource_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]generatorschema.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_attribute": resource_generate.GeneratorSingleNestedAttribute{
-							Attributes: map[string]generatorschema.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": resource_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Computed: true,
