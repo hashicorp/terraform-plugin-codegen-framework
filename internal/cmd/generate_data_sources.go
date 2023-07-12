@@ -135,14 +135,19 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 
 	// convert framework schema to []byte
 	g := datasource_generate.NewGeneratorDataSourceSchemas(schema)
-	schemaBytes, err := g.ToBytes(packageName)
+	schemaBytes, err := g.SchemasBytes(packageName)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
 	// generate model code
-	dataSourcesModelsGenerator := datasource_generate.NewDataSourcesModelsGenerator()
-	dataSourcesModels, err := dataSourcesModelsGenerator.Process(schema)
+	modelsBytes, err := g.ModelsBytes()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// generate model object helpers code
+	modelsObjectHelpersBytes, err := g.ModelsObjectHelpersBytes()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -154,13 +159,19 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 	}
 
 	// format model code
-	formattedDataSourcesModels, err := format.Format(dataSourcesModels)
+	formattedDataSourcesModels, err := format.Format(modelsBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// format model object helpers code
+	formattedDataSourcesModelObjectHelpers, err := format.Format(modelsObjectHelpersBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// write code
-	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, outputPath)
+	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedDataSourcesModelObjectHelpers, outputPath)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

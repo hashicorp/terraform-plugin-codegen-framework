@@ -127,40 +127,51 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context) error {
 
 func generateProviderCode(spec spec.Specification, outputPath, packageName string) error {
 	// convert IR to framework schema
-	providerSchemaConverter := provider_convert.NewConverter(spec)
-	providerSchemas, err := providerSchemaConverter.ToGeneratorProviderSchema()
+	c := provider_convert.NewConverter(spec)
+	schema, err := c.ToGeneratorProviderSchema()
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
 
 	// convert framework schema to []byte
-	providerSchemaGenerator := provider_generate.NewGeneratorProviderSchemas(providerSchemas)
-	providerSchemaBytes, err := providerSchemaGenerator.ToBytes(packageName)
+	g := provider_generate.NewGeneratorProviderSchemas(schema)
+	schemaBytes, err := g.SchemasBytes(packageName)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
 	// generate model code
-	providerModelsGenerator := provider_generate.NewProviderModelsGenerator()
-	providerModels, err := providerModelsGenerator.Process(providerSchemas)
+	modelsBytes, err := g.ModelsBytes()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// generate model object helpers code
+	modelsObjectHelpersBytes, err := g.ModelsObjectHelpersBytes()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// format schema code
-	formattedProvidersSchema, err := format.Format(providerSchemaBytes)
+	formattedProvidersSchema, err := format.Format(schemaBytes)
 	if err != nil {
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
 
 	// format model code
-	formattedProviderModels, err := format.Format(providerModels)
+	formattedProvidersModels, err := format.Format(modelsBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// format model object helpers code
+	formattedProvidersModelObjectHelpers, err := format.Format(modelsObjectHelpersBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// write code
-	err = output.WriteProviders(formattedProvidersSchema, formattedProviderModels, outputPath)
+	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedProvidersModelObjectHelpers, outputPath)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

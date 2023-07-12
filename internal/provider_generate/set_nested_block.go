@@ -87,8 +87,8 @@ func (g GeneratorSetNestedBlock) Equal(ga GeneratorBlock) bool {
 
 func (g GeneratorSetNestedBlock) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": getAttributes,
-		"getBlocks":     getBlocks,
+		"AttributesString": g.NestedObject.Attributes.String,
+		"BlocksString":     g.NestedObject.Blocks.String,
 	}
 
 	t, err := template.New("set_nested_block").Funcs(funcMap).Parse(setNestedBlockGoTemplate)
@@ -126,6 +126,14 @@ func (g GeneratorSetNestedBlock) ModelField(name string) (model.Field, error) {
 	}
 
 	return field, nil
+}
+
+func (g GeneratorSetNestedBlock) GetAttributes() GeneratorAttributes {
+	return g.NestedObject.Attributes
+}
+
+func (g GeneratorSetNestedBlock) GetBlocks() GeneratorBlocks {
+	return g.NestedObject.Blocks
 }
 
 func (g GeneratorSetNestedBlock) setValidatorsEqual(x, y []specschema.SetValidator) bool {

@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package resource_generate
+package datasource_generate
 
 import (
 	"os"
@@ -11,16 +11,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 )
 
-func TestResourcesModelsGenerator_Process(t *testing.T) {
+func TestGeneratorDataSourceSchemas_ModelsBytes(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		input         map[string]GeneratorResourceSchema
+		input         map[string]GeneratorDataSourceSchema
 		expected      string
 		expectedError error
 	}{
 		"all": {
-			input: map[string]GeneratorResourceSchema{
+			input: map[string]GeneratorDataSourceSchema{
 				"example": {
 					Attributes: map[string]GeneratorAttribute{
 						"bool_attribute": GeneratorBoolAttribute{},
@@ -203,8 +203,8 @@ func TestResourcesModelsGenerator_Process(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			g := NewResourcesModelsGenerator()
-			got, err := g.Process(testCase.input)
+			g := NewGeneratorDataSourceSchemas(testCase.input)
+			got, err := g.ModelsBytes()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

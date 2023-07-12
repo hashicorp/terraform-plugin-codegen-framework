@@ -24,7 +24,7 @@ func TestGeneratorMapNestedAttribute_ToString(t *testing.T) {
 		"attribute-bool": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: GeneratorAttributes{
 						"bool": GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional: true,
@@ -48,7 +48,7 @@ Optional: true,
 		"attribute-list": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Optional: true,
@@ -76,10 +76,10 @@ Optional: true,
 		"attribute-list-nested": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: GeneratorAttributes{
 						"nested_list_nested": GeneratorMapNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -112,7 +112,7 @@ Optional: true,
 		"attribute-object": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: GeneratorAttributes{
 						"object": GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
@@ -145,9 +145,9 @@ Optional: true,
 		"attribute-single-nested-bool": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: GeneratorAttributes{
 						"nested_single_nested": GeneratorSingleNestedAttribute{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,

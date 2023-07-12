@@ -61,7 +61,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-attribute-list": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
@@ -77,7 +77,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-attribute-list-with-custom-type": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -98,7 +98,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-list-with-custom-type-with-element-with-custom-type": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -131,7 +131,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-attribute-object": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"obj": GeneratorObjectAttribute{
 						AttributeTypes: []specschema.ObjectAttributeType{
 							{
@@ -153,7 +153,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-attribute-object-with-custom-type": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"obj": GeneratorObjectAttribute{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -174,7 +174,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-object-with-custom-type-with-attribute-with-custom-type": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"obj": GeneratorObjectAttribute{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -317,7 +317,7 @@ func TestGeneratorSingleNestedAttribute_ToString(t *testing.T) {
 	}{
 		"attribute-bool": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"bool": GeneratorBoolAttribute{
 						BoolAttribute: schema.BoolAttribute{
 							Optional: true,
@@ -337,7 +337,7 @@ Optional: true,
 
 		"attribute-list": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ListAttribute: schema.ListAttribute{
 							Optional: true,
@@ -361,10 +361,10 @@ Optional: true,
 
 		"attribute-list-nested": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"nested_list_nested": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -393,7 +393,7 @@ Optional: true,
 
 		"attribute-object": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						ObjectAttribute: schema.ObjectAttribute{
 							Optional: true,
@@ -422,9 +422,9 @@ Optional: true,
 
 		"attribute-single-nested-bool": {
 			input: GeneratorSingleNestedAttribute{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: GeneratorAttributes{
 					"nested_single_nested": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: GeneratorAttributes{
 							"bool": GeneratorBoolAttribute{
 								BoolAttribute: schema.BoolAttribute{
 									Optional: true,

@@ -1,0 +1,26 @@
+
+func (m {{.Name}}Model) ObjectType(ctx context.Context) types.ObjectType {
+return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m {{.Name}}Model) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+return map[string]attr.Type{
+{{- range $key, $value := .AttrTypes }}
+"{{$key}}": {{$value}},
+{{- end}}
+}
+}
+
+func (m {{.Name}}Model) ObjectNull(ctx context.Context) types.Object {
+return types.ObjectNull(
+m.ObjectAttributeTypes(ctx),
+)
+}
+
+func (m {{.Name}}Model) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+return types.ObjectValueFrom(
+ctx,
+m.ObjectAttributeTypes(ctx),
+data,
+)
+}
