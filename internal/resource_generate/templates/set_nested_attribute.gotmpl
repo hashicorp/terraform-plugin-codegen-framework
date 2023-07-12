@@ -2,7 +2,7 @@
 "{{$key}}": schema.SetNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
-{{- getAttributes $value.NestedObject.Attributes}}
+{{- AttributesString}}
 },
 {{- if $value.NestedObject.CustomType}}
 CustomType: {{$value.NestedObject.CustomType.Type}},

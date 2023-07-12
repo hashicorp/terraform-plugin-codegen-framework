@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertMapNestedAttribute(a *provider.MapNestedAttribute) (provider_generate.GeneratorMapNestedAttribute, error) {
@@ -17,10 +18,10 @@ func convertMapNestedAttribute(a *provider.MapNestedAttribute) (provider_generat
 		return provider_generate.GeneratorMapNestedAttribute{}, fmt.Errorf("*provider.MapNestedAttribute is nil")
 	}
 
-	attributes := make(map[string]provider_generate.GeneratorAttribute, len(a.NestedObject.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
 
 	for _, v := range a.NestedObject.Attributes {
-		var attribute provider_generate.GeneratorAttribute
+		var attribute generatorschema.GeneratorAttribute
 		var err error
 
 		switch {

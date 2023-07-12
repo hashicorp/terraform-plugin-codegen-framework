@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertListNestedBlock(b *resource.ListNestedBlock) (resource_generate.GeneratorListNestedBlock, error) {
@@ -17,10 +18,10 @@ func convertListNestedBlock(b *resource.ListNestedBlock) (resource_generate.Gene
 		return resource_generate.GeneratorListNestedBlock{}, fmt.Errorf("*resource.ListNestedBlock is nil")
 	}
 
-	attributes := make(map[string]resource_generate.GeneratorAttribute, len(b.NestedObject.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(b.NestedObject.Attributes))
 
 	for _, v := range b.NestedObject.Attributes {
-		var attribute resource_generate.GeneratorAttribute
+		var attribute generatorschema.GeneratorAttribute
 		var err error
 
 		switch {
@@ -61,10 +62,10 @@ func convertListNestedBlock(b *resource.ListNestedBlock) (resource_generate.Gene
 		attributes[v.Name] = attribute
 	}
 
-	blocks := make(map[string]resource_generate.GeneratorBlock, len(b.NestedObject.Blocks))
+	blocks := make(generatorschema.GeneratorBlocks, len(b.NestedObject.Blocks))
 
 	for _, v := range b.NestedObject.Blocks {
-		var block resource_generate.GeneratorBlock
+		var block generatorschema.GeneratorBlock
 		var err error
 
 		switch {

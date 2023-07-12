@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -22,6 +24,12 @@ type GeneratorListNestedAttribute struct {
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedAttributeObject
 	Validators   []specschema.ListValidator
+}
+
+func (g GeneratorListNestedAttribute) AttrType() attr.Type {
+	return types.ListType{
+		//TODO: Add ElemType?
+	}
 }
 
 func (g GeneratorListNestedAttribute) Imports() *generatorschema.Imports {
@@ -50,7 +58,7 @@ func (g GeneratorListNestedAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorListNestedAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorListNestedAttribute)
 	if !ok {
 		return false
@@ -83,7 +91,7 @@ func (g GeneratorListNestedAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorListNestedAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": getAttributes,
+		"AttributesString": g.NestedObject.Attributes.String,
 	}
 
 	t, err := template.New("list_nested_attribute").Funcs(funcMap).Parse(listNestedAttributeGoTemplate)
@@ -121,6 +129,10 @@ func (g GeneratorListNestedAttribute) ModelField(name string) (model.Field, erro
 	}
 
 	return field, nil
+}
+
+func (g GeneratorListNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
+	return g.NestedObject.Attributes
 }
 
 func (g GeneratorListNestedAttribute) listValidatorsEqual(x, y []specschema.ListValidator) bool {

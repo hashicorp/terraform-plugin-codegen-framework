@@ -6,18 +6,18 @@ package provider_convert
 import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func convertSchema(d *provider.Provider) (provider_generate.GeneratorProviderSchema, error) {
-	var s provider_generate.GeneratorProviderSchema
+func convertSchema(d *provider.Provider) (schema.GeneratorSchema, error) {
+	var s schema.GeneratorSchema
 
 	if d.Schema == nil {
 		return s, nil
 	}
 
-	attributes := make(map[string]provider_generate.GeneratorAttribute, len(d.Schema.Attributes))
-	blocks := make(map[string]provider_generate.GeneratorBlock, len(d.Schema.Blocks))
+	attributes := make(schema.GeneratorAttributes, len(d.Schema.Attributes))
+	blocks := make(schema.GeneratorBlocks, len(d.Schema.Blocks))
 
 	for _, v := range d.Schema.Attributes {
 		a, err := convertAttribute(v)

@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestConvertSetNestedAttribute(t *testing.T) {
@@ -56,7 +57,7 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetNestedAttribute{
 				NestedObject: provider_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]provider_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": provider_generate.GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional: true,
@@ -84,7 +85,7 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetNestedAttribute{
 				NestedObject: provider_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]provider_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list_attribute": provider_generate.GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Optional: true,
@@ -122,10 +123,10 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetNestedAttribute{
 				NestedObject: provider_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]provider_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_attribute": provider_generate.GeneratorSetNestedAttribute{
 							NestedObject: provider_generate.GeneratorNestedAttributeObject{
-								Attributes: map[string]provider_generate.GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": provider_generate.GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -162,7 +163,7 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetNestedAttribute{
 				NestedObject: provider_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]provider_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"object_attribute": provider_generate.GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
@@ -201,9 +202,9 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 			},
 			expected: provider_generate.GeneratorSetNestedAttribute{
 				NestedObject: provider_generate.GeneratorNestedAttributeObject{
-					Attributes: map[string]provider_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_attribute": provider_generate.GeneratorSingleNestedAttribute{
-							Attributes: map[string]provider_generate.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": provider_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,

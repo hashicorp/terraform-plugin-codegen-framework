@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertListNestedBlock(b *provider.ListNestedBlock) (provider_generate.GeneratorListNestedBlock, error) {
@@ -17,10 +18,10 @@ func convertListNestedBlock(b *provider.ListNestedBlock) (provider_generate.Gene
 		return provider_generate.GeneratorListNestedBlock{}, fmt.Errorf("*provider.ListNestedBlock is nil")
 	}
 
-	attributes := make(map[string]provider_generate.GeneratorAttribute, len(b.NestedObject.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(b.NestedObject.Attributes))
 
 	for _, v := range b.NestedObject.Attributes {
-		var attribute provider_generate.GeneratorAttribute
+		var attribute generatorschema.GeneratorAttribute
 		var err error
 
 		switch {
@@ -61,10 +62,10 @@ func convertListNestedBlock(b *provider.ListNestedBlock) (provider_generate.Gene
 		attributes[v.Name] = attribute
 	}
 
-	blocks := make(map[string]provider_generate.GeneratorBlock, len(b.NestedObject.Blocks))
+	blocks := make(generatorschema.GeneratorBlocks, len(b.NestedObject.Blocks))
 
 	for _, v := range b.NestedObject.Blocks {
-		var block provider_generate.GeneratorBlock
+		var block generatorschema.GeneratorBlock
 		var err error
 
 		switch {

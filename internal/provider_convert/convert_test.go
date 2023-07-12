@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func pointer[T any](in T) *T {
@@ -24,7 +25,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 
 	testCases := map[string]struct {
 		spec           spec.Specification
-		expectedSchema map[string]provider_generate.GeneratorProviderSchema
+		expectedSchema map[string]generatorschema.GeneratorSchema
 	}{
 		"success": {
 			spec: spec.Specification{
@@ -180,9 +181,9 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 					},
 				},
 			},
-			expectedSchema: map[string]provider_generate.GeneratorProviderSchema{
+			expectedSchema: map[string]generatorschema.GeneratorSchema{
 				"example": {
-					Attributes: map[string]provider_generate.GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": provider_generate.GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional:  true,
@@ -227,7 +228,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 						},
 						"list_nested_attribute": provider_generate.GeneratorListNestedAttribute{
 							NestedObject: provider_generate.GeneratorNestedAttributeObject{
-								Attributes: map[string]provider_generate.GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": provider_generate.GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -267,7 +268,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 							},
 						},
 						"single_nested_attribute": provider_generate.GeneratorSingleNestedAttribute{
-							Attributes: map[string]provider_generate.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool_attribute": provider_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -287,10 +288,10 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 							},
 						},
 					},
-					Blocks: map[string]provider_generate.GeneratorBlock{
+					Blocks: generatorschema.GeneratorBlocks{
 						"list_nested_block": provider_generate.GeneratorListNestedBlock{
 							NestedObject: provider_generate.GeneratorNestedBlockObject{
-								Attributes: map[string]provider_generate.GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": provider_generate.GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -300,7 +301,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 							},
 						},
 						"single_nested_block": provider_generate.GeneratorSingleNestedBlock{
-							Attributes: map[string]provider_generate.GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool_attribute": provider_generate.GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,

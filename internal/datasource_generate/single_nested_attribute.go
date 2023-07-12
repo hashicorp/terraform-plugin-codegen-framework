@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -19,9 +21,15 @@ type GeneratorSingleNestedAttribute struct {
 
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
-	Attributes map[string]GeneratorAttribute
+	Attributes generatorschema.GeneratorAttributes
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
+}
+
+func (g GeneratorSingleNestedAttribute) AttrType() attr.Type {
+	return types.ObjectType{
+		//TODO: Add AttrTypes?
+	}
 }
 
 func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
@@ -42,7 +50,7 @@ func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorSingleNestedAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSingleNestedAttribute)
 	if !ok {
 		return false
@@ -67,7 +75,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga GeneratorAttribute) bool {
 
 func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": getAttributes,
+		"AttributesString": g.Attributes.String,
 	}
 
 	t, err := template.New("single_nested_attribute").Funcs(funcMap).Parse(singleNestedAttributeGoTemplate)
@@ -105,6 +113,10 @@ func (g GeneratorSingleNestedAttribute) ModelField(name string) (model.Field, er
 	}
 
 	return field, nil
+}
+
+func (g GeneratorSingleNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
+	return g.Attributes
 }
 
 func (g GeneratorSingleNestedAttribute) validatorsEqual(x, y []specschema.ObjectValidator) bool {

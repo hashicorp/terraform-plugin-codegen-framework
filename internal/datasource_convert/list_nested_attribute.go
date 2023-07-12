@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertListNestedAttribute(a *datasource.ListNestedAttribute) (datasource_generate.GeneratorListNestedAttribute, error) {
@@ -17,10 +18,10 @@ func convertListNestedAttribute(a *datasource.ListNestedAttribute) (datasource_g
 		return datasource_generate.GeneratorListNestedAttribute{}, fmt.Errorf("*datasource.ListNestedAttribute is nil")
 	}
 
-	attributes := make(map[string]datasource_generate.GeneratorAttribute, len(a.NestedObject.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
 
 	for _, v := range a.NestedObject.Attributes {
-		var attribute datasource_generate.GeneratorAttribute
+		var attribute generatorschema.GeneratorAttribute
 		var err error
 
 		switch {

@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -22,6 +24,12 @@ type GeneratorListNestedBlock struct {
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedBlockObject
 	Validators   []specschema.ListValidator
+}
+
+func (g GeneratorListNestedBlock) AttrType() attr.Type {
+	return types.ListType{
+		//TODO: Add ElemType?
+	}
 }
 
 func (g GeneratorListNestedBlock) Imports() *generatorschema.Imports {
@@ -54,7 +62,7 @@ func (g GeneratorListNestedBlock) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorListNestedBlock) Equal(ga GeneratorBlock) bool {
+func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 	h, ok := ga.(GeneratorListNestedBlock)
 	if !ok {
 		return false
@@ -87,8 +95,8 @@ func (g GeneratorListNestedBlock) Equal(ga GeneratorBlock) bool {
 
 func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": getAttributes,
-		"getBlocks":     getBlocks,
+		"AttributesString": g.NestedObject.Attributes.String,
+		"BlocksString":     g.NestedObject.Blocks.String,
 	}
 
 	t, err := template.New("list_nested_block").Funcs(funcMap).Parse(listNestedBlockGoTemplate)
@@ -126,6 +134,14 @@ func (g GeneratorListNestedBlock) ModelField(name string) (model.Field, error) {
 	}
 
 	return field, nil
+}
+
+func (g GeneratorListNestedBlock) GetAttributes() generatorschema.GeneratorAttributes {
+	return g.NestedObject.Attributes
+}
+
+func (g GeneratorListNestedBlock) GetBlocks() generatorschema.GeneratorBlocks {
+	return g.NestedObject.Blocks
 }
 
 func (g GeneratorListNestedBlock) listValidatorsEqual(x, y []specschema.ListValidator) bool {

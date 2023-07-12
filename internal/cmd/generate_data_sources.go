@@ -14,10 +14,10 @@ import (
 	"github.com/mitchellh/cli"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_convert"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
 
@@ -117,7 +117,7 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateDataSourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName)
+	err = generateDataSourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource")
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
 	}
@@ -125,24 +125,29 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context) error {
 	return nil
 }
 
-func generateDataSourceCode(spec spec.Specification, outputPath, packageName string) error {
+func generateDataSourceCode(spec spec.Specification, outputPath, packageName, generatorType string) error {
 	// convert IR to framework schema
 	c := datasource_convert.NewConverter(spec)
-	schema, err := c.ToGeneratorDataSourceSchema()
+	s, err := c.ToGeneratorDataSourceSchema()
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
 
 	// convert framework schema to []byte
-	g := datasource_generate.NewGeneratorDataSourceSchemas(schema)
-	schemaBytes, err := g.ToBytes(packageName)
+	g := schema.NewGeneratorSchemas(s)
+	schemaBytes, err := g.SchemasBytes(packageName, generatorType)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
 	// generate model code
-	dataSourcesModelsGenerator := datasource_generate.NewDataSourcesModelsGenerator()
-	dataSourcesModels, err := dataSourcesModelsGenerator.Process(schema)
+	modelsBytes, err := g.ModelsBytes()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// generate model object helpers code
+	modelsObjectHelpersBytes, err := g.ModelsObjectHelpersBytes()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -154,13 +159,19 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName str
 	}
 
 	// format model code
-	formattedDataSourcesModels, err := format.Format(dataSourcesModels)
+	formattedDataSourcesModels, err := format.Format(modelsBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// format model object helpers code
+	formattedDataSourcesModelObjectHelpers, err := format.Format(modelsObjectHelpersBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// write code
-	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, outputPath)
+	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedDataSourcesModelObjectHelpers, outputPath)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

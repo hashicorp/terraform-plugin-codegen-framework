@@ -61,7 +61,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"nested-attribute-list": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
@@ -77,7 +77,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"nested-attribute-list-with-custom-type": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -98,7 +98,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"nested-list-with-custom-type-with-element-with-custom-type": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -131,7 +131,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"nested-attribute-object": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"obj": GeneratorObjectAttribute{
 						AttributeTypes: []specschema.ObjectAttributeType{
 							{
@@ -153,7 +153,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"nested-attribute-object-with-custom-type": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"obj": GeneratorObjectAttribute{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -174,7 +174,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"nested-object-with-custom-type-with-attribute-with-custom-type": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"obj": GeneratorObjectAttribute{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -210,7 +210,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"nested-block-with-custom-type": {
 			input: GeneratorSingleNestedBlock{
-				Blocks: map[string]GeneratorBlock{
+				Blocks: generatorschema.GeneratorBlocks{
 					"list-nested-block": GeneratorListNestedBlock{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -422,7 +422,7 @@ func TestGeneratorSingleNestedBlock_ToString(t *testing.T) {
 	}{
 		"attribute-bool": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"bool": GeneratorBoolAttribute{
 						BoolAttribute: schema.BoolAttribute{
 							Optional: true,
@@ -442,7 +442,7 @@ Optional: true,
 
 		"attribute-list": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"list": GeneratorListAttribute{
 						ListAttribute: schema.ListAttribute{
 							Optional: true,
@@ -466,10 +466,10 @@ Optional: true,
 
 		"attribute-list-nested": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"nested_list_nested": GeneratorListNestedAttribute{
 						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -498,7 +498,7 @@ Optional: true,
 
 		"attribute-object": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
 						ObjectAttribute: schema.ObjectAttribute{
 							Optional: true,
@@ -527,9 +527,9 @@ Optional: true,
 
 		"attribute-single-nested-bool": {
 			input: GeneratorSingleNestedBlock{
-				Attributes: map[string]GeneratorAttribute{
+				Attributes: generatorschema.GeneratorAttributes{
 					"nested_single_nested": GeneratorSingleNestedAttribute{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: generatorschema.GeneratorAttributes{
 							"bool": GeneratorBoolAttribute{
 								BoolAttribute: schema.BoolAttribute{
 									Optional: true,
@@ -555,10 +555,10 @@ Optional: true,
 
 		"block-list-nested-bool": {
 			input: GeneratorSingleNestedBlock{
-				Blocks: map[string]GeneratorBlock{
+				Blocks: generatorschema.GeneratorBlocks{
 					"nested_list_nested": GeneratorListNestedBlock{
 						NestedObject: GeneratorNestedBlockObject{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -587,9 +587,9 @@ Optional: true,
 
 		"block-single-nested-bool": {
 			input: GeneratorSingleNestedBlock{
-				Blocks: map[string]GeneratorBlock{
+				Blocks: generatorschema.GeneratorBlocks{
 					"nested_single_nested": GeneratorSingleNestedBlock{
-						Attributes: map[string]GeneratorAttribute{
+						Attributes: generatorschema.GeneratorAttributes{
 							"bool": GeneratorBoolAttribute{
 								BoolAttribute: schema.BoolAttribute{
 									Optional: true,

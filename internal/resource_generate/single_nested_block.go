@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -19,11 +21,17 @@ type GeneratorSingleNestedBlock struct {
 
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
-	Attributes    map[string]GeneratorAttribute
-	Blocks        map[string]GeneratorBlock
+	Attributes    generatorschema.GeneratorAttributes
+	Blocks        generatorschema.GeneratorBlocks
 	CustomType    *specschema.CustomType
 	PlanModifiers []specschema.ObjectPlanModifier
 	Validators    []specschema.ObjectValidator
+}
+
+func (g GeneratorSingleNestedBlock) AttrType() attr.Type {
+	return types.ObjectType{
+		//TODO: Add AttrTypes?
+	}
 }
 
 func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
@@ -53,7 +61,7 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorSingleNestedBlock) Equal(ga GeneratorBlock) bool {
+func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 	h, ok := ga.(GeneratorSingleNestedBlock)
 	if !ok {
 		return false
@@ -78,8 +86,8 @@ func (g GeneratorSingleNestedBlock) Equal(ga GeneratorBlock) bool {
 
 func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 	funcMap := template.FuncMap{
-		"getAttributes": getAttributes,
-		"getBlocks":     getBlocks,
+		"AttributesString": g.Attributes.String,
+		"BlocksString":     g.Blocks.String,
 	}
 
 	t, err := template.New("single_nested_block").Funcs(funcMap).Parse(singleNestedBlockGoTemplate)
@@ -117,6 +125,14 @@ func (g GeneratorSingleNestedBlock) ModelField(name string) (model.Field, error)
 	}
 
 	return field, nil
+}
+
+func (g GeneratorSingleNestedBlock) GetAttributes() generatorschema.GeneratorAttributes {
+	return g.Attributes
+}
+
+func (g GeneratorSingleNestedBlock) GetBlocks() generatorschema.GeneratorBlocks {
+	return g.Blocks
 }
 
 func (g GeneratorSingleNestedBlock) validatorsEqual(x, y []specschema.ObjectValidator) bool {

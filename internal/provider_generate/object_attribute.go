@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -22,6 +24,16 @@ type GeneratorObjectAttribute struct {
 	AttributeTypes []specschema.ObjectAttributeType
 	CustomType     *specschema.CustomType
 	Validators     []specschema.ObjectValidator
+}
+
+func (g GeneratorObjectAttribute) AttrType() attr.Type {
+	return types.ObjectType{
+		//TODO: Add AttrTypes?
+	}
+}
+
+func (g GeneratorObjectAttribute) AttrTypes() specschema.ObjectAttributeTypes {
+	return g.AttributeTypes
 }
 
 func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
@@ -41,7 +53,7 @@ func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorObjectAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorObjectAttribute)
 	if !ok {
 		return false

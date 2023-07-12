@@ -10,8 +10,10 @@ import (
 
 const (
 	AttrImport         = "github.com/hashicorp/terraform-plugin-framework/attr"
-	TypesImport        = "github.com/hashicorp/terraform-plugin-framework/types"
+	ContextImport      = "context"
+	DiagImport         = "github.com/hashicorp/terraform-plugin-framework/diag"
 	PlanModifierImport = "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	TypesImport        = "github.com/hashicorp/terraform-plugin-framework/types"
 	ValidatorImport    = "github.com/hashicorp/terraform-plugin-framework/schema/validator"
 )
 
