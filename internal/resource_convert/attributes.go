@@ -8,10 +8,10 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func convertAttribute(a resource.Attribute) (resource_generate.GeneratorAttribute, error) {
+func convertAttribute(a resource.Attribute) (generatorschema.GeneratorAttribute, error) {
 	switch {
 	case a.Bool != nil:
 		return convertBoolAttribute(a.Bool)

@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertSingleNestedAttribute(a *datasource.SingleNestedAttribute) (datasource_generate.GeneratorSingleNestedAttribute, error) {
@@ -17,10 +18,10 @@ func convertSingleNestedAttribute(a *datasource.SingleNestedAttribute) (datasour
 		return datasource_generate.GeneratorSingleNestedAttribute{}, fmt.Errorf("*datasource.SingleNestedAttribute is nil")
 	}
 
-	attributes := make(map[string]datasource_generate.GeneratorAttribute, len(a.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(a.Attributes))
 
 	for _, v := range a.Attributes {
-		var attribute datasource_generate.GeneratorAttribute
+		var attribute generatorschema.GeneratorAttribute
 		var err error
 
 		switch {

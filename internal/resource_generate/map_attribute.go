@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -24,6 +26,16 @@ type GeneratorMapAttribute struct {
 	ElementType   specschema.ElementType
 	PlanModifiers []specschema.MapPlanModifier
 	Validators    []specschema.MapValidator
+}
+
+func (g GeneratorMapAttribute) AttrType() attr.Type {
+	return types.MapType{
+		//TODO: Add ElemType?
+	}
+}
+
+func (g GeneratorMapAttribute) ElemType() specschema.ElementType {
+	return g.ElementType
 }
 
 func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {
@@ -56,7 +68,7 @@ func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {
 // Equal does not delegate to g.ListAttribute.Equal(h.ListAttribute) as the
 // call returns false owing to !a.GetType().Equal(b.GetType()) returning false
 // when the ElementType is nil.
-func (g GeneratorMapAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorMapAttribute)
 	if !ok {
 		return false

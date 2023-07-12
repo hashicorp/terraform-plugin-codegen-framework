@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorMapNestedAttribute_ToString(t *testing.T) {
@@ -24,7 +25,7 @@ func TestGeneratorMapNestedAttribute_ToString(t *testing.T) {
 		"attribute-bool": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool": GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional: true,
@@ -48,7 +49,7 @@ Optional: true,
 		"attribute-list": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Optional: true,
@@ -76,10 +77,10 @@ Optional: true,
 		"attribute-list-nested": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_list_nested": GeneratorMapNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -112,7 +113,7 @@ Optional: true,
 		"attribute-object": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"object": GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
@@ -145,9 +146,9 @@ Optional: true,
 		"attribute-single-nested-bool": {
 			input: GeneratorMapNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_single_nested": GeneratorSingleNestedAttribute{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,

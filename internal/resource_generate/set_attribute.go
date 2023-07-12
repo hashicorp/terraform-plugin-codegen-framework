@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -24,6 +26,16 @@ type GeneratorSetAttribute struct {
 	ElementType   specschema.ElementType
 	PlanModifiers []specschema.SetPlanModifier
 	Validators    []specschema.SetValidator
+}
+
+func (g GeneratorSetAttribute) AttrType() attr.Type {
+	return types.SetType{
+		//TODO: Add ElemType?
+	}
+}
+
+func (g GeneratorSetAttribute) ElemType() specschema.ElementType {
+	return g.ElementType
 }
 
 func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
@@ -53,7 +65,7 @@ func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorSetAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSetAttribute)
 	if !ok {
 		return false

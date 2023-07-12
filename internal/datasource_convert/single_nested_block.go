@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertSingleNestedBlock(b *datasource.SingleNestedBlock) (datasource_generate.GeneratorSingleNestedBlock, error) {
@@ -17,10 +18,10 @@ func convertSingleNestedBlock(b *datasource.SingleNestedBlock) (datasource_gener
 		return datasource_generate.GeneratorSingleNestedBlock{}, fmt.Errorf("*datasource.SingleNestedBlock is nil")
 	}
 
-	attributes := make(map[string]datasource_generate.GeneratorAttribute, len(b.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(b.Attributes))
 
 	for _, v := range b.Attributes {
-		var attribute datasource_generate.GeneratorAttribute
+		var attribute generatorschema.GeneratorAttribute
 		var err error
 
 		switch {
@@ -61,10 +62,10 @@ func convertSingleNestedBlock(b *datasource.SingleNestedBlock) (datasource_gener
 		attributes[v.Name] = attribute
 	}
 
-	blocks := make(map[string]datasource_generate.GeneratorBlock, len(b.Blocks))
+	blocks := make(generatorschema.GeneratorBlocks, len(b.Blocks))
 
 	for _, v := range b.Blocks {
-		var block datasource_generate.GeneratorBlock
+		var block generatorschema.GeneratorBlock
 		var err error
 
 		switch {

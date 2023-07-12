@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -23,6 +25,10 @@ type GeneratorNumberAttribute struct {
 	Default       *specschema.NumberDefault
 	PlanModifiers []specschema.NumberPlanModifier
 	Validators    []specschema.NumberValidator
+}
+
+func (g GeneratorNumberAttribute) AttrType() attr.Type {
+	return types.NumberType
 }
 
 func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
@@ -49,7 +55,7 @@ func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorNumberAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorNumberAttribute)
 	if !ok {
 		return false

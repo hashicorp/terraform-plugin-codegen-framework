@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertSetNestedAttribute(a *resource.SetNestedAttribute) (resource_generate.GeneratorSetNestedAttribute, error) {
@@ -17,10 +18,10 @@ func convertSetNestedAttribute(a *resource.SetNestedAttribute) (resource_generat
 		return resource_generate.GeneratorSetNestedAttribute{}, fmt.Errorf("*resource.SetNestedAttribute is nil")
 	}
 
-	attributes := make(map[string]resource_generate.GeneratorAttribute, len(a.NestedObject.Attributes))
+	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
 
 	for _, v := range a.NestedObject.Attributes {
-		var attribute resource_generate.GeneratorAttribute
+		var attribute generatorschema.GeneratorAttribute
 		var err error
 
 		switch {

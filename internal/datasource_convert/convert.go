@@ -7,7 +7,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type converter struct {
@@ -20,8 +20,8 @@ func NewConverter(spec spec.Specification) converter {
 	}
 }
 
-func (c converter) ToGeneratorDataSourceSchema() (map[string]datasource_generate.GeneratorDataSourceSchema, error) {
-	dataSourceSchemas := make(map[string]datasource_generate.GeneratorDataSourceSchema, len(c.spec.DataSources))
+func (c converter) ToGeneratorDataSourceSchema() (map[string]schema.GeneratorSchema, error) {
+	dataSourceSchemas := make(map[string]schema.GeneratorSchema, len(c.spec.DataSources))
 
 	for _, v := range c.spec.DataSources {
 		s, err := convertSchema(v)

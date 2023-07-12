@@ -170,7 +170,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-list": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							ElementType: specschema.ElementType{
 								Bool: &specschema.BoolType{},
@@ -188,7 +188,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-list-with-custom-type": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							CustomType: &specschema.CustomType{
 								Import: &code.Import{
@@ -211,7 +211,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-list-with-custom-type-with-element-with-custom-type": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							CustomType: &specschema.CustomType{
 								Import: &code.Import{
@@ -246,7 +246,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-object": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
 							AttributeTypes: []specschema.ObjectAttributeType{
 								{
@@ -270,7 +270,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-object-with-custom-type": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
 							CustomType: &specschema.CustomType{
 								Import: &code.Import{
@@ -293,7 +293,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-object-with-custom-type-with-attribute-with-custom-type": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
 							CustomType: &specschema.CustomType{
 								Import: &code.Import{
@@ -532,7 +532,7 @@ func TestGeneratorListNestedAttribute_ToString(t *testing.T) {
 		"attribute-bool": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool": GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional: true,
@@ -556,7 +556,7 @@ Optional: true,
 		"attribute-list": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Optional: true,
@@ -584,10 +584,10 @@ Optional: true,
 		"attribute-list-nested": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_list_nested": GeneratorListNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: map[string]GeneratorAttribute{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -620,7 +620,7 @@ Optional: true,
 		"attribute-object": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"object": GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
@@ -653,9 +653,9 @@ Optional: true,
 		"attribute-single-nested-bool": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: map[string]GeneratorAttribute{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_single_nested": GeneratorSingleNestedAttribute{
-							Attributes: map[string]GeneratorAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,

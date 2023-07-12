@@ -8,10 +8,10 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func convertBlock(b provider.Block) (provider_generate.GeneratorBlock, error) {
+func convertBlock(b provider.Block) (schema.GeneratorBlock, error) {
 	switch {
 	case b.ListNested != nil:
 		return convertListNestedBlock(b.ListNested)

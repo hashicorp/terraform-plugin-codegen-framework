@@ -9,20 +9,22 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		input         map[string]GeneratorProviderSchema
+		input         map[string]generatorschema.GeneratorSchema
 		expected      string
 		expectedError error
 	}{
 		"all": {
-			input: map[string]GeneratorProviderSchema{
+			input: map[string]generatorschema.GeneratorSchema{
 				"example": {
-					Attributes: GeneratorAttributes{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{},
 						"bool_attribute_custom": GeneratorBoolAttribute{
 							CustomType: &schema.CustomType{
@@ -49,7 +51,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 						},
 						"list_nested_attribute": GeneratorListNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -59,7 +61,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 								ValueType: "my_list_nested_value_type",
 							},
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -72,7 +74,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 						},
 						"map_nested_attribute": GeneratorMapNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -82,7 +84,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 								ValueType: "my_map_nested_value_type",
 							},
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -107,7 +109,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 						},
 						"set_nested_attribute": GeneratorSetNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -117,13 +119,13 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 								ValueType: "my_set_nested_value_type",
 							},
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
 						},
 						"single_nested_attribute": GeneratorSingleNestedAttribute{
-							Attributes: GeneratorAttributes{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
@@ -131,7 +133,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 							CustomType: &schema.CustomType{
 								ValueType: "my_single_nested_value_type",
 							},
-							Attributes: GeneratorAttributes{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
@@ -142,10 +144,10 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 					},
-					Blocks: GeneratorBlocks{
+					Blocks: generatorschema.GeneratorBlocks{
 						"list_nested_block": GeneratorListNestedBlock{
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -155,14 +157,14 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 								ValueType: "my_list_nested_value_type",
 							},
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
 						},
 						"set_nested_block": GeneratorSetNestedBlock{
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
@@ -172,13 +174,13 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 								ValueType: "my_set_nested_value_type",
 							},
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
 								},
 							},
 						},
 						"single_nested_block": GeneratorSingleNestedBlock{
-							Attributes: GeneratorAttributes{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
@@ -186,7 +188,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 							CustomType: &schema.CustomType{
 								ValueType: "my_single_nested_value_type",
 							},
-							Attributes: GeneratorAttributes{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
@@ -203,7 +205,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			g := NewGeneratorProviderSchemas(testCase.input)
+			g := generatorschema.NewGeneratorSchemas(testCase.input)
 			got, err := g.ModelsBytes()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {

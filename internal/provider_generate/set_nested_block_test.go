@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorSetNestedBlock_ToString(t *testing.T) {
@@ -24,7 +25,7 @@ func TestGeneratorSetNestedBlock_ToString(t *testing.T) {
 		"attribute-bool": {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Attributes: GeneratorAttributes{
+					Attributes: generatorschema.GeneratorAttributes{
 						"bool": GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional: true,
@@ -48,7 +49,7 @@ Optional: true,
 		"attribute-list": {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Attributes: GeneratorAttributes{
+					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Optional: true,
@@ -76,10 +77,10 @@ Optional: true,
 		"attribute-list-nested": {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Attributes: GeneratorAttributes{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_list_nested": GeneratorSetNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -112,7 +113,7 @@ Optional: true,
 		"attribute-object": {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Attributes: GeneratorAttributes{
+					Attributes: generatorschema.GeneratorAttributes{
 						"object": GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
@@ -145,9 +146,9 @@ Optional: true,
 		"attribute-single-nested-bool": {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Attributes: GeneratorAttributes{
+					Attributes: generatorschema.GeneratorAttributes{
 						"nested_single_nested": GeneratorSingleNestedAttribute{
-							Attributes: GeneratorAttributes{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
@@ -177,10 +178,10 @@ Optional: true,
 		"block-list-nested-bool": {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Blocks: GeneratorBlocks{
+					Blocks: generatorschema.GeneratorBlocks{
 						"nested_list_nested": GeneratorSetNestedBlock{
 							NestedObject: GeneratorNestedBlockObject{
-								Attributes: GeneratorAttributes{
+								Attributes: generatorschema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
@@ -213,9 +214,9 @@ Optional: true,
 		"block-single-nested-bool": {
 			input: GeneratorSetNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Blocks: GeneratorBlocks{
+					Blocks: generatorschema.GeneratorBlocks{
 						"nested_single_nested": GeneratorSingleNestedBlock{
-							Attributes: GeneratorAttributes{
+							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,

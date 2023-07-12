@@ -9,9 +9,6 @@ import (
 	"text/template"
 )
 
-//go:embed templates/schema.gotmpl
-var schemaGoTemplate string
-
 //go:embed templates/bool_attribute.gotmpl
 var boolAttributeGoTemplate string
 

@@ -8,7 +8,9 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -23,6 +25,12 @@ type GeneratorSetNestedBlock struct {
 	NestedObject  GeneratorNestedBlockObject
 	PlanModifiers []specschema.SetPlanModifier
 	Validators    []specschema.SetValidator
+}
+
+func (g GeneratorSetNestedBlock) AttrType() attr.Type {
+	return types.SetType{
+		//TODO: Add ElemType?
+	}
 }
 
 func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {
@@ -65,7 +73,7 @@ func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorSetNestedBlock) Equal(ga GeneratorBlock) bool {
+func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 	h, ok := ga.(GeneratorSetNestedBlock)
 	if !ok {
 		return false
@@ -139,11 +147,11 @@ func (g GeneratorSetNestedBlock) ModelField(name string) (model.Field, error) {
 	return field, nil
 }
 
-func (g GeneratorSetNestedBlock) GetAttributes() GeneratorAttributes {
+func (g GeneratorSetNestedBlock) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.NestedObject.Attributes
 }
 
-func (g GeneratorSetNestedBlock) GetBlocks() GeneratorBlocks {
+func (g GeneratorSetNestedBlock) GetBlocks() generatorschema.GeneratorBlocks {
 	return g.NestedObject.Blocks
 }
 

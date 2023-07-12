@@ -1,29 +1,29 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package datasource_generate
+package schema
 
 import (
 	"bytes"
 )
 
 // TODO: Field(s) could be added to handle end-user supplying their own templates to allow overriding.
-type GeneratorDataSourceSchemas struct {
-	schemas map[string]GeneratorDataSourceSchema
+type GeneratorSchemas struct {
+	schemas map[string]GeneratorSchema
 }
 
-func NewGeneratorDataSourceSchemas(schemas map[string]GeneratorDataSourceSchema) GeneratorDataSourceSchemas {
-	return GeneratorDataSourceSchemas{
+func NewGeneratorSchemas(schemas map[string]GeneratorSchema) GeneratorSchemas {
+	return GeneratorSchemas{
 		schemas: schemas,
 	}
 }
 
-func (g GeneratorDataSourceSchemas) SchemasBytes(packageName string) (map[string][]byte, error) {
+func (g GeneratorSchemas) SchemasBytes(packageName, generatorType string) (map[string][]byte, error) {
 	schemasBytes := make(map[string][]byte, len(g.schemas))
 
 	for k, s := range g.schemas {
 
-		b, err := s.SchemaBytes(k, packageName)
+		b, err := s.SchemaBytes(k, packageName, generatorType)
 
 		if err != nil {
 			return nil, err
@@ -35,18 +35,18 @@ func (g GeneratorDataSourceSchemas) SchemasBytes(packageName string) (map[string
 	return schemasBytes, nil
 }
 
-func (g GeneratorDataSourceSchemas) ModelsBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) ModelsBytes() (map[string][]byte, error) {
 	modelsBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, schema := range g.schemas {
 		var buf bytes.Buffer
 
-		generatorDataSourceSchema := GeneratorDataSourceSchema{
+		generatorSchema := GeneratorSchema{
 			Attributes: schema.Attributes,
 			Blocks:     schema.Blocks,
 		}
 
-		models, err := generatorDataSourceSchema.Models(name)
+		models, err := generatorSchema.Models(name)
 		if err != nil {
 			return nil, err
 		}
@@ -61,7 +61,7 @@ func (g GeneratorDataSourceSchemas) ModelsBytes() (map[string][]byte, error) {
 	return modelsBytes, nil
 }
 
-func (g GeneratorDataSourceSchemas) ModelsObjectHelpersBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) ModelsObjectHelpersBytes() (map[string][]byte, error) {
 	modelsObjectHelpersBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, s := range g.schemas {

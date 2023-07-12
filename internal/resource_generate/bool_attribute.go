@@ -10,7 +10,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -25,6 +27,10 @@ type GeneratorBoolAttribute struct {
 	Default       *specschema.BoolDefault
 	PlanModifiers []specschema.BoolPlanModifier
 	Validators    []specschema.BoolValidator
+}
+
+func (g GeneratorBoolAttribute) AttrType() attr.Type {
+	return types.BoolType
 }
 
 func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
@@ -57,7 +63,7 @@ func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorBoolAttribute) Equal(ga GeneratorAttribute) bool {
+func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorBoolAttribute)
 	if !ok {
 		return false
