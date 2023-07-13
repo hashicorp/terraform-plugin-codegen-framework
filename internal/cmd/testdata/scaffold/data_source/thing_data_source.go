@@ -40,7 +40,11 @@ func (d *thingDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
-	// API call logic
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Read API call logic
 
 	// Example data value setting
 	data.Id = types.StringValue("example-id")
