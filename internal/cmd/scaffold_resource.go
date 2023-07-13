@@ -30,7 +30,7 @@ type ScaffoldResourceCommand struct {
 func (cmd *ScaffoldResourceCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("scaffold resource", flag.ExitOnError)
 
-	fs.StringVar(&cmd.flagResourceNameSnake, "name", "", "name of resource in snake case, required")
+	fs.StringVar(&cmd.flagResourceNameSnake, "name", "", "name of resource in snake case without the provider type prefix, required")
 	fs.BoolVar(&cmd.flagForceOverwrite, "force", false, "force creation, overwriting existing files")
 	fs.StringVar(&cmd.flagOutputDir, "output-dir", ".", "directory path to output scaffolded code file")
 	fs.StringVar(&cmd.flagOutputFile, "output-file", "", "file name and extension to write scaffolded code to, default will use the --name flag with '_resource.go' suffix")

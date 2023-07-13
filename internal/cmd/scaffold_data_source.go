@@ -30,7 +30,7 @@ type ScaffoldDataSourceCommand struct {
 func (cmd *ScaffoldDataSourceCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("scaffold data source", flag.ExitOnError)
 
-	fs.StringVar(&cmd.flagDataSourceNameSnake, "name", "", "name of data source in snake case, required")
+	fs.StringVar(&cmd.flagDataSourceNameSnake, "name", "", "name of data source in snake case without the provider type prefix, required")
 	fs.BoolVar(&cmd.flagForceOverwrite, "force", false, "force creation, overwriting existing files")
 	fs.StringVar(&cmd.flagOutputDir, "output-dir", ".", "directory path to output scaffolded code file")
 	fs.StringVar(&cmd.flagOutputFile, "output-file", "", "file name and extension to write scaffolded code to, default will use the --name flag with '_data_source.go' suffix")
