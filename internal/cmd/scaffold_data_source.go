@@ -33,7 +33,7 @@ func (cmd *ScaffoldDataSourceCommand) Flags() *flag.FlagSet {
 	fs.StringVar(&cmd.flagDataSourceNameSnake, "name", "", "name of data source in snake case, required")
 	fs.BoolVar(&cmd.flagForceOverwrite, "force", false, "force creation, overwriting existing files")
 	fs.StringVar(&cmd.flagOutputDir, "output-dir", ".", "directory path to output scaffolded code file")
-	fs.StringVar(&cmd.flagOutputFile, "output-file", "", "file name and extension to write scaffolded code to, default will use the --name flag and '.go' extension")
+	fs.StringVar(&cmd.flagOutputFile, "output-file", "", "file name and extension to write scaffolded code to, default will use the --name flag with '_data_source.go' suffix")
 	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for scaffolded code file")
 	return fs
 }
