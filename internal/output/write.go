@@ -4,7 +4,9 @@
 package output
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 )
@@ -88,6 +90,25 @@ func WriteProviders(providersSchema, providerModels, providerModelObjectHelpers 
 		if err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func WriteBytes(outputFilePath string, outputBytes []byte, forceOverwrite bool) error {
+	if _, err := os.Stat(outputFilePath); !errors.Is(err, fs.ErrNotExist) && !forceOverwrite {
+		return fmt.Errorf("file (%s) already exists and --force is false", outputFilePath)
+	}
+
+	f, err := os.Create(outputFilePath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.Write(outputBytes)
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -23,5 +23,8 @@ project {
 
     # Release Engineering tooling configuration
     ".release/*.hcl",
+
+    # Ignore testdata files
+    "internal/cmd/testdata/**",
   ]
 }

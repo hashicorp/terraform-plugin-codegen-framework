@@ -36,4 +36,22 @@ testdata:
 		--package generated \
 		--output ./internal/cmd/testdata/custom_and_external/provider_output
 
+	go run ./cmd/terraform-plugin-codegen-framework scaffold resource \
+		--name thing \
+		--force \
+		--package scaffold \
+		--output-dir ./internal/cmd/testdata/scaffold/resource
+
+	go run ./cmd/terraform-plugin-codegen-framework scaffold data-source \
+		--name thing \
+		--force \
+		--package scaffold \
+		--output-dir ./internal/cmd/testdata/scaffold/data_source
+
+	go run ./cmd/terraform-plugin-codegen-framework scaffold provider \
+		--name examplecloud \
+		--force \
+		--package scaffold \
+		--output-dir ./internal/cmd/testdata/scaffold/provider
+
 .PHONY: lint fmt test
