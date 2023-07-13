@@ -35,5 +35,16 @@ func (d *{{.NameCamel}}DataSource) Schema(ctx context.Context, req datasource.Sc
 }
 
 func (d *{{.NameCamel}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data {{.NameCamel}}DataSourceModel
 
+	// Read Terraform configuration data into the model
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+
+	// API call logic
+
+	// Example data value setting
+	data.Id = types.StringValue("example-id")
+
+	// Save data into Terraform state
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
