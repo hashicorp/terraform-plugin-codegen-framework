@@ -19,7 +19,13 @@ func (d *{{.NameCamel}}DataSource) Metadata(ctx context.Context, req datasource.
 }
 
 func (d *{{.NameCamel}}DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-
+	resp.Schema = schema.Schema{
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed: true,
+			},
+		},
+	}
 }
 
 func (d *{{.NameCamel}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
