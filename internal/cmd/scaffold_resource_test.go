@@ -32,7 +32,7 @@ func TestScaffoldResourceCommand(t *testing.T) {
 			}
 
 			args := []string{
-				"--name", "example_thing",
+				"--name", "thing",
 				"--package", "scaffold",
 				"--output-dir", testOutputDir,
 			}

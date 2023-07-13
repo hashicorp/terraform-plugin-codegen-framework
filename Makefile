@@ -37,19 +37,19 @@ testdata:
 		--output ./internal/cmd/testdata/custom_and_external/provider_output
 
 	go run ./cmd/terraform-plugin-codegen-framework scaffold resource \
-		--name example_thing \
+		--name thing \
 		--force \
 		--package scaffold \
 		--output-dir ./internal/cmd/testdata/scaffold/resource
 
 	go run ./cmd/terraform-plugin-codegen-framework scaffold data-source \
-		--name example_thing \
+		--name thing \
 		--force \
 		--package scaffold \
 		--output-dir ./internal/cmd/testdata/scaffold/data_source
 
 	go run ./cmd/terraform-plugin-codegen-framework scaffold provider \
-		--name example_thing \
+		--name examplecloud \
 		--force \
 		--package scaffold \
 		--output-dir ./internal/cmd/testdata/scaffold/provider
