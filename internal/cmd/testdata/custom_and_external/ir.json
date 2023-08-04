@@ -201,11 +201,9 @@
             "name": "single_nested_attribute_one",
             "single_nested": {
               "associated_external_type": {
-                "imports": [
-                  {
-                    "path": "example.com/apisdk"
-                  }
-                ],
+                "import": {
+                  "path": "example.com/apisdk"
+                },
                 "type": "*apisdk.DataSourceProperty"
               },
               "attributes": [
