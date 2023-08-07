@@ -75,3 +75,18 @@ func (g GeneratorSchemas) ModelsObjectHelpersBytes() (map[string][]byte, error) 
 
 	return modelsObjectHelpersBytes, nil
 }
+
+func (g GeneratorSchemas) ModelsToFromBytes() (map[string][]byte, error) {
+	modelsExpandFlattenBytes := make(map[string][]byte, len(g.schemas))
+
+	for name, s := range g.schemas {
+		b, err := s.ModelsToFromBytes()
+		if err != nil {
+			return nil, err
+		}
+
+		modelsExpandFlattenBytes[name] = b
+	}
+
+	return modelsExpandFlattenBytes, nil
+}

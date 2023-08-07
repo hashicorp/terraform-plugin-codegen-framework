@@ -42,3 +42,11 @@ type GeneratorBlock interface {
 	ModelField(string) (model.Field, error)
 	ToString(string) (string, error)
 }
+
+// TODO: AssocExtType() can be added to GeneratorAttribute,
+// and GeneratorBlock once all attributes and blocks
+// implement the function.
+type GeneratorBlockAssocExtType interface {
+	GeneratorBlock
+	AssocExtType() *AssocExtType
+}

@@ -1,0 +1,38 @@
+func To{{.Name}}(ctx context.Context, tfObject types.Object) ({{.Type}}, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if tfObject.IsNull() || tfObject.IsUnknown() {
+return nil, diags
+}
+
+var tfModel {{.Name}}Model
+
+diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+apiObject := &{{.TypeReference}}{
+{{- range $key, $value := .Attributes }}
+{{$key}}: tfModel.{{$key}}.{{$value.to}}(),
+{{- end}}
+}
+
+return apiObject, diags
+}
+
+func From{{.Name}}(ctx context.Context, apiObject {{.Type}}) (types.Object, diag.Diagnostics) {
+var diags diag.Diagnostics
+var tfModel {{.Name}}Model
+
+if apiObject == nil {
+return tfModel.ObjectNull(ctx), diags
+}
+
+{{- range $key, $value := .Attributes }}
+tfModel.{{$key}} = types.{{$value.from}}(apiObject.{{$key}})
+{{- end}}
+
+return tfModel.ObjectValueFrom(ctx, tfModel)
+}

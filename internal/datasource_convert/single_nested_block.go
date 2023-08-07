@@ -95,7 +95,9 @@ func convertSingleNestedBlock(b *datasource.SingleNestedBlock) (datasource_gener
 
 		Attributes: attributes,
 		Blocks:     blocks,
-		CustomType: b.CustomType,
-		Validators: b.Validators,
+
+		AssociatedExternalType: b.AssociatedExternalType,
+		CustomType:             b.CustomType,
+		Validators:             b.Validators,
 	}, nil
 }

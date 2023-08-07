@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObjectHelpers map[string][]byte, outputDir string) error {
+func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObjectHelpers, dataSourcesToFrom map[string][]byte, outputDir string) error {
 	for k, v := range dataSourcesSchema {
 		filename := fmt.Sprintf("%s_data_source_gen.go", k)
 
@@ -31,6 +31,11 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObje
 		}
 
 		_, err = f.Write(dataSourcesModelObjectHelpers[k])
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(dataSourcesToFrom[k])
 		if err != nil {
 			return err
 		}

@@ -515,6 +515,138 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 	return buf.Bytes(), nil
 }
 
+func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
+	var buf bytes.Buffer
+
+	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+	var attributeKeys = make([]string, 0, len(g.Attributes))
+
+	for k := range g.Attributes {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	for _, k := range attributeKeys {
+		if g.Attributes[k] == nil {
+			continue
+		}
+
+		//fmt.Println(g.Attributes[k].AttrType())
+		//
+		//if g.Attributes[k].AttrType() == types.Object {
+		//}
+		//
+		//if a, ok := g.Attributes[k].(Attributes); ok {
+		//	ng := GeneratorSchema{
+		//		Attributes: a.GetAttributes(),
+		//	}
+		//
+		//	modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
+		//	if err != nil {
+		//		return nil, err
+		//	}
+		//
+		//	buf.Write(modelObjectHelpers)
+		//}
+	}
+
+	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g.Blocks))
+
+	for k := range g.Blocks {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	for _, k := range blockKeys {
+		if g.Blocks[k] == nil {
+			continue
+		}
+
+		// TODO: Type check is only required until all blocks and attributes
+		// implement AssocExtType().
+		var b GeneratorBlockAssocExtType
+		var ok bool
+
+		if b, ok = g.Blocks[k].(GeneratorBlockAssocExtType); !ok {
+			continue
+		}
+
+		assocExtType := b.AssocExtType()
+
+		if assocExtType == nil {
+			continue
+		}
+
+		a, ok := g.Blocks[k].(Attributes)
+
+		if !ok {
+			return nil, fmt.Errorf("all block types must implement Attributes, %s does not", k)
+		}
+
+		attributes := make(map[string]map[string]string)
+
+		// TODO: Check whether v implements AssocExtType, and use that in preference to "default".
+		for k, v := range a.GetAttributes() {
+			switch v.AttrType() {
+			case types.BoolType:
+				attributes[model.SnakeCaseToCamelCase(k)] = map[string]string{
+					"to":   "ValueBoolPointer",
+					"from": "BoolPointerValue",
+				}
+			case types.Int64Type:
+				attributes[model.SnakeCaseToCamelCase(k)] = map[string]string{
+					"to":   "ValueInt64Pointer",
+					"from": "Int64PointerValue",
+				}
+			}
+		}
+
+		// now need to know if we're dealing with list, set or single nested block
+		// as that determines whether we're handling a single object in the "expand"
+		// "flatten" or a slice of objects (list, set) in "expand" and "flatten".
+		// This can be determined by using the attr.Type and a case.
+
+		switch b.AttrType().(type) {
+		case basetypes.ObjectTypable:
+			t, err := template.New("model_object_to_from").Parse(templates.ModelObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+
+			var objBuf bytes.Buffer
+
+			templateData := struct {
+				Name          string
+				Type          string
+				TypeReference string
+				Attributes    map[string]map[string]string
+			}{
+				Name:          model.SnakeCaseToCamelCase(k),
+				Type:          assocExtType.Type(),
+				TypeReference: assocExtType.TypeReference(),
+				Attributes:    attributes,
+			}
+
+			err = t.Execute(&objBuf, templateData)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.WriteString("\n")
+			buf.Write(objBuf.Bytes())
+		}
+	}
+
+	if buf.Len() > 0 {
+		buf.WriteString("\n")
+	}
+
+	return buf.Bytes(), nil
+}
+
 func elementTypeString(elementType specschema.ElementType) (string, error) {
 	switch {
 	case elementType.Bool != nil:

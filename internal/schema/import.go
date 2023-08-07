@@ -10,6 +10,7 @@ import (
 
 const (
 	AttrImport         = "github.com/hashicorp/terraform-plugin-framework/attr"
+	BaseTypesImport    = "github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	ContextImport      = "context"
 	DiagImport         = "github.com/hashicorp/terraform-plugin-framework/diag"
 	PlanModifierImport = "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -121,6 +122,16 @@ func GetElementTypeImports(e specschema.ElementType) *Imports {
 	default:
 		return imports
 	}
+}
+
+func AttrImports() *Imports {
+	imports := NewImports()
+
+	imports.Add(code.Import{
+		Path: AttrImport,
+	})
+
+	return imports
 }
 
 func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specschema.ObjectAttributeType) *Imports {
@@ -293,6 +304,28 @@ func CustomValidatorImports(cv *specschema.CustomValidator) *Imports {
 
 			imports.Add(i)
 		}
+	}
+
+	return imports
+}
+
+func AssociatedExternalTypeImports(a *specschema.AssociatedExternalType) *Imports {
+	imports := NewImports()
+
+	if a == nil {
+		return imports
+	}
+
+	if !a.HasImport() {
+		return imports
+	}
+
+	if len(a.Import.Path) > 0 {
+		imports.Add(*a.Import)
+
+		imports.Add(code.Import{
+			Path: BaseTypesImport,
+		})
 	}
 
 	return imports
