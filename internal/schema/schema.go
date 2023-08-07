@@ -599,8 +599,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
-		// TODO: Type check is only required until all blocks and attributes
-		// implement AssocExtType().
+		// TODO: Type check is only required until all blocks and attributes implement AssocExtType().
 		var blockAssocExtType GeneratorBlockAssocExtType
 		var ok bool
 
@@ -627,36 +626,53 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			return nil, fmt.Errorf("all block types must implement Blocks, %s does not", k)
 		}
 
-		attributes := make(map[string]map[string]string)
+		type attribute struct {
+			Name            string
+			HasAssocExtType bool
+			To              string
+			From            string
+		}
+
+		var attributes []attribute
+
+		nestedAttributes := a.GetAttributes()
+
+		// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
+		var nestedAttributeKeys = make([]string, 0, len(nestedAttributes))
+
+		for nk := range nestedAttributes {
+			nestedAttributeKeys = append(nestedAttributeKeys, nk)
+		}
+
+		sort.Strings(nestedAttributeKeys)
 
 		// TODO: Check whether v implements AssocExtType, and use that in preference to "default".
-		for x, v := range a.GetAttributes() {
-			switch v.AttrType() {
+		for _, x := range nestedAttributeKeys {
+			switch nestedAttributes[x].AttrType() {
 			case types.BoolType:
 				// TODO: Remove type assertion once all attributes and blocks implement AssocExtType()
-				if y, ok := v.(GeneratorAttributeAssocExtType); ok {
+				if y, ok := nestedAttributes[x].(GeneratorAttributeAssocExtType); ok {
 					if y.AssocExtType() != nil {
-
-						attributes[model.SnakeCaseToCamelCase(x)] = map[string]string{
-							"toAssocExtType":      fmt.Sprintf("To%s(ctx, tfModel.%s)", model.SnakeCaseToCamelCase(x), model.SnakeCaseToCamelCase(x)),
-							"toAssocExtTypeVar":   fmt.Sprintf("to%s", model.SnakeCaseToCamelCase(x)),
-							"fromAssocExtType":    fmt.Sprintf("From%s(ctx, apiObject.%s)", model.SnakeCaseToCamelCase(x), model.SnakeCaseToCamelCase(x)),
-							"fromAssocExtTypeVar": fmt.Sprintf("from%s", model.SnakeCaseToCamelCase(x)),
-						}
+						attributes = append(attributes, attribute{
+							Name:            model.SnakeCaseToCamelCase(x),
+							HasAssocExtType: true,
+						})
 
 						continue
 					}
 
-					attributes[model.SnakeCaseToCamelCase(x)] = map[string]string{
-						"to":   "ValueBoolPointer",
-						"from": "BoolPointerValue",
-					}
+					attributes = append(attributes, attribute{
+						Name: model.SnakeCaseToCamelCase(x),
+						To:   "ValueBoolPointer",
+						From: "BoolPointerValue",
+					})
 				}
 			case types.Int64Type:
-				attributes[model.SnakeCaseToCamelCase(x)] = map[string]string{
-					"to":   "ValueInt64Pointer",
-					"from": "Int64PointerValue",
-				}
+				attributes = append(attributes, attribute{
+					Name: model.SnakeCaseToCamelCase(x),
+					To:   "ValueInt64Pointer",
+					From: "Int64PointerValue",
+				})
 			}
 		}
 
@@ -678,7 +694,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 				Name          string
 				Type          string
 				TypeReference string
-				Attributes    map[string]map[string]string
+				Attributes    []attribute
 			}{
 				Name:          model.SnakeCaseToCamelCase(k),
 				Type:          assocExtType.Type(),

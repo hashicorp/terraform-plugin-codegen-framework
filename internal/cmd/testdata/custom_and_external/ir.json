@@ -427,6 +427,12 @@
                 "bool": {
                   "computed_optional_required": "computed"
                 }
+              },
+              {
+                "name": "int64_attribute",
+                "int64": {
+                  "computed_optional_required": "computed_optional"
+                }
               }
             ]
           }

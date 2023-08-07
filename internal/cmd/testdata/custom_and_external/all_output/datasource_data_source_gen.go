@@ -210,6 +210,10 @@ var datasourceDataSourceSchema = schema.Schema{
 				"bool_attribute": schema.BoolAttribute{
 					Computed: true,
 				},
+				"int64_attribute": schema.Int64Attribute{
+					Optional: true,
+					Computed: true,
+				},
 			},
 		},
 		"single_nested_block_one": schema.SingleNestedBlock{
@@ -341,7 +345,8 @@ type ListNestedBlockTwoListNestedBlockOneModel struct {
 }
 
 type SingleNestedBlockAssocExtTypeModel struct {
-	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+	BoolAttribute  types.Bool  `tfsdk:"bool_attribute"`
+	Int64Attribute types.Int64 `tfsdk:"int64_attribute"`
 }
 
 type SingleNestedBlockOneModel struct {
@@ -745,7 +750,8 @@ func (m SingleNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) type
 
 func (m SingleNestedBlockAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
 	return map[string]attr.Type{
-		"bool_attribute": types.BoolType,
+		"bool_attribute":  types.BoolType,
+		"int64_attribute": types.Int64Type,
 	}
 }
 
@@ -907,7 +913,8 @@ func ToSingleNestedBlockAssocExtType(ctx context.Context, tfObject types.Object)
 	}
 
 	apiObject := &apisdk.Type{
-		BoolAttribute: tfModel.BoolAttribute.ValueBoolPointer(),
+		BoolAttribute:  tfModel.BoolAttribute.ValueBoolPointer(),
+		Int64Attribute: tfModel.Int64Attribute.ValueInt64Pointer(),
 	}
 
 	return apiObject, diags
@@ -922,6 +929,7 @@ func FromSingleNestedBlockAssocExtType(ctx context.Context, apiObject *apisdk.Ty
 	}
 
 	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
+	tfModel.Int64Attribute = types.Int64PointerValue(apiObject.Int64Attribute)
 
 	return tfModel.ObjectValueFrom(ctx, tfModel)
 }
