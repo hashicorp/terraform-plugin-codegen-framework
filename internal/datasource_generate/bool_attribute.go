@@ -21,8 +21,13 @@ type GeneratorBoolAttribute struct {
 
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
-	CustomType *specschema.CustomType
-	Validators []specschema.BoolValidator
+	AssociatedExternalType *specschema.AssociatedExternalType
+	CustomType             *specschema.CustomType
+	Validators             []specschema.BoolValidator
+}
+
+func (g GeneratorBoolAttribute) AssocExtType() *generatorschema.AssocExtType {
+	return generatorschema.NewAssocExtType(g.AssociatedExternalType)
 }
 
 func (g GeneratorBoolAttribute) AttrType() attr.Type {
@@ -39,6 +44,9 @@ func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
 		imports.Append(customValidatorImports)
 	}
+
+	assocExtTypeImports := generatorschema.AssociatedExternalTypeImports(g.AssociatedExternalType)
+	imports.Append(assocExtTypeImports)
 
 	return imports
 }

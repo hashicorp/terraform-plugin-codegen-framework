@@ -10,6 +10,9 @@ import (
 //go:embed model_object_helpers.gotmpl
 var ModelObjectHelpersTemplate string
 
+//go:embed model_bool_to_from.gotmpl
+var ModelBoolToFromTemplate string
+
 //go:embed model_object_to_from.gotmpl
 var ModelObjectToFromTemplate string
 

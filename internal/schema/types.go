@@ -46,6 +46,14 @@ type GeneratorBlock interface {
 // TODO: AssocExtType() can be added to GeneratorAttribute,
 // and GeneratorBlock once all attributes and blocks
 // implement the function.
+type GeneratorAttributeAssocExtType interface {
+	GeneratorAttribute
+	AssocExtType() *AssocExtType
+}
+
+// TODO: AssocExtType() can be added to GeneratorAttribute,
+// and GeneratorBlock once all attributes and blocks
+// implement the function.
 type GeneratorBlockAssocExtType interface {
 	GeneratorBlock
 	AssocExtType() *AssocExtType
