@@ -30,7 +30,7 @@ if apiObject == nil {
 return tfModel.ObjectNull(ctx), diags
 }
 
-{{- range $key, $value := .Attributes }}
+{{range $key, $value := .Attributes }}
 tfModel.{{$key}} = types.{{$value.from}}(apiObject.{{$key}})
 {{- end}}
 

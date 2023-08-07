@@ -4,10 +4,12 @@ package generated
 
 import (
 	"context"
+	"example.com/apisdk"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
 var datasourceDataSourceSchema = schema.Schema{
@@ -203,6 +205,13 @@ var datasourceDataSourceSchema = schema.Schema{
 				},
 			},
 		},
+		"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
+			Attributes: map[string]schema.Attribute{
+				"bool_attribute": schema.BoolAttribute{
+					Computed: true,
+				},
+			},
+		},
 		"single_nested_block_one": schema.SingleNestedBlock{
 			Attributes: map[string]schema.Attribute{
 				"bool_attribute": schema.BoolAttribute{
@@ -247,26 +256,27 @@ var datasourceDataSourceSchema = schema.Schema{
 }
 
 type DatasourceModel struct {
-	BoolAttribute              types.Bool   `tfsdk:"bool_attribute"`
-	ListListAttribute          types.List   `tfsdk:"list_list_attribute"`
-	ListMapAttribute           types.List   `tfsdk:"list_map_attribute"`
-	ListNestedAttributeOne     types.List   `tfsdk:"list_nested_attribute_one"`
-	ListNestedAttributeThree   types.List   `tfsdk:"list_nested_attribute_three"`
-	ListNestedAttributeTwo     types.List   `tfsdk:"list_nested_attribute_two"`
-	ListObjectAttribute        types.List   `tfsdk:"list_object_attribute"`
-	ListObjectObjectAttribute  types.List   `tfsdk:"list_object_object_attribute"`
-	ObjectAttribute            types.Object `tfsdk:"object_attribute"`
-	ObjectListAttribute        types.Object `tfsdk:"object_list_attribute"`
-	ObjectListObjectAttribute  types.Object `tfsdk:"object_list_object_attribute"`
-	SingleNestedAttributeOne   types.Object `tfsdk:"single_nested_attribute_one"`
-	SingleNestedAttributeThree types.Object `tfsdk:"single_nested_attribute_three"`
-	SingleNestedAttributeTwo   types.Object `tfsdk:"single_nested_attribute_two"`
-	ListNestedBlockOne         types.List   `tfsdk:"list_nested_block_one"`
-	ListNestedBlockThree       types.List   `tfsdk:"list_nested_block_three"`
-	ListNestedBlockTwo         types.List   `tfsdk:"list_nested_block_two"`
-	SingleNestedBlockOne       types.Object `tfsdk:"single_nested_block_one"`
-	SingleNestedBlockThree     types.Object `tfsdk:"single_nested_block_three"`
-	SingleNestedBlockTwo       types.Object `tfsdk:"single_nested_block_two"`
+	BoolAttribute                 types.Bool   `tfsdk:"bool_attribute"`
+	ListListAttribute             types.List   `tfsdk:"list_list_attribute"`
+	ListMapAttribute              types.List   `tfsdk:"list_map_attribute"`
+	ListNestedAttributeOne        types.List   `tfsdk:"list_nested_attribute_one"`
+	ListNestedAttributeThree      types.List   `tfsdk:"list_nested_attribute_three"`
+	ListNestedAttributeTwo        types.List   `tfsdk:"list_nested_attribute_two"`
+	ListObjectAttribute           types.List   `tfsdk:"list_object_attribute"`
+	ListObjectObjectAttribute     types.List   `tfsdk:"list_object_object_attribute"`
+	ObjectAttribute               types.Object `tfsdk:"object_attribute"`
+	ObjectListAttribute           types.Object `tfsdk:"object_list_attribute"`
+	ObjectListObjectAttribute     types.Object `tfsdk:"object_list_object_attribute"`
+	SingleNestedAttributeOne      types.Object `tfsdk:"single_nested_attribute_one"`
+	SingleNestedAttributeThree    types.Object `tfsdk:"single_nested_attribute_three"`
+	SingleNestedAttributeTwo      types.Object `tfsdk:"single_nested_attribute_two"`
+	ListNestedBlockOne            types.List   `tfsdk:"list_nested_block_one"`
+	ListNestedBlockThree          types.List   `tfsdk:"list_nested_block_three"`
+	ListNestedBlockTwo            types.List   `tfsdk:"list_nested_block_two"`
+	SingleNestedBlockAssocExtType types.Object `tfsdk:"single_nested_block_assoc_ext_type"`
+	SingleNestedBlockOne          types.Object `tfsdk:"single_nested_block_one"`
+	SingleNestedBlockThree        types.Object `tfsdk:"single_nested_block_three"`
+	SingleNestedBlockTwo          types.Object `tfsdk:"single_nested_block_two"`
 }
 
 type ListNestedAttributeOneModel struct {
@@ -327,6 +337,10 @@ type ListNestedBlockTwoModel struct {
 }
 
 type ListNestedBlockTwoListNestedBlockOneModel struct {
+	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type SingleNestedBlockAssocExtTypeModel struct {
 	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
 }
 
@@ -725,6 +739,29 @@ func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectValueFrom(ctx context.C
 		data,
 	)
 }
+func (m SingleNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedBlockAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute": types.BoolType,
+	}
+}
+
+func (m SingleNestedBlockAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m SingleNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
 func (m SingleNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -852,4 +889,39 @@ func (m SingleNestedBlockTwoSingleNestedBlockOneModel) ObjectValueFrom(ctx conte
 		m.ObjectAttributeTypes(ctx),
 		data,
 	)
+}
+
+func ToSingleNestedBlockAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfObject.IsNull() || tfObject.IsUnknown() {
+		return nil, diags
+	}
+
+	var tfModel SingleNestedBlockAssocExtTypeModel
+
+	diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	apiObject := &apisdk.Type{
+		BoolAttribute: tfModel.BoolAttribute.ValueBoolPointer(),
+	}
+
+	return apiObject, diags
+}
+
+func FromSingleNestedBlockAssocExtType(ctx context.Context, apiObject *apisdk.Type) (types.Object, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel SingleNestedBlockAssocExtTypeModel
+
+	if apiObject == nil {
+		return tfModel.ObjectNull(ctx), diags
+	}
+
+	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
+
+	return tfModel.ObjectValueFrom(ctx, tfModel)
 }

@@ -200,12 +200,6 @@
           {
             "name": "single_nested_attribute_one",
             "single_nested": {
-              "associated_external_type": {
-                "import": {
-                  "path": "example.com/apisdk"
-                },
-                "type": "*apisdk.DataSourceProperty"
-              },
               "attributes": [
                 {
                   "name": "bool_attribute",
@@ -417,6 +411,25 @@
                 }
               ]
             }
+          },
+          {
+          "name": "single_nested_block_assoc_ext_type",
+          "single_nested": {
+            "associated_external_type": {
+              "import": {
+                "path": "example.com/apisdk"
+              },
+              "type": "*apisdk.Type"
+            },
+            "attributes": [
+              {
+                "name": "bool_attribute",
+                "bool": {
+                  "computed_optional_required": "computed"
+                }
+              }
+            ]
+          }
           }
         ]
       }
