@@ -701,7 +701,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		}
 	}
 
-	if buf.Len() > 0 {
+	if buf.Len() > 0 && !bytes.HasSuffix(buf.Bytes(), []byte("\n")) {
 		buf.WriteString("\n")
 	}
 
