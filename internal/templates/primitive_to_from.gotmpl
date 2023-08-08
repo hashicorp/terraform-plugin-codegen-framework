@@ -5,11 +5,11 @@ if tfType.IsNull() || tfType.IsUnknown() {
 return nil, diags
 }
 
-apiObject := &{{.TypeReference}}{
-{{.Name}}: tfType.{{.DefaultTo}}(),
-}
+var t {{.TypeReference}}
 
-return apiObject, diags
+t = tfType.{{.DefaultTo}}()
+
+return &t, diags
 }
 
 func From{{.Name}}(ctx context.Context, apiObject {{.Type}}) ({{.TfType}}, diag.Diagnostics) {
@@ -19,5 +19,7 @@ if apiObject == nil {
 return {{.TfType}}Null(), diags
 }
 
-return types.{{.DefaultFrom}}(apiObject.{{.Name}}), diags
+t := types.{{.DefaultFrom}}(*apiObject)
+
+return t, diags
 }
