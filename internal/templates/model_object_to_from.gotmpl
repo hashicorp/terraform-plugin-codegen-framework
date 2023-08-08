@@ -13,9 +13,9 @@ if diags.HasError() {
 return nil, diags
 }
 
-{{range $attr := .Attributes }}
-{{- if $attr.HasAssocExtType}}
-to{{$attr.Name}}, d := To{{$attr.Name}}(ctx, tfModel.{{$attr.Name}})
+{{range $field := .Fields }}
+{{- if $field.HasAssocExtType}}
+to{{$field.Name}}, d := To{{$field.Name}}(ctx, tfModel.{{$field.Name}})
 
 diags.Append(d...)
 
@@ -26,11 +26,11 @@ return nil, diags
 {{- end}}
 
 apiObject := &{{.TypeReference}}{
-{{- range $attr := .Attributes }}
-{{- if $attr.HasAssocExtType}}
-{{$attr.Name}}: to{{$attr.Name}},
+{{- range $field := .Fields }}
+{{- if $field.HasAssocExtType}}
+{{$field.Name}}: to{{$field.Name}},
 {{- else}}
-{{$attr.Name}}: tfModel.{{$attr.Name}}.{{$attr.To}}(),
+{{$field.Name}}: tfModel.{{$field.Name}}.{{$field.DefaultTo}}(),
 {{- end}}
 {{- end}}
 }
@@ -46,9 +46,9 @@ if apiObject == nil {
 return tfModel.ObjectNull(ctx), diags
 }
 
-{{range $attr := .Attributes }}
-{{- if $attr.HasAssocExtType}}
-from{{$attr.Name}}, d := From{{$attr.Name}}(ctx, apiObject.{{$attr.Name}})
+{{range $field := .Fields }}
+{{- if $field.HasAssocExtType}}
+from{{$field.Name}}, d := From{{$field.Name}}(ctx, apiObject.{{$field.Name}})
 
 diags.Append(d...)
 
@@ -58,11 +58,11 @@ return tfModel.ObjectNull(ctx), diags
 {{- end}}
 {{- end}}
 
-{{range $attr := .Attributes }}
-{{- if $attr.HasAssocExtType}}
-tfModel.{{$attr.Name}} = from{{$attr.Name}}
+{{range $field := .Fields }}
+{{- if $field.HasAssocExtType}}
+tfModel.{{$field.Name}} = from{{$field.Name}}
 {{- else}}
-tfModel.{{$attr.Name}} = types.{{$attr.From}}(apiObject.{{$attr.Name}})
+tfModel.{{$field.Name}} = types.{{$field.DefaultFrom}}(apiObject.{{$field.Name}})
 {{- end}}
 {{- end}}
 

@@ -550,36 +550,43 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		}
 
 		if _, ok := attributeAssocExtType.(Attributes); ok {
-			// TODO: Handle objects - object itself and list, map, set, single nested object
+			// TODO: Handle objects - list, map, set, single nested object
 		} else {
+			var t *template.Template
+			var err error
+
 			switch attributeAssocExtType.AttrType() {
 			case types.BoolType:
-				t, err := template.New("model_bool_to_from").Parse(templates.ModelBoolToFromTemplate)
+				t, err = template.New("model_bool_to_from").Parse(templates.ModelBoolToFromTemplate)
 				if err != nil {
 					return nil, err
 				}
+			}
 
-				var boolBuf bytes.Buffer
+			if t == nil {
+				return nil, fmt.Errorf("no template defined for %s, type %T", k, g.Attributes[k])
+			}
 
-				templateData := struct {
-					Name          string
-					Type          string
-					TypeReference string
-				}{
-					Name:          model.SnakeCaseToCamelCase(k),
-					Type:          assocExtType.Type(),
-					TypeReference: assocExtType.TypeReference(),
-				}
+			var tBuf bytes.Buffer
 
-				err = t.Execute(&boolBuf, templateData)
-				if err != nil {
-					return nil, err
-				}
+			templateData := struct {
+				Name          string
+				Type          string
+				TypeReference string
+			}{
+				Name:          model.SnakeCaseToCamelCase(k),
+				Type:          assocExtType.Type(),
+				TypeReference: assocExtType.TypeReference(),
+			}
 
-				if boolBuf.Len() > 0 {
-					buf.WriteString("\n")
-					buf.Write(boolBuf.Bytes())
-				}
+			err = t.Execute(&tBuf, templateData)
+			if err != nil {
+				return nil, err
+			}
+
+			if tBuf.Len() > 0 {
+				buf.WriteString("\n")
+				buf.Write(tBuf.Bytes())
 			}
 		}
 
@@ -619,60 +626,40 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			return nil, fmt.Errorf("all block types must implement Attributes, %s does not", k)
 		}
 
-		// TODO: Need to process blocks in the template
+		// TODO: Need to process blocks as well as attributes in the template
 		b, ok := g.Blocks[k].(Blocks)
 
 		if !ok {
 			return nil, fmt.Errorf("all block types must implement Blocks, %s does not", k)
 		}
 
-		type attribute struct {
-			Name            string
-			HasAssocExtType bool
-			To              string
-			From            string
-		}
+		var fields []field
 
-		var attributes []attribute
-
-		nestedAttributes := a.GetAttributes()
+		blockAttributes := a.GetAttributes()
 
 		// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-		var nestedAttributeKeys = make([]string, 0, len(nestedAttributes))
+		var blockAttributeKeys = make([]string, 0, len(blockAttributes))
 
-		for nk := range nestedAttributes {
-			nestedAttributeKeys = append(nestedAttributeKeys, nk)
+		for ba := range blockAttributes {
+			blockAttributeKeys = append(blockAttributeKeys, ba)
 		}
 
-		sort.Strings(nestedAttributeKeys)
+		sort.Strings(blockAttributeKeys)
 
-		// TODO: Check whether v implements AssocExtType, and use that in preference to "default".
-		for _, x := range nestedAttributeKeys {
-			switch nestedAttributes[x].AttrType() {
+		for _, x := range blockAttributeKeys {
+			switch blockAttributes[x].AttrType() {
 			case types.BoolType:
 				// TODO: Remove type assertion once all attributes and blocks implement AssocExtType()
-				if y, ok := nestedAttributes[x].(GeneratorAttributeAssocExtType); ok {
+				if y, ok := blockAttributes[x].(GeneratorAttributeAssocExtType); ok {
 					if y.AssocExtType() != nil {
-						attributes = append(attributes, attribute{
-							Name:            model.SnakeCaseToCamelCase(x),
-							HasAssocExtType: true,
-						})
-
+						fields = append(fields, boolField(model.SnakeCaseToCamelCase(x), true))
 						continue
 					}
 
-					attributes = append(attributes, attribute{
-						Name: model.SnakeCaseToCamelCase(x),
-						To:   "ValueBoolPointer",
-						From: "BoolPointerValue",
-					})
+					fields = append(fields, boolField(model.SnakeCaseToCamelCase(x), false))
 				}
 			case types.Int64Type:
-				attributes = append(attributes, attribute{
-					Name: model.SnakeCaseToCamelCase(x),
-					To:   "ValueInt64Pointer",
-					From: "Int64PointerValue",
-				})
+				fields = append(fields, int64Field(model.SnakeCaseToCamelCase(x), false))
 			}
 		}
 
@@ -694,12 +681,12 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 				Name          string
 				Type          string
 				TypeReference string
-				Attributes    []attribute
+				Fields        []field
 			}{
 				Name:          model.SnakeCaseToCamelCase(k),
 				Type:          assocExtType.Type(),
 				TypeReference: assocExtType.TypeReference(),
-				Attributes:    attributes,
+				Fields:        fields,
 			}
 
 			err = t.Execute(&objBuf, templateData)
@@ -732,6 +719,31 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+type field struct {
+	Name            string
+	HasAssocExtType bool
+	DefaultTo       string
+	DefaultFrom     string
+}
+
+func boolField(name string, hasAssocType bool) field {
+	return field{
+		Name:            name,
+		HasAssocExtType: hasAssocType,
+		DefaultTo:       "ValueBoolPointer",
+		DefaultFrom:     "BoolPointerValue",
+	}
+}
+
+func int64Field(name string, hasAssocType bool) field {
+	return field{
+		Name:            name,
+		HasAssocExtType: hasAssocType,
+		DefaultTo:       "ValueInt64Pointer",
+		DefaultFrom:     "Int64PointerValue",
+	}
 }
 
 func elementTypeString(elementType specschema.ElementType) (string, error) {
