@@ -425,6 +425,12 @@
               {
                 "name": "bool_attribute",
                 "bool": {
+                  "associated_external_type": {
+                    "import": {
+                      "path": "example.com/apisdk"
+                    },
+                    "type": "*apisdk.AnotherType"
+                  },
                   "computed_optional_required": "computed"
                 }
               },
