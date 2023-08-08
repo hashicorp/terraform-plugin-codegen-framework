@@ -552,32 +552,19 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		if _, ok := attributeAssocExtType.(Attributes); ok {
 			// TODO: Handle objects - list, map, set, single nested object
 		} else {
-			var t *template.Template
-			var err error
+			var templateData attributeField
 
 			switch attributeAssocExtType.AttrType() {
 			case types.BoolType:
-				t, err = template.New("model_bool_to_from").Parse(templates.ModelBoolToFromTemplate)
-				if err != nil {
-					return nil, err
-				}
+				templateData = boolAttributeField(model.SnakeCaseToCamelCase(k), assocExtType.Type(), assocExtType.TypeReference())
 			}
 
-			if t == nil {
-				return nil, fmt.Errorf("no template defined for %s, type %T", k, g.Attributes[k])
+			t, err := template.New("primitive_to_from").Parse(templates.PrimitiveToFromTemplate)
+			if err != nil {
+				return nil, err
 			}
 
 			var tBuf bytes.Buffer
-
-			templateData := struct {
-				Name          string
-				Type          string
-				TypeReference string
-			}{
-				Name:          model.SnakeCaseToCamelCase(k),
-				Type:          assocExtType.Type(),
-				TypeReference: assocExtType.TypeReference(),
-			}
 
 			err = t.Execute(&tBuf, templateData)
 			if err != nil {
@@ -633,7 +620,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			return nil, fmt.Errorf("all block types must implement Blocks, %s does not", k)
 		}
 
-		var fields []field
+		var fields []objectField
 
 		blockAttributes := a.GetAttributes()
 
@@ -652,14 +639,14 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 				// TODO: Remove type assertion once all attributes and blocks implement AssocExtType()
 				if y, ok := blockAttributes[x].(GeneratorAttributeAssocExtType); ok {
 					if y.AssocExtType() != nil {
-						fields = append(fields, boolField(model.SnakeCaseToCamelCase(x), true))
+						fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x), true))
 						continue
 					}
 
-					fields = append(fields, boolField(model.SnakeCaseToCamelCase(x), false))
+					fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x), false))
 				}
 			case types.Int64Type:
-				fields = append(fields, int64Field(model.SnakeCaseToCamelCase(x), false))
+				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x), false))
 			}
 		}
 
@@ -681,7 +668,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 				Name          string
 				Type          string
 				TypeReference string
-				Fields        []field
+				Fields        []objectField
 			}{
 				Name:          model.SnakeCaseToCamelCase(k),
 				Type:          assocExtType.Type(),
@@ -722,27 +709,61 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 }
 
 type field struct {
-	Name            string
-	HasAssocExtType bool
-	DefaultTo       string
-	DefaultFrom     string
+	DefaultTo   string
+	DefaultFrom string
 }
 
-func boolField(name string, hasAssocType bool) field {
+type attributeField struct {
+	Name          string
+	Type          string
+	TypeReference string
+	TfType        string
+	field
+}
+
+type objectField struct {
+	Name            string
+	HasAssocExtType bool
+	field
+}
+
+func boolField() field {
 	return field{
-		Name:            name,
-		HasAssocExtType: hasAssocType,
-		DefaultTo:       "ValueBoolPointer",
-		DefaultFrom:     "BoolPointerValue",
+		DefaultTo:   "ValueBoolPointer",
+		DefaultFrom: "BoolPointerValue",
 	}
 }
 
-func int64Field(name string, hasAssocType bool) field {
+func int64Field() field {
 	return field{
+		DefaultTo:   "ValueInt64Pointer",
+		DefaultFrom: "Int64PointerValue",
+	}
+}
+
+func boolAttributeField(name, assocType, typeReference string) attributeField {
+	return attributeField{
+		Name:          name,
+		Type:          assocType,
+		TypeReference: typeReference,
+		TfType:        "types.Bool",
+		field:         boolField(),
+	}
+}
+
+func boolObjectField(name string, hasAssocType bool) objectField {
+	return objectField{
 		Name:            name,
 		HasAssocExtType: hasAssocType,
-		DefaultTo:       "ValueInt64Pointer",
-		DefaultFrom:     "Int64PointerValue",
+		field:           boolField(),
+	}
+}
+
+func int64ObjectField(name string, hasAssocType bool) objectField {
+	return objectField{
+		Name:            name,
+		HasAssocExtType: hasAssocType,
+		field:           int64Field(),
 	}
 }
 

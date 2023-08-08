@@ -1,0 +1,23 @@
+func To{{.Name}}(ctx context.Context, tfType {{.TfType}}) ({{.Type}}, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if tfType.IsNull() || tfType.IsUnknown() {
+return nil, diags
+}
+
+apiObject := &{{.TypeReference}}{
+{{.Name}}: tfType.{{.DefaultTo}}(),
+}
+
+return apiObject, diags
+}
+
+func From{{.Name}}(ctx context.Context, apiObject {{.Type}}) ({{.TfType}}, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return {{.TfType}}Null(), diags
+}
+
+return types.{{.DefaultFrom}}(apiObject.{{.Name}}), diags
+}
