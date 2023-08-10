@@ -27,13 +27,20 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				{
 					Path: generatorschema.TypesImport,
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorSingleNestedAttribute{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: []code.Import{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorSingleNestedAttribute{
@@ -43,7 +50,11 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: []code.Import{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
 		},
 		"custom-type-with-import": {
 			input: GeneratorSingleNestedAttribute{
@@ -56,6 +67,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -72,6 +86,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -93,6 +110,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 				{
 					Path: "github.com/my_account/my_project/nested_list",
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -126,6 +146,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 				{
 					Path: "github.com/my_account/my_project/bool",
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -170,6 +193,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				{
 					Path: "github.com/my_account/my_project/nested_object",
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"nested-object-with-custom-type-with-attribute-with-custom-type": {
@@ -206,6 +232,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				{
 					Path: "github.com/my_account/my_project/bool",
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"validator-custom-nil": {
@@ -219,6 +248,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				{
 					Path: generatorschema.TypesImport,
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"validator-custom-import-nil": {
@@ -231,6 +263,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -250,6 +285,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -287,6 +325,9 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 				},
 				{
 					Path: "github.com/myproject/myvalidators/validator",
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},

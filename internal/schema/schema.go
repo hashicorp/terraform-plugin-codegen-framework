@@ -515,8 +515,10 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 	return buf.Bytes(), nil
 }
 
-// TODO: Call recursively to generate "expand" and "flatten" functions for all nested blocks and attributes
-// which may have an associated external type.
+// ModelsToFromBytes generates code for expand and flatten functions.
+// Whilst associated external types can be defined on any attribute
+// type, the only types which are processed are list, map, set and
+// single nested attributes, and list, set and single nested blocks.
 func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
@@ -592,7 +594,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 
 		switch attributeAssocExtType.AttrType().(type) {
 		case basetypes.ObjectTypable:
-			t, err := template.New("model_object_to_from").Parse(templates.ModelObjectToFromTemplate)
+			t, err := template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
@@ -693,7 +695,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 
 		switch blockAssocExtType.AttrType().(type) {
 		case basetypes.ObjectTypable:
-			t, err := template.New("model_object_to_from").Parse(templates.ModelObjectToFromTemplate)
+			t, err := template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
