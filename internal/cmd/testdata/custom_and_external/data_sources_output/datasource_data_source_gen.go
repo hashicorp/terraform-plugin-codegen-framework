@@ -912,16 +912,8 @@ func ToSingleNestedBlockAssocExtType(ctx context.Context, tfObject types.Object)
 		return nil, diags
 	}
 
-	toBoolAttribute, d := ToBoolAttribute(ctx, tfModel.BoolAttribute)
-
-	diags.Append(d...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
 	apiObject := &apisdk.Type{
-		BoolAttribute:  toBoolAttribute,
+		BoolAttribute:  tfModel.BoolAttribute.ValueBoolPointer(),
 		Int64Attribute: tfModel.Int64Attribute.ValueInt64Pointer(),
 	}
 
@@ -936,15 +928,7 @@ func FromSingleNestedBlockAssocExtType(ctx context.Context, apiObject *apisdk.Ty
 		return tfModel.ObjectNull(ctx), diags
 	}
 
-	fromBoolAttribute, d := FromBoolAttribute(ctx, apiObject.BoolAttribute)
-
-	diags.Append(d...)
-
-	if diags.HasError() {
-		return tfModel.ObjectNull(ctx), diags
-	}
-
-	tfModel.BoolAttribute = fromBoolAttribute
+	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
 	tfModel.Int64Attribute = types.Int64PointerValue(apiObject.Int64Attribute)
 
 	return tfModel.ObjectValueFrom(ctx, tfModel)
