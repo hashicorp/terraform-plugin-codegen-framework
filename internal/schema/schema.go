@@ -52,6 +52,9 @@ func (g GeneratorSchema) ImportsString() (string, error) {
 				{
 					Path: DiagImport,
 				},
+				{
+					Path: AttrImport,
+				},
 			}...)
 		}
 	}
@@ -71,6 +74,9 @@ func (g GeneratorSchema) ImportsString() (string, error) {
 				},
 				{
 					Path: DiagImport,
+				},
+				{
+					Path: AttrImport,
 				},
 			}...)
 		}
