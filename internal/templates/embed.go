@@ -13,8 +13,5 @@ var ModelObjectHelpersTemplate string
 //go:embed model_object_to_from.gotmpl
 var ModelObjectToFromTemplate string
 
-//go:embed primitive_to_from.gotmpl
-var PrimitiveToFromTemplate string
-
 //go:embed schema.gotmpl
 var SchemaGoTemplate string

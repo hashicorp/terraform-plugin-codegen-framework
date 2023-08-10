@@ -534,8 +534,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
-		// TODO: Type check is only required until all blocks and attributes
-		// implement AssocExtType().
+		// Only process attributes implementing GeneratorAttributeAssocExtType.
 		var attributeAssocExtType GeneratorAttributeAssocExtType
 		var ok bool
 
@@ -543,40 +542,83 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
+		// Only process if AssocExtType() is not nil.
 		assocExtType := attributeAssocExtType.AssocExtType()
 
 		if assocExtType == nil {
 			continue
 		}
 
-		if _, ok := attributeAssocExtType.(Attributes); ok {
-			// TODO: Handle objects - list, map, set, single nested object
-		} else {
-			var templateData attributeField
+		// Only process if attribute implements Attributes (i.e., list, map, set, single
+		// nested attributes).
+		a, ok := g.Attributes[k].(Attributes)
 
-			switch attributeAssocExtType.AttrType() {
-			case types.BoolType:
-				templateData = boolAttributeField(model.SnakeCaseToCamelCase(k), assocExtType.Type(), assocExtType.TypeReference())
-			}
+		if !ok {
+			continue
+		}
 
-			t, err := template.New("primitive_to_from").Parse(templates.PrimitiveToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
+		var fields []objectField
 
-			var tBuf bytes.Buffer
+		attributeAttributes := a.GetAttributes()
 
-			err = t.Execute(&tBuf, templateData)
-			if err != nil {
-				return nil, err
-			}
+		// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+		var attributeAttributeKeys = make([]string, 0, len(attributeAttributes))
 
-			if tBuf.Len() > 0 {
-				buf.WriteString("\n")
-				buf.Write(tBuf.Bytes())
+		for aa := range attributeAttributes {
+			attributeAttributeKeys = append(attributeAttributeKeys, aa)
+		}
+
+		sort.Strings(attributeAttributeKeys)
+
+		for _, x := range attributeAttributeKeys {
+			switch attributeAttributes[x].AttrType().(type) {
+			case basetypes.BoolTypable:
+				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.Int64Typable:
+				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.Float64Typable:
+				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.NumberTypable:
+				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.StringTypable:
+				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
 			}
 		}
 
+		// now need to know if we're dealing with list, set or single nested block
+		// as that determines whether we're handling a single object in the "expand"
+		// "flatten" or a slice of objects (list, set) in "expand" and "flatten".
+		// This can be determined by using the attr.Type and a case.
+
+		switch attributeAssocExtType.AttrType().(type) {
+		case basetypes.ObjectTypable:
+			t, err := template.New("model_object_to_from").Parse(templates.ModelObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+
+			var objBuf bytes.Buffer
+
+			templateData := struct {
+				Name          string
+				Type          string
+				TypeReference string
+				Fields        []objectField
+			}{
+				Name:          model.SnakeCaseToCamelCase(k),
+				Type:          assocExtType.Type(),
+				TypeReference: assocExtType.TypeReference(),
+				Fields:        fields,
+			}
+
+			err = t.Execute(&objBuf, templateData)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.WriteString("\n")
+			buf.Write(objBuf.Bytes())
+		}
 	}
 
 	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
@@ -593,7 +635,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
-		// TODO: Type check is only required until all blocks and attributes implement AssocExtType().
+		// Only process blocks implementing GeneratorBlockAssocExtType.
 		var blockAssocExtType GeneratorBlockAssocExtType
 		var ok bool
 
@@ -601,23 +643,19 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
+		// Only process if AssocExtType() is not nil.
 		assocExtType := blockAssocExtType.AssocExtType()
 
 		if assocExtType == nil {
 			continue
 		}
 
+		// Only process if block implements Attributes (i.e., list, set, single
+		// nested blocks).
 		a, ok := g.Blocks[k].(Attributes)
 
 		if !ok {
-			return nil, fmt.Errorf("all block types must implement Attributes, %s does not", k)
-		}
-
-		// TODO: Need to process blocks as well as attributes in the template
-		b, ok := g.Blocks[k].(Blocks)
-
-		if !ok {
-			return nil, fmt.Errorf("all block types must implement Blocks, %s does not", k)
+			continue
 		}
 
 		var fields []objectField
@@ -634,19 +672,17 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		sort.Strings(blockAttributeKeys)
 
 		for _, x := range blockAttributeKeys {
-			switch blockAttributes[x].AttrType() {
-			case types.BoolType:
-				// TODO: Remove type assertion once all attributes and blocks implement AssocExtType()
-				if y, ok := blockAttributes[x].(GeneratorAttributeAssocExtType); ok {
-					if y.AssocExtType() != nil {
-						fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x), true))
-						continue
-					}
-
-					fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x), false))
-				}
-			case types.Int64Type:
-				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x), false))
+			switch blockAttributes[x].AttrType().(type) {
+			case basetypes.BoolTypable:
+				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.Int64Typable:
+				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.Float64Typable:
+				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.NumberTypable:
+				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.StringTypable:
+				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
 			}
 		}
 
@@ -684,21 +720,6 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			buf.WriteString("\n")
 			buf.Write(objBuf.Bytes())
 		}
-
-		s := GeneratorSchema{
-			Attributes: a.GetAttributes(),
-			Blocks:     b.GetBlocks(),
-		}
-
-		toFromBytes, err := s.ModelsToFromBytes()
-		if err != nil {
-			return nil, err
-		}
-
-		if len(toFromBytes) > 0 {
-			buf.WriteString("\n")
-			buf.Write(toFromBytes)
-		}
 	}
 
 	if buf.Len() > 0 && !bytes.HasSuffix(buf.Bytes(), []byte("\n")) {
@@ -713,17 +734,8 @@ type field struct {
 	DefaultFrom string
 }
 
-type attributeField struct {
-	Name          string
-	Type          string
-	TypeReference string
-	TfType        string
-	field
-}
-
 type objectField struct {
-	Name            string
-	HasAssocExtType bool
+	Name string
 	field
 }
 
@@ -741,29 +753,59 @@ func int64Field() field {
 	}
 }
 
-func boolAttributeField(name, assocType, typeReference string) attributeField {
-	return attributeField{
-		Name:          name,
-		Type:          assocType,
-		TypeReference: typeReference,
-		TfType:        "types.Bool",
-		field:         boolField(),
+func float64Field() field {
+	return field{
+		DefaultTo:   "ValueFloat64Pointer",
+		DefaultFrom: "Float64PointerValue",
 	}
 }
 
-func boolObjectField(name string, hasAssocType bool) objectField {
-	return objectField{
-		Name:            name,
-		HasAssocExtType: hasAssocType,
-		field:           boolField(),
+func numberField() field {
+	return field{
+		DefaultTo:   "ValueBigFloat",
+		DefaultFrom: "NumberValue",
 	}
 }
 
-func int64ObjectField(name string, hasAssocType bool) objectField {
+func stringField() field {
+	return field{
+		DefaultTo:   "ValueStringPointer",
+		DefaultFrom: "StringPointerValue",
+	}
+}
+
+func boolObjectField(name string) objectField {
 	return objectField{
-		Name:            name,
-		HasAssocExtType: hasAssocType,
-		field:           int64Field(),
+		Name:  name,
+		field: boolField(),
+	}
+}
+
+func int64ObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: int64Field(),
+	}
+}
+
+func float64ObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: float64Field(),
+	}
+}
+
+func numberObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: numberField(),
+	}
+}
+
+func stringObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: stringField(),
 	}
 }
 

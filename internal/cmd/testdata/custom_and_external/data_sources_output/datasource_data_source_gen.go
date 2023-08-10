@@ -933,29 +933,3 @@ func FromSingleNestedBlockAssocExtType(ctx context.Context, apiObject *apisdk.Ty
 
 	return tfModel.ObjectValueFrom(ctx, tfModel)
 }
-
-func ToBoolAttribute(ctx context.Context, tfType types.Bool) (*apisdk.AnotherType, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	if tfType.IsNull() || tfType.IsUnknown() {
-		return nil, diags
-	}
-
-	var t apisdk.AnotherType
-
-	t = tfType.ValueBoolPointer()
-
-	return &t, diags
-}
-
-func FromBoolAttribute(ctx context.Context, apiObject *apisdk.AnotherType) (types.Bool, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	if apiObject == nil {
-		return types.BoolNull(), diags
-	}
-
-	t := types.BoolPointerValue(*apiObject)
-
-	return t, diags
-}
