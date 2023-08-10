@@ -97,8 +97,10 @@ func convertListNestedBlock(b *datasource.ListNestedBlock) (datasource_generate.
 		NestedObject: datasource_generate.GeneratorNestedBlockObject{
 			Attributes: attributes,
 			Blocks:     blocks,
-			CustomType: b.NestedObject.CustomType,
-			Validators: b.NestedObject.Validators,
+
+			AssociatedExternalType: b.NestedObject.AssociatedExternalType,
+			CustomType:             b.NestedObject.CustomType,
+			Validators:             b.NestedObject.Validators,
 		},
 		Validators: b.Validators,
 	}, nil

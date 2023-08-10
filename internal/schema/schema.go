@@ -587,40 +587,42 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			}
 		}
 
-		// now need to know if we're dealing with list, set or single nested block
-		// as that determines whether we're handling a single object in the "expand"
-		// "flatten" or a slice of objects (list, set) in "expand" and "flatten".
-		// This can be determined by using the attr.Type and a case.
+		var t *template.Template
+		var err error
 
 		switch attributeAssocExtType.AttrType().(type) {
+		case basetypes.ListTypable:
+			t, err = template.New("list_nested_object_to_from").Parse(templates.ListNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
 		case basetypes.ObjectTypable:
-			t, err := template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
+			t, err = template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-
-			var objBuf bytes.Buffer
-
-			templateData := struct {
-				Name          string
-				Type          string
-				TypeReference string
-				Fields        []objectField
-			}{
-				Name:          model.SnakeCaseToCamelCase(k),
-				Type:          assocExtType.Type(),
-				TypeReference: assocExtType.TypeReference(),
-				Fields:        fields,
-			}
-
-			err = t.Execute(&objBuf, templateData)
-			if err != nil {
-				return nil, err
-			}
-
-			buf.WriteString("\n")
-			buf.Write(objBuf.Bytes())
 		}
+
+		var templateBuf bytes.Buffer
+
+		templateData := struct {
+			Name          string
+			Type          string
+			TypeReference string
+			Fields        []objectField
+		}{
+			Name:          model.SnakeCaseToCamelCase(k),
+			Type:          assocExtType.Type(),
+			TypeReference: assocExtType.TypeReference(),
+			Fields:        fields,
+		}
+
+		err = t.Execute(&templateBuf, templateData)
+		if err != nil {
+			return nil, err
+		}
+
+		buf.Write(templateBuf.Bytes())
 	}
 
 	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
@@ -688,44 +690,41 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			}
 		}
 
-		// now need to know if we're dealing with list, set or single nested block
-		// as that determines whether we're handling a single object in the "expand"
-		// "flatten" or a slice of objects (list, set) in "expand" and "flatten".
-		// This can be determined by using the attr.Type and a case.
+		var t *template.Template
+		var err error
 
 		switch blockAssocExtType.AttrType().(type) {
+		case basetypes.ListTypable:
+			t, err = template.New("list_nested_object_to_from").Parse(templates.ListNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
 		case basetypes.ObjectTypable:
-			t, err := template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
+			t, err = template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-
-			var objBuf bytes.Buffer
-
-			templateData := struct {
-				Name          string
-				Type          string
-				TypeReference string
-				Fields        []objectField
-			}{
-				Name:          model.SnakeCaseToCamelCase(k),
-				Type:          assocExtType.Type(),
-				TypeReference: assocExtType.TypeReference(),
-				Fields:        fields,
-			}
-
-			err = t.Execute(&objBuf, templateData)
-			if err != nil {
-				return nil, err
-			}
-
-			buf.WriteString("\n")
-			buf.Write(objBuf.Bytes())
 		}
-	}
+		var templateBuf bytes.Buffer
 
-	if buf.Len() > 0 && !bytes.HasSuffix(buf.Bytes(), []byte("\n")) {
-		buf.WriteString("\n")
+		templateData := struct {
+			Name          string
+			Type          string
+			TypeReference string
+			Fields        []objectField
+		}{
+			Name:          model.SnakeCaseToCamelCase(k),
+			Type:          assocExtType.Type(),
+			TypeReference: assocExtType.TypeReference(),
+			Fields:        fields,
+		}
+
+		err = t.Execute(&templateBuf, templateData)
+		if err != nil {
+			return nil, err
+		}
+
+		buf.Write(templateBuf.Bytes())
 	}
 
 	return buf.Bytes(), nil
