@@ -120,6 +120,32 @@ var datasourceDataSourceSchema = schema.Schema{
 			},
 			Computed: true,
 		},
+		"map_nested_attribute_assoc_ext_type": schema.MapNestedAttribute{
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Computed: true,
+					},
+					"float64_attribute": schema.Float64Attribute{
+						Optional: true,
+						Computed: true,
+					},
+					"int64_attribute": schema.Int64Attribute{
+						Optional: true,
+						Computed: true,
+					},
+					"number_attribute": schema.NumberAttribute{
+						Optional: true,
+						Computed: true,
+					},
+					"string_attribute": schema.StringAttribute{
+						Optional: true,
+						Computed: true,
+					},
+				},
+			},
+			Optional: true,
+		},
 		"object_attribute": schema.ObjectAttribute{
 			AttributeTypes: map[string]attr.Type{
 				"obj_string_attr": types.StringType,
@@ -356,6 +382,7 @@ type DatasourceModel struct {
 	ListNestedAttributeTwo            types.List   `tfsdk:"list_nested_attribute_two"`
 	ListObjectAttribute               types.List   `tfsdk:"list_object_attribute"`
 	ListObjectObjectAttribute         types.List   `tfsdk:"list_object_object_attribute"`
+	MapNestedAttributeAssocExtType    types.Map    `tfsdk:"map_nested_attribute_assoc_ext_type"`
 	ObjectAttribute                   types.Object `tfsdk:"object_attribute"`
 	ObjectListAttribute               types.Object `tfsdk:"object_list_attribute"`
 	ObjectListObjectAttribute         types.Object `tfsdk:"object_list_object_attribute"`
@@ -399,6 +426,14 @@ type ListNestedAttributeTwoModel struct {
 
 type ListNestedAttributeTwoListNestedAttributeOneModel struct {
 	BoolAttribute types.Bool `tfsdk:"bool_attribute"`
+}
+
+type MapNestedAttributeAssocExtTypeModel struct {
+	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
+	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
+	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
+	StringAttribute  types.String  `tfsdk:"string_attribute"`
 }
 
 type SingleNestedAttributeAssocExtTypeModel struct {
@@ -514,6 +549,7 @@ func (m ListNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Contex
 		data,
 	)
 }
+
 func (m ListNestedAttributeOneModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -537,6 +573,7 @@ func (m ListNestedAttributeOneModel) ObjectValueFrom(ctx context.Context, data a
 		data,
 	)
 }
+
 func (m ListNestedAttributeThreeModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -588,6 +625,7 @@ func (m ListNestedAttributeThreeListNestedAttributeOneModel) ObjectValueFrom(ctx
 		data,
 	)
 }
+
 func (m ListNestedAttributeTwoModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -637,6 +675,35 @@ func (m ListNestedAttributeTwoListNestedAttributeOneModel) ObjectValueFrom(ctx c
 		data,
 	)
 }
+
+func (m MapNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m MapNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    types.BoolType,
+		"float64_attribute": types.Float64Type,
+		"int64_attribute":   types.Int64Type,
+		"number_attribute":  types.NumberType,
+		"string_attribute":  types.StringType,
+	}
+}
+
+func (m MapNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m MapNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
 func (m SingleNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -664,6 +731,7 @@ func (m SingleNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Cont
 		data,
 	)
 }
+
 func (m SingleNestedAttributeOneModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -687,6 +755,7 @@ func (m SingleNestedAttributeOneModel) ObjectValueFrom(ctx context.Context, data
 		data,
 	)
 }
+
 func (m SingleNestedAttributeThreeModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -738,6 +807,7 @@ func (m SingleNestedAttributeThreeSingleNestedAttributeOneModel) ObjectValueFrom
 		data,
 	)
 }
+
 func (m SingleNestedAttributeTwoModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -787,6 +857,7 @@ func (m SingleNestedAttributeTwoSingleNestedAttributeOneModel) ObjectValueFrom(c
 		data,
 	)
 }
+
 func (m ListNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -814,6 +885,7 @@ func (m ListNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context, d
 		data,
 	)
 }
+
 func (m ListNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -837,6 +909,7 @@ func (m ListNestedBlockOneModel) ObjectValueFrom(ctx context.Context, data any) 
 		data,
 	)
 }
+
 func (m ListNestedBlockThreeModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -893,6 +966,7 @@ func (m ListNestedBlockThreeListNestedBlockOneModel) ObjectValueFrom(ctx context
 		data,
 	)
 }
+
 func (m ListNestedBlockTwoModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -942,6 +1016,7 @@ func (m ListNestedBlockTwoListNestedBlockOneModel) ObjectValueFrom(ctx context.C
 		data,
 	)
 }
+
 func (m SingleNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -969,6 +1044,7 @@ func (m SingleNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context,
 		data,
 	)
 }
+
 func (m SingleNestedBlockOneModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -992,6 +1068,7 @@ func (m SingleNestedBlockOneModel) ObjectValueFrom(ctx context.Context, data any
 		data,
 	)
 }
+
 func (m SingleNestedBlockThreeModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1048,6 +1125,7 @@ func (m SingleNestedBlockThreeListNestedBlockOneModel) ObjectValueFrom(ctx conte
 		data,
 	)
 }
+
 func (m SingleNestedBlockTwoModel) ObjectType(ctx context.Context) types.ObjectType {
 	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
 }
@@ -1151,6 +1229,61 @@ func FromListNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apis
 	}
 
 	return types.ListValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+}
+
+func ToMapNestedAttributeAssocExtType(ctx context.Context, tfMap types.Map) (map[string]*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfMap.IsNull() || tfMap.IsUnknown() {
+		return nil, diags
+	}
+
+	var tfModels map[string]MapNestedAttributeAssocExtTypeModel
+
+	diags.Append(tfMap.ElementsAs(ctx, &tfModels, false)...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	apiObjects := make(map[string]*apisdk.Type)
+
+	for k, tfModel := range tfModels {
+		apiObjects[k] = &apisdk.Type{
+			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
+			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
+			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
+			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
+			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
+		}
+	}
+
+	return apiObjects, diags
+}
+
+func FromMapNestedAttributeAssocExtType(ctx context.Context, apiObjects map[string]*apisdk.Type) (types.Map, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel MapNestedAttributeAssocExtTypeModel
+
+	if apiObjects == nil {
+		return types.MapNull(
+			tfModel.ObjectType(ctx),
+		), diags
+	}
+
+	tfModels := make(map[string]MapNestedAttributeAssocExtTypeModel)
+
+	for k, apiObject := range apiObjects {
+		tfModels[k] = MapNestedAttributeAssocExtTypeModel{
+			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		}
+	}
+
+	return types.MapValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
 }
 
 func ToSingleNestedAttributeAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {

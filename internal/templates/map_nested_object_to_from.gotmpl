@@ -1,0 +1,51 @@
+
+func To{{.Name}}(ctx context.Context, tfMap types.Map) (map[string]{{.Type}}, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if tfMap.IsNull() || tfMap.IsUnknown() {
+return nil, diags
+}
+
+var tfModels map[string]{{.Name}}Model
+
+diags.Append(tfMap.ElementsAs(ctx, &tfModels, false)...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+apiObjects := make(map[string]{{.Type}})
+
+for k, tfModel := range tfModels {
+apiObjects[k] = &{{.TypeReference}}{
+{{- range $field := .Fields }}
+{{$field.Name}}: tfModel.{{$field.Name}}.{{$field.DefaultTo}}(),
+{{- end}}
+}
+}
+
+return apiObjects, diags
+}
+
+func From{{.Name}}(ctx context.Context, apiObjects map[string]{{.Type}}) (types.Map, diag.Diagnostics) {
+var diags diag.Diagnostics
+var tfModel {{.Name}}Model
+
+if apiObjects == nil {
+return types.MapNull(
+tfModel.ObjectType(ctx),
+), diags
+}
+
+tfModels := make(map[string]{{.Name}}Model)
+
+for k, apiObject := range apiObjects {
+tfModels[k] = {{.Name}}Model{
+{{- range $field := .Fields }}
+{{$field.Name}}: types.{{$field.DefaultFrom}}(apiObject.{{$field.Name}}),
+{{- end}}
+}
+}
+
+return types.MapValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+}

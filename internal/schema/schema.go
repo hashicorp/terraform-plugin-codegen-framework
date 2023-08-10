@@ -596,6 +596,11 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			if err != nil {
 				return nil, err
 			}
+		case basetypes.MapTypable:
+			t, err = template.New("map_nested_object_to_from").Parse(templates.MapNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
 		case basetypes.ObjectTypable:
 			t, err = template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
 			if err != nil {

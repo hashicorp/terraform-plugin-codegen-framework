@@ -10,6 +10,9 @@ import (
 //go:embed list_nested_object_to_from.gotmpl
 var ListNestedObjectToFromTemplate string
 
+//go:embed map_nested_object_to_from.gotmpl
+var MapNestedObjectToFromTemplate string
+
 //go:embed model_object_helpers.gotmpl
 var ModelObjectHelpersTemplate string
 

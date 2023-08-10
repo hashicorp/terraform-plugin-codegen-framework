@@ -244,6 +244,52 @@
             }
           },
           {
+            "name": "map_nested_attribute_assoc_ext_type",
+            "map_nested": {
+              "nested_object": {
+                "associated_external_type": {
+                  "import": {
+                    "path": "example.com/apisdk"
+                  },
+                  "type": "*apisdk.Type"
+                },
+                "attributes": [
+                  {
+                    "name": "bool_attribute",
+                    "bool": {
+                      "computed_optional_required": "computed"
+                    }
+                  },
+                  {
+                    "name": "float64_attribute",
+                    "float64": {
+                      "computed_optional_required": "computed_optional"
+                    }
+                  },
+                  {
+                    "name": "int64_attribute",
+                    "int64": {
+                      "computed_optional_required": "computed_optional"
+                    }
+                  },
+                  {
+                    "name": "number_attribute",
+                    "number": {
+                      "computed_optional_required": "computed_optional"
+                    }
+                  },
+                  {
+                    "name": "string_attribute",
+                    "string": {
+                      "computed_optional_required": "computed_optional"
+                    }
+                  }
+                ]
+              },
+              "computed_optional_required": "optional"
+            }
+          },
+          {
             "name": "single_nested_attribute_one",
             "single_nested": {
               "attributes": [
