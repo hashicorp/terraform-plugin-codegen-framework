@@ -1,0 +1,51 @@
+
+func To{{.Name}}(ctx context.Context, tfSet types.Set) ([]{{.Type}}, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if tfSet.IsNull() || tfSet.IsUnknown() {
+return nil, diags
+}
+
+var tfModels []{{.Name}}Model
+
+diags.Append(tfSet.ElementsAs(ctx, &tfModels, false)...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+var apiObjects []{{.Type}}
+
+for _, tfModel := range tfModels {
+apiObjects = append(apiObjects, &{{.TypeReference}}{
+{{- range $field := .Fields }}
+{{$field.Name}}: tfModel.{{$field.Name}}.{{$field.DefaultTo}}(),
+{{- end}}
+})
+}
+
+return apiObjects, diags
+}
+
+func From{{.Name}}(ctx context.Context, apiObjects []{{.Type}}) (types.Set, diag.Diagnostics) {
+var diags diag.Diagnostics
+var tfModel {{.Name}}Model
+
+if apiObjects == nil {
+return types.SetNull(
+tfModel.ObjectType(ctx),
+), diags
+}
+
+var tfModels []{{.Name}}Model
+
+for _, apiObject := range apiObjects {
+tfModels = append(tfModels, {{.Name}}Model{
+{{- range $field := .Fields }}
+{{$field.Name}}: types.{{$field.DefaultFrom}}(apiObject.{{$field.Name}}),
+{{- end}}
+})
+}
+
+return types.SetValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+}

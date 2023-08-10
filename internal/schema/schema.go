@@ -606,6 +606,15 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			if err != nil {
 				return nil, err
 			}
+		case basetypes.SetTypable:
+			t, err = template.New("set_nested_object_to_from").Parse(templates.SetNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		if t == nil {
+			return nil, fmt.Errorf("no matching template for type: %T", attributeAssocExtType.AttrType())
 		}
 
 		var templateBuf bytes.Buffer
@@ -709,7 +718,17 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			if err != nil {
 				return nil, err
 			}
+		case basetypes.SetTypable:
+			t, err = template.New("set_nested_object_to_from").Parse(templates.SetNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
 		}
+
+		if t == nil {
+			return nil, fmt.Errorf("no matching template for type: %T", blockAssocExtType.AttrType())
+		}
+
 		var templateBuf bytes.Buffer
 
 		templateData := struct {
