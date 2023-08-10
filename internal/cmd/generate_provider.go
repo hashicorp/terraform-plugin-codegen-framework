@@ -152,6 +152,12 @@ func generateProviderCode(spec spec.Specification, outputPath, packageName, gene
 		log.Fatal(err)
 	}
 
+	// generate "expand" and "flatten" code
+	modelsToFromBytes, err := g.ModelsToFromBytes()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// format schema code
 	formattedProvidersSchema, err := format.Format(schemaBytes)
 	if err != nil {
@@ -170,8 +176,14 @@ func generateProviderCode(spec spec.Specification, outputPath, packageName, gene
 		log.Fatal(err)
 	}
 
+	// format "expand" and "flatten" code
+	formattedProviderToFrom, err := format.Format(modelsToFromBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// write code
-	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedProvidersModelObjectHelpers, outputPath)
+	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedProvidersModelObjectHelpers, formattedProviderToFrom, outputPath)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

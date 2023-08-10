@@ -3,10 +3,737 @@
 package generated
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-var providerProviderSchema = schema.Schema{}
+var providerProviderSchema = schema.Schema{
+	Attributes: map[string]schema.Attribute{
+		"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Optional: true,
+					},
+					"float64_attribute": schema.Float64Attribute{
+						Optional: true,
+					},
+					"int64_attribute": schema.Int64Attribute{
+						Optional: true,
+					},
+					"number_attribute": schema.NumberAttribute{
+						Optional: true,
+					},
+					"string_attribute": schema.StringAttribute{
+						Optional: true,
+					},
+				},
+			},
+			Optional: true,
+		},
+		"map_nested_attribute_assoc_ext_type": schema.MapNestedAttribute{
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Optional: true,
+					},
+					"float64_attribute": schema.Float64Attribute{
+						Optional: true,
+					},
+					"int64_attribute": schema.Int64Attribute{
+						Optional: true,
+					},
+					"number_attribute": schema.NumberAttribute{
+						Optional: true,
+					},
+					"string_attribute": schema.StringAttribute{
+						Optional: true,
+					},
+				},
+			},
+			Optional: true,
+		},
+		"set_nested_attribute_assoc_ext_type": schema.SetNestedAttribute{
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Optional: true,
+					},
+					"float64_attribute": schema.Float64Attribute{
+						Optional: true,
+					},
+					"int64_attribute": schema.Int64Attribute{
+						Optional: true,
+					},
+					"number_attribute": schema.NumberAttribute{
+						Optional: true,
+					},
+					"string_attribute": schema.StringAttribute{
+						Optional: true,
+					},
+				},
+			},
+			Optional: true,
+		},
+		"single_nested_attribute_assoc_ext_type": schema.SingleNestedAttribute{
+			Attributes: map[string]schema.Attribute{
+				"bool_attribute": schema.BoolAttribute{
+					Optional: true,
+				},
+				"float64_attribute": schema.Float64Attribute{
+					Optional: true,
+				},
+				"int64_attribute": schema.Int64Attribute{
+					Optional: true,
+				},
+				"number_attribute": schema.NumberAttribute{
+					Optional: true,
+				},
+				"string_attribute": schema.StringAttribute{
+					Optional: true,
+				},
+			},
+			Optional: true,
+		},
+	},
+	Blocks: map[string]schema.Block{
+		"list_nested_block_assoc_ext_type": schema.ListNestedBlock{
+			NestedObject: schema.NestedBlockObject{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Optional: true,
+					},
+					"float64_attribute": schema.Float64Attribute{
+						Optional: true,
+					},
+					"int64_attribute": schema.Int64Attribute{
+						Optional: true,
+					},
+					"number_attribute": schema.NumberAttribute{
+						Optional: true,
+					},
+					"string_attribute": schema.StringAttribute{
+						Optional: true,
+					},
+				},
+			},
+		},
+		"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
+			NestedObject: schema.NestedBlockObject{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Optional: true,
+					},
+					"float64_attribute": schema.Float64Attribute{
+						Optional: true,
+					},
+					"int64_attribute": schema.Int64Attribute{
+						Optional: true,
+					},
+					"number_attribute": schema.NumberAttribute{
+						Optional: true,
+					},
+					"string_attribute": schema.StringAttribute{
+						Optional: true,
+					},
+				},
+			},
+		},
+		"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
+			Attributes: map[string]schema.Attribute{
+				"bool_attribute": schema.BoolAttribute{
+					Optional: true,
+				},
+				"float64_attribute": schema.Float64Attribute{
+					Optional: true,
+				},
+				"int64_attribute": schema.Int64Attribute{
+					Optional: true,
+				},
+				"number_attribute": schema.NumberAttribute{
+					Optional: true,
+				},
+				"string_attribute": schema.StringAttribute{
+					Optional: true,
+				},
+			},
+		},
+	},
+}
 
 type ProviderModel struct {
+	ListNestedAttributeAssocExtType   types.List   `tfsdk:"list_nested_attribute_assoc_ext_type"`
+	MapNestedAttributeAssocExtType    types.Map    `tfsdk:"map_nested_attribute_assoc_ext_type"`
+	SetNestedAttributeAssocExtType    types.Set    `tfsdk:"set_nested_attribute_assoc_ext_type"`
+	SingleNestedAttributeAssocExtType types.Object `tfsdk:"single_nested_attribute_assoc_ext_type"`
+	ListNestedBlockAssocExtType       types.List   `tfsdk:"list_nested_block_assoc_ext_type"`
+	SetNestedBlockAssocExtType        types.Set    `tfsdk:"set_nested_block_assoc_ext_type"`
+	SingleNestedBlockAssocExtType     types.Object `tfsdk:"single_nested_block_assoc_ext_type"`
+}
+
+type ListNestedAttributeAssocExtTypeModel struct {
+	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
+	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
+	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
+	StringAttribute  types.String  `tfsdk:"string_attribute"`
+}
+
+type MapNestedAttributeAssocExtTypeModel struct {
+	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
+	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
+	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
+	StringAttribute  types.String  `tfsdk:"string_attribute"`
+}
+
+type SetNestedAttributeAssocExtTypeModel struct {
+	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
+	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
+	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
+	StringAttribute  types.String  `tfsdk:"string_attribute"`
+}
+
+type SingleNestedAttributeAssocExtTypeModel struct {
+	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
+	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
+	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
+	StringAttribute  types.String  `tfsdk:"string_attribute"`
+}
+
+type ListNestedBlockAssocExtTypeModel struct {
+	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
+	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
+	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
+	StringAttribute  types.String  `tfsdk:"string_attribute"`
+}
+
+type SetNestedBlockAssocExtTypeModel struct {
+	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
+	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
+	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
+	StringAttribute  types.String  `tfsdk:"string_attribute"`
+}
+
+type SingleNestedBlockAssocExtTypeModel struct {
+	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
+	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
+	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
+	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
+	StringAttribute  types.String  `tfsdk:"string_attribute"`
+}
+
+func (m ListNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    types.BoolType,
+		"float64_attribute": types.Float64Type,
+		"int64_attribute":   types.Int64Type,
+		"number_attribute":  types.NumberType,
+		"string_attribute":  types.StringType,
+	}
+}
+
+func (m ListNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m ListNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m MapNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m MapNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    types.BoolType,
+		"float64_attribute": types.Float64Type,
+		"int64_attribute":   types.Int64Type,
+		"number_attribute":  types.NumberType,
+		"string_attribute":  types.StringType,
+	}
+}
+
+func (m MapNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m MapNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SetNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SetNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    types.BoolType,
+		"float64_attribute": types.Float64Type,
+		"int64_attribute":   types.Int64Type,
+		"number_attribute":  types.NumberType,
+		"string_attribute":  types.StringType,
+	}
+}
+
+func (m SetNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m SetNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SingleNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    types.BoolType,
+		"float64_attribute": types.Float64Type,
+		"int64_attribute":   types.Int64Type,
+		"number_attribute":  types.NumberType,
+		"string_attribute":  types.StringType,
+	}
+}
+
+func (m SingleNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m SingleNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m ListNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m ListNestedBlockAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    types.BoolType,
+		"float64_attribute": types.Float64Type,
+		"int64_attribute":   types.Int64Type,
+		"number_attribute":  types.NumberType,
+		"string_attribute":  types.StringType,
+	}
+}
+
+func (m ListNestedBlockAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m ListNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SetNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SetNestedBlockAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    types.BoolType,
+		"float64_attribute": types.Float64Type,
+		"int64_attribute":   types.Int64Type,
+		"number_attribute":  types.NumberType,
+		"string_attribute":  types.StringType,
+	}
+}
+
+func (m SetNestedBlockAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m SetNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+func (m SingleNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
+	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+}
+
+func (m SingleNestedBlockAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    types.BoolType,
+		"float64_attribute": types.Float64Type,
+		"int64_attribute":   types.Int64Type,
+		"number_attribute":  types.NumberType,
+		"string_attribute":  types.StringType,
+	}
+}
+
+func (m SingleNestedBlockAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
+	return types.ObjectNull(
+		m.ObjectAttributeTypes(ctx),
+	)
+}
+
+func (m SingleNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
+	return types.ObjectValueFrom(
+		ctx,
+		m.ObjectAttributeTypes(ctx),
+		data,
+	)
+}
+
+func ToListNestedAttributeAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfList.IsNull() || tfList.IsUnknown() {
+		return nil, diags
+	}
+
+	var tfModels []ListNestedAttributeAssocExtTypeModel
+
+	diags.Append(tfList.ElementsAs(ctx, &tfModels, false)...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var apiObjects []*apisdk.Type
+
+	for _, tfModel := range tfModels {
+		apiObjects = append(apiObjects, &apisdk.Type{
+			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
+			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
+			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
+			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
+			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
+		})
+	}
+
+	return apiObjects, diags
+}
+
+func FromListNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.List, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel ListNestedAttributeAssocExtTypeModel
+
+	if apiObjects == nil {
+		return types.ListNull(
+			tfModel.ObjectType(ctx),
+		), diags
+	}
+
+	var tfModels []ListNestedAttributeAssocExtTypeModel
+
+	for _, apiObject := range apiObjects {
+		tfModels = append(tfModels, ListNestedAttributeAssocExtTypeModel{
+			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		})
+	}
+
+	return types.ListValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+}
+
+func ToMapNestedAttributeAssocExtType(ctx context.Context, tfMap types.Map) (map[string]*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfMap.IsNull() || tfMap.IsUnknown() {
+		return nil, diags
+	}
+
+	var tfModels map[string]MapNestedAttributeAssocExtTypeModel
+
+	diags.Append(tfMap.ElementsAs(ctx, &tfModels, false)...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	apiObjects := make(map[string]*apisdk.Type)
+
+	for k, tfModel := range tfModels {
+		apiObjects[k] = &apisdk.Type{
+			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
+			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
+			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
+			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
+			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
+		}
+	}
+
+	return apiObjects, diags
+}
+
+func FromMapNestedAttributeAssocExtType(ctx context.Context, apiObjects map[string]*apisdk.Type) (types.Map, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel MapNestedAttributeAssocExtTypeModel
+
+	if apiObjects == nil {
+		return types.MapNull(
+			tfModel.ObjectType(ctx),
+		), diags
+	}
+
+	tfModels := make(map[string]MapNestedAttributeAssocExtTypeModel)
+
+	for k, apiObject := range apiObjects {
+		tfModels[k] = MapNestedAttributeAssocExtTypeModel{
+			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		}
+	}
+
+	return types.MapValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+}
+
+func ToSetNestedAttributeAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfSet.IsNull() || tfSet.IsUnknown() {
+		return nil, diags
+	}
+
+	var tfModels []SetNestedAttributeAssocExtTypeModel
+
+	diags.Append(tfSet.ElementsAs(ctx, &tfModels, false)...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var apiObjects []*apisdk.Type
+
+	for _, tfModel := range tfModels {
+		apiObjects = append(apiObjects, &apisdk.Type{
+			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
+			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
+			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
+			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
+			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
+		})
+	}
+
+	return apiObjects, diags
+}
+
+func FromSetNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.Set, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel SetNestedAttributeAssocExtTypeModel
+
+	if apiObjects == nil {
+		return types.SetNull(
+			tfModel.ObjectType(ctx),
+		), diags
+	}
+
+	var tfModels []SetNestedAttributeAssocExtTypeModel
+
+	for _, apiObject := range apiObjects {
+		tfModels = append(tfModels, SetNestedAttributeAssocExtTypeModel{
+			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		})
+	}
+
+	return types.SetValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+}
+
+func ToSingleNestedAttributeAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfObject.IsNull() || tfObject.IsUnknown() {
+		return nil, diags
+	}
+
+	var tfModel SingleNestedAttributeAssocExtTypeModel
+
+	diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	apiObject := &apisdk.Type{
+		BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
+	}
+
+	return apiObject, diags
+}
+
+func FromSingleNestedAttributeAssocExtType(ctx context.Context, apiObject *apisdk.Type) (types.Object, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel SingleNestedAttributeAssocExtTypeModel
+
+	if apiObject == nil {
+		return tfModel.ObjectNull(ctx), diags
+	}
+
+	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
+	tfModel.Float64Attribute = types.Float64PointerValue(apiObject.Float64Attribute)
+	tfModel.Int64Attribute = types.Int64PointerValue(apiObject.Int64Attribute)
+	tfModel.NumberAttribute = types.NumberValue(apiObject.NumberAttribute)
+	tfModel.StringAttribute = types.StringPointerValue(apiObject.StringAttribute)
+
+	return tfModel.ObjectValueFrom(ctx, tfModel)
+}
+
+func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfList.IsNull() || tfList.IsUnknown() {
+		return nil, diags
+	}
+
+	var tfModels []ListNestedBlockAssocExtTypeModel
+
+	diags.Append(tfList.ElementsAs(ctx, &tfModels, false)...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var apiObjects []*apisdk.Type
+
+	for _, tfModel := range tfModels {
+		apiObjects = append(apiObjects, &apisdk.Type{
+			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
+			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
+			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
+			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
+			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
+		})
+	}
+
+	return apiObjects, diags
+}
+
+func FromListNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.List, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel ListNestedBlockAssocExtTypeModel
+
+	if apiObjects == nil {
+		return types.ListNull(
+			tfModel.ObjectType(ctx),
+		), diags
+	}
+
+	var tfModels []ListNestedBlockAssocExtTypeModel
+
+	for _, apiObject := range apiObjects {
+		tfModels = append(tfModels, ListNestedBlockAssocExtTypeModel{
+			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		})
+	}
+
+	return types.ListValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+}
+
+func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfSet.IsNull() || tfSet.IsUnknown() {
+		return nil, diags
+	}
+
+	var tfModels []SetNestedBlockAssocExtTypeModel
+
+	diags.Append(tfSet.ElementsAs(ctx, &tfModels, false)...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var apiObjects []*apisdk.Type
+
+	for _, tfModel := range tfModels {
+		apiObjects = append(apiObjects, &apisdk.Type{
+			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
+			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
+			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
+			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
+			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
+		})
+	}
+
+	return apiObjects, diags
+}
+
+func FromSetNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.Set, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel SetNestedBlockAssocExtTypeModel
+
+	if apiObjects == nil {
+		return types.SetNull(
+			tfModel.ObjectType(ctx),
+		), diags
+	}
+
+	var tfModels []SetNestedBlockAssocExtTypeModel
+
+	for _, apiObject := range apiObjects {
+		tfModels = append(tfModels, SetNestedBlockAssocExtTypeModel{
+			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		})
+	}
+
+	return types.SetValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
 }

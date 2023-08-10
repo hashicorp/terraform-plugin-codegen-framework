@@ -44,7 +44,7 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObje
 	return nil
 }
 
-func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelpers map[string][]byte, outputDir string) error {
+func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelpers, resourcesToFrom map[string][]byte, outputDir string) error {
 	for k, v := range resourcesSchema {
 		filename := fmt.Sprintf("%s_resource_gen.go", k)
 
@@ -67,12 +67,17 @@ func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelper
 		if err != nil {
 			return err
 		}
+
+		_, err = f.Write(resourcesToFrom[k])
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func WriteProviders(providersSchema, providerModels, providerModelObjectHelpers map[string][]byte, outputDir string) error {
+func WriteProviders(providersSchema, providerModels, providerModelObjectHelpers, providerToFrom map[string][]byte, outputDir string) error {
 	for k, v := range providersSchema {
 		filename := fmt.Sprintf("%s_provider_gen.go", k)
 
@@ -92,6 +97,11 @@ func WriteProviders(providersSchema, providerModels, providerModelObjectHelpers 
 		}
 
 		_, err = f.Write(providerModelObjectHelpers[k])
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(providerToFrom[k])
 		if err != nil {
 			return err
 		}
