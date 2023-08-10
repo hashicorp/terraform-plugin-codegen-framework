@@ -74,7 +74,9 @@ func convertSingleNestedAttribute(a *datasource.SingleNestedAttribute) (datasour
 		},
 
 		Attributes: attributes,
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+
+		AssociatedExternalType: a.AssociatedExternalType,
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
 	}, nil
 }
