@@ -95,11 +95,12 @@ func convertListNestedBlock(b *resource.ListNestedBlock) (resource_generate.Gene
 
 		CustomType: b.CustomType,
 		NestedObject: resource_generate.GeneratorNestedBlockObject{
-			Attributes:    attributes,
-			Blocks:        blocks,
-			CustomType:    b.NestedObject.CustomType,
-			PlanModifiers: b.NestedObject.PlanModifiers,
-			Validators:    b.NestedObject.Validators,
+			AssociatedExternalType: b.NestedObject.AssociatedExternalType,
+			Attributes:             attributes,
+			Blocks:                 blocks,
+			CustomType:             b.NestedObject.CustomType,
+			PlanModifiers:          b.NestedObject.PlanModifiers,
+			Validators:             b.NestedObject.Validators,
 		},
 		PlanModifiers: b.PlanModifiers,
 		Validators:    b.Validators,

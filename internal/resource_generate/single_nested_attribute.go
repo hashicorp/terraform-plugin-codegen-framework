@@ -21,11 +21,16 @@ type GeneratorSingleNestedAttribute struct {
 
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
-	Attributes    generatorschema.GeneratorAttributes
-	CustomType    *specschema.CustomType
-	Default       *specschema.ObjectDefault
-	PlanModifiers []specschema.ObjectPlanModifier
-	Validators    []specschema.ObjectValidator
+	AssociatedExternalType *specschema.AssociatedExternalType
+	Attributes             generatorschema.GeneratorAttributes
+	CustomType             *specschema.CustomType
+	Default                *specschema.ObjectDefault
+	PlanModifiers          []specschema.ObjectPlanModifier
+	Validators             []specschema.ObjectValidator
+}
+
+func (g GeneratorSingleNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
+	return generatorschema.NewAssocExtType(g.AssociatedExternalType)
 }
 
 func (g GeneratorSingleNestedAttribute) AttrType() attr.Type {
@@ -58,6 +63,9 @@ func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 	for _, v := range g.Attributes {
 		imports.Append(v.Imports())
 	}
+
+	// TODO: This should only be added if model object helper functions are being generated.
+	imports.Append(generatorschema.AttrImports())
 
 	return imports
 }

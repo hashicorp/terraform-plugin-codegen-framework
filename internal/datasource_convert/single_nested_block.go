@@ -93,10 +93,9 @@ func convertSingleNestedBlock(b *datasource.SingleNestedBlock) (datasource_gener
 			DeprecationMessage:  deprecationMessage(b.DeprecationMessage),
 		},
 
-		Attributes: attributes,
-		Blocks:     blocks,
-
 		AssociatedExternalType: b.AssociatedExternalType,
+		Attributes:             attributes,
+		Blocks:                 blocks,
 		CustomType:             b.CustomType,
 		Validators:             b.Validators,
 	}, nil

@@ -74,9 +74,10 @@ func convertListNestedAttribute(a *provider.ListNestedAttribute) (provider_gener
 
 		CustomType: a.CustomType,
 		NestedObject: provider_generate.GeneratorNestedAttributeObject{
-			Attributes: attributes,
-			CustomType: a.NestedObject.CustomType,
-			Validators: a.NestedObject.Validators,
+			AssociatedExternalType: a.NestedObject.AssociatedExternalType,
+			Attributes:             attributes,
+			CustomType:             a.NestedObject.CustomType,
+			Validators:             a.NestedObject.Validators,
 		},
 		Validators: a.Validators,
 	}, nil

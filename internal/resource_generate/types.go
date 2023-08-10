@@ -10,16 +10,20 @@ import (
 )
 
 type GeneratorNestedAttributeObject struct {
-	Attributes    schema.GeneratorAttributes
-	CustomType    *specschema.CustomType
-	PlanModifiers []specschema.ObjectPlanModifier
-	Validators    []specschema.ObjectValidator
+	Attributes schema.GeneratorAttributes
+
+	AssociatedExternalType *specschema.AssociatedExternalType
+	CustomType             *specschema.CustomType
+	PlanModifiers          []specschema.ObjectPlanModifier
+	Validators             []specschema.ObjectValidator
 }
 
 type GeneratorNestedBlockObject struct {
-	Attributes    schema.GeneratorAttributes
-	Blocks        schema.GeneratorBlocks
-	CustomType    *specschema.CustomType
-	PlanModifiers []specschema.ObjectPlanModifier
-	Validators    []specschema.ObjectValidator
+	Attributes schema.GeneratorAttributes
+	Blocks     schema.GeneratorBlocks
+
+	AssociatedExternalType *specschema.AssociatedExternalType
+	CustomType             *specschema.CustomType
+	PlanModifiers          []specschema.ObjectPlanModifier
+	Validators             []specschema.ObjectValidator
 }

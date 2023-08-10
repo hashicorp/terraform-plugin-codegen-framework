@@ -72,10 +72,11 @@ func convertSingleNestedAttribute(a *resource.SingleNestedAttribute) (resource_g
 			MarkdownDescription: description(a.Description),
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
-		Attributes:    attributes,
-		CustomType:    a.CustomType,
-		Default:       a.Default,
-		PlanModifiers: a.PlanModifiers,
-		Validators:    a.Validators,
+		AssociatedExternalType: a.AssociatedExternalType,
+		Attributes:             attributes,
+		CustomType:             a.CustomType,
+		Default:                a.Default,
+		PlanModifiers:          a.PlanModifiers,
+		Validators:             a.Validators,
 	}, nil
 }

@@ -95,10 +95,11 @@ func convertSetNestedBlock(b *provider.SetNestedBlock) (provider_generate.Genera
 
 		CustomType: b.CustomType,
 		NestedObject: provider_generate.GeneratorNestedBlockObject{
-			Attributes: attributes,
-			Blocks:     blocks,
-			CustomType: b.NestedObject.CustomType,
-			Validators: b.NestedObject.Validators,
+			AssociatedExternalType: b.NestedObject.AssociatedExternalType,
+			Attributes:             attributes,
+			Blocks:                 blocks,
+			CustomType:             b.NestedObject.CustomType,
+			Validators:             b.NestedObject.Validators,
 		},
 		Validators: b.Validators,
 	}, nil

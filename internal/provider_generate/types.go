@@ -11,13 +11,17 @@ import (
 
 type GeneratorNestedAttributeObject struct {
 	Attributes schema.GeneratorAttributes
-	CustomType *specschema.CustomType
-	Validators []specschema.ObjectValidator
+
+	AssociatedExternalType *specschema.AssociatedExternalType
+	CustomType             *specschema.CustomType
+	Validators             []specschema.ObjectValidator
 }
 
 type GeneratorNestedBlockObject struct {
 	Attributes schema.GeneratorAttributes
 	Blocks     schema.GeneratorBlocks
-	CustomType *specschema.CustomType
-	Validators []specschema.ObjectValidator
+
+	AssociatedExternalType *specschema.AssociatedExternalType
+	CustomType             *specschema.CustomType
+	Validators             []specschema.ObjectValidator
 }

@@ -74,9 +74,10 @@ func convertMapNestedAttribute(a *provider.MapNestedAttribute) (provider_generat
 
 		CustomType: a.CustomType,
 		NestedObject: provider_generate.GeneratorNestedAttributeObject{
-			Attributes: attributes,
-			CustomType: a.NestedObject.CustomType,
-			Validators: a.NestedObject.Validators,
+			AssociatedExternalType: a.NestedObject.AssociatedExternalType,
+			Attributes:             attributes,
+			CustomType:             a.NestedObject.CustomType,
+			Validators:             a.NestedObject.Validators,
 		},
 		Validators: a.Validators,
 	}, nil

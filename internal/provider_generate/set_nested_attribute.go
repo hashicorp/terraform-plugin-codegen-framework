@@ -26,6 +26,10 @@ type GeneratorSetNestedAttribute struct {
 	Validators   []specschema.SetValidator
 }
 
+func (g GeneratorSetNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
+	return generatorschema.NewAssocExtType(g.NestedObject.AssociatedExternalType)
+}
+
 func (g GeneratorSetNestedAttribute) AttrType() attr.Type {
 	return types.SetType{
 		//TODO: Add ElemType?
@@ -54,6 +58,9 @@ func (g GeneratorSetNestedAttribute) Imports() *generatorschema.Imports {
 	for _, v := range g.NestedObject.Attributes {
 		imports.Append(v.Imports())
 	}
+
+	// TODO: This should only be added if model object helper functions are being generated.
+	imports.Append(generatorschema.AttrImports())
 
 	return imports
 }
