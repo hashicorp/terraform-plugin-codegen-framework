@@ -60,6 +60,9 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 	// TODO: This should only be added if model object helper functions are being generated.
 	imports.Append(generatorschema.AttrImports())
 
+	assocExtTypeImports := generatorschema.AssociatedExternalTypeImports(g.AssociatedExternalType)
+	imports.Append(assocExtTypeImports)
+
 	return imports
 }
 

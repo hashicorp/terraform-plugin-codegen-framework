@@ -4,6 +4,7 @@ package generated
 
 import (
 	"context"
+	"example.com/apisdk"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	planmodifieralias "github.com/my_account/my_project/myboolplanmodifier"
 	validatoralias "github.com/my_account/my_project/myboolvalidator"
 	boolalias "github.com/my_account_my_project/bool"
