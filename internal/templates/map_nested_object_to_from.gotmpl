@@ -2,7 +2,16 @@
 func To{{.Name}}(ctx context.Context, tfMap types.Map) (map[string]{{.Type}}, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-if tfMap.IsNull() || tfMap.IsUnknown() {
+if tfMap.IsNull() {
+return nil, diags
+}
+
+if tfMap.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"Map Value Is Unknown",
+`Model field "{{.Name}}" is unknown.`,
+))
+
 return nil, diags
 }
 

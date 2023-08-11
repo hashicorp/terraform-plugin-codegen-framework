@@ -2,7 +2,16 @@
 func To{{.Name}}(ctx context.Context, tfList types.List) ([]{{.Type}}, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-if tfList.IsNull() || tfList.IsUnknown() {
+if tfList.IsNull() {
+return nil, diags
+}
+
+if tfList.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"List Value Is Unknown",
+`Model field "{{.Name}}" is unknown.`,
+))
+
 return nil, diags
 }
 

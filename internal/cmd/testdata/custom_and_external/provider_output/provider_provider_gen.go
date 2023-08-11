@@ -425,7 +425,16 @@ func (m SingleNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context,
 func ToListNestedAttributeAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfList.IsNull() || tfList.IsUnknown() {
+	if tfList.IsNull() {
+		return nil, diags
+	}
+
+	if tfList.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"List Value Is Unknown",
+			`Model field "ListNestedAttributeAssocExtType" is unknown.`,
+		))
+
 		return nil, diags
 	}
 
@@ -480,7 +489,16 @@ func FromListNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apis
 func ToMapNestedAttributeAssocExtType(ctx context.Context, tfMap types.Map) (map[string]*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfMap.IsNull() || tfMap.IsUnknown() {
+	if tfMap.IsNull() {
+		return nil, diags
+	}
+
+	if tfMap.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"Map Value Is Unknown",
+			`Model field "MapNestedAttributeAssocExtType" is unknown.`,
+		))
+
 		return nil, diags
 	}
 
@@ -535,7 +553,16 @@ func FromMapNestedAttributeAssocExtType(ctx context.Context, apiObjects map[stri
 func ToSetNestedAttributeAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfSet.IsNull() || tfSet.IsUnknown() {
+	if tfSet.IsNull() {
+		return nil, diags
+	}
+
+	if tfSet.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"Set Value Is Unknown",
+			`Model field "SetNestedAttributeAssocExtType" is unknown.`,
+		))
+
 		return nil, diags
 	}
 
@@ -590,7 +617,16 @@ func FromSetNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apisd
 func ToSingleNestedAttributeAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfObject.IsNull() || tfObject.IsUnknown() {
+	if tfObject.IsNull() {
+		return nil, diags
+	}
+
+	if tfObject.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"Object Value Is Unknown",
+			`Model field "SingleNestedAttributeAssocExtType" is unknown.`,
+		))
+
 		return nil, diags
 	}
 
@@ -633,7 +669,16 @@ func FromSingleNestedAttributeAssocExtType(ctx context.Context, apiObject *apisd
 func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfList.IsNull() || tfList.IsUnknown() {
+	if tfList.IsNull() {
+		return nil, diags
+	}
+
+	if tfList.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"List Value Is Unknown",
+			`Model field "ListNestedBlockAssocExtType" is unknown.`,
+		))
+
 		return nil, diags
 	}
 
@@ -688,7 +733,16 @@ func FromListNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.T
 func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfSet.IsNull() || tfSet.IsUnknown() {
+	if tfSet.IsNull() {
+		return nil, diags
+	}
+
+	if tfSet.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"Set Value Is Unknown",
+			`Model field "SetNestedBlockAssocExtType" is unknown.`,
+		))
+
 		return nil, diags
 	}
 
