@@ -83,10 +83,16 @@ tfModel.ObjectType(ctx),
 ), diags
 }
 
-var tfModels []{{.Name}}Model
+var tfModels []*{{.Name}}Model
 
 for _, apiObject := range apiObjects {
-tfModels = append(tfModels, {{.Name}}Model{
+if apiObject == nil {
+tfModels = append(tfModels, nil)
+
+continue
+}
+
+tfModels = append(tfModels, &{{.Name}}Model{
 {{- range $field := .Fields }}
 {{$field.Name}}: types.{{$field.DefaultFrom}}(apiObject.{{$field.Name}}),
 {{- end}}

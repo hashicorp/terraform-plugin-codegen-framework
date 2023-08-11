@@ -83,10 +83,16 @@ tfModel.ObjectType(ctx),
 ), diags
 }
 
-tfModels := make(map[string]{{.Name}}Model)
+tfModels := make(map[string]*{{.Name}}Model)
 
 for k, apiObject := range apiObjects {
-tfModels[k] = {{.Name}}Model{
+if apiObject == nil {
+tfModels[k] = nil
+
+continue
+}
+
+tfModels[k] = &{{.Name}}Model{
 {{- range $field := .Fields }}
 {{$field.Name}}: types.{{$field.DefaultFrom}}(apiObject.{{$field.Name}}),
 {{- end}}

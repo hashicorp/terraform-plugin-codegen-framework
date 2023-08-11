@@ -526,10 +526,16 @@ func FromListNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apis
 		), diags
 	}
 
-	var tfModels []ListNestedAttributeAssocExtTypeModel
+	var tfModels []*ListNestedAttributeAssocExtTypeModel
 
 	for _, apiObject := range apiObjects {
-		tfModels = append(tfModels, ListNestedAttributeAssocExtTypeModel{
+		if apiObject == nil {
+			tfModels = append(tfModels, nil)
+
+			continue
+		}
+
+		tfModels = append(tfModels, &ListNestedAttributeAssocExtTypeModel{
 			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
 			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
 			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
@@ -627,10 +633,16 @@ func FromMapNestedAttributeAssocExtType(ctx context.Context, apiObjects map[stri
 		), diags
 	}
 
-	tfModels := make(map[string]MapNestedAttributeAssocExtTypeModel)
+	tfModels := make(map[string]*MapNestedAttributeAssocExtTypeModel)
 
 	for k, apiObject := range apiObjects {
-		tfModels[k] = MapNestedAttributeAssocExtTypeModel{
+		if apiObject == nil {
+			tfModels[k] = nil
+
+			continue
+		}
+
+		tfModels[k] = &MapNestedAttributeAssocExtTypeModel{
 			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
 			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
 			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
@@ -728,10 +740,16 @@ func FromSetNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apisd
 		), diags
 	}
 
-	var tfModels []SetNestedAttributeAssocExtTypeModel
+	var tfModels []*SetNestedAttributeAssocExtTypeModel
 
 	for _, apiObject := range apiObjects {
-		tfModels = append(tfModels, SetNestedAttributeAssocExtTypeModel{
+		if apiObject == nil {
+			tfModels = append(tfModels, nil)
+
+			continue
+		}
+
+		tfModels = append(tfModels, &SetNestedAttributeAssocExtTypeModel{
 			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
 			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
 			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
@@ -881,10 +899,16 @@ func FromListNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.T
 		), diags
 	}
 
-	var tfModels []ListNestedBlockAssocExtTypeModel
+	var tfModels []*ListNestedBlockAssocExtTypeModel
 
 	for _, apiObject := range apiObjects {
-		tfModels = append(tfModels, ListNestedBlockAssocExtTypeModel{
+		if apiObject == nil {
+			tfModels = append(tfModels, nil)
+
+			continue
+		}
+
+		tfModels = append(tfModels, &ListNestedBlockAssocExtTypeModel{
 			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
 			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
 			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
@@ -982,10 +1006,16 @@ func FromSetNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Ty
 		), diags
 	}
 
-	var tfModels []SetNestedBlockAssocExtTypeModel
+	var tfModels []*SetNestedBlockAssocExtTypeModel
 
 	for _, apiObject := range apiObjects {
-		tfModels = append(tfModels, SetNestedBlockAssocExtTypeModel{
+		if apiObject == nil {
+			tfModels = append(tfModels, nil)
+
+			continue
+		}
+
+		tfModels = append(tfModels, &SetNestedBlockAssocExtTypeModel{
 			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
 			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
 			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
