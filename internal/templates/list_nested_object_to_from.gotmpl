@@ -15,17 +15,54 @@ diags.Append(diag.NewErrorDiagnostic(
 return nil, diags
 }
 
-var tfModels []{{.Name}}Model
+var listObjects []types.Object
 
-diags.Append(tfList.ElementsAs(ctx, &tfModels, false)...)
+diags.Append(tfList.ElementsAs(ctx, &listObjects, false)...)
 
 if diags.HasError() {
 return nil, diags
 }
 
+var tfModels []*{{.Name}}Model
+
+for _, listObject := range listObjects {
+if listObject.IsNull() {
+tfModels = append(tfModels, nil)
+
+continue
+}
+
+if listObject.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"Object Value Within List Is Unknown",
+`Model field "{{.Name}}" contains an object which is unknown.`,
+))
+
+return nil, diags
+}
+
+var tfModel {{.Name}}Model
+
+d := listObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
+
+diags.Append(d...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+tfModels = append(tfModels, &tfModel)
+}
+
 var apiObjects []{{.Type}}
 
 for _, tfModel := range tfModels {
+if tfModel == nil {
+apiObjects = append(apiObjects, nil)
+
+continue
+}
+
 apiObjects = append(apiObjects, &{{.TypeReference}}{
 {{- range $field := .Fields }}
 {{$field.Name}}: tfModel.{{$field.Name}}.{{$field.DefaultTo}}(),

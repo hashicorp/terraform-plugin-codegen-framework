@@ -438,17 +438,54 @@ func ToListNestedAttributeAssocExtType(ctx context.Context, tfList types.List) (
 		return nil, diags
 	}
 
-	var tfModels []ListNestedAttributeAssocExtTypeModel
+	var listObjects []types.Object
 
-	diags.Append(tfList.ElementsAs(ctx, &tfModels, false)...)
+	diags.Append(tfList.ElementsAs(ctx, &listObjects, false)...)
 
 	if diags.HasError() {
 		return nil, diags
 	}
 
+	var tfModels []*ListNestedAttributeAssocExtTypeModel
+
+	for _, listObject := range listObjects {
+		if listObject.IsNull() {
+			tfModels = append(tfModels, nil)
+
+			continue
+		}
+
+		if listObject.IsUnknown() {
+			diags.Append(diag.NewErrorDiagnostic(
+				"Object Value Within List Is Unknown",
+				`Model field "ListNestedAttributeAssocExtType" contains an object which is unknown.`,
+			))
+
+			return nil, diags
+		}
+
+		var tfModel ListNestedAttributeAssocExtTypeModel
+
+		d := listObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
+
+		diags.Append(d...)
+
+		if diags.HasError() {
+			return nil, diags
+		}
+
+		tfModels = append(tfModels, &tfModel)
+	}
+
 	var apiObjects []*apisdk.Type
 
 	for _, tfModel := range tfModels {
+		if tfModel == nil {
+			apiObjects = append(apiObjects, nil)
+
+			continue
+		}
+
 		apiObjects = append(apiObjects, &apisdk.Type{
 			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
 			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
@@ -502,17 +539,54 @@ func ToMapNestedAttributeAssocExtType(ctx context.Context, tfMap types.Map) (map
 		return nil, diags
 	}
 
-	var tfModels map[string]MapNestedAttributeAssocExtTypeModel
+	mapObjects := make(map[string]types.Object)
 
-	diags.Append(tfMap.ElementsAs(ctx, &tfModels, false)...)
+	diags.Append(tfMap.ElementsAs(ctx, &mapObjects, false)...)
 
 	if diags.HasError() {
 		return nil, diags
 	}
 
+	tfModels := make(map[string]*MapNestedAttributeAssocExtTypeModel)
+
+	for k, mapObject := range mapObjects {
+		if mapObject.IsNull() {
+			tfModels[k] = nil
+
+			continue
+		}
+
+		if mapObject.IsUnknown() {
+			diags.Append(diag.NewErrorDiagnostic(
+				"Object Value Within Map Is Unknown",
+				`Model field "MapNestedAttributeAssocExtType" contains an object which is unknown.`,
+			))
+
+			return nil, diags
+		}
+
+		var tfModel MapNestedAttributeAssocExtTypeModel
+
+		d := mapObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
+
+		diags.Append(d...)
+
+		if diags.HasError() {
+			return nil, diags
+		}
+
+		tfModels[k] = &tfModel
+	}
+
 	apiObjects := make(map[string]*apisdk.Type)
 
 	for k, tfModel := range tfModels {
+		if tfModel == nil {
+			apiObjects[k] = nil
+
+			continue
+		}
+
 		apiObjects[k] = &apisdk.Type{
 			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
 			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
@@ -566,17 +640,54 @@ func ToSetNestedAttributeAssocExtType(ctx context.Context, tfSet types.Set) ([]*
 		return nil, diags
 	}
 
-	var tfModels []SetNestedAttributeAssocExtTypeModel
+	var setObjects []types.Object
 
-	diags.Append(tfSet.ElementsAs(ctx, &tfModels, false)...)
+	diags.Append(tfSet.ElementsAs(ctx, &setObjects, false)...)
 
 	if diags.HasError() {
 		return nil, diags
 	}
 
+	var tfModels []*SetNestedAttributeAssocExtTypeModel
+
+	for _, setObject := range setObjects {
+		if setObject.IsNull() {
+			tfModels = append(tfModels, nil)
+
+			continue
+		}
+
+		if setObject.IsUnknown() {
+			diags.Append(diag.NewErrorDiagnostic(
+				"Object Value Within Set Is Unknown",
+				`Model field "SetNestedAttributeAssocExtType" contains an object which is unknown.`,
+			))
+
+			return nil, diags
+		}
+
+		var tfModel SetNestedAttributeAssocExtTypeModel
+
+		d := setObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
+
+		diags.Append(d...)
+
+		if diags.HasError() {
+			return nil, diags
+		}
+
+		tfModels = append(tfModels, &tfModel)
+	}
+
 	var apiObjects []*apisdk.Type
 
 	for _, tfModel := range tfModels {
+		if tfModel == nil {
+			apiObjects = append(apiObjects, nil)
+
+			continue
+		}
+
 		apiObjects = append(apiObjects, &apisdk.Type{
 			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
 			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
@@ -682,17 +793,54 @@ func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*a
 		return nil, diags
 	}
 
-	var tfModels []ListNestedBlockAssocExtTypeModel
+	var listObjects []types.Object
 
-	diags.Append(tfList.ElementsAs(ctx, &tfModels, false)...)
+	diags.Append(tfList.ElementsAs(ctx, &listObjects, false)...)
 
 	if diags.HasError() {
 		return nil, diags
 	}
 
+	var tfModels []*ListNestedBlockAssocExtTypeModel
+
+	for _, listObject := range listObjects {
+		if listObject.IsNull() {
+			tfModels = append(tfModels, nil)
+
+			continue
+		}
+
+		if listObject.IsUnknown() {
+			diags.Append(diag.NewErrorDiagnostic(
+				"Object Value Within List Is Unknown",
+				`Model field "ListNestedBlockAssocExtType" contains an object which is unknown.`,
+			))
+
+			return nil, diags
+		}
+
+		var tfModel ListNestedBlockAssocExtTypeModel
+
+		d := listObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
+
+		diags.Append(d...)
+
+		if diags.HasError() {
+			return nil, diags
+		}
+
+		tfModels = append(tfModels, &tfModel)
+	}
+
 	var apiObjects []*apisdk.Type
 
 	for _, tfModel := range tfModels {
+		if tfModel == nil {
+			apiObjects = append(apiObjects, nil)
+
+			continue
+		}
+
 		apiObjects = append(apiObjects, &apisdk.Type{
 			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
 			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
@@ -746,17 +894,54 @@ func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apis
 		return nil, diags
 	}
 
-	var tfModels []SetNestedBlockAssocExtTypeModel
+	var setObjects []types.Object
 
-	diags.Append(tfSet.ElementsAs(ctx, &tfModels, false)...)
+	diags.Append(tfSet.ElementsAs(ctx, &setObjects, false)...)
 
 	if diags.HasError() {
 		return nil, diags
 	}
 
+	var tfModels []*SetNestedBlockAssocExtTypeModel
+
+	for _, setObject := range setObjects {
+		if setObject.IsNull() {
+			tfModels = append(tfModels, nil)
+
+			continue
+		}
+
+		if setObject.IsUnknown() {
+			diags.Append(diag.NewErrorDiagnostic(
+				"Object Value Within Set Is Unknown",
+				`Model field "SetNestedBlockAssocExtType" contains an object which is unknown.`,
+			))
+
+			return nil, diags
+		}
+
+		var tfModel SetNestedBlockAssocExtTypeModel
+
+		d := setObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
+
+		diags.Append(d...)
+
+		if diags.HasError() {
+			return nil, diags
+		}
+
+		tfModels = append(tfModels, &tfModel)
+	}
+
 	var apiObjects []*apisdk.Type
 
 	for _, tfModel := range tfModels {
+		if tfModel == nil {
+			apiObjects = append(apiObjects, nil)
+
+			continue
+		}
+
 		apiObjects = append(apiObjects, &apisdk.Type{
 			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
 			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),

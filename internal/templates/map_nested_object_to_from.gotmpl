@@ -15,17 +15,54 @@ diags.Append(diag.NewErrorDiagnostic(
 return nil, diags
 }
 
-var tfModels map[string]{{.Name}}Model
+mapObjects := make(map[string]types.Object)
 
-diags.Append(tfMap.ElementsAs(ctx, &tfModels, false)...)
+diags.Append(tfMap.ElementsAs(ctx, &mapObjects, false)...)
 
 if diags.HasError() {
 return nil, diags
 }
 
+tfModels := make(map[string]*{{.Name}}Model)
+
+for k, mapObject := range mapObjects {
+if mapObject.IsNull() {
+tfModels[k] = nil
+
+continue
+}
+
+if mapObject.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"Object Value Within Map Is Unknown",
+`Model field "{{.Name}}" contains an object which is unknown.`,
+))
+
+return nil, diags
+}
+
+var tfModel {{.Name}}Model
+
+d := mapObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
+
+diags.Append(d...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+tfModels[k] = &tfModel
+}
+
 apiObjects := make(map[string]{{.Type}})
 
 for k, tfModel := range tfModels {
+if tfModel == nil {
+apiObjects[k] = nil
+
+continue
+}
+
 apiObjects[k] = &{{.TypeReference}}{
 {{- range $field := .Fields }}
 {{$field.Name}}: tfModel.{{$field.Name}}.{{$field.DefaultTo}}(),
