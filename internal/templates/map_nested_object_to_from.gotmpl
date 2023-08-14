@@ -23,11 +23,11 @@ if diags.HasError() {
 return nil, diags
 }
 
-tfModels := make(map[string]*{{.Name}}Model)
+apiObjects := make(map[string]{{.Type}}, len(mapObjects))
 
 for k, mapObject := range mapObjects {
 if mapObject.IsNull() {
-tfModels[k] = nil
+apiObjects[k] = nil
 
 continue
 }
@@ -49,18 +49,6 @@ diags.Append(d...)
 
 if diags.HasError() {
 return nil, diags
-}
-
-tfModels[k] = &tfModel
-}
-
-apiObjects := make(map[string]{{.Type}})
-
-for k, tfModel := range tfModels {
-if tfModel == nil {
-apiObjects[k] = nil
-
-continue
 }
 
 apiObjects[k] = &{{.TypeReference}}{

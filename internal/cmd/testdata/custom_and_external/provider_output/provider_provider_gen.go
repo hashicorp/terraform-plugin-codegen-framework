@@ -446,11 +446,11 @@ func ToListNestedAttributeAssocExtType(ctx context.Context, tfList types.List) (
 		return nil, diags
 	}
 
-	var tfModels []*ListNestedAttributeAssocExtTypeModel
+	apiObjects := make([]*apisdk.Type, 0, len(listObjects))
 
 	for _, listObject := range listObjects {
 		if listObject.IsNull() {
-			tfModels = append(tfModels, nil)
+			apiObjects = append(apiObjects, nil)
 
 			continue
 		}
@@ -472,18 +472,6 @@ func ToListNestedAttributeAssocExtType(ctx context.Context, tfList types.List) (
 
 		if diags.HasError() {
 			return nil, diags
-		}
-
-		tfModels = append(tfModels, &tfModel)
-	}
-
-	var apiObjects []*apisdk.Type
-
-	for _, tfModel := range tfModels {
-		if tfModel == nil {
-			apiObjects = append(apiObjects, nil)
-
-			continue
 		}
 
 		apiObjects = append(apiObjects, &apisdk.Type{
@@ -553,11 +541,11 @@ func ToMapNestedAttributeAssocExtType(ctx context.Context, tfMap types.Map) (map
 		return nil, diags
 	}
 
-	tfModels := make(map[string]*MapNestedAttributeAssocExtTypeModel)
+	apiObjects := make(map[string]*apisdk.Type, len(mapObjects))
 
 	for k, mapObject := range mapObjects {
 		if mapObject.IsNull() {
-			tfModels[k] = nil
+			apiObjects[k] = nil
 
 			continue
 		}
@@ -579,18 +567,6 @@ func ToMapNestedAttributeAssocExtType(ctx context.Context, tfMap types.Map) (map
 
 		if diags.HasError() {
 			return nil, diags
-		}
-
-		tfModels[k] = &tfModel
-	}
-
-	apiObjects := make(map[string]*apisdk.Type)
-
-	for k, tfModel := range tfModels {
-		if tfModel == nil {
-			apiObjects[k] = nil
-
-			continue
 		}
 
 		apiObjects[k] = &apisdk.Type{
@@ -660,11 +636,11 @@ func ToSetNestedAttributeAssocExtType(ctx context.Context, tfSet types.Set) ([]*
 		return nil, diags
 	}
 
-	var tfModels []*SetNestedAttributeAssocExtTypeModel
+	apiObjects := make([]*apisdk.Type, 0, len(setObjects))
 
 	for _, setObject := range setObjects {
 		if setObject.IsNull() {
-			tfModels = append(tfModels, nil)
+			apiObjects = append(apiObjects, nil)
 
 			continue
 		}
@@ -686,18 +662,6 @@ func ToSetNestedAttributeAssocExtType(ctx context.Context, tfSet types.Set) ([]*
 
 		if diags.HasError() {
 			return nil, diags
-		}
-
-		tfModels = append(tfModels, &tfModel)
-	}
-
-	var apiObjects []*apisdk.Type
-
-	for _, tfModel := range tfModels {
-		if tfModel == nil {
-			apiObjects = append(apiObjects, nil)
-
-			continue
 		}
 
 		apiObjects = append(apiObjects, &apisdk.Type{
@@ -819,11 +783,11 @@ func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*a
 		return nil, diags
 	}
 
-	var tfModels []*ListNestedBlockAssocExtTypeModel
+	apiObjects := make([]*apisdk.Type, 0, len(listObjects))
 
 	for _, listObject := range listObjects {
 		if listObject.IsNull() {
-			tfModels = append(tfModels, nil)
+			apiObjects = append(apiObjects, nil)
 
 			continue
 		}
@@ -845,18 +809,6 @@ func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*a
 
 		if diags.HasError() {
 			return nil, diags
-		}
-
-		tfModels = append(tfModels, &tfModel)
-	}
-
-	var apiObjects []*apisdk.Type
-
-	for _, tfModel := range tfModels {
-		if tfModel == nil {
-			apiObjects = append(apiObjects, nil)
-
-			continue
 		}
 
 		apiObjects = append(apiObjects, &apisdk.Type{
@@ -926,11 +878,11 @@ func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apis
 		return nil, diags
 	}
 
-	var tfModels []*SetNestedBlockAssocExtTypeModel
+	apiObjects := make([]*apisdk.Type, 0, len(setObjects))
 
 	for _, setObject := range setObjects {
 		if setObject.IsNull() {
-			tfModels = append(tfModels, nil)
+			apiObjects = append(apiObjects, nil)
 
 			continue
 		}
@@ -952,18 +904,6 @@ func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apis
 
 		if diags.HasError() {
 			return nil, diags
-		}
-
-		tfModels = append(tfModels, &tfModel)
-	}
-
-	var apiObjects []*apisdk.Type
-
-	for _, tfModel := range tfModels {
-		if tfModel == nil {
-			apiObjects = append(apiObjects, nil)
-
-			continue
 		}
 
 		apiObjects = append(apiObjects, &apisdk.Type{

@@ -23,11 +23,11 @@ if diags.HasError() {
 return nil, diags
 }
 
-var tfModels []*{{.Name}}Model
+apiObjects := make([]{{.Type}}, 0, len(listObjects))
 
 for _, listObject := range listObjects {
 if listObject.IsNull() {
-tfModels = append(tfModels, nil)
+apiObjects = append(apiObjects, nil)
 
 continue
 }
@@ -49,18 +49,6 @@ diags.Append(d...)
 
 if diags.HasError() {
 return nil, diags
-}
-
-tfModels = append(tfModels, &tfModel)
-}
-
-var apiObjects []{{.Type}}
-
-for _, tfModel := range tfModels {
-if tfModel == nil {
-apiObjects = append(apiObjects, nil)
-
-continue
 }
 
 apiObjects = append(apiObjects, &{{.TypeReference}}{
