@@ -75,7 +75,7 @@ func convertMapNestedAttribute(a *resource.MapNestedAttribute) (resource_generat
 		CustomType: a.CustomType,
 		Default:    a.Default,
 		NestedObject: resource_generate.GeneratorNestedAttributeObject{
-			AssociatedExternalType: a.NestedObject.AssociatedExternalType,
+			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			CustomType:             a.NestedObject.CustomType,
 			PlanModifiers:          a.NestedObject.PlanModifiers,

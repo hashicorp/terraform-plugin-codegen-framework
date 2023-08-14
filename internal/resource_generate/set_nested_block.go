@@ -28,7 +28,7 @@ type GeneratorSetNestedBlock struct {
 }
 
 func (g GeneratorSetNestedBlock) AssocExtType() *generatorschema.AssocExtType {
-	return generatorschema.NewAssocExtType(g.NestedObject.AssociatedExternalType)
+	return g.NestedObject.AssociatedExternalType
 }
 
 func (g GeneratorSetNestedBlock) AttrType() attr.Type {
@@ -77,8 +77,7 @@ func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {
 	// TODO: This should only be added if model object helper functions are being generated.
 	imports.Append(generatorschema.AttrImports())
 
-	assocExtTypeImports := generatorschema.AssociatedExternalTypeImports(g.NestedObject.AssociatedExternalType)
-	imports.Append(assocExtTypeImports)
+	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
 
 	return imports
 }

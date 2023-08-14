@@ -308,25 +308,3 @@ func CustomValidatorImports(cv *specschema.CustomValidator) *Imports {
 
 	return imports
 }
-
-func AssociatedExternalTypeImports(a *specschema.AssociatedExternalType) *Imports {
-	imports := NewImports()
-
-	if a == nil {
-		return imports
-	}
-
-	if !a.HasImport() {
-		return imports
-	}
-
-	if len(a.Import.Path) > 0 {
-		imports.Add(*a.Import)
-
-		imports.Add(code.Import{
-			Path: BaseTypesImport,
-		})
-	}
-
-	return imports
-}

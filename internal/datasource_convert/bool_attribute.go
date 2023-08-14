@@ -28,8 +28,7 @@ func convertBoolAttribute(a *datasource.BoolAttribute) (datasource_generate.Gene
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		AssociatedExternalType: a.AssociatedExternalType,
-		CustomType:             a.CustomType,
-		Validators:             a.Validators,
+		CustomType: a.CustomType,
+		Validators: a.Validators,
 	}, nil
 }

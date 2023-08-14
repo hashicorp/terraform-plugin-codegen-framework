@@ -12,7 +12,7 @@ import (
 type GeneratorNestedAttributeObject struct {
 	Attributes schema.GeneratorAttributes
 
-	AssociatedExternalType *specschema.AssociatedExternalType
+	AssociatedExternalType *schema.AssocExtType
 	CustomType             *specschema.CustomType
 	PlanModifiers          []specschema.ObjectPlanModifier
 	Validators             []specschema.ObjectValidator
@@ -22,7 +22,7 @@ type GeneratorNestedBlockObject struct {
 	Attributes schema.GeneratorAttributes
 	Blocks     schema.GeneratorBlocks
 
-	AssociatedExternalType *specschema.AssociatedExternalType
+	AssociatedExternalType *schema.AssocExtType
 	CustomType             *specschema.CustomType
 	PlanModifiers          []specschema.ObjectPlanModifier
 	Validators             []specschema.ObjectValidator

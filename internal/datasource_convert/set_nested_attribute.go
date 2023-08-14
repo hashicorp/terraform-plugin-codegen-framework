@@ -75,7 +75,7 @@ func convertSetNestedAttribute(a *datasource.SetNestedAttribute) (datasource_gen
 
 		CustomType: a.CustomType,
 		NestedObject: datasource_generate.GeneratorNestedAttributeObject{
-			AssociatedExternalType: a.NestedObject.AssociatedExternalType,
+			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			CustomType:             a.NestedObject.CustomType,
 			Validators:             a.NestedObject.Validators,

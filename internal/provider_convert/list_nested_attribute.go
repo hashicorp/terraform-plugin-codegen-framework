@@ -74,7 +74,7 @@ func convertListNestedAttribute(a *provider.ListNestedAttribute) (provider_gener
 
 		CustomType: a.CustomType,
 		NestedObject: provider_generate.GeneratorNestedAttributeObject{
-			AssociatedExternalType: a.NestedObject.AssociatedExternalType,
+			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			CustomType:             a.NestedObject.CustomType,
 			Validators:             a.NestedObject.Validators,

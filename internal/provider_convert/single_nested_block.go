@@ -92,9 +92,10 @@ func convertSingleNestedBlock(b *provider.SingleNestedBlock) (provider_generate.
 			MarkdownDescription: description(b.Description),
 			DeprecationMessage:  deprecationMessage(b.DeprecationMessage),
 		},
-		Attributes: attributes,
-		Blocks:     blocks,
-		CustomType: b.CustomType,
-		Validators: b.Validators,
+		AssociatedExternalType: generatorschema.NewAssocExtType(b.AssociatedExternalType),
+		Attributes:             attributes,
+		Blocks:                 blocks,
+		CustomType:             b.CustomType,
+		Validators:             b.Validators,
 	}, nil
 }

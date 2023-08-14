@@ -948,3 +948,55 @@ func FromSetNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Ty
 
 	return types.SetValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
 }
+
+func ToSingleNestedBlockAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if tfObject.IsNull() {
+		return nil, diags
+	}
+
+	if tfObject.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"Object Value Is Unknown",
+			`Model field "SingleNestedBlockAssocExtType" is unknown.`,
+		))
+
+		return nil, diags
+	}
+
+	var tfModel SingleNestedBlockAssocExtTypeModel
+
+	diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	apiObject := &apisdk.Type{
+		BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
+	}
+
+	return apiObject, diags
+}
+
+func FromSingleNestedBlockAssocExtType(ctx context.Context, apiObject *apisdk.Type) (types.Object, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	var tfModel SingleNestedBlockAssocExtTypeModel
+
+	if apiObject == nil {
+		return tfModel.ObjectNull(ctx), diags
+	}
+
+	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
+	tfModel.Float64Attribute = types.Float64PointerValue(apiObject.Float64Attribute)
+	tfModel.Int64Attribute = types.Int64PointerValue(apiObject.Int64Attribute)
+	tfModel.NumberAttribute = types.NumberValue(apiObject.NumberAttribute)
+	tfModel.StringAttribute = types.StringPointerValue(apiObject.StringAttribute)
+
+	return tfModel.ObjectValueFrom(ctx, tfModel)
+}

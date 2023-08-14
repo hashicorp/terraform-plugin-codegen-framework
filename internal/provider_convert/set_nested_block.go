@@ -95,7 +95,7 @@ func convertSetNestedBlock(b *provider.SetNestedBlock) (provider_generate.Genera
 
 		CustomType: b.CustomType,
 		NestedObject: provider_generate.GeneratorNestedBlockObject{
-			AssociatedExternalType: b.NestedObject.AssociatedExternalType,
+			AssociatedExternalType: generatorschema.NewAssocExtType(b.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			Blocks:                 blocks,
 			CustomType:             b.NestedObject.CustomType,

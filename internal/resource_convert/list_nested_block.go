@@ -95,7 +95,7 @@ func convertListNestedBlock(b *resource.ListNestedBlock) (resource_generate.Gene
 
 		CustomType: b.CustomType,
 		NestedObject: resource_generate.GeneratorNestedBlockObject{
-			AssociatedExternalType: b.NestedObject.AssociatedExternalType,
+			AssociatedExternalType: generatorschema.NewAssocExtType(b.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			Blocks:                 blocks,
 			CustomType:             b.NestedObject.CustomType,

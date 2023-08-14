@@ -26,11 +26,41 @@ func NewAssocExtType(assocExtType *schema.AssociatedExternalType) *AssocExtType 
 	}
 }
 
-func (a AssocExtType) Type() string {
+func (a *AssocExtType) Imports() *Imports {
+	imports := NewImports()
+
+	if a == nil {
+		return imports
+	}
+
+	if a.imp == nil {
+		return imports
+	}
+
+	if len(a.imp.Path) > 0 {
+		imports.Add(*a.imp)
+
+		imports.Add(code.Import{
+			Path: BaseTypesImport,
+		})
+	}
+
+	return imports
+}
+
+func (a *AssocExtType) Type() string {
+	if a == nil {
+		return ""
+	}
+
 	return a.typ
 }
 
-func (a AssocExtType) TypeReference() string {
+func (a *AssocExtType) TypeReference() string {
+	if a == nil {
+		return ""
+	}
+
 	tr, _ := strings.CutPrefix(a.typ, "*")
 
 	return tr

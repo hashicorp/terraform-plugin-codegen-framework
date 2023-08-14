@@ -27,7 +27,7 @@ type GeneratorMapNestedAttribute struct {
 }
 
 func (g GeneratorMapNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
-	return generatorschema.NewAssocExtType(g.NestedObject.AssociatedExternalType)
+	return g.NestedObject.AssociatedExternalType
 }
 
 func (g GeneratorMapNestedAttribute) AttrType() attr.Type {
@@ -62,8 +62,7 @@ func (g GeneratorMapNestedAttribute) Imports() *generatorschema.Imports {
 	// TODO: This should only be added if model object helper functions are being generated.
 	imports.Append(generatorschema.AttrImports())
 
-	assocExtTypeImports := generatorschema.AssociatedExternalTypeImports(g.NestedObject.AssociatedExternalType)
-	imports.Append(assocExtTypeImports)
+	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
 
 	return imports
 }

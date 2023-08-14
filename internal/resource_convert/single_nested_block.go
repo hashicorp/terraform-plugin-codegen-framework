@@ -92,7 +92,7 @@ func convertSingleNestedBlock(b *resource.SingleNestedBlock) (resource_generate.
 			MarkdownDescription: description(b.Description),
 			DeprecationMessage:  deprecationMessage(b.DeprecationMessage),
 		},
-		AssociatedExternalType: b.AssociatedExternalType,
+		AssociatedExternalType: generatorschema.NewAssocExtType(b.AssociatedExternalType),
 		Attributes:             attributes,
 		Blocks:                 blocks,
 		CustomType:             b.CustomType,

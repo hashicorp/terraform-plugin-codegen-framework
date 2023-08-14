@@ -71,7 +71,7 @@ func convertSingleNestedAttribute(a *provider.SingleNestedAttribute) (provider_g
 			MarkdownDescription: description(a.Description),
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
-		AssociatedExternalType: a.AssociatedExternalType,
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		Attributes:             attributes,
 		CustomType:             a.CustomType,
 		Validators:             a.Validators,
