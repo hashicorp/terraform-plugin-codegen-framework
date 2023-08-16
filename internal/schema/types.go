@@ -42,3 +42,13 @@ type GeneratorBlock interface {
 	ModelField(string) (model.Field, error)
 	ToString(string) (string, error)
 }
+
+type GeneratorAttributeAssocExtType interface {
+	GeneratorAttribute
+	AssocExtType() *AssocExtType
+}
+
+type GeneratorBlockAssocExtType interface {
+	GeneratorBlock
+	AssocExtType() *AssocExtType
+}

@@ -7,12 +7,616 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
+
+func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorSetNestedBlock
+		expected []code.Import
+	}{
+		"default": {
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-custom-type-without-import": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"custom-type-and-nested-object-custom-type-without-import": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{},
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-custom-type-with-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "",
+					},
+				},
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"custom-type-with-import": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-custom-type-with-import": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"custom-type-with-import-with-nested-object-custom-type-with-import": {
+			input: GeneratorSetNestedBlock{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
+				},
+				NestedObject: GeneratorNestedBlockObject{
+					CustomType: &specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/nested_object",
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_object",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-set": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"set": GeneratorSetAttribute{
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-set-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"set": GeneratorSetAttribute{
+							CustomType: &specschema.CustomType{
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_list",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_list",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-set-with-custom-type-with-element-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"set": GeneratorSetAttribute{
+							CustomType: &specschema.CustomType{
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_list",
+								},
+							},
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/bool",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_list",
+				},
+				{
+					Path: "github.com/my_account/my_project/bool",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"obj": GeneratorObjectAttribute{
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"obj": GeneratorObjectAttribute{
+							CustomType: &specschema.CustomType{
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_object",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_object",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-with-custom-type-with-attribute-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"obj": GeneratorObjectAttribute{
+							CustomType: &specschema.CustomType{
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_object",
+								},
+							},
+							AttributeTypes: []specschema.ObjectAttributeType{
+								{
+									Name: "bool",
+									Bool: &specschema.BoolType{
+										CustomType: &specschema.CustomType{
+											Import: &code.Import{
+												Path: "github.com/my_account/my_project/bool",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_object",
+				},
+				{
+					Path: "github.com/my_account/my_project/bool",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-block-with-custom-type": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Blocks: generatorschema.GeneratorBlocks{
+						"list-nested-block": GeneratorSetNestedBlock{
+							CustomType: &specschema.CustomType{
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_block",
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/nested_block",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorSetNestedBlock{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: nil,
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorSetNestedBlock{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "",
+								},
+							},
+						},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorSetNestedBlock{
+				Validators: []specschema.SetValidator{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
+								},
+							},
+						},
+					},
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
+								},
+							},
+						},
+					},
+				}},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-validator-custom-nil": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: nil,
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-validator-custom-import-nil": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: &specschema.CustomValidator{},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-validator-custom-import-empty-string": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: &specschema.CustomValidator{
+								Imports: []code.Import{
+									{
+										Path: "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-validator-custom-import": {
+			input: GeneratorSetNestedBlock{
+				NestedObject: GeneratorNestedBlockObject{
+					Validators: []specschema.ObjectValidator{
+						{
+							Custom: &specschema.CustomValidator{
+								Imports: []code.Import{
+									{
+										Path: "github.com/myotherproject/myvalidators/validator",
+									},
+								},
+							},
+						},
+						{
+							Custom: &specschema.CustomValidator{
+								Imports: []code.Import{
+									{
+										Path: "github.com/myproject/myvalidators/validator",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports().All()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
 
 func TestGeneratorSetNestedBlock_ToString(t *testing.T) {
 	t.Parallel()

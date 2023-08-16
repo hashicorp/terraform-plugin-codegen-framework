@@ -1,5 +1,0 @@
-{{define "single_nested_attribute"}}
-"{{.Name}}": types.ObjectType{
-    AttrTypes: {{snakeCaseToCamelCase .Name}}Model{}.objectAttributeTypes(ctx),
-},
-{{- end}}

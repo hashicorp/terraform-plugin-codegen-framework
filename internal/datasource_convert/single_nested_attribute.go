@@ -73,8 +73,9 @@ func convertSingleNestedAttribute(a *datasource.SingleNestedAttribute) (datasour
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		Attributes: attributes,
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		Attributes:             attributes,
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
 	}, nil
 }

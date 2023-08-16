@@ -521,6 +521,325 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 	return buf.Bytes(), nil
 }
 
+// ModelsToFromBytes generates code for expand and flatten functions.
+// Whilst associated external types can be defined on any attribute
+// type, the only types which are processed are list, map, set and
+// single nested attributes, and list, set and single nested blocks.
+func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
+	var buf bytes.Buffer
+
+	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+	var attributeKeys = make([]string, 0, len(g.Attributes))
+
+	for k := range g.Attributes {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	for _, k := range attributeKeys {
+		if g.Attributes[k] == nil {
+			continue
+		}
+
+		// Only process attributes implementing GeneratorAttributeAssocExtType.
+		var attributeAssocExtType GeneratorAttributeAssocExtType
+		var ok bool
+
+		if attributeAssocExtType, ok = g.Attributes[k].(GeneratorAttributeAssocExtType); !ok {
+			continue
+		}
+
+		// Only process if AssocExtType() is not nil.
+		assocExtType := attributeAssocExtType.AssocExtType()
+
+		if assocExtType == nil {
+			continue
+		}
+
+		// Only process if attribute implements Attributes (i.e., list, map, set, single
+		// nested attributes).
+		a, ok := g.Attributes[k].(Attributes)
+
+		if !ok {
+			continue
+		}
+
+		var fields []objectField
+
+		attributeAttributes := a.GetAttributes()
+
+		// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
+		var attributeAttributeKeys = make([]string, 0, len(attributeAttributes))
+
+		for aa := range attributeAttributes {
+			attributeAttributeKeys = append(attributeAttributeKeys, aa)
+		}
+
+		sort.Strings(attributeAttributeKeys)
+
+		for _, x := range attributeAttributeKeys {
+			switch attributeAttributes[x].AttrType().(type) {
+			case basetypes.BoolTypable:
+				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.Int64Typable:
+				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.Float64Typable:
+				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.NumberTypable:
+				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.StringTypable:
+				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
+			}
+		}
+
+		var t *template.Template
+		var err error
+
+		switch attributeAssocExtType.AttrType().(type) {
+		case basetypes.ListTypable:
+			t, err = template.New("list_nested_object_to_from").Parse(templates.ListNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+		case basetypes.MapTypable:
+			t, err = template.New("map_nested_object_to_from").Parse(templates.MapNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+		case basetypes.ObjectTypable:
+			t, err = template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+		case basetypes.SetTypable:
+			t, err = template.New("set_nested_object_to_from").Parse(templates.SetNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		if t == nil {
+			return nil, fmt.Errorf("no matching template for type: %T", attributeAssocExtType.AttrType())
+		}
+
+		var templateBuf bytes.Buffer
+
+		templateData := struct {
+			Name          string
+			Type          string
+			TypeReference string
+			Fields        []objectField
+		}{
+			Name:          model.SnakeCaseToCamelCase(k),
+			Type:          assocExtType.Type(),
+			TypeReference: assocExtType.TypeReference(),
+			Fields:        fields,
+		}
+
+		err = t.Execute(&templateBuf, templateData)
+		if err != nil {
+			return nil, err
+		}
+
+		buf.Write(templateBuf.Bytes())
+	}
+
+	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g.Blocks))
+
+	for k := range g.Blocks {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	for _, k := range blockKeys {
+		if g.Blocks[k] == nil {
+			continue
+		}
+
+		// Only process blocks implementing GeneratorBlockAssocExtType.
+		var blockAssocExtType GeneratorBlockAssocExtType
+		var ok bool
+
+		if blockAssocExtType, ok = g.Blocks[k].(GeneratorBlockAssocExtType); !ok {
+			continue
+		}
+
+		// Only process if AssocExtType() is not nil.
+		assocExtType := blockAssocExtType.AssocExtType()
+
+		if assocExtType == nil {
+			continue
+		}
+
+		// Only process if block implements Attributes (i.e., list, set, single
+		// nested blocks).
+		a, ok := g.Blocks[k].(Attributes)
+
+		if !ok {
+			continue
+		}
+
+		var fields []objectField
+
+		blockAttributes := a.GetAttributes()
+
+		// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
+		var blockAttributeKeys = make([]string, 0, len(blockAttributes))
+
+		for ba := range blockAttributes {
+			blockAttributeKeys = append(blockAttributeKeys, ba)
+		}
+
+		sort.Strings(blockAttributeKeys)
+
+		for _, x := range blockAttributeKeys {
+			switch blockAttributes[x].AttrType().(type) {
+			case basetypes.BoolTypable:
+				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.Int64Typable:
+				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.Float64Typable:
+				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.NumberTypable:
+				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
+			case basetypes.StringTypable:
+				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
+			}
+		}
+
+		var t *template.Template
+		var err error
+
+		switch blockAssocExtType.AttrType().(type) {
+		case basetypes.ListTypable:
+			t, err = template.New("list_nested_object_to_from").Parse(templates.ListNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+		case basetypes.ObjectTypable:
+			t, err = template.New("single_nested_object_to_from").Parse(templates.SingleNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+		case basetypes.SetTypable:
+			t, err = template.New("set_nested_object_to_from").Parse(templates.SetNestedObjectToFromTemplate)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		if t == nil {
+			return nil, fmt.Errorf("no matching template for type: %T", blockAssocExtType.AttrType())
+		}
+
+		var templateBuf bytes.Buffer
+
+		templateData := struct {
+			Name          string
+			Type          string
+			TypeReference string
+			Fields        []objectField
+		}{
+			Name:          model.SnakeCaseToCamelCase(k),
+			Type:          assocExtType.Type(),
+			TypeReference: assocExtType.TypeReference(),
+			Fields:        fields,
+		}
+
+		err = t.Execute(&templateBuf, templateData)
+		if err != nil {
+			return nil, err
+		}
+
+		buf.Write(templateBuf.Bytes())
+	}
+
+	return buf.Bytes(), nil
+}
+
+type field struct {
+	DefaultTo   string
+	DefaultFrom string
+}
+
+type objectField struct {
+	Name string
+	field
+}
+
+func boolField() field {
+	return field{
+		DefaultTo:   "ValueBoolPointer",
+		DefaultFrom: "BoolPointerValue",
+	}
+}
+
+func int64Field() field {
+	return field{
+		DefaultTo:   "ValueInt64Pointer",
+		DefaultFrom: "Int64PointerValue",
+	}
+}
+
+func float64Field() field {
+	return field{
+		DefaultTo:   "ValueFloat64Pointer",
+		DefaultFrom: "Float64PointerValue",
+	}
+}
+
+func numberField() field {
+	return field{
+		DefaultTo:   "ValueBigFloat",
+		DefaultFrom: "NumberValue",
+	}
+}
+
+func stringField() field {
+	return field{
+		DefaultTo:   "ValueStringPointer",
+		DefaultFrom: "StringPointerValue",
+	}
+}
+
+func boolObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: boolField(),
+	}
+}
+
+func int64ObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: int64Field(),
+	}
+}
+
+func float64ObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: float64Field(),
+	}
+}
+
+func numberObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: numberField(),
+	}
+}
+
+func stringObjectField(name string) objectField {
+	return objectField{
+		Name:  name,
+		field: stringField(),
+	}
+}
+
 func elementTypeString(elementType specschema.ElementType) (string, error) {
 	switch {
 	case elementType.Bool != nil:

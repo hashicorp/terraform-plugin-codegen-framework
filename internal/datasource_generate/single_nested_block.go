@@ -19,12 +19,17 @@ import (
 type GeneratorSingleNestedBlock struct {
 	schema.SingleNestedBlock
 
+	AssociatedExternalType *generatorschema.AssocExtType
+	Attributes             generatorschema.GeneratorAttributes
+	Blocks                 generatorschema.GeneratorBlocks
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
-	Attributes generatorschema.GeneratorAttributes
-	Blocks     generatorschema.GeneratorBlocks
 	CustomType *specschema.CustomType
 	Validators []specschema.ObjectValidator
+}
+
+func (g GeneratorSingleNestedBlock) AssocExtType() *generatorschema.AssocExtType {
+	return g.AssociatedExternalType
 }
 
 func (g GeneratorSingleNestedBlock) AttrType() attr.Type {
@@ -51,6 +56,11 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 	for _, v := range g.Blocks {
 		imports.Append(v.Imports())
 	}
+
+	// TODO: This should only be added if model object helper functions are being generated.
+	imports.Append(generatorschema.AttrImports())
+
+	imports.Append(g.AssociatedExternalType.Imports())
 
 	return imports
 }

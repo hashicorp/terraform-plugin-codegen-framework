@@ -1,0 +1,48 @@
+
+func To{{.Name}}(ctx context.Context, tfObject types.Object) ({{.Type}}, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if tfObject.IsNull() {
+return nil, diags
+}
+
+if tfObject.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"Object Value Is Unknown",
+`Model field "{{.Name}}" is unknown.`,
+))
+
+return nil, diags
+}
+
+var tfModel {{.Name}}Model
+
+diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+apiObject := &{{.TypeReference}}{
+{{- range $field := .Fields }}
+{{$field.Name}}: tfModel.{{$field.Name}}.{{$field.DefaultTo}}(),
+{{- end}}
+}
+
+return apiObject, diags
+}
+
+func From{{.Name}}(ctx context.Context, apiObject {{.Type}}) (types.Object, diag.Diagnostics) {
+var diags diag.Diagnostics
+var tfModel {{.Name}}Model
+
+if apiObject == nil {
+return tfModel.ObjectNull(ctx), diags
+}
+
+{{range $field := .Fields }}
+tfModel.{{$field.Name}} = types.{{$field.DefaultFrom}}(apiObject.{{$field.Name}})
+{{- end}}
+
+return tfModel.ObjectValueFrom(ctx, tfModel)
+}

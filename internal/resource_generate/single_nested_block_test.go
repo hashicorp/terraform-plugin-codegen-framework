@@ -27,13 +27,20 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				{
 					Path: generatorschema.TypesImport,
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"custom-type-without-import": {
 			input: GeneratorSingleNestedBlock{
 				CustomType: &specschema.CustomType{},
 			},
-			expected: []code.Import{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorSingleNestedBlock{
@@ -43,7 +50,11 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 					},
 				},
 			},
-			expected: []code.Import{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
 		},
 		"custom-type-with-import": {
 			input: GeneratorSingleNestedBlock{
@@ -56,6 +67,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -72,6 +86,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -93,6 +110,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 				{
 					Path: "github.com/my_account/my_project/nested_list",
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -126,6 +146,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				},
 				{
 					Path: "github.com/my_account/my_project/bool",
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -170,6 +193,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				{
 					Path: "github.com/my_account/my_project/nested_object",
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"nested-object-with-custom-type-with-attribute-with-custom-type": {
@@ -206,6 +232,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				{
 					Path: "github.com/my_account/my_project/bool",
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"nested-block-with-custom-type": {
@@ -227,6 +256,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				{
 					Path: "github.com/my_account/my_project/nested_block",
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"validator-custom-nil": {
@@ -240,6 +272,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				{
 					Path: generatorschema.TypesImport,
 				},
+				{
+					Path: generatorschema.AttrImport,
+				},
 			},
 		},
 		"validator-custom-import-nil": {
@@ -252,6 +287,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -271,6 +309,9 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
@@ -309,89 +350,8 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 				{
 					Path: "github.com/myproject/myvalidators/validator",
 				},
-			},
-		},
-		"plan-modifier-custom-nil": {
-			input: GeneratorSingleNestedBlock{
-				PlanModifiers: []specschema.ObjectPlanModifier{
-					{
-						Custom: nil,
-					},
-				}},
-			expected: []code.Import{
 				{
-					Path: generatorschema.TypesImport,
-				},
-			},
-		},
-		"plan-modifier-custom-import-nil": {
-			input: GeneratorSingleNestedBlock{
-				PlanModifiers: []specschema.ObjectPlanModifier{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{},
-						},
-					},
-				}},
-			expected: []code.Import{
-				{
-					Path: generatorschema.TypesImport,
-				},
-			},
-		},
-		"plan-modifiers-custom-import-empty-string": {
-			input: GeneratorSingleNestedBlock{
-				PlanModifiers: []specschema.ObjectPlanModifier{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "",
-								},
-							},
-						},
-					},
-				}},
-			expected: []code.Import{
-				{
-					Path: generatorschema.TypesImport,
-				},
-			},
-		},
-		"plan-modifier-custom-import": {
-			input: GeneratorSingleNestedBlock{
-				PlanModifiers: []specschema.ObjectPlanModifier{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
-								},
-							},
-						},
-					},
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "github.com/myproject/myplanmodifiers/planmodifier",
-								},
-							},
-						},
-					},
-				}},
-			expected: []code.Import{
-				{
-					Path: generatorschema.TypesImport,
-				},
-				{
-					Path: generatorschema.PlanModifierImport,
-				},
-				{
-					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
-				},
-				{
-					Path: "github.com/myproject/myplanmodifiers/planmodifier",
+					Path: generatorschema.AttrImport,
 				},
 			},
 		},
