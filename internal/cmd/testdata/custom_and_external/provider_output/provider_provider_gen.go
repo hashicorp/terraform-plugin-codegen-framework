@@ -37,6 +37,11 @@ var providerProviderSchema = schema.Schema{
 						Optional: true,
 					},
 				},
+				CustomType: ListNestedAttributeAssocExtTypeType{
+					ObjectType: types.ObjectType{
+						AttrTypes: ListNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+					},
+				},
 			},
 			Optional: true,
 		},
