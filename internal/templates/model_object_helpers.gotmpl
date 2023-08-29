@@ -236,7 +236,7 @@ var val tftypes.Value
 var err error
 
 {{range $key, $value := .AttrTypes }}
-attrTypes["{{$key}}"] = {{$value.AttrType}}{}.TerraformType(ctx)
+attrTypes["{{$key}}"] = {{$value.AttrType}}.TerraformType(ctx)
 {{- end}}
 
 objectType := tftypes.Object{AttributeTypes: attrTypes}
@@ -286,7 +286,7 @@ func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValu
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
 {{- range $key, $value := .AttrTypes }}
-"{{$key}}": {{$value.AttrType}}{},
+"{{$key}}": {{$value.AttrType}},
 {{- end}}
 },
 map[string]attr.Value{
@@ -314,9 +314,15 @@ return true
 }
 
 {{range $key, $value := .AttrTypes }}
+{{- if eq $value.AttrValue "baseTypes.BoolValue" "baseTypes.Float64Value" "baseTypes.Int64Value" "baseTypes.NumberValue" "baseTypes.StringValue"}}
 if v.{{$value.AttributeName}} != other.{{$value.AttributeName}} {
 return false
 }
+{{- else}}
+if !v.{{$value.AttributeName}}.Equal(other.{{$value.AttributeName}}) {
+return false
+}
+{{- end}}
 {{end}}
 
 return true
@@ -333,7 +339,7 @@ AttrTypes: v.AttributeTypes(ctx),
 func (v {{.Name}}Value) AttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 {{- range $key, $value := .AttrTypes }}
-"{{$key}}": {{$value.AttrType}}{},
+"{{$key}}": {{$value.AttrType}},
 {{- end}}
 }
 }

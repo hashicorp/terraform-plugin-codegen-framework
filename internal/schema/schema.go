@@ -319,21 +319,21 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 	for _, k := range attributeKeys {
 		if g.Attributes[k].AttrType() == types.BoolType {
 			attrTypeStrings[k] = aType{
-				AttrType:  "basetypes.BoolType",
+				AttrType:  "basetypes.BoolType{}",
 				AttrValue: "basetypes.BoolValue",
 			}
 		}
 
 		if g.Attributes[k].AttrType() == types.Float64Type {
 			attrTypeStrings[k] = aType{
-				AttrType:  "basetypes.Float64Type",
+				AttrType:  "basetypes.Float64Type{}",
 				AttrValue: "basetypes.Float64Value",
 			}
 		}
 
 		if g.Attributes[k].AttrType() == types.Int64Type {
 			attrTypeStrings[k] = aType{
-				AttrType:  "basetypes.Int64Type",
+				AttrType:  "basetypes.Int64Type{}",
 				AttrValue: "basetypes.Int64Value",
 			}
 		}
@@ -356,7 +356,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 				}
 			} else {
 				attrTypeStrings[k] = aType{
-					AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+					AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 					AttrValue: "basetypes.ListValue",
 				}
 			}
@@ -380,7 +380,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 				}
 			} else {
 				attrTypeStrings[k] = aType{
-					AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+					AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 					AttrValue: "basetypes.MapValue",
 				}
 			}
@@ -388,7 +388,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 
 		if g.Attributes[k].AttrType() == types.NumberType {
 			attrTypeStrings[k] = aType{
-				AttrType:  "basetypes.NumberType",
+				AttrType:  "basetypes.NumberType{}",
 				AttrValue: "basetypes.NumberValue",
 			}
 		}
@@ -411,7 +411,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 				}
 			} else {
 				attrTypeStrings[k] = aType{
-					AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sModel{}.ObjectAttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+					AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 					AttrValue: "basetypes.ObjectValue",
 				}
 			}
@@ -435,7 +435,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 				}
 			} else {
 				attrTypeStrings[k] = aType{
-					AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+					AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 					AttrValue: "basetypes.SetValue",
 				}
 			}
@@ -443,7 +443,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 
 		if g.Attributes[k].AttrType() == types.StringType {
 			attrTypeStrings[k] = aType{
-				AttrType:  "basetypes.StringType",
+				AttrType:  "basetypes.StringType{}",
 				AttrValue: "basetypes.StringValue",
 			}
 		}
@@ -472,21 +472,21 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 	for _, k := range blockKeys {
 		if _, ok := g.Blocks[k].AttrType().(basetypes.ListType); ok {
 			attrTypeStrings[k] = aType{
-				AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+				AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.ListValue",
 			}
 		}
 
 		if _, ok := g.Blocks[k].AttrType().(basetypes.SetType); ok {
 			attrTypeStrings[k] = aType{
-				AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sModel{}.ObjectType(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+				AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.SetValue",
 			}
 		}
 
 		if _, ok := g.Blocks[k].AttrType().(basetypes.ObjectType); ok {
 			attrTypeStrings[k] = aType{
-				AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sModel{}.ObjectAttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+				AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.ObjectValue",
 			}
 		}
