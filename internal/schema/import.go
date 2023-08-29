@@ -13,7 +13,10 @@ const (
 	BaseTypesImport    = "github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	ContextImport      = "context"
 	DiagImport         = "github.com/hashicorp/terraform-plugin-framework/diag"
+	FmtImport          = "fmt"
 	PlanModifierImport = "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	StringsImport      = "strings"
+	TfTypesImport      = "github.com/hashicorp/terraform-plugin-go/tftypes"
 	TypesImport        = "github.com/hashicorp/terraform-plugin-framework/types"
 	ValidatorImport    = "github.com/hashicorp/terraform-plugin-framework/schema/validator"
 )

@@ -1,26 +1,339 @@
 
-func (m {{.Name}}Model) ObjectType(ctx context.Context) types.ObjectType {
-return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
+var _ basetypes.ObjectTypable = {{.Name}}Type{}
+
+type {{.Name}}Type struct {
+basetypes.ObjectType
 }
 
-func (m {{.Name}}Model) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
+func (t {{.Name}}Type) Equal(o attr.Type) bool {
+other, ok := o.({{.Name}}Type)
+
+if !ok {
+return false
+}
+
+return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t {{.Name}}Type) String() string {
+return "{{.Name}}Type"
+}
+
+func (t {{.Name}}Type) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+state := attr.ValueStateKnown
+
+attributes := in.Attributes()
+
+{{range $key, $value := .AttrTypes }}
+{{$value.VarName}}, ok := attributes["{{$key}}"]
+
+if !ok {
+diags.AddError(
+"Attribute Missing",
+`{{$key}} is missing from object`)
+
+return nil, diags
+}
+
+{{$value.VarName}}Val, ok := {{$value.VarName}}.({{$value.AttrValue}})
+
+if !ok {
+diags.AddError(
+"Attribute Wrong Type",
+fmt.Sprintf(`{{$key}} expected to be {{$value.AttrValue}}, was: %T`, {{$value.VarName}}))
+}
+
+if {{$value.VarName}}Val.IsUnknown() {
+state = attr.ValueStateUnknown
+}
+{{end}}
+
+return {{.Name}}Value{
+{{- range $key, $value := .AttrTypes }}
+{{$value.AttributeName}}: {{$value.VarName}}Val,
+{{- end}}
+state: state,
+}, diags
+}
+
+func New{{.Name}}ValueNull() {{.Name}}Value {
+return {{.Name}}Value{
+state: attr.ValueStateNull,
+}
+}
+
+func New{{.Name}}ValueUnknown() {{.Name}}Value {
+return {{.Name}}Value{
+state: attr.ValueStateUnknown,
+}
+}
+
+func New{{.Name}}Value(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) ({{.Name}}Value, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+ctx := context.Background()
+
+for name, attributeType := range attributeTypes {
+attribute, ok := attributes[name]
+
+if !ok {
+diags.AddError(
+"Missing {{.Name}}Value Attribute Value",
+"While creating a {{.Name}}Value value, a missing attribute value was detected. "+
+"A {{.Name}}Value must contain values for all attributes, even if null or unknown. "+
+"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+fmt.Sprintf("{{.Name}}Value Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+)
+
+continue
+}
+
+if !attributeType.Equal(attribute.Type(ctx)) {
+diags.AddError(
+"Invalid {{.Name}}Value Attribute Type",
+"While creating a {{.Name}}Value value, an invalid attribute value was detected. "+
+"A {{.Name}}Value must use a matching attribute type for the value. "+
+"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+fmt.Sprintf("{{.Name}}Value Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+fmt.Sprintf("{{.Name}}Value Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+)
+}
+}
+
+for name := range attributes {
+_, ok := attributeTypes[name]
+
+if !ok {
+diags.AddError(
+"Extra {{.Name}}Value Attribute Value",
+"While creating a {{.Name}}Value value, an extra attribute value was detected. "+
+"A {{.Name}}Value must not contain values beyond the expected attribute types. "+
+"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+fmt.Sprintf("Extra {{.Name}}Value Attribute Name: %s", name),
+)
+}
+}
+
+if diags.HasError() {
+return New{{.Name}}ValueUnknown(), diags
+}
+
+state := attr.ValueStateKnown
+
+{{range $key, $value := .AttrTypes }}
+{{$value.VarName}}, ok := attributes["{{$key}}"]
+
+if !ok {
+diags.AddError(
+"Attribute Missing",
+`{{$key}} is missing from object`)
+
+return New{{$.Name}}ValueNull(), diags
+}
+
+{{$value.VarName}}Val, ok := {{$value.VarName}}.({{$value.AttrValue}})
+
+if !ok {
+diags.AddError(
+"Attribute Wrong Type",
+fmt.Sprintf(`{{$key}} expected to be {{$value.AttrValue}}, was: %T`, {{$value.VarName}}))
+}
+
+if {{$value.VarName}}Val.IsUnknown() {
+state = attr.ValueStateUnknown
+}
+{{end}}
+
+return {{.Name}}Value{
+{{- range $key, $value := .AttrTypes }}
+{{$value.AttributeName}}: {{$value.VarName}}Val,
+{{- end}}
+state: state,
+}, diags
+}
+
+func New{{.Name}}ValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) {{.Name}}Value {
+object, diags := New{{.Name}}Value(attributeTypes, attributes)
+
+if diags.HasError() {
+// This could potentially be added to the diag package.
+diagsStrings := make([]string, 0, len(diags))
+
+for _, diagnostic := range diags {
+diagsStrings = append(diagsStrings, fmt.Sprintf(
+"%s | %s | %s",
+diagnostic.Severity(),
+diagnostic.Summary(),
+diagnostic.Detail()))
+}
+
+panic("New{{.Name}}ValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+}
+
+return object
+}
+
+func (t {{.Name}}Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+if in.Type() == nil {
+return New{{.Name}}ValueNull(), nil
+}
+
+if !in.Type().Equal(t.TerraformType(ctx)) {
+return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+}
+
+if !in.IsKnown() {
+return New{{.Name}}ValueUnknown(), nil
+}
+
+if in.IsNull() {
+return New{{.Name}}ValueNull(), nil
+}
+
+attributes := map[string]attr.Value{}
+
+val := map[string]tftypes.Value{}
+
+err := in.As(&val)
+
+if err != nil {
+return nil, err
+}
+
+for k, v := range val {
+a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+if err != nil {
+return nil, err
+}
+
+attributes[k] = a
+}
+
+return New{{.Name}}ValueMust(t.AttrTypes, attributes), nil
+}
+
+func (t {{.Name}}Type) ValueType(ctx context.Context) attr.Value {
+return {{.Name}}Value{}
+}
+
+var _ basetypes.ObjectValuable = {{.Name}}Value{}
+
+type {{.Name}}Value struct {
+{{- range $key, $value := .AttrTypes }}
+{{$value.AttributeName}} {{$value.AttrValue}} `tfsdk:"{{$key}}"`
+{{- end}}
+state attr.ValueState
+}
+
+func (v {{.Name}}Value) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+attrTypes := make(map[string]tftypes.Type, {{len .AttrTypes}})
+
+var val tftypes.Value
+var err error
+
+{{range $key, $value := .AttrTypes }}
+attrTypes["{{$key}}"] = {{$value.AttrType}}{}.TerraformType(ctx)
+{{- end}}
+
+objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+switch v.state {
+case attr.ValueStateKnown:
+vals := make(map[string]tftypes.Value, 1)
+
+{{range $key, $value := .AttrTypes }}
+val, err = v.{{$value.AttributeName}}.ToTerraformValue(ctx)
+
+if err != nil {
+return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+}
+
+vals["{{$key}}"] = val
+
+{{end}}
+
+if err := tftypes.ValidateValue(objectType, vals); err != nil {
+return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+}
+
+return tftypes.NewValue(objectType, vals), nil
+case attr.ValueStateNull:
+return tftypes.NewValue(objectType, nil), nil
+case attr.ValueStateUnknown:
+return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+default:
+panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+}
+}
+
+func (v {{.Name}}Value) IsNull() bool {
+return v.state == attr.ValueStateNull
+}
+
+func (v {{.Name}}Value) IsUnknown() bool {
+return v.state == attr.ValueStateUnknown
+}
+
+func (v {{.Name}}Value) String() string {
+return "{{.Name}}Value"
+}
+
+func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+{{- range $key, $value := .AttrTypes }}
+"{{$key}}": {{$value.AttrType}}{},
+{{- end}}
+},
+map[string]attr.Value{
+{{- range $key, $value := .AttrTypes }}
+"{{$key}}": v.{{$value.AttributeName}},
+{{- end}}
+})
+
+return objVal, diags
+}
+
+func (v {{.Name}}Value) Equal(o attr.Value) bool {
+other, ok := o.({{.Name}}Value)
+
+if !ok {
+return false
+}
+
+if v.state != other.state {
+return false
+}
+
+if v.state != attr.ValueStateKnown {
+return true
+}
+
+{{range $key, $value := .AttrTypes }}
+if v.{{$value.AttributeName}} != other.{{$value.AttributeName}} {
+return false
+}
+{{end}}
+
+return true
+}
+
+func (v {{.Name}}Value) Type(ctx context.Context) attr.Type {
+return {{.Name}}Type{
+basetypes.ObjectType{
+AttrTypes: v.AttributeTypes(ctx),
+},
+}
+}
+
+func (v {{.Name}}Value) AttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
 {{- range $key, $value := .AttrTypes }}
-"{{$key}}": {{$value}},
+"{{$key}}": {{$value.AttrType}}{},
 {{- end}}
 }
-}
-
-func (m {{.Name}}Model) ObjectNull(ctx context.Context) types.Object {
-return types.ObjectNull(
-m.ObjectAttributeTypes(ctx),
-)
-}
-
-func (m {{.Name}}Model) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
-return types.ObjectValueFrom(
-ctx,
-m.ObjectAttributeTypes(ctx),
-data,
-)
 }
