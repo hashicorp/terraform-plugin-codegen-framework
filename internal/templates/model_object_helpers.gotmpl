@@ -283,6 +283,38 @@ return "{{.Name}}Value"
 }
 
 func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+{{- range $key, $value := .AttrTypes }}
+{{- if eq $value.AttributeType "ListNestedAttribute"}}
+{{$value.VarName}} := types.ListValueMust(
+{{$value.AttributeName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.AttributeName}}Value{}.AttributeTypes(ctx),
+},
+},
+v.{{$value.AttributeName}}.Elements(),
+)
+
+if v.{{$value.AttributeName}}.IsNull() {
+{{$value.VarName}} = types.ListNull(
+{{$value.AttributeName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.AttributeName}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+if v.{{$value.AttributeName}}.IsUnknown() {
+{{$value.VarName}} = types.ListUnknown(
+{{$value.AttributeName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.AttributeName}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+{{end}}
+{{- end}}
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
 {{- range $key, $value := .AttrTypes }}
@@ -291,7 +323,11 @@ map[string]attr.Type{
 },
 map[string]attr.Value{
 {{- range $key, $value := .AttrTypes }}
+{{- if eq $value.AttributeType "ListNestedAttribute"}}
+"{{$key}}": {{$value.VarName}},
+{{- else}}
 "{{$key}}": v.{{$value.AttributeName}},
+{{- end}}
 {{- end}}
 })
 

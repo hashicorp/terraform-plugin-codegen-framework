@@ -301,6 +301,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 		AttrType      string
 		AttrValue     string
 		AttributeName string
+		AttributeType string
 		VarName       string
 	}
 
@@ -356,8 +357,9 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 				}
 			} else {
 				attrTypeStrings[k] = aType{
-					AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-					AttrValue: "basetypes.ListValue",
+					AttrType:      fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+					AttrValue:     "basetypes.ListValue",
+					AttributeType: "ListNestedAttribute",
 				}
 			}
 		}
@@ -451,7 +453,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 		a := attrTypeStrings[k]
 
 		camelCaseName := model.SnakeCaseToCamelCase(k)
-		lcFirstName := strings.ToLower(camelCaseName[:1] + camelCaseName[1:])
+		lcFirstName := strings.ToLower(camelCaseName[:1]) + camelCaseName[1:]
 
 		a.AttributeName = camelCaseName
 		a.VarName = lcFirstName
