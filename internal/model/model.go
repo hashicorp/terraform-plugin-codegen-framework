@@ -53,9 +53,19 @@ func (m Model) String() string {
 func SnakeCaseToCamelCase(input string) string {
 	inputSplit := strings.Split(input, "_")
 
+	return toCamelCase(inputSplit)
+}
+
+func DotNotationToCamelCase(input string) string {
+	inputSplit := strings.Split(input, ".")
+
+	return toCamelCase(inputSplit)
+}
+
+func toCamelCase(input []string) string {
 	var ucName string
 
-	for _, v := range inputSplit {
+	for _, v := range input {
 		if len(v) < 1 {
 			continue
 		}

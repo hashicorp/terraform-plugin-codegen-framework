@@ -24,3 +24,6 @@ var SetNestedObjectToFromTemplate string
 
 //go:embed single_nested_object_to_from.gotmpl
 var SingleNestedObjectToFromTemplate string
+
+//go:embed to_from.gotmpl
+var ToFromTemplate string

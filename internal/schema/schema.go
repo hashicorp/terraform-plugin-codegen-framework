@@ -641,7 +641,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 
 		switch attributeAssocExtType.AttrType().(type) {
 		case basetypes.ListTypable:
-			t, err = template.New("list_nested_object_to_from").Parse(templates.ListNestedObjectToFromTemplate)
+			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
@@ -672,11 +672,13 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			Name          string
 			Type          string
 			TypeReference string
+			TypeName      string
 			Fields        []objectField
 		}{
 			Name:          model.SnakeCaseToCamelCase(k),
 			Type:          assocExtType.Type(),
 			TypeReference: assocExtType.TypeReference(),
+			TypeName:      model.DotNotationToCamelCase(assocExtType.TypeReference()),
 			Fields:        fields,
 		}
 
