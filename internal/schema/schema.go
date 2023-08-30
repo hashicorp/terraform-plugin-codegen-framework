@@ -137,7 +137,7 @@ func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([
 		PackageName   string
 		GeneratorType string
 	}{
-		Name:            name,
+		Name:            model.SnakeCaseToCamelCase(name),
 		GeneratorSchema: g,
 		PackageName:     packageName,
 		GeneratorType:   generatorType,

@@ -16,255 +16,353 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 )
 
-var datasourceDataSourceSchema = schema.Schema{
-	Attributes: map[string]schema.Attribute{
-		"bool_attribute": schema.BoolAttribute{
-			Computed: true,
-		},
-		"list_list_attribute": schema.ListAttribute{
-			ElementType: types.ListType{
-				ElemType: types.StringType,
+func DatasourceDataSourceSchema(ctx context.Context) schema.Schema {
+	return schema.Schema{
+		Attributes: map[string]schema.Attribute{
+			"bool_attribute": schema.BoolAttribute{
+				Computed: true,
 			},
-			Computed: true,
-		},
-		"list_map_attribute": schema.ListAttribute{
-			ElementType: types.MapType{
-				ElemType: types.StringType,
-			},
-			Computed: true,
-		},
-		"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Computed: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-						Computed: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-						Computed: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-						Computed: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-						Computed: true,
-					},
-				},
-			},
-			Optional: true,
-		},
-		"list_nested_attribute_one": schema.ListNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Computed: true,
-					},
-				},
-			},
-			Computed: true,
-		},
-		"list_nested_attribute_three": schema.ListNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"list_nested_attribute_three_list_nested_attribute_one": schema.ListNestedAttribute{
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"list_attribute": schema.ListAttribute{
-									ElementType: types.StringType,
-									Computed:    true,
-								},
-							},
-						},
-						Computed: true,
-					},
-				},
-			},
-			Computed: true,
-		},
-		"list_nested_attribute_two": schema.ListNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"list_nested_attribute_two_list_nested_attribute_one": schema.ListNestedAttribute{
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"bool_attribute": schema.BoolAttribute{
-									Computed: true,
-								},
-							},
-						},
-						Computed: true,
-					},
-				},
-			},
-			Computed: true,
-		},
-		"list_object_attribute": schema.ListAttribute{
-			ElementType: types.ObjectType{
-				AttrTypes: map[string]attr.Type{
-					"obj_string_attr": types.StringType,
-				},
-			},
-			Computed: true,
-		},
-		"list_object_object_attribute": schema.ListAttribute{
-			ElementType: types.ObjectType{
-				AttrTypes: map[string]attr.Type{
-					"obj_obj_attr": types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"obj_obj_string_attr": types.StringType,
-						},
-					},
-				},
-			},
-			Computed: true,
-		},
-		"map_nested_attribute_assoc_ext_type": schema.MapNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Computed: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-						Computed: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-						Computed: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-						Computed: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-						Computed: true,
-					},
-				},
-			},
-			Optional: true,
-		},
-		"object_attribute": schema.ObjectAttribute{
-			AttributeTypes: map[string]attr.Type{
-				"obj_string_attr": types.StringType,
-			},
-			Computed: true,
-		},
-		"object_list_attribute": schema.ObjectAttribute{
-			AttributeTypes: map[string]attr.Type{
-				"obj_list_attr": types.ListType{
+			"list_list_attribute": schema.ListAttribute{
+				ElementType: types.ListType{
 					ElemType: types.StringType,
 				},
+				Computed: true,
 			},
-			Computed: true,
-		},
-		"object_list_object_attribute": schema.ObjectAttribute{
-			AttributeTypes: map[string]attr.Type{
-				"obj_list_attr": types.ListType{
-					ElemType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"obj_list_obj_attr": types.StringType,
-						},
-					},
+			"list_map_attribute": schema.ListAttribute{
+				ElementType: types.MapType{
+					ElemType: types.StringType,
 				},
+				Computed: true,
 			},
-			Computed: true,
-		},
-		"set_nested_attribute_assoc_ext_type": schema.SetNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Computed: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-						Computed: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-						Computed: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-						Computed: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-						Computed: true,
-					},
-				},
-			},
-			Optional: true,
-		},
-		"single_nested_attribute_assoc_ext_type": schema.SingleNestedAttribute{
-			Attributes: map[string]schema.Attribute{
-				"bool_attribute": schema.BoolAttribute{
-					Computed: true,
-				},
-				"float64_attribute": schema.Float64Attribute{
-					Optional: true,
-					Computed: true,
-				},
-				"int64_attribute": schema.Int64Attribute{
-					Optional: true,
-					Computed: true,
-				},
-				"number_attribute": schema.NumberAttribute{
-					Optional: true,
-					Computed: true,
-				},
-				"string_attribute": schema.StringAttribute{
-					Optional: true,
-					Computed: true,
-				},
-			},
-			Optional: true,
-		},
-		"single_nested_attribute_one": schema.SingleNestedAttribute{
-			Attributes: map[string]schema.Attribute{
-				"bool_attribute": schema.BoolAttribute{
-					Computed: true,
-				},
-			},
-			Computed: true,
-		},
-		"single_nested_attribute_three": schema.SingleNestedAttribute{
-			Attributes: map[string]schema.Attribute{
-				"single_nested_attribute_three_single_nested_attribute_one": schema.SingleNestedAttribute{
+			"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"list_attribute": schema.ListAttribute{
-							ElementType: types.StringType,
-							Computed:    true,
+						"bool_attribute": schema.BoolAttribute{
+							Computed: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+							Computed: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+							Computed: true,
 						},
 					},
-					Computed: true,
 				},
+				Optional: true,
 			},
-			Computed: true,
-		},
-		"single_nested_attribute_two": schema.SingleNestedAttribute{
-			Attributes: map[string]schema.Attribute{
-				"single_nested_attribute_two_single_nested_attribute_one": schema.SingleNestedAttribute{
+			"list_nested_attribute_one": schema.ListNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"bool_attribute": schema.BoolAttribute{
 							Computed: true,
 						},
 					},
-					Computed: true,
+				},
+				Computed: true,
+			},
+			"list_nested_attribute_three": schema.ListNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"list_nested_attribute_three_list_nested_attribute_one": schema.ListNestedAttribute{
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"list_attribute": schema.ListAttribute{
+										ElementType: types.StringType,
+										Computed:    true,
+									},
+								},
+							},
+							Computed: true,
+						},
+					},
+				},
+				Computed: true,
+			},
+			"list_nested_attribute_two": schema.ListNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"list_nested_attribute_two_list_nested_attribute_one": schema.ListNestedAttribute{
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"bool_attribute": schema.BoolAttribute{
+										Computed: true,
+									},
+								},
+							},
+							Computed: true,
+						},
+					},
+				},
+				Computed: true,
+			},
+			"list_object_attribute": schema.ListAttribute{
+				ElementType: types.ObjectType{
+					AttrTypes: map[string]attr.Type{
+						"obj_string_attr": types.StringType,
+					},
+				},
+				Computed: true,
+			},
+			"list_object_object_attribute": schema.ListAttribute{
+				ElementType: types.ObjectType{
+					AttrTypes: map[string]attr.Type{
+						"obj_obj_attr": types.ObjectType{
+							AttrTypes: map[string]attr.Type{
+								"obj_obj_string_attr": types.StringType,
+							},
+						},
+					},
+				},
+				Computed: true,
+			},
+			"map_nested_attribute_assoc_ext_type": schema.MapNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Computed: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+							Computed: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+							Computed: true,
+						},
+					},
+				},
+				Optional: true,
+			},
+			"object_attribute": schema.ObjectAttribute{
+				AttributeTypes: map[string]attr.Type{
+					"obj_string_attr": types.StringType,
+				},
+				Computed: true,
+			},
+			"object_list_attribute": schema.ObjectAttribute{
+				AttributeTypes: map[string]attr.Type{
+					"obj_list_attr": types.ListType{
+						ElemType: types.StringType,
+					},
+				},
+				Computed: true,
+			},
+			"object_list_object_attribute": schema.ObjectAttribute{
+				AttributeTypes: map[string]attr.Type{
+					"obj_list_attr": types.ListType{
+						ElemType: types.ObjectType{
+							AttrTypes: map[string]attr.Type{
+								"obj_list_obj_attr": types.StringType,
+							},
+						},
+					},
+				},
+				Computed: true,
+			},
+			"set_nested_attribute_assoc_ext_type": schema.SetNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Computed: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+							Computed: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+							Computed: true,
+						},
+					},
+				},
+				Optional: true,
+			},
+			"single_nested_attribute_assoc_ext_type": schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Computed: true,
+					},
+					"float64_attribute": schema.Float64Attribute{
+						Optional: true,
+						Computed: true,
+					},
+					"int64_attribute": schema.Int64Attribute{
+						Optional: true,
+						Computed: true,
+					},
+					"number_attribute": schema.NumberAttribute{
+						Optional: true,
+						Computed: true,
+					},
+					"string_attribute": schema.StringAttribute{
+						Optional: true,
+						Computed: true,
+					},
+				},
+				Optional: true,
+			},
+			"single_nested_attribute_one": schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Computed: true,
+					},
+				},
+				Computed: true,
+			},
+			"single_nested_attribute_three": schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"single_nested_attribute_three_single_nested_attribute_one": schema.SingleNestedAttribute{
+						Attributes: map[string]schema.Attribute{
+							"list_attribute": schema.ListAttribute{
+								ElementType: types.StringType,
+								Computed:    true,
+							},
+						},
+						Computed: true,
+					},
+				},
+				Computed: true,
+			},
+			"single_nested_attribute_two": schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"single_nested_attribute_two_single_nested_attribute_one": schema.SingleNestedAttribute{
+						Attributes: map[string]schema.Attribute{
+							"bool_attribute": schema.BoolAttribute{
+								Computed: true,
+							},
+						},
+						Computed: true,
+					},
+				},
+				Computed: true,
+			},
+		},
+		Blocks: map[string]schema.Block{
+			"list_nested_block_assoc_ext_type": schema.ListNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Computed: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+							Computed: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+							Computed: true,
+						},
+					},
 				},
 			},
-			Computed: true,
-		},
-	},
-	Blocks: map[string]schema.Block{
-		"list_nested_block_assoc_ext_type": schema.ListNestedBlock{
-			NestedObject: schema.NestedBlockObject{
+			"list_nested_block_one": schema.ListNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Computed: true,
+						},
+					},
+				},
+			},
+			"list_nested_block_three": schema.ListNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Attributes: map[string]schema.Attribute{
+						"object_attribute": schema.ObjectAttribute{
+							AttributeTypes: map[string]attr.Type{
+								"string_attribute_type": types.StringType,
+							},
+							Computed: true,
+						},
+					},
+					Blocks: map[string]schema.Block{
+						"list_nested_block_three_list_nested_block_one": schema.ListNestedBlock{
+							NestedObject: schema.NestedBlockObject{
+								Attributes: map[string]schema.Attribute{
+									"list_attribute": schema.ListAttribute{
+										ElementType: types.StringType,
+										Computed:    true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"list_nested_block_two": schema.ListNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Blocks: map[string]schema.Block{
+						"list_nested_block_two_list_nested_block_one": schema.ListNestedBlock{
+							NestedObject: schema.NestedBlockObject{
+								Attributes: map[string]schema.Attribute{
+									"bool_attribute": schema.BoolAttribute{
+										Computed: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Computed: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+							Computed: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+							Computed: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+							Computed: true,
+						},
+					},
+				},
+			},
+			"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
 				Attributes: map[string]schema.Attribute{
 					"bool_attribute": schema.BoolAttribute{
 						Computed: true,
@@ -287,18 +385,14 @@ var datasourceDataSourceSchema = schema.Schema{
 					},
 				},
 			},
-		},
-		"list_nested_block_one": schema.ListNestedBlock{
-			NestedObject: schema.NestedBlockObject{
+			"single_nested_block_one": schema.SingleNestedBlock{
 				Attributes: map[string]schema.Attribute{
 					"bool_attribute": schema.BoolAttribute{
 						Computed: true,
 					},
 				},
 			},
-		},
-		"list_nested_block_three": schema.ListNestedBlock{
-			NestedObject: schema.NestedBlockObject{
+			"single_nested_block_three": schema.SingleNestedBlock{
 				Attributes: map[string]schema.Attribute{
 					"object_attribute": schema.ObjectAttribute{
 						AttributeTypes: map[string]attr.Type{
@@ -308,7 +402,7 @@ var datasourceDataSourceSchema = schema.Schema{
 					},
 				},
 				Blocks: map[string]schema.Block{
-					"list_nested_block_three_list_nested_block_one": schema.ListNestedBlock{
+					"single_nested_block_three_list_nested_block_one": schema.ListNestedBlock{
 						NestedObject: schema.NestedBlockObject{
 							Attributes: map[string]schema.Attribute{
 								"list_attribute": schema.ListAttribute{
@@ -320,111 +414,19 @@ var datasourceDataSourceSchema = schema.Schema{
 					},
 				},
 			},
-		},
-		"list_nested_block_two": schema.ListNestedBlock{
-			NestedObject: schema.NestedBlockObject{
+			"single_nested_block_two": schema.SingleNestedBlock{
 				Blocks: map[string]schema.Block{
-					"list_nested_block_two_list_nested_block_one": schema.ListNestedBlock{
-						NestedObject: schema.NestedBlockObject{
-							Attributes: map[string]schema.Attribute{
-								"bool_attribute": schema.BoolAttribute{
-									Computed: true,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
-			NestedObject: schema.NestedBlockObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Computed: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-						Computed: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-						Computed: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-						Computed: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-						Computed: true,
-					},
-				},
-			},
-		},
-		"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
-			Attributes: map[string]schema.Attribute{
-				"bool_attribute": schema.BoolAttribute{
-					Computed: true,
-				},
-				"float64_attribute": schema.Float64Attribute{
-					Optional: true,
-					Computed: true,
-				},
-				"int64_attribute": schema.Int64Attribute{
-					Optional: true,
-					Computed: true,
-				},
-				"number_attribute": schema.NumberAttribute{
-					Optional: true,
-					Computed: true,
-				},
-				"string_attribute": schema.StringAttribute{
-					Optional: true,
-					Computed: true,
-				},
-			},
-		},
-		"single_nested_block_one": schema.SingleNestedBlock{
-			Attributes: map[string]schema.Attribute{
-				"bool_attribute": schema.BoolAttribute{
-					Computed: true,
-				},
-			},
-		},
-		"single_nested_block_three": schema.SingleNestedBlock{
-			Attributes: map[string]schema.Attribute{
-				"object_attribute": schema.ObjectAttribute{
-					AttributeTypes: map[string]attr.Type{
-						"string_attribute_type": types.StringType,
-					},
-					Computed: true,
-				},
-			},
-			Blocks: map[string]schema.Block{
-				"single_nested_block_three_list_nested_block_one": schema.ListNestedBlock{
-					NestedObject: schema.NestedBlockObject{
+					"single_nested_block_two_single_nested_block_one": schema.SingleNestedBlock{
 						Attributes: map[string]schema.Attribute{
-							"list_attribute": schema.ListAttribute{
-								ElementType: types.StringType,
-								Computed:    true,
+							"bool_attribute": schema.BoolAttribute{
+								Computed: true,
 							},
 						},
 					},
 				},
 			},
 		},
-		"single_nested_block_two": schema.SingleNestedBlock{
-			Blocks: map[string]schema.Block{
-				"single_nested_block_two_single_nested_block_one": schema.SingleNestedBlock{
-					Attributes: map[string]schema.Attribute{
-						"bool_attribute": schema.BoolAttribute{
-							Computed: true,
-						},
-					},
-				},
-			},
-		},
-	},
+	}
 }
 
 type DatasourceModel struct {

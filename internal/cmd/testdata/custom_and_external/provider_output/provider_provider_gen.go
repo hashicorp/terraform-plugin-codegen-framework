@@ -16,10 +16,81 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 )
 
-var providerProviderSchema = schema.Schema{
-	Attributes: map[string]schema.Attribute{
-		"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
+func ProviderProviderSchema(ctx context.Context) schema.Schema {
+	return schema.Schema{
+		Attributes: map[string]schema.Attribute{
+			"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+					CustomType: ListNestedAttributeAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
+				},
+				Optional: true,
+			},
+			"map_nested_attribute_assoc_ext_type": schema.MapNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+				Optional: true,
+			},
+			"set_nested_attribute_assoc_ext_type": schema.SetNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+				Optional: true,
+			},
+			"single_nested_attribute_assoc_ext_type": schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{
 					"bool_attribute": schema.BoolAttribute{
 						Optional: true,
@@ -37,82 +108,53 @@ var providerProviderSchema = schema.Schema{
 						Optional: true,
 					},
 				},
-				CustomType: ListNestedAttributeAssocExtTypeType{
-					ObjectType: types.ObjectType{
-						AttrTypes: ListNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+				Optional: true,
+			},
+		},
+		Blocks: map[string]schema.Block{
+			"list_nested_block_assoc_ext_type": schema.ListNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
 					},
 				},
 			},
-			Optional: true,
-		},
-		"map_nested_attribute_assoc_ext_type": schema.MapNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Optional: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-					},
-				},
-			},
-			Optional: true,
-		},
-		"set_nested_attribute_assoc_ext_type": schema.SetNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Optional: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
+			"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
 					},
 				},
 			},
-			Optional: true,
-		},
-		"single_nested_attribute_assoc_ext_type": schema.SingleNestedAttribute{
-			Attributes: map[string]schema.Attribute{
-				"bool_attribute": schema.BoolAttribute{
-					Optional: true,
-				},
-				"float64_attribute": schema.Float64Attribute{
-					Optional: true,
-				},
-				"int64_attribute": schema.Int64Attribute{
-					Optional: true,
-				},
-				"number_attribute": schema.NumberAttribute{
-					Optional: true,
-				},
-				"string_attribute": schema.StringAttribute{
-					Optional: true,
-				},
-			},
-			Optional: true,
-		},
-	},
-	Blocks: map[string]schema.Block{
-		"list_nested_block_assoc_ext_type": schema.ListNestedBlock{
-			NestedObject: schema.NestedBlockObject{
+			"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
 				Attributes: map[string]schema.Attribute{
 					"bool_attribute": schema.BoolAttribute{
 						Optional: true,
@@ -132,47 +174,7 @@ var providerProviderSchema = schema.Schema{
 				},
 			},
 		},
-		"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
-			NestedObject: schema.NestedBlockObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Optional: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-					},
-				},
-			},
-		},
-		"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
-			Attributes: map[string]schema.Attribute{
-				"bool_attribute": schema.BoolAttribute{
-					Optional: true,
-				},
-				"float64_attribute": schema.Float64Attribute{
-					Optional: true,
-				},
-				"int64_attribute": schema.Int64Attribute{
-					Optional: true,
-				},
-				"number_attribute": schema.NumberAttribute{
-					Optional: true,
-				},
-				"string_attribute": schema.StringAttribute{
-					Optional: true,
-				},
-			},
-		},
-	},
+	}
 }
 
 type ProviderModel struct {
