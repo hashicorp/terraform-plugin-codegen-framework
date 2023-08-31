@@ -243,7 +243,7 @@ objectType := tftypes.Object{AttributeTypes: attrTypes}
 
 switch v.state {
 case attr.ValueStateKnown:
-vals := make(map[string]tftypes.Value, 1)
+vals := make(map[string]tftypes.Value, {{len .Fields}})
 
 {{range $key, $value := .Fields }}
 val, err = v.{{$value.FieldName}}.ToTerraformValue(ctx)

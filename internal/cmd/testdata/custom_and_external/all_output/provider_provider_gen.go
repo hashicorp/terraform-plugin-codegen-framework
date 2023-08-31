@@ -611,7 +611,7 @@ func (v ListNestedAttributeAssocExtTypeValue) ToTerraformValue(ctx context.Conte
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 1)
+		vals := make(map[string]tftypes.Value, 5)
 
 		val, err = v.BoolAttribute.ToTerraformValue(ctx)
 
@@ -1179,7 +1179,7 @@ func (v MapNestedAttributeAssocExtTypeValue) ToTerraformValue(ctx context.Contex
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 1)
+		vals := make(map[string]tftypes.Value, 5)
 
 		val, err = v.BoolAttribute.ToTerraformValue(ctx)
 
@@ -1747,7 +1747,7 @@ func (v SetNestedAttributeAssocExtTypeValue) ToTerraformValue(ctx context.Contex
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 1)
+		vals := make(map[string]tftypes.Value, 5)
 
 		val, err = v.BoolAttribute.ToTerraformValue(ctx)
 
@@ -2315,7 +2315,7 @@ func (v SingleNestedAttributeAssocExtTypeValue) ToTerraformValue(ctx context.Con
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 1)
+		vals := make(map[string]tftypes.Value, 5)
 
 		val, err = v.BoolAttribute.ToTerraformValue(ctx)
 
@@ -2883,7 +2883,7 @@ func (v ListNestedBlockAssocExtTypeValue) ToTerraformValue(ctx context.Context) 
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 1)
+		vals := make(map[string]tftypes.Value, 5)
 
 		val, err = v.BoolAttribute.ToTerraformValue(ctx)
 
@@ -3451,7 +3451,7 @@ func (v SetNestedBlockAssocExtTypeValue) ToTerraformValue(ctx context.Context) (
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 1)
+		vals := make(map[string]tftypes.Value, 5)
 
 		val, err = v.BoolAttribute.ToTerraformValue(ctx)
 
@@ -4019,7 +4019,7 @@ func (v SingleNestedBlockAssocExtTypeValue) ToTerraformValue(ctx context.Context
 
 	switch v.state {
 	case attr.ValueStateKnown:
-		vals := make(map[string]tftypes.Value, 1)
+		vals := make(map[string]tftypes.Value, 5)
 
 		val, err = v.BoolAttribute.ToTerraformValue(ctx)
 
