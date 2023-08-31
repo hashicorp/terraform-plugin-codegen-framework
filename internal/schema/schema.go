@@ -297,15 +297,15 @@ func (g GeneratorSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 // If any of the attributes or blocks are nested attributes or nested blocks, respectively, then
 // ModelObjectHelpersTemplate is called recursively.
 func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error) {
-	type aType struct {
-		AttrType      string
-		AttrValue     string
-		AttributeName string
-		AttributeType string
-		VarName       string
+	type field struct {
+		AttrType         string
+		AttrValue        string
+		FieldName        string
+		FieldType        string
+		FieldNameLCFirst string
 	}
 
-	attrTypeStrings := make(map[string]aType)
+	fields := make(map[string]field)
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
 	var attributeKeys = make([]string, 0, len(g.Attributes))
@@ -316,24 +316,24 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 
 	sort.Strings(attributeKeys)
 
-	// Populate attrTypeStrings map for use in template.
+	// Populate fields map for use in template.
 	for _, k := range attributeKeys {
 		if g.Attributes[k].AttrType() == types.BoolType {
-			attrTypeStrings[k] = aType{
+			fields[k] = field{
 				AttrType:  "basetypes.BoolType{}",
 				AttrValue: "basetypes.BoolValue",
 			}
 		}
 
 		if g.Attributes[k].AttrType() == types.Float64Type {
-			attrTypeStrings[k] = aType{
+			fields[k] = field{
 				AttrType:  "basetypes.Float64Type{}",
 				AttrValue: "basetypes.Float64Value",
 			}
 		}
 
 		if g.Attributes[k].AttrType() == types.Int64Type {
-			attrTypeStrings[k] = aType{
+			fields[k] = field{
 				AttrType:  "basetypes.Int64Type{}",
 				AttrValue: "basetypes.Int64Value",
 			}
@@ -348,7 +348,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 					if err != nil {
 						return nil, err
 					}
-					attrTypeStrings[k] = aType{
+					fields[k] = field{
 						AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %s,\n}", elemType),
 						AttrValue: "basetypes.ListValue",
 					}
@@ -356,10 +356,10 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 					return nil, fmt.Errorf("%s.%s attribute is a ListType but does not implement Elements interface", name, k)
 				}
 			} else {
-				attrTypeStrings[k] = aType{
-					AttrType:      fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-					AttrValue:     "basetypes.ListValue",
-					AttributeType: "ListNestedAttribute",
+				fields[k] = field{
+					AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+					AttrValue: "basetypes.ListValue",
+					FieldType: "ListNestedAttribute",
 				}
 			}
 		}
@@ -373,7 +373,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 					if err != nil {
 						return nil, err
 					}
-					attrTypeStrings[k] = aType{
+					fields[k] = field{
 						AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %s,\n}", elemType),
 						AttrValue: "basetypes.MapValue",
 					}
@@ -381,7 +381,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 					return nil, fmt.Errorf("%s.%s attribute is a MapType but does not implement Elements interface", name, k)
 				}
 			} else {
-				attrTypeStrings[k] = aType{
+				fields[k] = field{
 					AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 					AttrValue: "basetypes.MapValue",
 				}
@@ -389,7 +389,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 		}
 
 		if g.Attributes[k].AttrType() == types.NumberType {
-			attrTypeStrings[k] = aType{
+			fields[k] = field{
 				AttrType:  "basetypes.NumberType{}",
 				AttrValue: "basetypes.NumberValue",
 			}
@@ -404,7 +404,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 					if err != nil {
 						return nil, err
 					}
-					attrTypeStrings[k] = aType{
+					fields[k] = field{
 						AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", attrTypes),
 						AttrValue: "basetypes.ObjectValue",
 					}
@@ -412,7 +412,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 					return nil, fmt.Errorf("%s.%s attribute is an ObjectType but does not implement Attrs interface", name, k)
 				}
 			} else {
-				attrTypeStrings[k] = aType{
+				fields[k] = field{
 					AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 					AttrValue: "basetypes.ObjectValue",
 				}
@@ -428,7 +428,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 					if err != nil {
 						return nil, err
 					}
-					attrTypeStrings[k] = aType{
+					fields[k] = field{
 						AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %s,\n}", elemType),
 						AttrValue: "basetypes.SetValue",
 					}
@@ -436,7 +436,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 					return nil, fmt.Errorf("%s.%s attribute is a SetType but does not implement Elements interface", name, k)
 				}
 			} else {
-				attrTypeStrings[k] = aType{
+				fields[k] = field{
 					AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 					AttrValue: "basetypes.SetValue",
 				}
@@ -444,21 +444,21 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 		}
 
 		if g.Attributes[k].AttrType() == types.StringType {
-			attrTypeStrings[k] = aType{
+			fields[k] = field{
 				AttrType:  "basetypes.StringType{}",
 				AttrValue: "basetypes.StringValue",
 			}
 		}
 
-		a := attrTypeStrings[k]
+		f := fields[k]
 
 		camelCaseName := model.SnakeCaseToCamelCase(k)
 		lcFirstName := strings.ToLower(camelCaseName[:1]) + camelCaseName[1:]
 
-		a.AttributeName = camelCaseName
-		a.VarName = lcFirstName
+		f.FieldName = camelCaseName
+		f.FieldNameLCFirst = lcFirstName
 
-		attrTypeStrings[k] = a
+		fields[k] = f
 	}
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
@@ -470,38 +470,38 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 
 	sort.Strings(blockKeys)
 
-	// Populate attrTypeStrings map for use in template.
+	// Populate fields map for use in template.
 	for _, k := range blockKeys {
 		if _, ok := g.Blocks[k].AttrType().(basetypes.ListType); ok {
-			attrTypeStrings[k] = aType{
+			fields[k] = field{
 				AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.ListValue",
 			}
 		}
 
 		if _, ok := g.Blocks[k].AttrType().(basetypes.SetType); ok {
-			attrTypeStrings[k] = aType{
+			fields[k] = field{
 				AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.SetValue",
 			}
 		}
 
 		if _, ok := g.Blocks[k].AttrType().(basetypes.ObjectType); ok {
-			attrTypeStrings[k] = aType{
+			fields[k] = field{
 				AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.ObjectValue",
 			}
 		}
 
-		a := attrTypeStrings[k]
+		f := fields[k]
 
 		camelCaseName := model.SnakeCaseToCamelCase(k)
 		lcFirstName := strings.ToLower(camelCaseName[:1] + camelCaseName[1:])
 
-		a.AttributeName = camelCaseName
-		a.VarName = lcFirstName
+		f.FieldName = camelCaseName
+		f.FieldNameLCFirst = lcFirstName
 
-		attrTypeStrings[k] = a
+		fields[k] = f
 	}
 
 	t, err := template.New("model_object_helpers").Parse(templates.ModelObjectHelpersTemplate)
@@ -512,11 +512,11 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 	var buf bytes.Buffer
 
 	templateData := struct {
-		Name      string
-		AttrTypes map[string]aType
+		Name   string
+		Fields map[string]field
 	}{
-		Name:      model.SnakeCaseToCamelCase(name),
-		AttrTypes: attrTypeStrings,
+		Name:   model.SnakeCaseToCamelCase(name),
+		Fields: fields,
 	}
 
 	err = t.Execute(&buf, templateData)

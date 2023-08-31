@@ -26,8 +26,8 @@ state := attr.ValueStateKnown
 
 attributes := in.Attributes()
 
-{{range $key, $value := .AttrTypes }}
-{{$value.VarName}}, ok := attributes["{{$key}}"]
+{{range $key, $value := .Fields }}
+{{$value.FieldNameLCFirst}}, ok := attributes["{{$key}}"]
 
 if !ok {
 diags.AddError(
@@ -37,22 +37,22 @@ diags.AddError(
 return nil, diags
 }
 
-{{$value.VarName}}Val, ok := {{$value.VarName}}.({{$value.AttrValue}})
+{{$value.FieldNameLCFirst}}Val, ok := {{$value.FieldNameLCFirst}}.({{$value.AttrValue}})
 
 if !ok {
 diags.AddError(
 "Attribute Wrong Type",
-fmt.Sprintf(`{{$key}} expected to be {{$value.AttrValue}}, was: %T`, {{$value.VarName}}))
+fmt.Sprintf(`{{$key}} expected to be {{$value.AttrValue}}, was: %T`, {{$value.FieldNameLCFirst}}))
 }
 
-if {{$value.VarName}}Val.IsUnknown() {
+if {{$value.FieldNameLCFirst}}Val.IsUnknown() {
 state = attr.ValueStateUnknown
 }
 {{end}}
 
 return {{.Name}}Value{
-{{- range $key, $value := .AttrTypes }}
-{{$value.AttributeName}}: {{$value.VarName}}Val,
+{{- range $key, $value := .Fields }}
+{{$value.FieldName}}: {{$value.FieldNameLCFirst}}Val,
 {{- end}}
 state: state,
 }, diags
@@ -123,8 +123,8 @@ return New{{.Name}}ValueUnknown(), diags
 
 state := attr.ValueStateKnown
 
-{{range $key, $value := .AttrTypes }}
-{{$value.VarName}}, ok := attributes["{{$key}}"]
+{{range $key, $value := .Fields }}
+{{$value.FieldNameLCFirst}}, ok := attributes["{{$key}}"]
 
 if !ok {
 diags.AddError(
@@ -134,22 +134,22 @@ diags.AddError(
 return New{{$.Name}}ValueNull(), diags
 }
 
-{{$value.VarName}}Val, ok := {{$value.VarName}}.({{$value.AttrValue}})
+{{$value.FieldNameLCFirst}}Val, ok := {{$value.FieldNameLCFirst}}.({{$value.AttrValue}})
 
 if !ok {
 diags.AddError(
 "Attribute Wrong Type",
-fmt.Sprintf(`{{$key}} expected to be {{$value.AttrValue}}, was: %T`, {{$value.VarName}}))
+fmt.Sprintf(`{{$key}} expected to be {{$value.AttrValue}}, was: %T`, {{$value.FieldNameLCFirst}}))
 }
 
-if {{$value.VarName}}Val.IsUnknown() {
+if {{$value.FieldNameLCFirst}}Val.IsUnknown() {
 state = attr.ValueStateUnknown
 }
 {{end}}
 
 return {{.Name}}Value{
-{{- range $key, $value := .AttrTypes }}
-{{$value.AttributeName}}: {{$value.VarName}}Val,
+{{- range $key, $value := .Fields }}
+{{$value.FieldName}}: {{$value.FieldNameLCFirst}}Val,
 {{- end}}
 state: state,
 }, diags
@@ -223,19 +223,19 @@ return {{.Name}}Value{}
 var _ basetypes.ObjectValuable = {{.Name}}Value{}
 
 type {{.Name}}Value struct {
-{{- range $key, $value := .AttrTypes }}
-{{$value.AttributeName}} {{$value.AttrValue}} `tfsdk:"{{$key}}"`
+{{- range $key, $value := .Fields }}
+{{$value.FieldName}} {{$value.AttrValue}} `tfsdk:"{{$key}}"`
 {{- end}}
 state attr.ValueState
 }
 
 func (v {{.Name}}Value) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
-attrTypes := make(map[string]tftypes.Type, {{len .AttrTypes}})
+attrTypes := make(map[string]tftypes.Type, {{len .Fields}})
 
 var val tftypes.Value
 var err error
 
-{{range $key, $value := .AttrTypes }}
+{{range $key, $value := .Fields }}
 attrTypes["{{$key}}"] = {{$value.AttrType}}.TerraformType(ctx)
 {{- end}}
 
@@ -245,8 +245,8 @@ switch v.state {
 case attr.ValueStateKnown:
 vals := make(map[string]tftypes.Value, 1)
 
-{{range $key, $value := .AttrTypes }}
-val, err = v.{{$value.AttributeName}}.ToTerraformValue(ctx)
+{{range $key, $value := .Fields }}
+val, err = v.{{$value.FieldName}}.ToTerraformValue(ctx)
 
 if err != nil {
 return tftypes.NewValue(objectType, tftypes.UnknownValue), err
@@ -283,32 +283,32 @@ return "{{.Name}}Value"
 }
 
 func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
-{{- range $key, $value := .AttrTypes }}
-{{- if eq $value.AttributeType "ListNestedAttribute"}}
-{{$value.VarName}} := types.ListValueMust(
-{{$value.AttributeName}}Type{
+{{- range $key, $value := .Fields }}
+{{- if eq $value.FieldType "ListNestedAttribute"}}
+{{$value.FieldNameLCFirst}} := types.ListValueMust(
+{{$value.FieldName}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$value.AttributeName}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
 },
 },
-v.{{$value.AttributeName}}.Elements(),
+v.{{$value.FieldName}}.Elements(),
 )
 
-if v.{{$value.AttributeName}}.IsNull() {
-{{$value.VarName}} = types.ListNull(
-{{$value.AttributeName}}Type{
+if v.{{$value.FieldName}}.IsNull() {
+{{$value.FieldNameLCFirst}} = types.ListNull(
+{{$value.FieldName}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$value.AttributeName}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
 },
 },
 )
 }
 
-if v.{{$value.AttributeName}}.IsUnknown() {
-{{$value.VarName}} = types.ListUnknown(
-{{$value.AttributeName}}Type{
+if v.{{$value.FieldName}}.IsUnknown() {
+{{$value.FieldNameLCFirst}} = types.ListUnknown(
+{{$value.FieldName}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$value.AttributeName}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
 },
 },
 )
@@ -317,16 +317,16 @@ AttrTypes: {{$value.AttributeName}}Value{}.AttributeTypes(ctx),
 {{- end}}
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
-{{- range $key, $value := .AttrTypes }}
+{{- range $key, $value := .Fields }}
 "{{$key}}": {{$value.AttrType}},
 {{- end}}
 },
 map[string]attr.Value{
-{{- range $key, $value := .AttrTypes }}
-{{- if eq $value.AttributeType "ListNestedAttribute"}}
-"{{$key}}": {{$value.VarName}},
+{{- range $key, $value := .Fields }}
+{{- if eq $value.FieldType "ListNestedAttribute"}}
+"{{$key}}": {{$value.FieldNameLCFirst}},
 {{- else}}
-"{{$key}}": v.{{$value.AttributeName}},
+"{{$key}}": v.{{$value.FieldName}},
 {{- end}}
 {{- end}}
 })
@@ -349,13 +349,13 @@ if v.state != attr.ValueStateKnown {
 return true
 }
 
-{{range $key, $value := .AttrTypes }}
+{{range $key, $value := .Fields }}
 {{- if eq $value.AttrValue "baseTypes.BoolValue" "baseTypes.Float64Value" "baseTypes.Int64Value" "baseTypes.NumberValue" "baseTypes.StringValue"}}
-if v.{{$value.AttributeName}} != other.{{$value.AttributeName}} {
+if v.{{$value.FieldName}} != other.{{$value.FieldName}} {
 return false
 }
 {{- else}}
-if !v.{{$value.AttributeName}}.Equal(other.{{$value.AttributeName}}) {
+if !v.{{$value.FieldName}}.Equal(other.{{$value.FieldName}}) {
 return false
 }
 {{- end}}
@@ -374,7 +374,7 @@ AttrTypes: v.AttributeTypes(ctx),
 
 func (v {{.Name}}Value) AttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
-{{- range $key, $value := .AttrTypes }}
+{{- range $key, $value := .Fields }}
 "{{$key}}": {{$value.AttrType}},
 {{- end}}
 }
