@@ -292,10 +292,9 @@ func (g GeneratorSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// ModelObjectHelpersTemplate iterates over all the attributes and blocks adding the string representation of
-// the attr.Type for each attribute or block. A template is then used to generate the model object helpers code.
-// If any of the attributes or blocks are nested attributes or nested blocks, respectively, then
-// ModelObjectHelpersTemplate is called recursively.
+// ModelObjectHelpersTemplate is used to generate custom type and value types for nested attributes and
+// blocks by executing a template. If any of the attributes contain nested attributes, or any of the
+// blocks contain nested blocks, then ModelObjectHelpersTemplate is called recursively.
 func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error) {
 	type field struct {
 		AttrType         string
