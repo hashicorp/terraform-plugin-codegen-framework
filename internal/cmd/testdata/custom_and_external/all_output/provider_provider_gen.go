@@ -118,6 +118,11 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 						Optional: true,
 					},
 				},
+				CustomType: SingleNestedAttributeAssocExtTypeType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+					},
+				},
 				Optional: true,
 			},
 		},
@@ -188,13 +193,13 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 }
 
 type ProviderModel struct {
-	ListNestedAttributeAssocExtType   types.List   `tfsdk:"list_nested_attribute_assoc_ext_type"`
-	MapNestedAttributeAssocExtType    types.Map    `tfsdk:"map_nested_attribute_assoc_ext_type"`
-	SetNestedAttributeAssocExtType    types.Set    `tfsdk:"set_nested_attribute_assoc_ext_type"`
-	SingleNestedAttributeAssocExtType types.Object `tfsdk:"single_nested_attribute_assoc_ext_type"`
-	ListNestedBlockAssocExtType       types.List   `tfsdk:"list_nested_block_assoc_ext_type"`
-	SetNestedBlockAssocExtType        types.Set    `tfsdk:"set_nested_block_assoc_ext_type"`
-	SingleNestedBlockAssocExtType     types.Object `tfsdk:"single_nested_block_assoc_ext_type"`
+	ListNestedAttributeAssocExtType   types.List                             `tfsdk:"list_nested_attribute_assoc_ext_type"`
+	MapNestedAttributeAssocExtType    types.Map                              `tfsdk:"map_nested_attribute_assoc_ext_type"`
+	SetNestedAttributeAssocExtType    types.Set                              `tfsdk:"set_nested_attribute_assoc_ext_type"`
+	SingleNestedAttributeAssocExtType SingleNestedAttributeAssocExtTypeValue `tfsdk:"single_nested_attribute_assoc_ext_type"`
+	ListNestedBlockAssocExtType       types.List                             `tfsdk:"list_nested_block_assoc_ext_type"`
+	SetNestedBlockAssocExtType        types.Set                              `tfsdk:"set_nested_block_assoc_ext_type"`
+	SingleNestedBlockAssocExtType     types.Object                           `tfsdk:"single_nested_block_assoc_ext_type"`
 }
 
 var _ basetypes.ObjectTypable = ListNestedAttributeAssocExtTypeType{}
@@ -4299,56 +4304,46 @@ func (v SetNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context,
 	}, diags
 }
 
-func ToSingleNestedAttributeAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
+func (v SingleNestedAttributeAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfObject.IsNull() {
+	if v.IsNull() {
 		return nil, diags
 	}
 
-	if tfObject.IsUnknown() {
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"Object Value Is Unknown",
-			`Model field "SingleNestedAttributeAssocExtType" is unknown.`,
+			"SingleNestedAttributeAssocExtTypeValue Value Is Unknown",
+			`"SingleNestedAttributeAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	var tfModel SingleNestedAttributeAssocExtTypeModel
-
-	diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObject := &apisdk.Type{
-		BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-		Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-		Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-		NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-		StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-	}
-
-	return apiObject, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromSingleNestedAttributeAssocExtType(ctx context.Context, apiObject *apisdk.Type) (types.Object, diag.Diagnostics) {
+func (v SingleNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (SingleNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel SingleNestedAttributeAssocExtTypeModel
 
 	if apiObject == nil {
-		return tfModel.ObjectNull(ctx), diags
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
 	}
 
-	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
-	tfModel.Float64Attribute = types.Float64PointerValue(apiObject.Float64Attribute)
-	tfModel.Int64Attribute = types.Int64PointerValue(apiObject.Int64Attribute)
-	tfModel.NumberAttribute = types.NumberValue(apiObject.NumberAttribute)
-	tfModel.StringAttribute = types.StringPointerValue(apiObject.StringAttribute)
-
-	return tfModel.ObjectValueFrom(ctx, tfModel)
+	return SingleNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
 
 func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {

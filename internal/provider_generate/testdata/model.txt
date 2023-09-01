@@ -22,7 +22,7 @@ SetAttribute types.Set `tfsdk:"set_attribute"`
 SetAttributeCustom my_set_value_type `tfsdk:"set_attribute_custom"`
 SetNestedAttribute types.Set `tfsdk:"set_nested_attribute"`
 SetNestedAttributeCustom my_set_nested_value_type `tfsdk:"set_nested_attribute_custom"`
-SingleNestedAttribute types.Object `tfsdk:"single_nested_attribute"`
+SingleNestedAttribute SingleNestedAttributeValue `tfsdk:"single_nested_attribute"`
 SingleNestedAttributeCustom my_single_nested_value_type `tfsdk:"single_nested_attribute_custom"`
 StringAttribute types.String `tfsdk:"string_attribute"`
 StringAttributeCustom my_string_value_type `tfsdk:"string_attribute_custom"`

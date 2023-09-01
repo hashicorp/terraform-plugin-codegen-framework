@@ -778,6 +778,11 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: NestedSingleNestedType{
+ObjectType: types.ObjectType{
+AttrTypes: NestedSingleNestedValue{}.AttributeTypes(ctx),
+},
+},
 },
 },
 },

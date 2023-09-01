@@ -373,6 +373,11 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 },`,
 		},
 
@@ -395,6 +400,11 @@ Attributes: map[string]schema.Attribute{
 "list": schema.ListAttribute{
 ElementType: types.StringType,
 Optional: true,
+},
+},
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
 },
 },
 },`,
@@ -434,6 +444,11 @@ AttrTypes: NestedListNestedValue{}.AttributeTypes(ctx),
 },
 },
 },
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 },`,
 		},
 
@@ -463,6 +478,11 @@ AttributeTypes: map[string]attr.Type{
 Optional: true,
 },
 },
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 },`,
 		},
 
@@ -489,6 +509,16 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: NestedSingleNestedType{
+ObjectType: types.ObjectType{
+AttrTypes: NestedSingleNestedValue{}.AttributeTypes(ctx),
+},
+},
+},
+},
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
 },
 },
 },`,
@@ -518,6 +548,11 @@ CustomType: my_custom_type,
 "single_nested_attribute": schema.SingleNestedAttribute{
 Attributes: map[string]schema.Attribute{
 },
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 Required: true,
 },`,
 		},
@@ -531,6 +566,11 @@ Required: true,
 			expected: `
 "single_nested_attribute": schema.SingleNestedAttribute{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 Optional: true,
 },`,
@@ -546,6 +586,11 @@ Optional: true,
 "single_nested_attribute": schema.SingleNestedAttribute{
 Attributes: map[string]schema.Attribute{
 },
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 Sensitive: true,
 },`,
 		},
@@ -559,6 +604,11 @@ Sensitive: true,
 			expected: `
 "single_nested_attribute": schema.SingleNestedAttribute{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 Description: "description",
 MarkdownDescription: "description",
@@ -574,6 +624,11 @@ MarkdownDescription: "description",
 			expected: `
 "single_nested_attribute": schema.SingleNestedAttribute{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 DeprecationMessage: "deprecated",
 },`,
@@ -598,7 +653,12 @@ DeprecationMessage: "deprecated",
 "single_nested_attribute": schema.SingleNestedAttribute{
 Attributes: map[string]schema.Attribute{
 },
-Validators: []validator.Bool{
+CustomType: SingleNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
+Validators: []validator.Object{
 my_validator.Validate(),
 my_other_validator.Validate(),
 },
@@ -636,7 +696,7 @@ func TestGeneratorSingleNestedAttribute_ModelField(t *testing.T) {
 		"default": {
 			expected: model.Field{
 				Name:      "SingleNestedAttribute",
-				ValueType: "types.Object",
+				ValueType: "SingleNestedAttributeValue",
 				TfsdkName: "single_nested_attribute",
 			},
 		},

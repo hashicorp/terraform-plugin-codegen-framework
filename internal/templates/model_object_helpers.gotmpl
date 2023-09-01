@@ -371,6 +371,27 @@ AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
 },
 )
 }
+{{else if eq $value.FieldType "SingleNestedAttribute"}}
+var {{$value.FieldNameLCFirst}} basetypes.ObjectValue
+
+if v.{{$value.FieldName}}.IsNull() {
+{{$value.FieldNameLCFirst}} = types.ObjectNull(
+{{$value.FieldName}}Value{}.AttributeTypes(ctx),
+)
+}
+
+if v.{{$value.FieldName}}.IsUnknown() {
+{{$value.FieldNameLCFirst}} = types.ObjectUnknown(
+{{$value.FieldName}}Value{}.AttributeTypes(ctx),
+)
+}
+
+if !v.{{$value.FieldName}}.IsNull() && !v.{{$value.FieldName}}.IsUnknown() {
+{{$value.FieldNameLCFirst}} = types.ObjectValueMust(
+{{$value.FieldName}}Value{}.AttributeTypes(ctx),
+v.{{$value.FieldName}}.Attributes(),
+)
+}
 {{end}}
 {{- end}}
 objVal, diags := types.ObjectValue(
@@ -381,7 +402,7 @@ map[string]attr.Type{
 },
 map[string]attr.Value{
 {{- range $key, $value := .Fields }}
-{{- if eq $value.FieldType "ListNestedAttribute" "MapNestedAttribute" "SetNestedAttribute"}}
+{{- if eq $value.FieldType "ListNestedAttribute" "MapNestedAttribute" "SetNestedAttribute" "SingleNestedAttribute"}}
 "{{$key}}": {{$value.FieldNameLCFirst}},
 {{- else}}
 "{{$key}}": v.{{$value.FieldName}},
