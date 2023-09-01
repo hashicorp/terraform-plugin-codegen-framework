@@ -4344,99 +4344,46 @@ func (v SingleNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Conte
 	}, diags
 }
 
-func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {
+func (v ListNestedBlockAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfList.IsNull() {
+	if v.IsNull() {
 		return nil, diags
 	}
 
-	if tfList.IsUnknown() {
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"List Value Is Unknown",
-			`Model field "ListNestedBlockAssocExtType" is unknown.`,
+			"ListNestedBlockAssocExtTypeValue Value Is Unknown",
+			`"ListNestedBlockAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	var listObjects []types.Object
-
-	diags.Append(tfList.ElementsAs(ctx, &listObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make([]*apisdk.Type, 0, len(listObjects))
-
-	for _, listObject := range listObjects {
-		if listObject.IsNull() {
-			apiObjects = append(apiObjects, nil)
-
-			continue
-		}
-
-		if listObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within List Is Unknown",
-				`Model field "ListNestedBlockAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel ListNestedBlockAssocExtTypeModel
-
-		d := listObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects = append(apiObjects, &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		})
-	}
-
-	return apiObjects, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromListNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.List, diag.Diagnostics) {
+func (v ListNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ListNestedBlockAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel ListNestedBlockAssocExtTypeModel
 
-	if apiObjects == nil {
-		return types.ListNull(
-			tfModel.ObjectType(ctx),
-		), diags
+	if apiObject == nil {
+		return NewListNestedBlockAssocExtTypeValueNull(), diags
 	}
 
-	var tfModels []*ListNestedBlockAssocExtTypeModel
-
-	for _, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels = append(tfModels, nil)
-
-			continue
-		}
-
-		tfModels = append(tfModels, &ListNestedBlockAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		})
-	}
-
-	return types.ListValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+	return ListNestedBlockAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
 
 func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {

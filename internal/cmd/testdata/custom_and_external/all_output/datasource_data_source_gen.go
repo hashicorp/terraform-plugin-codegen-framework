@@ -6938,7 +6938,7 @@ func (t ListNestedBlockThreeType) ValueFromObject(ctx context.Context, in basety
 
 	attributes := in.Attributes()
 
-	listnestedblockthreelistnestedblockone, ok := attributes["list_nested_block_three_list_nested_block_one"]
+	listNestedBlockThreeListNestedBlockOne, ok := attributes["list_nested_block_three_list_nested_block_one"]
 
 	if !ok {
 		diags.AddError(
@@ -6948,15 +6948,15 @@ func (t ListNestedBlockThreeType) ValueFromObject(ctx context.Context, in basety
 		return nil, diags
 	}
 
-	listnestedblockthreelistnestedblockoneVal, ok := listnestedblockthreelistnestedblockone.(basetypes.ListValue)
+	listNestedBlockThreeListNestedBlockOneVal, ok := listNestedBlockThreeListNestedBlockOne.(basetypes.ListValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`list_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listnestedblockthreelistnestedblockone))
+			fmt.Sprintf(`list_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listNestedBlockThreeListNestedBlockOne))
 	}
 
-	if listnestedblockthreelistnestedblockoneVal.IsUnknown() {
+	if listNestedBlockThreeListNestedBlockOneVal.IsUnknown() {
 		state = attr.ValueStateUnknown
 	}
 
@@ -6983,7 +6983,7 @@ func (t ListNestedBlockThreeType) ValueFromObject(ctx context.Context, in basety
 	}
 
 	return ListNestedBlockThreeValue{
-		ListNestedBlockThreeListNestedBlockOne: listnestedblockthreelistnestedblockoneVal,
+		ListNestedBlockThreeListNestedBlockOne: listNestedBlockThreeListNestedBlockOneVal,
 		ObjectAttribute:                        objectAttributeVal,
 		state:                                  state,
 	}, diags
@@ -7054,7 +7054,7 @@ func NewListNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribute
 
 	state := attr.ValueStateKnown
 
-	listnestedblockthreelistnestedblockone, ok := attributes["list_nested_block_three_list_nested_block_one"]
+	listNestedBlockThreeListNestedBlockOne, ok := attributes["list_nested_block_three_list_nested_block_one"]
 
 	if !ok {
 		diags.AddError(
@@ -7064,15 +7064,15 @@ func NewListNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribute
 		return NewListNestedBlockThreeValueNull(), diags
 	}
 
-	listnestedblockthreelistnestedblockoneVal, ok := listnestedblockthreelistnestedblockone.(basetypes.ListValue)
+	listNestedBlockThreeListNestedBlockOneVal, ok := listNestedBlockThreeListNestedBlockOne.(basetypes.ListValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`list_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listnestedblockthreelistnestedblockone))
+			fmt.Sprintf(`list_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listNestedBlockThreeListNestedBlockOne))
 	}
 
-	if listnestedblockthreelistnestedblockoneVal.IsUnknown() {
+	if listNestedBlockThreeListNestedBlockOneVal.IsUnknown() {
 		state = attr.ValueStateUnknown
 	}
 
@@ -7099,7 +7099,7 @@ func NewListNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribute
 	}
 
 	return ListNestedBlockThreeValue{
-		ListNestedBlockThreeListNestedBlockOne: listnestedblockthreelistnestedblockoneVal,
+		ListNestedBlockThreeListNestedBlockOne: listNestedBlockThreeListNestedBlockOneVal,
 		ObjectAttribute:                        objectAttributeVal,
 		state:                                  state,
 	}, diags
@@ -7242,6 +7242,35 @@ func (v ListNestedBlockThreeValue) String() string {
 }
 
 func (v ListNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	listNestedBlockThreeListNestedBlockOne := types.ListValueMust(
+		ListNestedBlockThreeListNestedBlockOneType{
+			basetypes.ObjectType{
+				AttrTypes: ListNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx),
+			},
+		},
+		v.ListNestedBlockThreeListNestedBlockOne.Elements(),
+	)
+
+	if v.ListNestedBlockThreeListNestedBlockOne.IsNull() {
+		listNestedBlockThreeListNestedBlockOne = types.ListNull(
+			ListNestedBlockThreeListNestedBlockOneType{
+				basetypes.ObjectType{
+					AttrTypes: ListNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx),
+				},
+			},
+		)
+	}
+
+	if v.ListNestedBlockThreeListNestedBlockOne.IsUnknown() {
+		listNestedBlockThreeListNestedBlockOne = types.ListUnknown(
+			ListNestedBlockThreeListNestedBlockOneType{
+				basetypes.ObjectType{
+					AttrTypes: ListNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx),
+				},
+			},
+		)
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"list_nested_block_three_list_nested_block_one": basetypes.ListType{
@@ -7254,7 +7283,7 @@ func (v ListNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetypes
 			},
 		},
 		map[string]attr.Value{
-			"list_nested_block_three_list_nested_block_one": v.ListNestedBlockThreeListNestedBlockOne,
+			"list_nested_block_three_list_nested_block_one": listNestedBlockThreeListNestedBlockOne,
 			"object_attribute": v.ObjectAttribute,
 		})
 
@@ -7657,7 +7686,7 @@ func (t ListNestedBlockTwoType) ValueFromObject(ctx context.Context, in basetype
 
 	attributes := in.Attributes()
 
-	listnestedblocktwolistnestedblockone, ok := attributes["list_nested_block_two_list_nested_block_one"]
+	listNestedBlockTwoListNestedBlockOne, ok := attributes["list_nested_block_two_list_nested_block_one"]
 
 	if !ok {
 		diags.AddError(
@@ -7667,20 +7696,20 @@ func (t ListNestedBlockTwoType) ValueFromObject(ctx context.Context, in basetype
 		return nil, diags
 	}
 
-	listnestedblocktwolistnestedblockoneVal, ok := listnestedblocktwolistnestedblockone.(basetypes.ListValue)
+	listNestedBlockTwoListNestedBlockOneVal, ok := listNestedBlockTwoListNestedBlockOne.(basetypes.ListValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`list_nested_block_two_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listnestedblocktwolistnestedblockone))
+			fmt.Sprintf(`list_nested_block_two_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listNestedBlockTwoListNestedBlockOne))
 	}
 
-	if listnestedblocktwolistnestedblockoneVal.IsUnknown() {
+	if listNestedBlockTwoListNestedBlockOneVal.IsUnknown() {
 		state = attr.ValueStateUnknown
 	}
 
 	return ListNestedBlockTwoValue{
-		ListNestedBlockTwoListNestedBlockOne: listnestedblocktwolistnestedblockoneVal,
+		ListNestedBlockTwoListNestedBlockOne: listNestedBlockTwoListNestedBlockOneVal,
 		state:                                state,
 	}, diags
 }
@@ -7750,7 +7779,7 @@ func NewListNestedBlockTwoValue(attributeTypes map[string]attr.Type, attributes 
 
 	state := attr.ValueStateKnown
 
-	listnestedblocktwolistnestedblockone, ok := attributes["list_nested_block_two_list_nested_block_one"]
+	listNestedBlockTwoListNestedBlockOne, ok := attributes["list_nested_block_two_list_nested_block_one"]
 
 	if !ok {
 		diags.AddError(
@@ -7760,20 +7789,20 @@ func NewListNestedBlockTwoValue(attributeTypes map[string]attr.Type, attributes 
 		return NewListNestedBlockTwoValueNull(), diags
 	}
 
-	listnestedblocktwolistnestedblockoneVal, ok := listnestedblocktwolistnestedblockone.(basetypes.ListValue)
+	listNestedBlockTwoListNestedBlockOneVal, ok := listNestedBlockTwoListNestedBlockOne.(basetypes.ListValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`list_nested_block_two_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listnestedblocktwolistnestedblockone))
+			fmt.Sprintf(`list_nested_block_two_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listNestedBlockTwoListNestedBlockOne))
 	}
 
-	if listnestedblocktwolistnestedblockoneVal.IsUnknown() {
+	if listNestedBlockTwoListNestedBlockOneVal.IsUnknown() {
 		state = attr.ValueStateUnknown
 	}
 
 	return ListNestedBlockTwoValue{
-		ListNestedBlockTwoListNestedBlockOne: listnestedblocktwolistnestedblockoneVal,
+		ListNestedBlockTwoListNestedBlockOne: listNestedBlockTwoListNestedBlockOneVal,
 		state:                                state,
 	}, diags
 }
@@ -7901,6 +7930,35 @@ func (v ListNestedBlockTwoValue) String() string {
 }
 
 func (v ListNestedBlockTwoValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	listNestedBlockTwoListNestedBlockOne := types.ListValueMust(
+		ListNestedBlockTwoListNestedBlockOneType{
+			basetypes.ObjectType{
+				AttrTypes: ListNestedBlockTwoListNestedBlockOneValue{}.AttributeTypes(ctx),
+			},
+		},
+		v.ListNestedBlockTwoListNestedBlockOne.Elements(),
+	)
+
+	if v.ListNestedBlockTwoListNestedBlockOne.IsNull() {
+		listNestedBlockTwoListNestedBlockOne = types.ListNull(
+			ListNestedBlockTwoListNestedBlockOneType{
+				basetypes.ObjectType{
+					AttrTypes: ListNestedBlockTwoListNestedBlockOneValue{}.AttributeTypes(ctx),
+				},
+			},
+		)
+	}
+
+	if v.ListNestedBlockTwoListNestedBlockOne.IsUnknown() {
+		listNestedBlockTwoListNestedBlockOne = types.ListUnknown(
+			ListNestedBlockTwoListNestedBlockOneType{
+				basetypes.ObjectType{
+					AttrTypes: ListNestedBlockTwoListNestedBlockOneValue{}.AttributeTypes(ctx),
+				},
+			},
+		)
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"list_nested_block_two_list_nested_block_one": basetypes.ListType{
@@ -7908,7 +7966,7 @@ func (v ListNestedBlockTwoValue) ToObjectValue(ctx context.Context) (basetypes.O
 			},
 		},
 		map[string]attr.Value{
-			"list_nested_block_two_list_nested_block_one": v.ListNestedBlockTwoListNestedBlockOne,
+			"list_nested_block_two_list_nested_block_one": listNestedBlockTwoListNestedBlockOne,
 		})
 
 	return objVal, diags
@@ -9769,7 +9827,7 @@ func (t SingleNestedBlockThreeType) ValueFromObject(ctx context.Context, in base
 		state = attr.ValueStateUnknown
 	}
 
-	singlenestedblockthreelistnestedblockone, ok := attributes["single_nested_block_three_list_nested_block_one"]
+	singleNestedBlockThreeListNestedBlockOne, ok := attributes["single_nested_block_three_list_nested_block_one"]
 
 	if !ok {
 		diags.AddError(
@@ -9779,21 +9837,21 @@ func (t SingleNestedBlockThreeType) ValueFromObject(ctx context.Context, in base
 		return nil, diags
 	}
 
-	singlenestedblockthreelistnestedblockoneVal, ok := singlenestedblockthreelistnestedblockone.(basetypes.ListValue)
+	singleNestedBlockThreeListNestedBlockOneVal, ok := singleNestedBlockThreeListNestedBlockOne.(basetypes.ListValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`single_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, singlenestedblockthreelistnestedblockone))
+			fmt.Sprintf(`single_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, singleNestedBlockThreeListNestedBlockOne))
 	}
 
-	if singlenestedblockthreelistnestedblockoneVal.IsUnknown() {
+	if singleNestedBlockThreeListNestedBlockOneVal.IsUnknown() {
 		state = attr.ValueStateUnknown
 	}
 
 	return SingleNestedBlockThreeValue{
 		ObjectAttribute:                          objectAttributeVal,
-		SingleNestedBlockThreeListNestedBlockOne: singlenestedblockthreelistnestedblockoneVal,
+		SingleNestedBlockThreeListNestedBlockOne: singleNestedBlockThreeListNestedBlockOneVal,
 		state:                                    state,
 	}, diags
 }
@@ -9885,7 +9943,7 @@ func NewSingleNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribu
 		state = attr.ValueStateUnknown
 	}
 
-	singlenestedblockthreelistnestedblockone, ok := attributes["single_nested_block_three_list_nested_block_one"]
+	singleNestedBlockThreeListNestedBlockOne, ok := attributes["single_nested_block_three_list_nested_block_one"]
 
 	if !ok {
 		diags.AddError(
@@ -9895,21 +9953,21 @@ func NewSingleNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribu
 		return NewSingleNestedBlockThreeValueNull(), diags
 	}
 
-	singlenestedblockthreelistnestedblockoneVal, ok := singlenestedblockthreelistnestedblockone.(basetypes.ListValue)
+	singleNestedBlockThreeListNestedBlockOneVal, ok := singleNestedBlockThreeListNestedBlockOne.(basetypes.ListValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`single_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, singlenestedblockthreelistnestedblockone))
+			fmt.Sprintf(`single_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, singleNestedBlockThreeListNestedBlockOne))
 	}
 
-	if singlenestedblockthreelistnestedblockoneVal.IsUnknown() {
+	if singleNestedBlockThreeListNestedBlockOneVal.IsUnknown() {
 		state = attr.ValueStateUnknown
 	}
 
 	return SingleNestedBlockThreeValue{
 		ObjectAttribute:                          objectAttributeVal,
-		SingleNestedBlockThreeListNestedBlockOne: singlenestedblockthreelistnestedblockoneVal,
+		SingleNestedBlockThreeListNestedBlockOne: singleNestedBlockThreeListNestedBlockOneVal,
 		state:                                    state,
 	}, diags
 }
@@ -10051,6 +10109,35 @@ func (v SingleNestedBlockThreeValue) String() string {
 }
 
 func (v SingleNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	singleNestedBlockThreeListNestedBlockOne := types.ListValueMust(
+		SingleNestedBlockThreeListNestedBlockOneType{
+			basetypes.ObjectType{
+				AttrTypes: SingleNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx),
+			},
+		},
+		v.SingleNestedBlockThreeListNestedBlockOne.Elements(),
+	)
+
+	if v.SingleNestedBlockThreeListNestedBlockOne.IsNull() {
+		singleNestedBlockThreeListNestedBlockOne = types.ListNull(
+			SingleNestedBlockThreeListNestedBlockOneType{
+				basetypes.ObjectType{
+					AttrTypes: SingleNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx),
+				},
+			},
+		)
+	}
+
+	if v.SingleNestedBlockThreeListNestedBlockOne.IsUnknown() {
+		singleNestedBlockThreeListNestedBlockOne = types.ListUnknown(
+			SingleNestedBlockThreeListNestedBlockOneType{
+				basetypes.ObjectType{
+					AttrTypes: SingleNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx),
+				},
+			},
+		)
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"object_attribute": basetypes.ObjectType{
@@ -10064,7 +10151,7 @@ func (v SingleNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetyp
 		},
 		map[string]attr.Value{
 			"object_attribute": v.ObjectAttribute,
-			"single_nested_block_three_list_nested_block_one": v.SingleNestedBlockThreeListNestedBlockOne,
+			"single_nested_block_three_list_nested_block_one": singleNestedBlockThreeListNestedBlockOne,
 		})
 
 	return objVal, diags
@@ -10466,7 +10553,7 @@ func (t SingleNestedBlockTwoType) ValueFromObject(ctx context.Context, in basety
 
 	attributes := in.Attributes()
 
-	singlenestedblocktwosinglenestedblockone, ok := attributes["single_nested_block_two_single_nested_block_one"]
+	singleNestedBlockTwoSingleNestedBlockOne, ok := attributes["single_nested_block_two_single_nested_block_one"]
 
 	if !ok {
 		diags.AddError(
@@ -10476,20 +10563,20 @@ func (t SingleNestedBlockTwoType) ValueFromObject(ctx context.Context, in basety
 		return nil, diags
 	}
 
-	singlenestedblocktwosinglenestedblockoneVal, ok := singlenestedblocktwosinglenestedblockone.(basetypes.ObjectValue)
+	singleNestedBlockTwoSingleNestedBlockOneVal, ok := singleNestedBlockTwoSingleNestedBlockOne.(basetypes.ObjectValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`single_nested_block_two_single_nested_block_one expected to be basetypes.ObjectValue, was: %T`, singlenestedblocktwosinglenestedblockone))
+			fmt.Sprintf(`single_nested_block_two_single_nested_block_one expected to be basetypes.ObjectValue, was: %T`, singleNestedBlockTwoSingleNestedBlockOne))
 	}
 
-	if singlenestedblocktwosinglenestedblockoneVal.IsUnknown() {
+	if singleNestedBlockTwoSingleNestedBlockOneVal.IsUnknown() {
 		state = attr.ValueStateUnknown
 	}
 
 	return SingleNestedBlockTwoValue{
-		SingleNestedBlockTwoSingleNestedBlockOne: singlenestedblocktwosinglenestedblockoneVal,
+		SingleNestedBlockTwoSingleNestedBlockOne: singleNestedBlockTwoSingleNestedBlockOneVal,
 		state:                                    state,
 	}, diags
 }
@@ -10559,7 +10646,7 @@ func NewSingleNestedBlockTwoValue(attributeTypes map[string]attr.Type, attribute
 
 	state := attr.ValueStateKnown
 
-	singlenestedblocktwosinglenestedblockone, ok := attributes["single_nested_block_two_single_nested_block_one"]
+	singleNestedBlockTwoSingleNestedBlockOne, ok := attributes["single_nested_block_two_single_nested_block_one"]
 
 	if !ok {
 		diags.AddError(
@@ -10569,20 +10656,20 @@ func NewSingleNestedBlockTwoValue(attributeTypes map[string]attr.Type, attribute
 		return NewSingleNestedBlockTwoValueNull(), diags
 	}
 
-	singlenestedblocktwosinglenestedblockoneVal, ok := singlenestedblocktwosinglenestedblockone.(basetypes.ObjectValue)
+	singleNestedBlockTwoSingleNestedBlockOneVal, ok := singleNestedBlockTwoSingleNestedBlockOne.(basetypes.ObjectValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`single_nested_block_two_single_nested_block_one expected to be basetypes.ObjectValue, was: %T`, singlenestedblocktwosinglenestedblockone))
+			fmt.Sprintf(`single_nested_block_two_single_nested_block_one expected to be basetypes.ObjectValue, was: %T`, singleNestedBlockTwoSingleNestedBlockOne))
 	}
 
-	if singlenestedblocktwosinglenestedblockoneVal.IsUnknown() {
+	if singleNestedBlockTwoSingleNestedBlockOneVal.IsUnknown() {
 		state = attr.ValueStateUnknown
 	}
 
 	return SingleNestedBlockTwoValue{
-		SingleNestedBlockTwoSingleNestedBlockOne: singlenestedblocktwosinglenestedblockoneVal,
+		SingleNestedBlockTwoSingleNestedBlockOne: singleNestedBlockTwoSingleNestedBlockOneVal,
 		state:                                    state,
 	}, diags
 }
@@ -11245,99 +11332,46 @@ func (v SingleNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Conte
 	}, diags
 }
 
-func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {
+func (v ListNestedBlockAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfList.IsNull() {
+	if v.IsNull() {
 		return nil, diags
 	}
 
-	if tfList.IsUnknown() {
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"List Value Is Unknown",
-			`Model field "ListNestedBlockAssocExtType" is unknown.`,
+			"ListNestedBlockAssocExtTypeValue Value Is Unknown",
+			`"ListNestedBlockAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	var listObjects []types.Object
-
-	diags.Append(tfList.ElementsAs(ctx, &listObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make([]*apisdk.Type, 0, len(listObjects))
-
-	for _, listObject := range listObjects {
-		if listObject.IsNull() {
-			apiObjects = append(apiObjects, nil)
-
-			continue
-		}
-
-		if listObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within List Is Unknown",
-				`Model field "ListNestedBlockAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel ListNestedBlockAssocExtTypeModel
-
-		d := listObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects = append(apiObjects, &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		})
-	}
-
-	return apiObjects, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromListNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.List, diag.Diagnostics) {
+func (v ListNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ListNestedBlockAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel ListNestedBlockAssocExtTypeModel
 
-	if apiObjects == nil {
-		return types.ListNull(
-			tfModel.ObjectType(ctx),
-		), diags
+	if apiObject == nil {
+		return NewListNestedBlockAssocExtTypeValueNull(), diags
 	}
 
-	var tfModels []*ListNestedBlockAssocExtTypeModel
-
-	for _, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels = append(tfModels, nil)
-
-			continue
-		}
-
-		tfModels = append(tfModels, &ListNestedBlockAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		})
-	}
-
-	return types.ListValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+	return ListNestedBlockAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
 
 func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {

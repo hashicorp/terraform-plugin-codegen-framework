@@ -478,6 +478,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 			fields[k] = field{
 				AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.ListValue",
+				FieldType: "ListNestedBlock",
 			}
 		}
 
@@ -498,7 +499,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 		f := fields[k]
 
 		camelCaseName := model.SnakeCaseToCamelCase(k)
-		lcFirstName := strings.ToLower(camelCaseName[:1] + camelCaseName[1:])
+		lcFirstName := strings.ToLower(camelCaseName[:1]) + camelCaseName[1:]
 
 		f.FieldName = camelCaseName
 		f.FieldNameLCFirst = lcFirstName
@@ -762,7 +763,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 
 		switch blockAssocExtType.AttrType().(type) {
 		case basetypes.ListTypable:
-			t, err = template.New("list_nested_object_to_from").Parse(templates.ListNestedObjectToFromTemplate)
+			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
@@ -788,11 +789,13 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			Name          string
 			Type          string
 			TypeReference string
+			TypeName      string
 			Fields        []objectField
 		}{
 			Name:          model.SnakeCaseToCamelCase(k),
 			Type:          assocExtType.Type(),
 			TypeReference: assocExtType.TypeReference(),
+			TypeName:      model.DotNotationToCamelCase(assocExtType.TypeReference()),
 			Fields:        fields,
 		}
 

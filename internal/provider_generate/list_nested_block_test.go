@@ -646,6 +646,11 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },
 },`,
 		},
@@ -672,6 +677,11 @@ Attributes: map[string]schema.Attribute{
 "list": schema.ListAttribute{
 ElementType: types.StringType,
 Optional: true,
+},
+},
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 },
 },
 },
@@ -715,6 +725,11 @@ AttrTypes: NestedListNestedValue{}.AttributeTypes(ctx),
 },
 },
 },
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },
 },`,
 		},
@@ -746,6 +761,11 @@ AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
 },
 Optional: true,
+},
+},
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 },
 },
 },
@@ -785,6 +805,11 @@ AttrTypes: NestedSingleNestedValue{}.AttributeTypes(ctx),
 },
 },
 },
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },
 },`,
 		},
@@ -818,7 +843,17 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: NestedListNestedType{
+ObjectType: types.ObjectType{
+AttrTypes: NestedListNestedValue{}.AttributeTypes(ctx),
 },
+},
+},
+},
+},
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 },
 },
 },
@@ -853,6 +888,11 @@ Optional: true,
 },
 },
 },
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },
 },`,
 		},
@@ -866,6 +906,11 @@ Optional: true,
 			expected: `
 "list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },
 CustomType: my_custom_type,
 },`,
@@ -880,6 +925,11 @@ CustomType: my_custom_type,
 			expected: `
 "list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },
 Description: "description",
 MarkdownDescription: "description",
@@ -895,6 +945,11 @@ MarkdownDescription: "description",
 			expected: `
 "list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },
 DeprecationMessage: "deprecated",
 },`,
@@ -918,6 +973,11 @@ DeprecationMessage: "deprecated",
 			expected: `
 "list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },
 Validators: []validator.List{
 my_validator.Validate(),
@@ -962,6 +1022,11 @@ CustomType: my_custom_type,
 			expected: `
 "list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
+CustomType: ListNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 Validators: []validator.Object{
 my_validator.Validate(),
 my_other_validator.Validate(),

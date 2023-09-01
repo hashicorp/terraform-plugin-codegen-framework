@@ -284,7 +284,7 @@ return "{{.Name}}Value"
 
 func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 {{- range $key, $value := .Fields }}
-{{- if eq $value.FieldType "ListNestedAttribute"}}
+{{- if eq $value.FieldType "ListNestedAttribute" "ListNestedBlock"}}
 {{$value.FieldNameLCFirst}} := types.ListValueMust(
 {{$value.FieldName}}Type{
 basetypes.ObjectType{
@@ -402,7 +402,7 @@ map[string]attr.Type{
 },
 map[string]attr.Value{
 {{- range $key, $value := .Fields }}
-{{- if eq $value.FieldType "ListNestedAttribute" "MapNestedAttribute" "SetNestedAttribute" "SingleNestedAttribute"}}
+{{- if eq $value.FieldType "ListNestedAttribute" "MapNestedAttribute" "SetNestedAttribute" "SingleNestedAttribute" "ListNestedBlock"}}
 "{{$key}}": {{$value.FieldNameLCFirst}},
 {{- else}}
 "{{$key}}": v.{{$value.FieldName}},
