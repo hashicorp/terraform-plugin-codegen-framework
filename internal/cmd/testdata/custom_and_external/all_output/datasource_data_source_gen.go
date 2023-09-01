@@ -11374,99 +11374,46 @@ func (v ListNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, ap
 	}, diags
 }
 
-func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {
+func (v SetNestedBlockAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfSet.IsNull() {
+	if v.IsNull() {
 		return nil, diags
 	}
 
-	if tfSet.IsUnknown() {
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"Set Value Is Unknown",
-			`Model field "SetNestedBlockAssocExtType" is unknown.`,
+			"SetNestedBlockAssocExtTypeValue Value Is Unknown",
+			`"SetNestedBlockAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	var setObjects []types.Object
-
-	diags.Append(tfSet.ElementsAs(ctx, &setObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make([]*apisdk.Type, 0, len(setObjects))
-
-	for _, setObject := range setObjects {
-		if setObject.IsNull() {
-			apiObjects = append(apiObjects, nil)
-
-			continue
-		}
-
-		if setObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within Set Is Unknown",
-				`Model field "SetNestedBlockAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel SetNestedBlockAssocExtTypeModel
-
-		d := setObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects = append(apiObjects, &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		})
-	}
-
-	return apiObjects, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromSetNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.Set, diag.Diagnostics) {
+func (v SetNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (SetNestedBlockAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel SetNestedBlockAssocExtTypeModel
 
-	if apiObjects == nil {
-		return types.SetNull(
-			tfModel.ObjectType(ctx),
-		), diags
+	if apiObject == nil {
+		return NewSetNestedBlockAssocExtTypeValueNull(), diags
 	}
 
-	var tfModels []*SetNestedBlockAssocExtTypeModel
-
-	for _, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels = append(tfModels, nil)
-
-			continue
-		}
-
-		tfModels = append(tfModels, &SetNestedBlockAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		})
-	}
-
-	return types.SetValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+	return SetNestedBlockAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
 
 func ToSingleNestedBlockAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {

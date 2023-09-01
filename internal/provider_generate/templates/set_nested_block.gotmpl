@@ -1,31 +1,37 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.SetNestedBlock{
+
+"{{.Name}}": schema.SetNestedBlock{
 NestedObject: schema.NestedBlockObject{
-{{- if gt (len $value.NestedObject.Attributes) 0 }}
+{{- if .Attributes}}
 Attributes: map[string]schema.Attribute{
-{{- AttributesString}}
+{{- .Attributes}}
 },
 {{- end}}
-{{- if gt (len $value.NestedObject.Blocks) 0 }}
+{{- if .Blocks}}
 Blocks: map[string]schema.Block{
-{{- BlocksString}}
+{{- .Blocks}}
 },
 {{- end}}
-{{- if $value.NestedObject.CustomType}}
-CustomType: {{$value.NestedObject.CustomType.Type}},
+{{- if .GeneratorSetNestedBlock.NestedObject.CustomType}}
+CustomType: {{.GeneratorSetNestedBlock.NestedObject.CustomType.Type}},
+{{- else}}
+CustomType: {{.TypeValueName}}Type{
+ObjectType: types.ObjectType{
+AttrTypes: {{.TypeValueName}}Value{}.AttributeTypes(ctx),
+},
+},
 {{- end}}
-{{- if gt (len $value.NestedObject.Validators) 0 }}
+{{- if gt (len .GeneratorSetNestedBlock.NestedObject.Validators) 0 }}
 Validators: []validator.Object{
-{{- range $validator := $value.NestedObject.Validators}}
+{{- range $validator := .GeneratorSetNestedBlock.NestedObject.Validators}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 },
 {{- end}}
 },
-{{- template "common_block" $value }}
-{{- if $value.Validators }}
+{{- template "common_block" .GeneratorSetNestedBlock }}
+{{- if .GeneratorSetNestedBlock.Validators }}
 Validators: []validator.Set{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorSetNestedBlock.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -33,4 +39,3 @@ Validators: []validator.Set{
 },
 {{- end}}
 },
-{{- end }}

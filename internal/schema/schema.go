@@ -486,6 +486,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 			fields[k] = field{
 				AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.SetValue",
+				FieldType: "SetNestedBlock",
 			}
 		}
 
@@ -773,7 +774,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 				return nil, err
 			}
 		case basetypes.SetTypable:
-			t, err = template.New("set_nested_object_to_from").Parse(templates.SetNestedObjectToFromTemplate)
+			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
