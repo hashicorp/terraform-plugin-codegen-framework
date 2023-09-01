@@ -707,6 +707,11 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: NestedListNestedType{
+ObjectType: types.ObjectType{
+AttrTypes: NestedListNestedValue{}.AttributeTypes(ctx),
+},
+},
 },
 },
 },

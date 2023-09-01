@@ -11119,99 +11119,46 @@ func (v MapNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context,
 	}, diags
 }
 
-func ToSetNestedAttributeAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {
+func (v SetNestedAttributeAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfSet.IsNull() {
+	if v.IsNull() {
 		return nil, diags
 	}
 
-	if tfSet.IsUnknown() {
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"Set Value Is Unknown",
-			`Model field "SetNestedAttributeAssocExtType" is unknown.`,
+			"SetNestedAttributeAssocExtTypeValue Value Is Unknown",
+			`"SetNestedAttributeAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	var setObjects []types.Object
-
-	diags.Append(tfSet.ElementsAs(ctx, &setObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make([]*apisdk.Type, 0, len(setObjects))
-
-	for _, setObject := range setObjects {
-		if setObject.IsNull() {
-			apiObjects = append(apiObjects, nil)
-
-			continue
-		}
-
-		if setObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within Set Is Unknown",
-				`Model field "SetNestedAttributeAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel SetNestedAttributeAssocExtTypeModel
-
-		d := setObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects = append(apiObjects, &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		})
-	}
-
-	return apiObjects, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromSetNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.Set, diag.Diagnostics) {
+func (v SetNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (SetNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel SetNestedAttributeAssocExtTypeModel
 
-	if apiObjects == nil {
-		return types.SetNull(
-			tfModel.ObjectType(ctx),
-		), diags
+	if apiObject == nil {
+		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
 	}
 
-	var tfModels []*SetNestedAttributeAssocExtTypeModel
-
-	for _, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels = append(tfModels, nil)
-
-			continue
-		}
-
-		tfModels = append(tfModels, &SetNestedAttributeAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		})
-	}
-
-	return types.SetValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+	return SetNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
 
 func ToSingleNestedAttributeAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
