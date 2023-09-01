@@ -4218,99 +4218,46 @@ func (v ListNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context
 	}, diags
 }
 
-func ToMapNestedAttributeAssocExtType(ctx context.Context, tfMap types.Map) (map[string]*apisdk.Type, diag.Diagnostics) {
+func (v MapNestedAttributeAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfMap.IsNull() {
+	if v.IsNull() {
 		return nil, diags
 	}
 
-	if tfMap.IsUnknown() {
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"Map Value Is Unknown",
-			`Model field "MapNestedAttributeAssocExtType" is unknown.`,
+			"MapNestedAttributeAssocExtTypeValue Value Is Unknown",
+			`"MapNestedAttributeAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	mapObjects := make(map[string]types.Object)
-
-	diags.Append(tfMap.ElementsAs(ctx, &mapObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make(map[string]*apisdk.Type, len(mapObjects))
-
-	for k, mapObject := range mapObjects {
-		if mapObject.IsNull() {
-			apiObjects[k] = nil
-
-			continue
-		}
-
-		if mapObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within Map Is Unknown",
-				`Model field "MapNestedAttributeAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel MapNestedAttributeAssocExtTypeModel
-
-		d := mapObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects[k] = &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		}
-	}
-
-	return apiObjects, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromMapNestedAttributeAssocExtType(ctx context.Context, apiObjects map[string]*apisdk.Type) (types.Map, diag.Diagnostics) {
+func (v MapNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (MapNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel MapNestedAttributeAssocExtTypeModel
 
-	if apiObjects == nil {
-		return types.MapNull(
-			tfModel.ObjectType(ctx),
-		), diags
+	if apiObject == nil {
+		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
 	}
 
-	tfModels := make(map[string]*MapNestedAttributeAssocExtTypeModel)
-
-	for k, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels[k] = nil
-
-			continue
-		}
-
-		tfModels[k] = &MapNestedAttributeAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		}
-	}
-
-	return types.MapValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
+	return MapNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
 
 func ToSetNestedAttributeAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {

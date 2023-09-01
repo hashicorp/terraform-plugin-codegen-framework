@@ -383,6 +383,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 				fields[k] = field{
 					AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 					AttrValue: "basetypes.MapValue",
+					FieldType: "MapNestedAttribute",
 				}
 			}
 		}
@@ -645,7 +646,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 				return nil, err
 			}
 		case basetypes.MapTypable:
-			t, err = template.New("map_nested_object_to_from").Parse(templates.MapNestedObjectToFromTemplate)
+			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
