@@ -6,8 +6,9 @@ package cmd_test
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 	"github.com/mitchellh/cli"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 )
 
 func TestGenerateAllCommand(t *testing.T) {
@@ -15,11 +16,17 @@ func TestGenerateAllCommand(t *testing.T) {
 
 	testCases := map[string]struct {
 		irInputPath   string
+		pkgName       string
 		goldenFileDir string
 	}{
-		"custom_and_external": {
+		"specified_pkg_name": {
 			irInputPath:   "testdata/custom_and_external/ir.json",
-			goldenFileDir: "testdata/custom_and_external/all_output",
+			pkgName:       "specified",
+			goldenFileDir: "testdata/custom_and_external/all_output/specified_pkg_name",
+		},
+		"default_pkg_name": {
+			irInputPath:   "testdata/custom_and_external/ir.json",
+			goldenFileDir: "testdata/custom_and_external/all_output/default_pkg_name",
 		},
 	}
 	for name, testCase := range testCases {
@@ -35,7 +42,7 @@ func TestGenerateAllCommand(t *testing.T) {
 
 			args := []string{
 				"--input", testCase.irInputPath,
-				"--package", "generated",
+				"--package", testCase.pkgName,
 				"--output", testOutputDir,
 			}
 

@@ -18,8 +18,12 @@ generate:
 testdata:
 	go run ./cmd/terraform-plugin-codegen-framework generate all \
 		--input ./internal/cmd/testdata/custom_and_external/ir.json \
-		--package generated \
-		--output ./internal/cmd/testdata/custom_and_external/all_output
+		--package specified \
+		--output ./internal/cmd/testdata/custom_and_external/all_output/specified_pkg_name
+
+	go run ./cmd/terraform-plugin-codegen-framework generate all \
+		--input ./internal/cmd/testdata/custom_and_external/ir.json \
+		--output ./internal/cmd/testdata/custom_and_external/all_output/default_pkg_name
 
 	go run ./cmd/terraform-plugin-codegen-framework generate resources \
 		--input ./internal/cmd/testdata/custom_and_external/ir.json \
