@@ -30,6 +30,6 @@ ListNestedBlock types.List `tfsdk:"list_nested_block"`
 ListNestedBlockCustom my_list_nested_value_type `tfsdk:"list_nested_block_custom"`
 SetNestedBlock types.Set `tfsdk:"set_nested_block"`
 SetNestedBlockCustom my_set_nested_value_type `tfsdk:"set_nested_block_custom"`
-SingleNestedBlock types.Object `tfsdk:"single_nested_block"`
+SingleNestedBlock SingleNestedBlockValue `tfsdk:"single_nested_block"`
 SingleNestedBlockCustom my_single_nested_value_type `tfsdk:"single_nested_block_custom"`
 }

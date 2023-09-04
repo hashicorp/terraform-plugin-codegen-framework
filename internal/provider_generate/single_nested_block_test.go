@@ -397,6 +397,11 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },`,
 		},
 
@@ -419,6 +424,11 @@ Attributes: map[string]schema.Attribute{
 "list": schema.ListAttribute{
 ElementType: types.StringType,
 Optional: true,
+},
+},
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 },
 },
 },`,
@@ -458,6 +468,11 @@ AttrTypes: NestedListNestedValue{}.AttributeTypes(ctx),
 },
 },
 },
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },`,
 		},
 
@@ -485,6 +500,11 @@ AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
 },
 Optional: true,
+},
+},
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 },
 },
 },`,
@@ -518,6 +538,11 @@ ObjectType: types.ObjectType{
 AttrTypes: NestedSingleNestedValue{}.AttributeTypes(ctx),
 },
 },
+},
+},
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 },
 },
 },`,
@@ -557,6 +582,11 @@ AttrTypes: NestedListNestedValue{}.AttributeTypes(ctx),
 },
 },
 },
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 },`,
 		},
 
@@ -583,6 +613,16 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: NestedSingleNestedType{
+ObjectType: types.ObjectType{
+AttrTypes: NestedSingleNestedValue{}.AttributeTypes(ctx),
+},
+},
+},
+},
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 },
 },
 },`,
@@ -608,6 +648,11 @@ CustomType: my_custom_type,
 			},
 			expected: `
 "single_nested_block": schema.SingleNestedBlock{
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 Description: "description",
 MarkdownDescription: "description",
 },`,
@@ -621,6 +666,11 @@ MarkdownDescription: "description",
 			},
 			expected: `
 "single_nested_block": schema.SingleNestedBlock{
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 DeprecationMessage: "deprecated",
 },`,
 		},
@@ -642,6 +692,11 @@ DeprecationMessage: "deprecated",
 			},
 			expected: `
 "single_nested_block": schema.SingleNestedBlock{
+CustomType: SingleNestedBlockType{
+ObjectType: types.ObjectType{
+AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
+},
+},
 Validators: []validator.Bool{
 my_validator.Validate(),
 my_other_validator.Validate(),
@@ -680,7 +735,7 @@ func TestGeneratorSingleNestedBlock_ModelField(t *testing.T) {
 		"default": {
 			expected: model.Field{
 				Name:      "SingleNestedBlock",
-				ValueType: "types.Object",
+				ValueType: "SingleNestedBlockValue",
 				TfsdkName: "single_nested_block",
 			},
 		},

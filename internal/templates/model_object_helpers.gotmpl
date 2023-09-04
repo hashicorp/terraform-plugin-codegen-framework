@@ -371,7 +371,7 @@ AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
 },
 )
 }
-{{else if eq $value.FieldType "SingleNestedAttribute"}}
+{{else if eq $value.FieldType "SingleNestedAttribute" "SingleNestedBlock"}}
 var {{$value.FieldNameLCFirst}} basetypes.ObjectValue
 
 if v.{{$value.FieldName}}.IsNull() {
@@ -402,7 +402,7 @@ map[string]attr.Type{
 },
 map[string]attr.Value{
 {{- range $key, $value := .Fields }}
-{{- if eq $value.FieldType "ListNestedAttribute" "MapNestedAttribute" "SetNestedAttribute" "SingleNestedAttribute" "ListNestedBlock" "SetNestedBlock"}}
+{{- if eq $value.FieldType "ListNestedAttribute" "MapNestedAttribute" "SetNestedAttribute" "SingleNestedAttribute" "ListNestedBlock" "SetNestedBlock" "SingleNestedBlock"}}
 "{{$key}}": {{$value.FieldNameLCFirst}},
 {{- else}}
 "{{$key}}": v.{{$value.FieldName}},

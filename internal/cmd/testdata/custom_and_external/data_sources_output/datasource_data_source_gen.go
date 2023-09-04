@@ -10797,6 +10797,27 @@ func (v SingleNestedBlockTwoValue) String() string {
 }
 
 func (v SingleNestedBlockTwoValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var singleNestedBlockTwoSingleNestedBlockOne basetypes.ObjectValue
+
+	if v.SingleNestedBlockTwoSingleNestedBlockOne.IsNull() {
+		singleNestedBlockTwoSingleNestedBlockOne = types.ObjectNull(
+			SingleNestedBlockTwoSingleNestedBlockOneValue{}.AttributeTypes(ctx),
+		)
+	}
+
+	if v.SingleNestedBlockTwoSingleNestedBlockOne.IsUnknown() {
+		singleNestedBlockTwoSingleNestedBlockOne = types.ObjectUnknown(
+			SingleNestedBlockTwoSingleNestedBlockOneValue{}.AttributeTypes(ctx),
+		)
+	}
+
+	if !v.SingleNestedBlockTwoSingleNestedBlockOne.IsNull() && !v.SingleNestedBlockTwoSingleNestedBlockOne.IsUnknown() {
+		singleNestedBlockTwoSingleNestedBlockOne = types.ObjectValueMust(
+			SingleNestedBlockTwoSingleNestedBlockOneValue{}.AttributeTypes(ctx),
+			v.SingleNestedBlockTwoSingleNestedBlockOne.Attributes(),
+		)
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"single_nested_block_two_single_nested_block_one": basetypes.ObjectType{
@@ -10804,7 +10825,7 @@ func (v SingleNestedBlockTwoValue) ToObjectValue(ctx context.Context) (basetypes
 			},
 		},
 		map[string]attr.Value{
-			"single_nested_block_two_single_nested_block_one": v.SingleNestedBlockTwoSingleNestedBlockOne,
+			"single_nested_block_two_single_nested_block_one": singleNestedBlockTwoSingleNestedBlockOne,
 		})
 
 	return objVal, diags
@@ -11416,54 +11437,44 @@ func (v SetNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, api
 	}, diags
 }
 
-func ToSingleNestedBlockAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
+func (v SingleNestedBlockAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfObject.IsNull() {
+	if v.IsNull() {
 		return nil, diags
 	}
 
-	if tfObject.IsUnknown() {
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"Object Value Is Unknown",
-			`Model field "SingleNestedBlockAssocExtType" is unknown.`,
+			"SingleNestedBlockAssocExtTypeValue Value Is Unknown",
+			`"SingleNestedBlockAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	var tfModel SingleNestedBlockAssocExtTypeModel
-
-	diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObject := &apisdk.Type{
-		BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-		Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-		Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-		NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-		StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-	}
-
-	return apiObject, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromSingleNestedBlockAssocExtType(ctx context.Context, apiObject *apisdk.Type) (types.Object, diag.Diagnostics) {
+func (v SingleNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (SingleNestedBlockAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel SingleNestedBlockAssocExtTypeModel
 
 	if apiObject == nil {
-		return tfModel.ObjectNull(ctx), diags
+		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
 	}
 
-	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
-	tfModel.Float64Attribute = types.Float64PointerValue(apiObject.Float64Attribute)
-	tfModel.Int64Attribute = types.Int64PointerValue(apiObject.Int64Attribute)
-	tfModel.NumberAttribute = types.NumberValue(apiObject.NumberAttribute)
-	tfModel.StringAttribute = types.StringPointerValue(apiObject.StringAttribute)
-
-	return tfModel.ObjectValueFrom(ctx, tfModel)
+	return SingleNestedBlockAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
