@@ -23,6 +23,10 @@ func (g GeneratorSchemas) SchemasBytes(packageName, generatorType string) (map[s
 
 	for k, s := range g.schemas {
 
+		if packageName == "" {
+			packageName = k
+		}
+
 		b, err := s.SchemaBytes(k, packageName, generatorType)
 
 		if err != nil {
