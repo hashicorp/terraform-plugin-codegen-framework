@@ -33,6 +33,6 @@ return {{.Name}}Value{
 {{- range $field := .Fields }}
 {{$field.Name}}: types.{{$field.DefaultFrom}}(apiObject.{{$field.Name}}),
 {{- end}}
-state:                     attr.ValueStateKnown,
+state: attr.ValueStateKnown,
 }, diags
 }
