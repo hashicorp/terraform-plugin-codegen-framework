@@ -59,6 +59,10 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObje
 	return nil
 }
 
+// WriteResources uses the packageName to determine whether to create a directory and package per resource.
+// If packageName is an empty string, this indicates that the flag was not set, and the default behaviour is
+// then to create a package and directory per resource. If packageName is set then all generated code is
+// placed into the same directory and package.
 func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelpers, resourcesToFrom map[string][]byte, outputDir, packageName string) error {
 	for k, v := range resourcesSchema {
 		dirName := ""
@@ -103,6 +107,10 @@ func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelper
 	return nil
 }
 
+// WriteProviders uses the packageName to determine whether to create a directory and package for the provider.
+// If packageName is an empty string, this indicates that the flag was not set, and the default behaviour is
+// then to create a package and directory for the provider. If packageName is set then all generated code is
+// placed into the same directory and package.
 func WriteProviders(providersSchema, providerModels, providerModelObjectHelpers, providerToFrom map[string][]byte, outputDir, packageName string) error {
 	for k, v := range providersSchema {
 		dirName := ""
