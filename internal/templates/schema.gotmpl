@@ -20,10 +20,10 @@ return schema.Schema{
         {{- AttributesString}}
 	},
     {{- end}}
-      {{- if gt (len .GeneratorSchema.Blocks) 0 }}
-        Blocks: map[string]schema.Block{
-            {{- BlocksString}}
-        },
-        {{- end}}
+    {{- if gt (len .GeneratorSchema.Blocks) 0 }}
+	Blocks: map[string]schema.Block{
+        {{- BlocksString}}
+	},
+    {{- end}}
     }
 }
