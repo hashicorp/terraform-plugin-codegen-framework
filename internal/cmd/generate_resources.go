@@ -183,7 +183,7 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// write code
-	err = output.WriteResources(formattedResourcesSchema, formattedResourcesModels, formattedResourcesModelObjectHelpers, formattedResourcesToFrom, outputPath)
+	err = output.WriteResources(formattedResourcesSchema, formattedResourcesModels, formattedResourcesModelObjectHelpers, formattedResourcesToFrom, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

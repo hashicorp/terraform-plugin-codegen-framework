@@ -183,7 +183,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// write code
-	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedDataSourcesModelObjectHelpers, formattedDataSourcesToFrom, outputPath)
+	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedDataSourcesModelObjectHelpers, formattedDataSourcesToFrom, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

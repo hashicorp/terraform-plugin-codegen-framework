@@ -183,7 +183,7 @@ func generateProviderCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// write code
-	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedProvidersModelObjectHelpers, formattedProviderToFrom, outputPath)
+	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedProvidersModelObjectHelpers, formattedProviderToFrom, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}
