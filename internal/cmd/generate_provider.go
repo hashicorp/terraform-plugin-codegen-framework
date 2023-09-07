@@ -32,7 +32,7 @@ func (cmd *GenerateProviderCommand) Flags() *flag.FlagSet {
 	fs := flag.NewFlagSet("generate provider", flag.ExitOnError)
 	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
-	fs.StringVar(&cmd.flagPackageName, "package", "provider", "name of Go package for generated code files")
+	fs.StringVar(&cmd.flagPackageName, "package", "", "name of Go package for generated code files")
 
 	return fs
 }
@@ -183,7 +183,7 @@ func generateProviderCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// write code
-	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedProvidersModelObjectHelpers, formattedProviderToFrom, outputPath)
+	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedProvidersModelObjectHelpers, formattedProviderToFrom, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

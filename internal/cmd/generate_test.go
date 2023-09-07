@@ -11,7 +11,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-// TODO: currently doesn't compare nested directory files
 func compareDirectories(t *testing.T, wantDirPath, gotDirPath string) {
 	t.Helper()
 
@@ -42,17 +41,50 @@ func compareDirectories(t *testing.T, wantDirPath, gotDirPath string) {
 			continue
 		}
 
-		gotFile, err := os.ReadFile(path.Join(gotDirPath, gotEntry.Name()))
+		compareFiles(t, path.Join(gotDirPath, gotEntry.Name()), path.Join(wantDirPath, wantEntry.Name()))
+	}
+}
+
+func compareFiles(t *testing.T, got, want string) {
+	gotFile, err := os.Open(got)
+
+	if err != nil {
+		t.Fatalf("unexpected error opening %s: %s", got, err)
+	}
+
+	gotFileInfo, err := gotFile.Stat()
+
+	if err != nil {
+		t.Fatalf("unexpected error stat %s: %s", got, err)
+	}
+
+	if gotFileInfo.IsDir() {
+		dirEntries, err := os.ReadDir(got)
+
 		if err != nil {
-			t.Fatalf("unexpected error reading `got` file: %s", err)
-		}
-		wantFile, _ := os.ReadFile(path.Join(wantDirPath, wantEntry.Name()))
-		if err != nil {
-			t.Fatalf("unexpected error reading `want` file: %s", err)
+			t.Fatalf("unexpected error reading dir %s: %s", got, err)
 		}
 
-		if diff := cmp.Diff(string(gotFile), string(wantFile)); diff != "" {
-			t.Errorf("unexpected difference in %s: %s", wantEntry.Name(), diff)
+		for _, dirEntry := range dirEntries {
+			compareFiles(t, path.Join(got, dirEntry.Name()), path.Join(want, dirEntry.Name()))
 		}
+
+		return
+	}
+
+	gotFileBytes, err := os.ReadFile(got)
+
+	if err != nil {
+		t.Fatalf("unexpected error reading `got` file: %s", err)
+	}
+
+	wantFileBytes, err := os.ReadFile(want)
+
+	if err != nil {
+		t.Fatalf("unexpected error reading `want` file: %s", err)
+	}
+
+	if diff := cmp.Diff(string(gotFileBytes), string(wantFileBytes)); diff != "" {
+		t.Errorf("unexpected difference in %s: %s", got, diff)
 	}
 }

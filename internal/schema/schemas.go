@@ -5,6 +5,8 @@ package schema
 
 import (
 	"bytes"
+	"fmt"
+	"strings"
 )
 
 // TODO: Field(s) could be added to handle end-user supplying their own templates to allow overriding.
@@ -22,6 +24,10 @@ func (g GeneratorSchemas) SchemasBytes(packageName, generatorType string) (map[s
 	schemasBytes := make(map[string][]byte, len(g.schemas))
 
 	for k, s := range g.schemas {
+
+		if packageName == "" {
+			packageName = fmt.Sprintf("%s_%s", strings.ToLower(generatorType), k)
+		}
 
 		b, err := s.SchemaBytes(k, packageName, generatorType)
 
