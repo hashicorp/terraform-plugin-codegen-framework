@@ -16,7 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 )
 
-func DatasourceDataSourceSchema(ctx context.Context) schema.Schema {
+func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 	return schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"bool_attribute": schema.BoolAttribute{
@@ -429,7 +429,7 @@ func DatasourceDataSourceSchema(ctx context.Context) schema.Schema {
 	}
 }
 
-type DatasourceModel struct {
+type ExampleModel struct {
 	BoolAttribute                     types.Bool   `tfsdk:"bool_attribute"`
 	ListListAttribute                 types.List   `tfsdk:"list_list_attribute"`
 	ListMapAttribute                  types.List   `tfsdk:"list_map_attribute"`

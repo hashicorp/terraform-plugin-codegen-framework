@@ -8,17 +8,34 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
+	planmodifieralias "github.com/my_account/my_project/myboolplanmodifier"
+	validatoralias "github.com/my_account/my_project/myboolvalidator"
+	boolalias "github.com/my_account_my_project/bool"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
-func ProviderProviderSchema(ctx context.Context) schema.Schema {
+func ExampleResourceSchema(ctx context.Context) schema.Schema {
 	return schema.Schema{
 		Attributes: map[string]schema.Attribute{
+			"bool_attribute": schema.BoolAttribute{
+				CustomType: my_bool_type,
+				Computed:   true,
+				PlanModifiers: []planmodifier.Bool{
+					myboolplanmodifier.Modify(),
+				},
+				Validators: []validator.Bool{
+					myboolvalidator.Validate(),
+				},
+				Default: booldefault.StaticBool(true),
+			},
 			"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -36,11 +53,6 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 						},
 						"string_attribute": schema.StringAttribute{
 							Optional: true,
-						},
-					},
-					CustomType: ListNestedAttributeAssocExtTypeType{
-						ObjectType: types.ObjectType{
-							AttrTypes: ListNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -65,11 +77,6 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 							Optional: true,
 						},
 					},
-					CustomType: MapNestedAttributeAssocExtTypeType{
-						ObjectType: types.ObjectType{
-							AttrTypes: MapNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
-						},
-					},
 				},
 				Optional: true,
 			},
@@ -92,11 +99,6 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 							Optional: true,
 						},
 					},
-					CustomType: SetNestedAttributeAssocExtTypeType{
-						ObjectType: types.ObjectType{
-							AttrTypes: SetNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
-						},
-					},
 				},
 				Optional: true,
 			},
@@ -116,11 +118,6 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 					},
 					"string_attribute": schema.StringAttribute{
 						Optional: true,
-					},
-				},
-				CustomType: SingleNestedAttributeAssocExtTypeType{
-					ObjectType: types.ObjectType{
-						AttrTypes: SingleNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
 					},
 				},
 				Optional: true,
@@ -146,11 +143,6 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 							Optional: true,
 						},
 					},
-					CustomType: ListNestedBlockAssocExtTypeType{
-						ObjectType: types.ObjectType{
-							AttrTypes: ListNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
-						},
-					},
 				},
 			},
 			"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
@@ -170,11 +162,6 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 						},
 						"string_attribute": schema.StringAttribute{
 							Optional: true,
-						},
-					},
-					CustomType: SetNestedBlockAssocExtTypeType{
-						ObjectType: types.ObjectType{
-							AttrTypes: SetNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -197,24 +184,20 @@ func ProviderProviderSchema(ctx context.Context) schema.Schema {
 						Optional: true,
 					},
 				},
-				CustomType: SingleNestedBlockAssocExtTypeType{
-					ObjectType: types.ObjectType{
-						AttrTypes: SingleNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
-					},
-				},
 			},
 		},
 	}
 }
 
-type ProviderModel struct {
-	ListNestedAttributeAssocExtType   types.List                             `tfsdk:"list_nested_attribute_assoc_ext_type"`
-	MapNestedAttributeAssocExtType    types.Map                              `tfsdk:"map_nested_attribute_assoc_ext_type"`
-	SetNestedAttributeAssocExtType    types.Set                              `tfsdk:"set_nested_attribute_assoc_ext_type"`
-	SingleNestedAttributeAssocExtType SingleNestedAttributeAssocExtTypeValue `tfsdk:"single_nested_attribute_assoc_ext_type"`
-	ListNestedBlockAssocExtType       types.List                             `tfsdk:"list_nested_block_assoc_ext_type"`
-	SetNestedBlockAssocExtType        types.Set                              `tfsdk:"set_nested_block_assoc_ext_type"`
-	SingleNestedBlockAssocExtType     SingleNestedBlockAssocExtTypeValue     `tfsdk:"single_nested_block_assoc_ext_type"`
+type ExampleModel struct {
+	BoolAttribute                     my_bool_value `tfsdk:"bool_attribute"`
+	ListNestedAttributeAssocExtType   types.List    `tfsdk:"list_nested_attribute_assoc_ext_type"`
+	MapNestedAttributeAssocExtType    types.Map     `tfsdk:"map_nested_attribute_assoc_ext_type"`
+	SetNestedAttributeAssocExtType    types.Set     `tfsdk:"set_nested_attribute_assoc_ext_type"`
+	SingleNestedAttributeAssocExtType types.Object  `tfsdk:"single_nested_attribute_assoc_ext_type"`
+	ListNestedBlockAssocExtType       types.List    `tfsdk:"list_nested_block_assoc_ext_type"`
+	SetNestedBlockAssocExtType        types.Set     `tfsdk:"set_nested_block_assoc_ext_type"`
+	SingleNestedBlockAssocExtType     types.Object  `tfsdk:"single_nested_block_assoc_ext_type"`
 }
 
 var _ basetypes.ObjectTypable = ListNestedAttributeAssocExtTypeType{}

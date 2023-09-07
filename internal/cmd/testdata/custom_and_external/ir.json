@@ -1,7 +1,7 @@
 {
   "datasources": [
     {
-      "name": "datasource",
+      "name": "example",
       "schema": {
         "attributes": [
           {
@@ -732,7 +732,7 @@
     }
   ],
   "provider": {
-    "name": "provider",
+    "name": "example",
     "schema": {
       "attributes": [
         {
@@ -1057,7 +1057,7 @@
   },
   "resources": [
     {
-      "name": "resource",
+      "name": "example",
       "schema": {
         "attributes": [
           {
