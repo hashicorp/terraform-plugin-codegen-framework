@@ -90,7 +90,7 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 		return false
 	}
 
-	if !customTypeEqual(g.CustomType, h.CustomType) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -98,7 +98,7 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 		return false
 	}
 
-	if !customTypeEqual(g.NestedObject.CustomType, h.NestedObject.CustomType) {
+	if !g.NestedObject.CustomType.Equal(h.NestedObject.CustomType) {
 		return false
 	}
 

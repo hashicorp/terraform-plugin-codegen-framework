@@ -66,7 +66,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	if !customTypeEqual(g.CustomType, h.CustomType) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 

@@ -5,59 +5,21 @@ package provider_generate
 
 import specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
-func customTypeEqual(x, y *specschema.CustomType) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if x.Import == nil && y.Import != nil {
-		return false
-	}
-
-	if x.Import != nil && y.Import == nil {
-		return false
-	}
-
-	if x.Import != nil && y.Import != nil {
-		if *x.Import != *y.Import {
-			return false
-		}
-	}
-
-	if x.Type != y.Type {
-		return false
-	}
-
-	if x.ValueType != y.ValueType {
-		return false
-	}
-
-	return true
-}
-
 func elementTypeEqual(x, y specschema.ElementType) bool {
 	if x.Bool != nil && y.Bool != nil {
-		return customTypeEqual(x.Bool.CustomType, y.Bool.CustomType)
+		return x.Bool.CustomType.Equal(y.Bool.CustomType)
 	}
 
 	if x.Float64 != nil && y.Float64 != nil {
-		return customTypeEqual(x.Float64.CustomType, y.Float64.CustomType)
+		return x.Float64.CustomType.Equal(y.Float64.CustomType)
 	}
 
 	if x.Int64 != nil && y.Float64 != nil {
-		return customTypeEqual(x.Int64.CustomType, y.Int64.CustomType)
+		return x.Int64.CustomType.Equal(y.Int64.CustomType)
 	}
 
 	if x.List != nil && y.List != nil {
-		if !customTypeEqual(x.List.CustomType, y.List.CustomType) {
+		if !x.List.CustomType.Equal(y.List.CustomType) {
 			return false
 		}
 
@@ -65,7 +27,7 @@ func elementTypeEqual(x, y specschema.ElementType) bool {
 	}
 
 	if x.Map != nil && y.Map != nil {
-		if !customTypeEqual(x.Map.CustomType, y.Map.CustomType) {
+		if !x.Map.CustomType.Equal(y.Map.CustomType) {
 			return false
 		}
 
@@ -73,7 +35,7 @@ func elementTypeEqual(x, y specschema.ElementType) bool {
 	}
 
 	if x.Number != nil && y.Number != nil {
-		return customTypeEqual(x.Number.CustomType, y.Number.CustomType)
+		return x.Number.CustomType.Equal(y.Number.CustomType)
 	}
 
 	if x.Object != nil && y.Object != nil {
@@ -81,7 +43,7 @@ func elementTypeEqual(x, y specschema.ElementType) bool {
 	}
 
 	if x.Set != nil && y.Set != nil {
-		if !customTypeEqual(x.Set.CustomType, y.Set.CustomType) {
+		if !x.Set.CustomType.Equal(y.Set.CustomType) {
 			return false
 		}
 
@@ -89,7 +51,7 @@ func elementTypeEqual(x, y specschema.ElementType) bool {
 	}
 
 	if x.String != nil && y.String != nil {
-		return customTypeEqual(x.String.CustomType, y.String.CustomType)
+		return x.String.CustomType.Equal(y.String.CustomType)
 	}
 
 	return false
@@ -104,7 +66,7 @@ func objectTypeEqual(x, y *specschema.ObjectType) bool {
 		return false
 	}
 
-	if !customTypeEqual(x.CustomType, y.CustomType) {
+	if !x.CustomType.Equal(y.CustomType) {
 		return false
 	}
 
