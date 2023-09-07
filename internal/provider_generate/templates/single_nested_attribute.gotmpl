@@ -1,12 +1,19 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.SingleNestedAttribute{
+
+"{{.Name}}": schema.SingleNestedAttribute{
 Attributes: map[string]schema.Attribute{
-{{- AttributesString}}
+{{- .Attributes}}
 },
-{{- template "common_attribute" $value }}
-{{- if $value.Validators }}
-Validators: []validator.Bool{
-{{- range $validator := .Validators}}
+{{- if not .GeneratorSingleNestedAttribute.CustomType}}
+CustomType: {{.TypeValueName}}Type{
+ObjectType: types.ObjectType{
+AttrTypes: {{.TypeValueName}}Value{}.AttributeTypes(ctx),
+},
+},
+{{- end}}
+{{- template "common_attribute" .GeneratorSingleNestedAttribute }}
+{{- if .GeneratorSingleNestedAttribute.Validators }}
+Validators: []validator.Object{
+{{- range $validator := .GeneratorSingleNestedAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -14,4 +21,3 @@ Validators: []validator.Bool{
 },
 {{- end}}
 },
-{{- end }}

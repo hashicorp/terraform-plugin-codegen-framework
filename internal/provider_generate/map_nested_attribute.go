@@ -99,11 +99,28 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 }
 
 func (g GeneratorMapNestedAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"AttributesString": g.NestedObject.Attributes.String,
+	type mapNestedAttribute struct {
+		Name                        string
+		TypeValueName               string
+		Attributes                  string
+		GeneratorMapNestedAttribute GeneratorMapNestedAttribute
+		NestedObjectCustomType      string
 	}
 
-	t, err := template.New("map_nested_attribute").Funcs(funcMap).Parse(mapNestedAttributeGoTemplate)
+	attributesStr, err := g.NestedObject.Attributes.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	l := mapNestedAttribute{
+		Name:                        name,
+		TypeValueName:               model.SnakeCaseToCamelCase(name),
+		Attributes:                  attributesStr,
+		GeneratorMapNestedAttribute: g,
+	}
+
+	t, err := template.New("map_nested_attribute").Parse(mapNestedAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -114,11 +131,7 @@ func (g GeneratorMapNestedAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorMapNestedAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, l)
 	if err != nil {
 		return "", err
 	}

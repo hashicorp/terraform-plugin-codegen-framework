@@ -103,12 +103,36 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 }
 
 func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"AttributesString": g.NestedObject.Attributes.String,
-		"BlocksString":     g.NestedObject.Blocks.String,
+	type listNestedBlock struct {
+		Name                     string
+		TypeValueName            string
+		Attributes               string
+		Blocks                   string
+		GeneratorListNestedBlock GeneratorListNestedBlock
+		NestedObjectCustomType   string
 	}
 
-	t, err := template.New("list_nested_block").Funcs(funcMap).Parse(listNestedBlockGoTemplate)
+	attributesStr, err := g.NestedObject.Attributes.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	blocksStr, err := g.NestedObject.Blocks.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	l := listNestedBlock{
+		Name:                     name,
+		TypeValueName:            model.SnakeCaseToCamelCase(name),
+		Attributes:               attributesStr,
+		Blocks:                   blocksStr,
+		GeneratorListNestedBlock: g,
+	}
+
+	t, err := template.New("list_nested_block").Parse(listNestedBlockGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -119,11 +143,7 @@ func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorListNestedBlock{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, l)
 	if err != nil {
 		return "", err
 	}

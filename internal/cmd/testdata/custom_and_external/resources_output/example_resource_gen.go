@@ -5,34 +5,168 @@ package generated
 import (
 	"context"
 	"example.com/apisdk"
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	planmodifieralias "github.com/my_account/my_project/myboolplanmodifier"
 	validatoralias "github.com/my_account/my_project/myboolvalidator"
 	boolalias "github.com/my_account_my_project/bool"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
-var exampleResourceSchema = schema.Schema{
-	Attributes: map[string]schema.Attribute{
-		"bool_attribute": schema.BoolAttribute{
-			CustomType: my_bool_type,
-			Computed:   true,
-			PlanModifiers: []planmodifier.Bool{
-				myboolplanmodifier.Modify(),
+func ExampleResourceSchema(ctx context.Context) schema.Schema {
+	return schema.Schema{
+		Attributes: map[string]schema.Attribute{
+			"bool_attribute": schema.BoolAttribute{
+				CustomType: my_bool_type,
+				Computed:   true,
+				PlanModifiers: []planmodifier.Bool{
+					myboolplanmodifier.Modify(),
+				},
+				Validators: []validator.Bool{
+					myboolvalidator.Validate(),
+				},
+				Default: booldefault.StaticBool(true),
 			},
-			Validators: []validator.Bool{
-				myboolvalidator.Validate(),
+			"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+				Optional: true,
 			},
-			Default: booldefault.StaticBool(true),
+			"map_nested_attribute_assoc_ext_type": schema.MapNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+				Optional: true,
+			},
+			"set_nested_attribute_assoc_ext_type": schema.SetNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+				Optional: true,
+			},
+			"single_nested_attribute_assoc_ext_type": schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"bool_attribute": schema.BoolAttribute{
+						Optional: true,
+					},
+					"float64_attribute": schema.Float64Attribute{
+						Optional: true,
+					},
+					"int64_attribute": schema.Int64Attribute{
+						Optional: true,
+					},
+					"number_attribute": schema.NumberAttribute{
+						Optional: true,
+					},
+					"string_attribute": schema.StringAttribute{
+						Optional: true,
+					},
+				},
+				Optional: true,
+			},
 		},
-		"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
+		Blocks: map[string]schema.Block{
+			"list_nested_block_assoc_ext_type": schema.ListNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+			},
+			"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
+				NestedObject: schema.NestedBlockObject{
+					Attributes: map[string]schema.Attribute{
+						"bool_attribute": schema.BoolAttribute{
+							Optional: true,
+						},
+						"float64_attribute": schema.Float64Attribute{
+							Optional: true,
+						},
+						"int64_attribute": schema.Int64Attribute{
+							Optional: true,
+						},
+						"number_attribute": schema.NumberAttribute{
+							Optional: true,
+						},
+						"string_attribute": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+			},
+			"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
 				Attributes: map[string]schema.Attribute{
 					"bool_attribute": schema.BoolAttribute{
 						Optional: true,
@@ -51,136 +185,8 @@ var exampleResourceSchema = schema.Schema{
 					},
 				},
 			},
-			Optional: true,
 		},
-		"map_nested_attribute_assoc_ext_type": schema.MapNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Optional: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-					},
-				},
-			},
-			Optional: true,
-		},
-		"set_nested_attribute_assoc_ext_type": schema.SetNestedAttribute{
-			NestedObject: schema.NestedAttributeObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Optional: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-					},
-				},
-			},
-			Optional: true,
-		},
-		"single_nested_attribute_assoc_ext_type": schema.SingleNestedAttribute{
-			Attributes: map[string]schema.Attribute{
-				"bool_attribute": schema.BoolAttribute{
-					Optional: true,
-				},
-				"float64_attribute": schema.Float64Attribute{
-					Optional: true,
-				},
-				"int64_attribute": schema.Int64Attribute{
-					Optional: true,
-				},
-				"number_attribute": schema.NumberAttribute{
-					Optional: true,
-				},
-				"string_attribute": schema.StringAttribute{
-					Optional: true,
-				},
-			},
-			Optional: true,
-		},
-	},
-	Blocks: map[string]schema.Block{
-		"list_nested_block_assoc_ext_type": schema.ListNestedBlock{
-			NestedObject: schema.NestedBlockObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Optional: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-					},
-				},
-			},
-		},
-		"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
-			NestedObject: schema.NestedBlockObject{
-				Attributes: map[string]schema.Attribute{
-					"bool_attribute": schema.BoolAttribute{
-						Optional: true,
-					},
-					"float64_attribute": schema.Float64Attribute{
-						Optional: true,
-					},
-					"int64_attribute": schema.Int64Attribute{
-						Optional: true,
-					},
-					"number_attribute": schema.NumberAttribute{
-						Optional: true,
-					},
-					"string_attribute": schema.StringAttribute{
-						Optional: true,
-					},
-				},
-			},
-		},
-		"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
-			Attributes: map[string]schema.Attribute{
-				"bool_attribute": schema.BoolAttribute{
-					Optional: true,
-				},
-				"float64_attribute": schema.Float64Attribute{
-					Optional: true,
-				},
-				"int64_attribute": schema.Int64Attribute{
-					Optional: true,
-				},
-				"number_attribute": schema.NumberAttribute{
-					Optional: true,
-				},
-				"string_attribute": schema.StringAttribute{
-					Optional: true,
-				},
-			},
-		},
-	},
+	}
 }
 
 type ExampleModel struct {
@@ -194,827 +200,4272 @@ type ExampleModel struct {
 	SingleNestedBlockAssocExtType     types.Object  `tfsdk:"single_nested_block_assoc_ext_type"`
 }
 
-type ListNestedAttributeAssocExtTypeModel struct {
-	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
-	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
-	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
-	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
-	StringAttribute  types.String  `tfsdk:"string_attribute"`
+var _ basetypes.ObjectTypable = ListNestedAttributeAssocExtTypeType{}
+
+type ListNestedAttributeAssocExtTypeType struct {
+	basetypes.ObjectType
 }
 
-type MapNestedAttributeAssocExtTypeModel struct {
-	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
-	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
-	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
-	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
-	StringAttribute  types.String  `tfsdk:"string_attribute"`
-}
+func (t ListNestedAttributeAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(ListNestedAttributeAssocExtTypeType)
 
-type SetNestedAttributeAssocExtTypeModel struct {
-	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
-	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
-	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
-	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
-	StringAttribute  types.String  `tfsdk:"string_attribute"`
-}
-
-type SingleNestedAttributeAssocExtTypeModel struct {
-	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
-	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
-	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
-	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
-	StringAttribute  types.String  `tfsdk:"string_attribute"`
-}
-
-type ListNestedBlockAssocExtTypeModel struct {
-	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
-	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
-	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
-	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
-	StringAttribute  types.String  `tfsdk:"string_attribute"`
-}
-
-type SetNestedBlockAssocExtTypeModel struct {
-	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
-	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
-	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
-	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
-	StringAttribute  types.String  `tfsdk:"string_attribute"`
-}
-
-type SingleNestedBlockAssocExtTypeModel struct {
-	BoolAttribute    types.Bool    `tfsdk:"bool_attribute"`
-	Float64Attribute types.Float64 `tfsdk:"float64_attribute"`
-	Int64Attribute   types.Int64   `tfsdk:"int64_attribute"`
-	NumberAttribute  types.Number  `tfsdk:"number_attribute"`
-	StringAttribute  types.String  `tfsdk:"string_attribute"`
-}
-
-func (m ListNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
-}
-
-func (m ListNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
-	return map[string]attr.Type{
-		"bool_attribute":    types.BoolType,
-		"float64_attribute": types.Float64Type,
-		"int64_attribute":   types.Int64Type,
-		"number_attribute":  types.NumberType,
-		"string_attribute":  types.StringType,
+	if !ok {
+		return false
 	}
+
+	return t.ObjectType.Equal(other.ObjectType)
 }
 
-func (m ListNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
-	return types.ObjectNull(
-		m.ObjectAttributeTypes(ctx),
-	)
+func (t ListNestedAttributeAssocExtTypeType) String() string {
+	return "ListNestedAttributeAssocExtTypeType"
 }
 
-func (m ListNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
-	return types.ObjectValueFrom(
-		ctx,
-		m.ObjectAttributeTypes(ctx),
-		data,
-	)
-}
-func (m MapNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
-}
-
-func (m MapNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
-	return map[string]attr.Type{
-		"bool_attribute":    types.BoolType,
-		"float64_attribute": types.Float64Type,
-		"int64_attribute":   types.Int64Type,
-		"number_attribute":  types.NumberType,
-		"string_attribute":  types.StringType,
-	}
-}
-
-func (m MapNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
-	return types.ObjectNull(
-		m.ObjectAttributeTypes(ctx),
-	)
-}
-
-func (m MapNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
-	return types.ObjectValueFrom(
-		ctx,
-		m.ObjectAttributeTypes(ctx),
-		data,
-	)
-}
-func (m SetNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
-}
-
-func (m SetNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
-	return map[string]attr.Type{
-		"bool_attribute":    types.BoolType,
-		"float64_attribute": types.Float64Type,
-		"int64_attribute":   types.Int64Type,
-		"number_attribute":  types.NumberType,
-		"string_attribute":  types.StringType,
-	}
-}
-
-func (m SetNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
-	return types.ObjectNull(
-		m.ObjectAttributeTypes(ctx),
-	)
-}
-
-func (m SetNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
-	return types.ObjectValueFrom(
-		ctx,
-		m.ObjectAttributeTypes(ctx),
-		data,
-	)
-}
-func (m SingleNestedAttributeAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
-}
-
-func (m SingleNestedAttributeAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
-	return map[string]attr.Type{
-		"bool_attribute":    types.BoolType,
-		"float64_attribute": types.Float64Type,
-		"int64_attribute":   types.Int64Type,
-		"number_attribute":  types.NumberType,
-		"string_attribute":  types.StringType,
-	}
-}
-
-func (m SingleNestedAttributeAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
-	return types.ObjectNull(
-		m.ObjectAttributeTypes(ctx),
-	)
-}
-
-func (m SingleNestedAttributeAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
-	return types.ObjectValueFrom(
-		ctx,
-		m.ObjectAttributeTypes(ctx),
-		data,
-	)
-}
-func (m ListNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
-}
-
-func (m ListNestedBlockAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
-	return map[string]attr.Type{
-		"bool_attribute":    types.BoolType,
-		"float64_attribute": types.Float64Type,
-		"int64_attribute":   types.Int64Type,
-		"number_attribute":  types.NumberType,
-		"string_attribute":  types.StringType,
-	}
-}
-
-func (m ListNestedBlockAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
-	return types.ObjectNull(
-		m.ObjectAttributeTypes(ctx),
-	)
-}
-
-func (m ListNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
-	return types.ObjectValueFrom(
-		ctx,
-		m.ObjectAttributeTypes(ctx),
-		data,
-	)
-}
-func (m SetNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
-}
-
-func (m SetNestedBlockAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
-	return map[string]attr.Type{
-		"bool_attribute":    types.BoolType,
-		"float64_attribute": types.Float64Type,
-		"int64_attribute":   types.Int64Type,
-		"number_attribute":  types.NumberType,
-		"string_attribute":  types.StringType,
-	}
-}
-
-func (m SetNestedBlockAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
-	return types.ObjectNull(
-		m.ObjectAttributeTypes(ctx),
-	)
-}
-
-func (m SetNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
-	return types.ObjectValueFrom(
-		ctx,
-		m.ObjectAttributeTypes(ctx),
-		data,
-	)
-}
-func (m SingleNestedBlockAssocExtTypeModel) ObjectType(ctx context.Context) types.ObjectType {
-	return types.ObjectType{AttrTypes: m.ObjectAttributeTypes(ctx)}
-}
-
-func (m SingleNestedBlockAssocExtTypeModel) ObjectAttributeTypes(ctx context.Context) map[string]attr.Type {
-	return map[string]attr.Type{
-		"bool_attribute":    types.BoolType,
-		"float64_attribute": types.Float64Type,
-		"int64_attribute":   types.Int64Type,
-		"number_attribute":  types.NumberType,
-		"string_attribute":  types.StringType,
-	}
-}
-
-func (m SingleNestedBlockAssocExtTypeModel) ObjectNull(ctx context.Context) types.Object {
-	return types.ObjectNull(
-		m.ObjectAttributeTypes(ctx),
-	)
-}
-
-func (m SingleNestedBlockAssocExtTypeModel) ObjectValueFrom(ctx context.Context, data any) (types.Object, diag.Diagnostics) {
-	return types.ObjectValueFrom(
-		ctx,
-		m.ObjectAttributeTypes(ctx),
-		data,
-	)
-}
-
-func ToListNestedAttributeAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {
+func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfList.IsNull() {
+	state := attr.ValueStateKnown
+
+	attributes := in.Attributes()
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
 		return nil, diags
 	}
 
-	if tfList.IsUnknown() {
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return ListNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewListNestedAttributeAssocExtTypeValueNull() ListNestedAttributeAssocExtTypeValue {
+	return ListNestedAttributeAssocExtTypeValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewListNestedAttributeAssocExtTypeValueUnknown() ListNestedAttributeAssocExtTypeValue {
+	return ListNestedAttributeAssocExtTypeValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (ListNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing ListNestedAttributeAssocExtTypeValue Attribute Value",
+				"While creating a ListNestedAttributeAssocExtTypeValue value, a missing attribute value was detected. "+
+					"A ListNestedAttributeAssocExtTypeValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("ListNestedAttributeAssocExtTypeValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid ListNestedAttributeAssocExtTypeValue Attribute Type",
+				"While creating a ListNestedAttributeAssocExtTypeValue value, an invalid attribute value was detected. "+
+					"A ListNestedAttributeAssocExtTypeValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("ListNestedAttributeAssocExtTypeValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("ListNestedAttributeAssocExtTypeValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra ListNestedAttributeAssocExtTypeValue Attribute Value",
+				"While creating a ListNestedAttributeAssocExtTypeValue value, an extra attribute value was detected. "+
+					"A ListNestedAttributeAssocExtTypeValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra ListNestedAttributeAssocExtTypeValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
+	}
+
+	state := attr.ValueStateKnown
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return ListNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewListNestedAttributeAssocExtTypeValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) ListNestedAttributeAssocExtTypeValue {
+	object, diags := NewListNestedAttributeAssocExtTypeValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewListNestedAttributeAssocExtTypeValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t ListNestedAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewListNestedAttributeAssocExtTypeValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewListNestedAttributeAssocExtTypeValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewListNestedAttributeAssocExtTypeValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewListNestedAttributeAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+}
+
+func (t ListNestedAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return ListNestedAttributeAssocExtTypeValue{}
+}
+
+var _ basetypes.ObjectValuable = ListNestedAttributeAssocExtTypeValue{}
+
+type ListNestedAttributeAssocExtTypeValue struct {
+	BoolAttribute    basetypes.BoolValue    `tfsdk:"bool_attribute"`
+	Float64Attribute basetypes.Float64Value `tfsdk:"float64_attribute"`
+	Int64Attribute   basetypes.Int64Value   `tfsdk:"int64_attribute"`
+	NumberAttribute  basetypes.NumberValue  `tfsdk:"number_attribute"`
+	StringAttribute  basetypes.StringValue  `tfsdk:"string_attribute"`
+	state            attr.ValueState
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 5)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["bool_attribute"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["float64_attribute"] = basetypes.Float64Type{}.TerraformType(ctx)
+	attrTypes["int64_attribute"] = basetypes.Int64Type{}.TerraformType(ctx)
+	attrTypes["number_attribute"] = basetypes.NumberType{}.TerraformType(ctx)
+	attrTypes["string_attribute"] = basetypes.StringType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 5)
+
+		val, err = v.BoolAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["bool_attribute"] = val
+
+		val, err = v.Float64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["float64_attribute"] = val
+
+		val, err = v.Int64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["int64_attribute"] = val
+
+		val, err = v.NumberAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["number_attribute"] = val
+
+		val, err = v.StringAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) String() string {
+	return "ListNestedAttributeAssocExtTypeValue"
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	objVal, diags := types.ObjectValue(
+		map[string]attr.Type{
+			"bool_attribute":    basetypes.BoolType{},
+			"float64_attribute": basetypes.Float64Type{},
+			"int64_attribute":   basetypes.Int64Type{},
+			"number_attribute":  basetypes.NumberType{},
+			"string_attribute":  basetypes.StringType{},
+		},
+		map[string]attr.Value{
+			"bool_attribute":    v.BoolAttribute,
+			"float64_attribute": v.Float64Attribute,
+			"int64_attribute":   v.Int64Attribute,
+			"number_attribute":  v.NumberAttribute,
+			"string_attribute":  v.StringAttribute,
+		})
+
+	return objVal, diags
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(ListNestedAttributeAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.BoolAttribute.Equal(other.BoolAttribute) {
+		return false
+	}
+
+	if !v.Float64Attribute.Equal(other.Float64Attribute) {
+		return false
+	}
+
+	if !v.Int64Attribute.Equal(other.Int64Attribute) {
+		return false
+	}
+
+	if !v.NumberAttribute.Equal(other.NumberAttribute) {
+		return false
+	}
+
+	if !v.StringAttribute.Equal(other.StringAttribute) {
+		return false
+	}
+
+	return true
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return ListNestedAttributeAssocExtTypeType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+}
+
+var _ basetypes.ObjectTypable = MapNestedAttributeAssocExtTypeType{}
+
+type MapNestedAttributeAssocExtTypeType struct {
+	basetypes.ObjectType
+}
+
+func (t MapNestedAttributeAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(MapNestedAttributeAssocExtTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t MapNestedAttributeAssocExtTypeType) String() string {
+	return "MapNestedAttributeAssocExtTypeType"
+}
+
+func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	state := attr.ValueStateKnown
+
+	attributes := in.Attributes()
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return MapNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewMapNestedAttributeAssocExtTypeValueNull() MapNestedAttributeAssocExtTypeValue {
+	return MapNestedAttributeAssocExtTypeValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewMapNestedAttributeAssocExtTypeValueUnknown() MapNestedAttributeAssocExtTypeValue {
+	return MapNestedAttributeAssocExtTypeValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (MapNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing MapNestedAttributeAssocExtTypeValue Attribute Value",
+				"While creating a MapNestedAttributeAssocExtTypeValue value, a missing attribute value was detected. "+
+					"A MapNestedAttributeAssocExtTypeValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("MapNestedAttributeAssocExtTypeValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid MapNestedAttributeAssocExtTypeValue Attribute Type",
+				"While creating a MapNestedAttributeAssocExtTypeValue value, an invalid attribute value was detected. "+
+					"A MapNestedAttributeAssocExtTypeValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("MapNestedAttributeAssocExtTypeValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("MapNestedAttributeAssocExtTypeValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra MapNestedAttributeAssocExtTypeValue Attribute Value",
+				"While creating a MapNestedAttributeAssocExtTypeValue value, an extra attribute value was detected. "+
+					"A MapNestedAttributeAssocExtTypeValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra MapNestedAttributeAssocExtTypeValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
+	}
+
+	state := attr.ValueStateKnown
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return MapNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewMapNestedAttributeAssocExtTypeValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) MapNestedAttributeAssocExtTypeValue {
+	object, diags := NewMapNestedAttributeAssocExtTypeValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewMapNestedAttributeAssocExtTypeValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t MapNestedAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewMapNestedAttributeAssocExtTypeValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewMapNestedAttributeAssocExtTypeValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewMapNestedAttributeAssocExtTypeValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewMapNestedAttributeAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+}
+
+func (t MapNestedAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return MapNestedAttributeAssocExtTypeValue{}
+}
+
+var _ basetypes.ObjectValuable = MapNestedAttributeAssocExtTypeValue{}
+
+type MapNestedAttributeAssocExtTypeValue struct {
+	BoolAttribute    basetypes.BoolValue    `tfsdk:"bool_attribute"`
+	Float64Attribute basetypes.Float64Value `tfsdk:"float64_attribute"`
+	Int64Attribute   basetypes.Int64Value   `tfsdk:"int64_attribute"`
+	NumberAttribute  basetypes.NumberValue  `tfsdk:"number_attribute"`
+	StringAttribute  basetypes.StringValue  `tfsdk:"string_attribute"`
+	state            attr.ValueState
+}
+
+func (v MapNestedAttributeAssocExtTypeValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 5)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["bool_attribute"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["float64_attribute"] = basetypes.Float64Type{}.TerraformType(ctx)
+	attrTypes["int64_attribute"] = basetypes.Int64Type{}.TerraformType(ctx)
+	attrTypes["number_attribute"] = basetypes.NumberType{}.TerraformType(ctx)
+	attrTypes["string_attribute"] = basetypes.StringType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 5)
+
+		val, err = v.BoolAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["bool_attribute"] = val
+
+		val, err = v.Float64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["float64_attribute"] = val
+
+		val, err = v.Int64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["int64_attribute"] = val
+
+		val, err = v.NumberAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["number_attribute"] = val
+
+		val, err = v.StringAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v MapNestedAttributeAssocExtTypeValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v MapNestedAttributeAssocExtTypeValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v MapNestedAttributeAssocExtTypeValue) String() string {
+	return "MapNestedAttributeAssocExtTypeValue"
+}
+
+func (v MapNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	objVal, diags := types.ObjectValue(
+		map[string]attr.Type{
+			"bool_attribute":    basetypes.BoolType{},
+			"float64_attribute": basetypes.Float64Type{},
+			"int64_attribute":   basetypes.Int64Type{},
+			"number_attribute":  basetypes.NumberType{},
+			"string_attribute":  basetypes.StringType{},
+		},
+		map[string]attr.Value{
+			"bool_attribute":    v.BoolAttribute,
+			"float64_attribute": v.Float64Attribute,
+			"int64_attribute":   v.Int64Attribute,
+			"number_attribute":  v.NumberAttribute,
+			"string_attribute":  v.StringAttribute,
+		})
+
+	return objVal, diags
+}
+
+func (v MapNestedAttributeAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(MapNestedAttributeAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.BoolAttribute.Equal(other.BoolAttribute) {
+		return false
+	}
+
+	if !v.Float64Attribute.Equal(other.Float64Attribute) {
+		return false
+	}
+
+	if !v.Int64Attribute.Equal(other.Int64Attribute) {
+		return false
+	}
+
+	if !v.NumberAttribute.Equal(other.NumberAttribute) {
+		return false
+	}
+
+	if !v.StringAttribute.Equal(other.StringAttribute) {
+		return false
+	}
+
+	return true
+}
+
+func (v MapNestedAttributeAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return MapNestedAttributeAssocExtTypeType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v MapNestedAttributeAssocExtTypeValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+}
+
+var _ basetypes.ObjectTypable = SetNestedAttributeAssocExtTypeType{}
+
+type SetNestedAttributeAssocExtTypeType struct {
+	basetypes.ObjectType
+}
+
+func (t SetNestedAttributeAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(SetNestedAttributeAssocExtTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t SetNestedAttributeAssocExtTypeType) String() string {
+	return "SetNestedAttributeAssocExtTypeType"
+}
+
+func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	state := attr.ValueStateKnown
+
+	attributes := in.Attributes()
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return SetNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewSetNestedAttributeAssocExtTypeValueNull() SetNestedAttributeAssocExtTypeValue {
+	return SetNestedAttributeAssocExtTypeValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewSetNestedAttributeAssocExtTypeValueUnknown() SetNestedAttributeAssocExtTypeValue {
+	return SetNestedAttributeAssocExtTypeValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (SetNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing SetNestedAttributeAssocExtTypeValue Attribute Value",
+				"While creating a SetNestedAttributeAssocExtTypeValue value, a missing attribute value was detected. "+
+					"A SetNestedAttributeAssocExtTypeValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("SetNestedAttributeAssocExtTypeValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid SetNestedAttributeAssocExtTypeValue Attribute Type",
+				"While creating a SetNestedAttributeAssocExtTypeValue value, an invalid attribute value was detected. "+
+					"A SetNestedAttributeAssocExtTypeValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("SetNestedAttributeAssocExtTypeValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("SetNestedAttributeAssocExtTypeValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra SetNestedAttributeAssocExtTypeValue Attribute Value",
+				"While creating a SetNestedAttributeAssocExtTypeValue value, an extra attribute value was detected. "+
+					"A SetNestedAttributeAssocExtTypeValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra SetNestedAttributeAssocExtTypeValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
+	}
+
+	state := attr.ValueStateKnown
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return SetNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewSetNestedAttributeAssocExtTypeValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) SetNestedAttributeAssocExtTypeValue {
+	object, diags := NewSetNestedAttributeAssocExtTypeValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewSetNestedAttributeAssocExtTypeValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t SetNestedAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewSetNestedAttributeAssocExtTypeValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewSetNestedAttributeAssocExtTypeValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewSetNestedAttributeAssocExtTypeValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewSetNestedAttributeAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+}
+
+func (t SetNestedAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return SetNestedAttributeAssocExtTypeValue{}
+}
+
+var _ basetypes.ObjectValuable = SetNestedAttributeAssocExtTypeValue{}
+
+type SetNestedAttributeAssocExtTypeValue struct {
+	BoolAttribute    basetypes.BoolValue    `tfsdk:"bool_attribute"`
+	Float64Attribute basetypes.Float64Value `tfsdk:"float64_attribute"`
+	Int64Attribute   basetypes.Int64Value   `tfsdk:"int64_attribute"`
+	NumberAttribute  basetypes.NumberValue  `tfsdk:"number_attribute"`
+	StringAttribute  basetypes.StringValue  `tfsdk:"string_attribute"`
+	state            attr.ValueState
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 5)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["bool_attribute"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["float64_attribute"] = basetypes.Float64Type{}.TerraformType(ctx)
+	attrTypes["int64_attribute"] = basetypes.Int64Type{}.TerraformType(ctx)
+	attrTypes["number_attribute"] = basetypes.NumberType{}.TerraformType(ctx)
+	attrTypes["string_attribute"] = basetypes.StringType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 5)
+
+		val, err = v.BoolAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["bool_attribute"] = val
+
+		val, err = v.Float64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["float64_attribute"] = val
+
+		val, err = v.Int64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["int64_attribute"] = val
+
+		val, err = v.NumberAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["number_attribute"] = val
+
+		val, err = v.StringAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) String() string {
+	return "SetNestedAttributeAssocExtTypeValue"
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	objVal, diags := types.ObjectValue(
+		map[string]attr.Type{
+			"bool_attribute":    basetypes.BoolType{},
+			"float64_attribute": basetypes.Float64Type{},
+			"int64_attribute":   basetypes.Int64Type{},
+			"number_attribute":  basetypes.NumberType{},
+			"string_attribute":  basetypes.StringType{},
+		},
+		map[string]attr.Value{
+			"bool_attribute":    v.BoolAttribute,
+			"float64_attribute": v.Float64Attribute,
+			"int64_attribute":   v.Int64Attribute,
+			"number_attribute":  v.NumberAttribute,
+			"string_attribute":  v.StringAttribute,
+		})
+
+	return objVal, diags
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(SetNestedAttributeAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.BoolAttribute.Equal(other.BoolAttribute) {
+		return false
+	}
+
+	if !v.Float64Attribute.Equal(other.Float64Attribute) {
+		return false
+	}
+
+	if !v.Int64Attribute.Equal(other.Int64Attribute) {
+		return false
+	}
+
+	if !v.NumberAttribute.Equal(other.NumberAttribute) {
+		return false
+	}
+
+	if !v.StringAttribute.Equal(other.StringAttribute) {
+		return false
+	}
+
+	return true
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return SetNestedAttributeAssocExtTypeType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+}
+
+var _ basetypes.ObjectTypable = SingleNestedAttributeAssocExtTypeType{}
+
+type SingleNestedAttributeAssocExtTypeType struct {
+	basetypes.ObjectType
+}
+
+func (t SingleNestedAttributeAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(SingleNestedAttributeAssocExtTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t SingleNestedAttributeAssocExtTypeType) String() string {
+	return "SingleNestedAttributeAssocExtTypeType"
+}
+
+func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	state := attr.ValueStateKnown
+
+	attributes := in.Attributes()
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return SingleNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewSingleNestedAttributeAssocExtTypeValueNull() SingleNestedAttributeAssocExtTypeValue {
+	return SingleNestedAttributeAssocExtTypeValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewSingleNestedAttributeAssocExtTypeValueUnknown() SingleNestedAttributeAssocExtTypeValue {
+	return SingleNestedAttributeAssocExtTypeValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (SingleNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing SingleNestedAttributeAssocExtTypeValue Attribute Value",
+				"While creating a SingleNestedAttributeAssocExtTypeValue value, a missing attribute value was detected. "+
+					"A SingleNestedAttributeAssocExtTypeValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("SingleNestedAttributeAssocExtTypeValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid SingleNestedAttributeAssocExtTypeValue Attribute Type",
+				"While creating a SingleNestedAttributeAssocExtTypeValue value, an invalid attribute value was detected. "+
+					"A SingleNestedAttributeAssocExtTypeValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("SingleNestedAttributeAssocExtTypeValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("SingleNestedAttributeAssocExtTypeValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra SingleNestedAttributeAssocExtTypeValue Attribute Value",
+				"While creating a SingleNestedAttributeAssocExtTypeValue value, an extra attribute value was detected. "+
+					"A SingleNestedAttributeAssocExtTypeValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra SingleNestedAttributeAssocExtTypeValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
+	}
+
+	state := attr.ValueStateKnown
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return SingleNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewSingleNestedAttributeAssocExtTypeValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) SingleNestedAttributeAssocExtTypeValue {
+	object, diags := NewSingleNestedAttributeAssocExtTypeValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewSingleNestedAttributeAssocExtTypeValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t SingleNestedAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewSingleNestedAttributeAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+}
+
+func (t SingleNestedAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return SingleNestedAttributeAssocExtTypeValue{}
+}
+
+var _ basetypes.ObjectValuable = SingleNestedAttributeAssocExtTypeValue{}
+
+type SingleNestedAttributeAssocExtTypeValue struct {
+	BoolAttribute    basetypes.BoolValue    `tfsdk:"bool_attribute"`
+	Float64Attribute basetypes.Float64Value `tfsdk:"float64_attribute"`
+	Int64Attribute   basetypes.Int64Value   `tfsdk:"int64_attribute"`
+	NumberAttribute  basetypes.NumberValue  `tfsdk:"number_attribute"`
+	StringAttribute  basetypes.StringValue  `tfsdk:"string_attribute"`
+	state            attr.ValueState
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 5)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["bool_attribute"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["float64_attribute"] = basetypes.Float64Type{}.TerraformType(ctx)
+	attrTypes["int64_attribute"] = basetypes.Int64Type{}.TerraformType(ctx)
+	attrTypes["number_attribute"] = basetypes.NumberType{}.TerraformType(ctx)
+	attrTypes["string_attribute"] = basetypes.StringType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 5)
+
+		val, err = v.BoolAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["bool_attribute"] = val
+
+		val, err = v.Float64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["float64_attribute"] = val
+
+		val, err = v.Int64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["int64_attribute"] = val
+
+		val, err = v.NumberAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["number_attribute"] = val
+
+		val, err = v.StringAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) String() string {
+	return "SingleNestedAttributeAssocExtTypeValue"
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	objVal, diags := types.ObjectValue(
+		map[string]attr.Type{
+			"bool_attribute":    basetypes.BoolType{},
+			"float64_attribute": basetypes.Float64Type{},
+			"int64_attribute":   basetypes.Int64Type{},
+			"number_attribute":  basetypes.NumberType{},
+			"string_attribute":  basetypes.StringType{},
+		},
+		map[string]attr.Value{
+			"bool_attribute":    v.BoolAttribute,
+			"float64_attribute": v.Float64Attribute,
+			"int64_attribute":   v.Int64Attribute,
+			"number_attribute":  v.NumberAttribute,
+			"string_attribute":  v.StringAttribute,
+		})
+
+	return objVal, diags
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(SingleNestedAttributeAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.BoolAttribute.Equal(other.BoolAttribute) {
+		return false
+	}
+
+	if !v.Float64Attribute.Equal(other.Float64Attribute) {
+		return false
+	}
+
+	if !v.Int64Attribute.Equal(other.Int64Attribute) {
+		return false
+	}
+
+	if !v.NumberAttribute.Equal(other.NumberAttribute) {
+		return false
+	}
+
+	if !v.StringAttribute.Equal(other.StringAttribute) {
+		return false
+	}
+
+	return true
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return SingleNestedAttributeAssocExtTypeType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+}
+
+var _ basetypes.ObjectTypable = ListNestedBlockAssocExtTypeType{}
+
+type ListNestedBlockAssocExtTypeType struct {
+	basetypes.ObjectType
+}
+
+func (t ListNestedBlockAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(ListNestedBlockAssocExtTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t ListNestedBlockAssocExtTypeType) String() string {
+	return "ListNestedBlockAssocExtTypeType"
+}
+
+func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	state := attr.ValueStateKnown
+
+	attributes := in.Attributes()
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return ListNestedBlockAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewListNestedBlockAssocExtTypeValueNull() ListNestedBlockAssocExtTypeValue {
+	return ListNestedBlockAssocExtTypeValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewListNestedBlockAssocExtTypeValueUnknown() ListNestedBlockAssocExtTypeValue {
+	return ListNestedBlockAssocExtTypeValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (ListNestedBlockAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing ListNestedBlockAssocExtTypeValue Attribute Value",
+				"While creating a ListNestedBlockAssocExtTypeValue value, a missing attribute value was detected. "+
+					"A ListNestedBlockAssocExtTypeValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("ListNestedBlockAssocExtTypeValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid ListNestedBlockAssocExtTypeValue Attribute Type",
+				"While creating a ListNestedBlockAssocExtTypeValue value, an invalid attribute value was detected. "+
+					"A ListNestedBlockAssocExtTypeValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("ListNestedBlockAssocExtTypeValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("ListNestedBlockAssocExtTypeValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra ListNestedBlockAssocExtTypeValue Attribute Value",
+				"While creating a ListNestedBlockAssocExtTypeValue value, an extra attribute value was detected. "+
+					"A ListNestedBlockAssocExtTypeValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra ListNestedBlockAssocExtTypeValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
+	}
+
+	state := attr.ValueStateKnown
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return NewListNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return NewListNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return NewListNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return NewListNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return NewListNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return ListNestedBlockAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewListNestedBlockAssocExtTypeValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) ListNestedBlockAssocExtTypeValue {
+	object, diags := NewListNestedBlockAssocExtTypeValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewListNestedBlockAssocExtTypeValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t ListNestedBlockAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewListNestedBlockAssocExtTypeValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewListNestedBlockAssocExtTypeValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewListNestedBlockAssocExtTypeValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewListNestedBlockAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+}
+
+func (t ListNestedBlockAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return ListNestedBlockAssocExtTypeValue{}
+}
+
+var _ basetypes.ObjectValuable = ListNestedBlockAssocExtTypeValue{}
+
+type ListNestedBlockAssocExtTypeValue struct {
+	BoolAttribute    basetypes.BoolValue    `tfsdk:"bool_attribute"`
+	Float64Attribute basetypes.Float64Value `tfsdk:"float64_attribute"`
+	Int64Attribute   basetypes.Int64Value   `tfsdk:"int64_attribute"`
+	NumberAttribute  basetypes.NumberValue  `tfsdk:"number_attribute"`
+	StringAttribute  basetypes.StringValue  `tfsdk:"string_attribute"`
+	state            attr.ValueState
+}
+
+func (v ListNestedBlockAssocExtTypeValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 5)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["bool_attribute"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["float64_attribute"] = basetypes.Float64Type{}.TerraformType(ctx)
+	attrTypes["int64_attribute"] = basetypes.Int64Type{}.TerraformType(ctx)
+	attrTypes["number_attribute"] = basetypes.NumberType{}.TerraformType(ctx)
+	attrTypes["string_attribute"] = basetypes.StringType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 5)
+
+		val, err = v.BoolAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["bool_attribute"] = val
+
+		val, err = v.Float64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["float64_attribute"] = val
+
+		val, err = v.Int64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["int64_attribute"] = val
+
+		val, err = v.NumberAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["number_attribute"] = val
+
+		val, err = v.StringAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v ListNestedBlockAssocExtTypeValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v ListNestedBlockAssocExtTypeValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v ListNestedBlockAssocExtTypeValue) String() string {
+	return "ListNestedBlockAssocExtTypeValue"
+}
+
+func (v ListNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	objVal, diags := types.ObjectValue(
+		map[string]attr.Type{
+			"bool_attribute":    basetypes.BoolType{},
+			"float64_attribute": basetypes.Float64Type{},
+			"int64_attribute":   basetypes.Int64Type{},
+			"number_attribute":  basetypes.NumberType{},
+			"string_attribute":  basetypes.StringType{},
+		},
+		map[string]attr.Value{
+			"bool_attribute":    v.BoolAttribute,
+			"float64_attribute": v.Float64Attribute,
+			"int64_attribute":   v.Int64Attribute,
+			"number_attribute":  v.NumberAttribute,
+			"string_attribute":  v.StringAttribute,
+		})
+
+	return objVal, diags
+}
+
+func (v ListNestedBlockAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(ListNestedBlockAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.BoolAttribute.Equal(other.BoolAttribute) {
+		return false
+	}
+
+	if !v.Float64Attribute.Equal(other.Float64Attribute) {
+		return false
+	}
+
+	if !v.Int64Attribute.Equal(other.Int64Attribute) {
+		return false
+	}
+
+	if !v.NumberAttribute.Equal(other.NumberAttribute) {
+		return false
+	}
+
+	if !v.StringAttribute.Equal(other.StringAttribute) {
+		return false
+	}
+
+	return true
+}
+
+func (v ListNestedBlockAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return ListNestedBlockAssocExtTypeType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v ListNestedBlockAssocExtTypeValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+}
+
+var _ basetypes.ObjectTypable = SetNestedBlockAssocExtTypeType{}
+
+type SetNestedBlockAssocExtTypeType struct {
+	basetypes.ObjectType
+}
+
+func (t SetNestedBlockAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(SetNestedBlockAssocExtTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t SetNestedBlockAssocExtTypeType) String() string {
+	return "SetNestedBlockAssocExtTypeType"
+}
+
+func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	state := attr.ValueStateKnown
+
+	attributes := in.Attributes()
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return SetNestedBlockAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewSetNestedBlockAssocExtTypeValueNull() SetNestedBlockAssocExtTypeValue {
+	return SetNestedBlockAssocExtTypeValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewSetNestedBlockAssocExtTypeValueUnknown() SetNestedBlockAssocExtTypeValue {
+	return SetNestedBlockAssocExtTypeValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (SetNestedBlockAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing SetNestedBlockAssocExtTypeValue Attribute Value",
+				"While creating a SetNestedBlockAssocExtTypeValue value, a missing attribute value was detected. "+
+					"A SetNestedBlockAssocExtTypeValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("SetNestedBlockAssocExtTypeValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid SetNestedBlockAssocExtTypeValue Attribute Type",
+				"While creating a SetNestedBlockAssocExtTypeValue value, an invalid attribute value was detected. "+
+					"A SetNestedBlockAssocExtTypeValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("SetNestedBlockAssocExtTypeValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("SetNestedBlockAssocExtTypeValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra SetNestedBlockAssocExtTypeValue Attribute Value",
+				"While creating a SetNestedBlockAssocExtTypeValue value, an extra attribute value was detected. "+
+					"A SetNestedBlockAssocExtTypeValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra SetNestedBlockAssocExtTypeValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
+	}
+
+	state := attr.ValueStateKnown
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return SetNestedBlockAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewSetNestedBlockAssocExtTypeValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) SetNestedBlockAssocExtTypeValue {
+	object, diags := NewSetNestedBlockAssocExtTypeValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewSetNestedBlockAssocExtTypeValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t SetNestedBlockAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewSetNestedBlockAssocExtTypeValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewSetNestedBlockAssocExtTypeValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewSetNestedBlockAssocExtTypeValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewSetNestedBlockAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+}
+
+func (t SetNestedBlockAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return SetNestedBlockAssocExtTypeValue{}
+}
+
+var _ basetypes.ObjectValuable = SetNestedBlockAssocExtTypeValue{}
+
+type SetNestedBlockAssocExtTypeValue struct {
+	BoolAttribute    basetypes.BoolValue    `tfsdk:"bool_attribute"`
+	Float64Attribute basetypes.Float64Value `tfsdk:"float64_attribute"`
+	Int64Attribute   basetypes.Int64Value   `tfsdk:"int64_attribute"`
+	NumberAttribute  basetypes.NumberValue  `tfsdk:"number_attribute"`
+	StringAttribute  basetypes.StringValue  `tfsdk:"string_attribute"`
+	state            attr.ValueState
+}
+
+func (v SetNestedBlockAssocExtTypeValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 5)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["bool_attribute"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["float64_attribute"] = basetypes.Float64Type{}.TerraformType(ctx)
+	attrTypes["int64_attribute"] = basetypes.Int64Type{}.TerraformType(ctx)
+	attrTypes["number_attribute"] = basetypes.NumberType{}.TerraformType(ctx)
+	attrTypes["string_attribute"] = basetypes.StringType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 5)
+
+		val, err = v.BoolAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["bool_attribute"] = val
+
+		val, err = v.Float64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["float64_attribute"] = val
+
+		val, err = v.Int64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["int64_attribute"] = val
+
+		val, err = v.NumberAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["number_attribute"] = val
+
+		val, err = v.StringAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v SetNestedBlockAssocExtTypeValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v SetNestedBlockAssocExtTypeValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v SetNestedBlockAssocExtTypeValue) String() string {
+	return "SetNestedBlockAssocExtTypeValue"
+}
+
+func (v SetNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	objVal, diags := types.ObjectValue(
+		map[string]attr.Type{
+			"bool_attribute":    basetypes.BoolType{},
+			"float64_attribute": basetypes.Float64Type{},
+			"int64_attribute":   basetypes.Int64Type{},
+			"number_attribute":  basetypes.NumberType{},
+			"string_attribute":  basetypes.StringType{},
+		},
+		map[string]attr.Value{
+			"bool_attribute":    v.BoolAttribute,
+			"float64_attribute": v.Float64Attribute,
+			"int64_attribute":   v.Int64Attribute,
+			"number_attribute":  v.NumberAttribute,
+			"string_attribute":  v.StringAttribute,
+		})
+
+	return objVal, diags
+}
+
+func (v SetNestedBlockAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(SetNestedBlockAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.BoolAttribute.Equal(other.BoolAttribute) {
+		return false
+	}
+
+	if !v.Float64Attribute.Equal(other.Float64Attribute) {
+		return false
+	}
+
+	if !v.Int64Attribute.Equal(other.Int64Attribute) {
+		return false
+	}
+
+	if !v.NumberAttribute.Equal(other.NumberAttribute) {
+		return false
+	}
+
+	if !v.StringAttribute.Equal(other.StringAttribute) {
+		return false
+	}
+
+	return true
+}
+
+func (v SetNestedBlockAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return SetNestedBlockAssocExtTypeType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v SetNestedBlockAssocExtTypeValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+}
+
+var _ basetypes.ObjectTypable = SingleNestedBlockAssocExtTypeType{}
+
+type SingleNestedBlockAssocExtTypeType struct {
+	basetypes.ObjectType
+}
+
+func (t SingleNestedBlockAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(SingleNestedBlockAssocExtTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t SingleNestedBlockAssocExtTypeType) String() string {
+	return "SingleNestedBlockAssocExtTypeType"
+}
+
+func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	state := attr.ValueStateKnown
+
+	attributes := in.Attributes()
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return SingleNestedBlockAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewSingleNestedBlockAssocExtTypeValueNull() SingleNestedBlockAssocExtTypeValue {
+	return SingleNestedBlockAssocExtTypeValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewSingleNestedBlockAssocExtTypeValueUnknown() SingleNestedBlockAssocExtTypeValue {
+	return SingleNestedBlockAssocExtTypeValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (SingleNestedBlockAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing SingleNestedBlockAssocExtTypeValue Attribute Value",
+				"While creating a SingleNestedBlockAssocExtTypeValue value, a missing attribute value was detected. "+
+					"A SingleNestedBlockAssocExtTypeValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("SingleNestedBlockAssocExtTypeValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid SingleNestedBlockAssocExtTypeValue Attribute Type",
+				"While creating a SingleNestedBlockAssocExtTypeValue value, an invalid attribute value was detected. "+
+					"A SingleNestedBlockAssocExtTypeValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("SingleNestedBlockAssocExtTypeValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("SingleNestedBlockAssocExtTypeValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra SingleNestedBlockAssocExtTypeValue Attribute Value",
+				"While creating a SingleNestedBlockAssocExtTypeValue value, an extra attribute value was detected. "+
+					"A SingleNestedBlockAssocExtTypeValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra SingleNestedBlockAssocExtTypeValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
+	}
+
+	state := attr.ValueStateKnown
+
+	boolAttribute, ok := attributes["bool_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`bool_attribute is missing from object`)
+
+		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+	}
+
+	if boolAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	float64Attribute, ok := attributes["float64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`float64_attribute is missing from object`)
+
+		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+	}
+
+	if float64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	int64Attribute, ok := attributes["int64_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`int64_attribute is missing from object`)
+
+		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+	}
+
+	if int64AttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	numberAttribute, ok := attributes["number_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`number_attribute is missing from object`)
+
+		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+	}
+
+	if numberAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	stringAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+	}
+
+	if stringAttributeVal.IsUnknown() {
+		state = attr.ValueStateUnknown
+	}
+
+	return SingleNestedBlockAssocExtTypeValue{
+		BoolAttribute:    boolAttributeVal,
+		Float64Attribute: float64AttributeVal,
+		Int64Attribute:   int64AttributeVal,
+		NumberAttribute:  numberAttributeVal,
+		StringAttribute:  stringAttributeVal,
+		state:            state,
+	}, diags
+}
+
+func NewSingleNestedBlockAssocExtTypeValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) SingleNestedBlockAssocExtTypeValue {
+	object, diags := NewSingleNestedBlockAssocExtTypeValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewSingleNestedBlockAssocExtTypeValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t SingleNestedBlockAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewSingleNestedBlockAssocExtTypeValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewSingleNestedBlockAssocExtTypeValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewSingleNestedBlockAssocExtTypeValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewSingleNestedBlockAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+}
+
+func (t SingleNestedBlockAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return SingleNestedBlockAssocExtTypeValue{}
+}
+
+var _ basetypes.ObjectValuable = SingleNestedBlockAssocExtTypeValue{}
+
+type SingleNestedBlockAssocExtTypeValue struct {
+	BoolAttribute    basetypes.BoolValue    `tfsdk:"bool_attribute"`
+	Float64Attribute basetypes.Float64Value `tfsdk:"float64_attribute"`
+	Int64Attribute   basetypes.Int64Value   `tfsdk:"int64_attribute"`
+	NumberAttribute  basetypes.NumberValue  `tfsdk:"number_attribute"`
+	StringAttribute  basetypes.StringValue  `tfsdk:"string_attribute"`
+	state            attr.ValueState
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 5)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["bool_attribute"] = basetypes.BoolType{}.TerraformType(ctx)
+	attrTypes["float64_attribute"] = basetypes.Float64Type{}.TerraformType(ctx)
+	attrTypes["int64_attribute"] = basetypes.Int64Type{}.TerraformType(ctx)
+	attrTypes["number_attribute"] = basetypes.NumberType{}.TerraformType(ctx)
+	attrTypes["string_attribute"] = basetypes.StringType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 5)
+
+		val, err = v.BoolAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["bool_attribute"] = val
+
+		val, err = v.Float64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["float64_attribute"] = val
+
+		val, err = v.Int64Attribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["int64_attribute"] = val
+
+		val, err = v.NumberAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["number_attribute"] = val
+
+		val, err = v.StringAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) String() string {
+	return "SingleNestedBlockAssocExtTypeValue"
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	objVal, diags := types.ObjectValue(
+		map[string]attr.Type{
+			"bool_attribute":    basetypes.BoolType{},
+			"float64_attribute": basetypes.Float64Type{},
+			"int64_attribute":   basetypes.Int64Type{},
+			"number_attribute":  basetypes.NumberType{},
+			"string_attribute":  basetypes.StringType{},
+		},
+		map[string]attr.Value{
+			"bool_attribute":    v.BoolAttribute,
+			"float64_attribute": v.Float64Attribute,
+			"int64_attribute":   v.Int64Attribute,
+			"number_attribute":  v.NumberAttribute,
+			"string_attribute":  v.StringAttribute,
+		})
+
+	return objVal, diags
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(SingleNestedBlockAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.BoolAttribute.Equal(other.BoolAttribute) {
+		return false
+	}
+
+	if !v.Float64Attribute.Equal(other.Float64Attribute) {
+		return false
+	}
+
+	if !v.Int64Attribute.Equal(other.Int64Attribute) {
+		return false
+	}
+
+	if !v.NumberAttribute.Equal(other.NumberAttribute) {
+		return false
+	}
+
+	if !v.StringAttribute.Equal(other.StringAttribute) {
+		return false
+	}
+
+	return true
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return SingleNestedBlockAssocExtTypeType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+}
+
+func (v ListNestedAttributeAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if v.IsNull() {
+		return nil, diags
+	}
+
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"List Value Is Unknown",
-			`Model field "ListNestedAttributeAssocExtType" is unknown.`,
+			"ListNestedAttributeAssocExtTypeValue Value Is Unknown",
+			`"ListNestedAttributeAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	var listObjects []types.Object
-
-	diags.Append(tfList.ElementsAs(ctx, &listObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make([]*apisdk.Type, 0, len(listObjects))
-
-	for _, listObject := range listObjects {
-		if listObject.IsNull() {
-			apiObjects = append(apiObjects, nil)
-
-			continue
-		}
-
-		if listObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within List Is Unknown",
-				`Model field "ListNestedAttributeAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel ListNestedAttributeAssocExtTypeModel
-
-		d := listObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects = append(apiObjects, &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		})
-	}
-
-	return apiObjects, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromListNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.List, diag.Diagnostics) {
+func (v ListNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ListNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel ListNestedAttributeAssocExtTypeModel
-
-	if apiObjects == nil {
-		return types.ListNull(
-			tfModel.ObjectType(ctx),
-		), diags
-	}
-
-	var tfModels []*ListNestedAttributeAssocExtTypeModel
-
-	for _, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels = append(tfModels, nil)
-
-			continue
-		}
-
-		tfModels = append(tfModels, &ListNestedAttributeAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		})
-	}
-
-	return types.ListValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
-}
-
-func ToMapNestedAttributeAssocExtType(ctx context.Context, tfMap types.Map) (map[string]*apisdk.Type, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	if tfMap.IsNull() {
-		return nil, diags
-	}
-
-	if tfMap.IsUnknown() {
-		diags.Append(diag.NewErrorDiagnostic(
-			"Map Value Is Unknown",
-			`Model field "MapNestedAttributeAssocExtType" is unknown.`,
-		))
-
-		return nil, diags
-	}
-
-	mapObjects := make(map[string]types.Object)
-
-	diags.Append(tfMap.ElementsAs(ctx, &mapObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make(map[string]*apisdk.Type, len(mapObjects))
-
-	for k, mapObject := range mapObjects {
-		if mapObject.IsNull() {
-			apiObjects[k] = nil
-
-			continue
-		}
-
-		if mapObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within Map Is Unknown",
-				`Model field "MapNestedAttributeAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel MapNestedAttributeAssocExtTypeModel
-
-		d := mapObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects[k] = &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		}
-	}
-
-	return apiObjects, diags
-}
-
-func FromMapNestedAttributeAssocExtType(ctx context.Context, apiObjects map[string]*apisdk.Type) (types.Map, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	var tfModel MapNestedAttributeAssocExtTypeModel
-
-	if apiObjects == nil {
-		return types.MapNull(
-			tfModel.ObjectType(ctx),
-		), diags
-	}
-
-	tfModels := make(map[string]*MapNestedAttributeAssocExtTypeModel)
-
-	for k, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels[k] = nil
-
-			continue
-		}
-
-		tfModels[k] = &MapNestedAttributeAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		}
-	}
-
-	return types.MapValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
-}
-
-func ToSetNestedAttributeAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	if tfSet.IsNull() {
-		return nil, diags
-	}
-
-	if tfSet.IsUnknown() {
-		diags.Append(diag.NewErrorDiagnostic(
-			"Set Value Is Unknown",
-			`Model field "SetNestedAttributeAssocExtType" is unknown.`,
-		))
-
-		return nil, diags
-	}
-
-	var setObjects []types.Object
-
-	diags.Append(tfSet.ElementsAs(ctx, &setObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make([]*apisdk.Type, 0, len(setObjects))
-
-	for _, setObject := range setObjects {
-		if setObject.IsNull() {
-			apiObjects = append(apiObjects, nil)
-
-			continue
-		}
-
-		if setObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within Set Is Unknown",
-				`Model field "SetNestedAttributeAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel SetNestedAttributeAssocExtTypeModel
-
-		d := setObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects = append(apiObjects, &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		})
-	}
-
-	return apiObjects, diags
-}
-
-func FromSetNestedAttributeAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.Set, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	var tfModel SetNestedAttributeAssocExtTypeModel
-
-	if apiObjects == nil {
-		return types.SetNull(
-			tfModel.ObjectType(ctx),
-		), diags
-	}
-
-	var tfModels []*SetNestedAttributeAssocExtTypeModel
-
-	for _, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels = append(tfModels, nil)
-
-			continue
-		}
-
-		tfModels = append(tfModels, &SetNestedAttributeAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		})
-	}
-
-	return types.SetValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
-}
-
-func ToSingleNestedAttributeAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	if tfObject.IsNull() {
-		return nil, diags
-	}
-
-	if tfObject.IsUnknown() {
-		diags.Append(diag.NewErrorDiagnostic(
-			"Object Value Is Unknown",
-			`Model field "SingleNestedAttributeAssocExtType" is unknown.`,
-		))
-
-		return nil, diags
-	}
-
-	var tfModel SingleNestedAttributeAssocExtTypeModel
-
-	diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObject := &apisdk.Type{
-		BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-		Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-		Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-		NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-		StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-	}
-
-	return apiObject, diags
-}
-
-func FromSingleNestedAttributeAssocExtType(ctx context.Context, apiObject *apisdk.Type) (types.Object, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	var tfModel SingleNestedAttributeAssocExtTypeModel
 
 	if apiObject == nil {
-		return tfModel.ObjectNull(ctx), diags
+		return NewListNestedAttributeAssocExtTypeValueNull(), diags
 	}
 
-	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
-	tfModel.Float64Attribute = types.Float64PointerValue(apiObject.Float64Attribute)
-	tfModel.Int64Attribute = types.Int64PointerValue(apiObject.Int64Attribute)
-	tfModel.NumberAttribute = types.NumberValue(apiObject.NumberAttribute)
-	tfModel.StringAttribute = types.StringPointerValue(apiObject.StringAttribute)
-
-	return tfModel.ObjectValueFrom(ctx, tfModel)
+	return ListNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
 
-func ToListNestedBlockAssocExtType(ctx context.Context, tfList types.List) ([]*apisdk.Type, diag.Diagnostics) {
+func (v MapNestedAttributeAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if tfList.IsNull() {
+	if v.IsNull() {
 		return nil, diags
 	}
 
-	if tfList.IsUnknown() {
+	if v.IsUnknown() {
 		diags.Append(diag.NewErrorDiagnostic(
-			"List Value Is Unknown",
-			`Model field "ListNestedBlockAssocExtType" is unknown.`,
+			"MapNestedAttributeAssocExtTypeValue Value Is Unknown",
+			`"MapNestedAttributeAssocExtTypeValue" is unknown.`,
 		))
 
 		return nil, diags
 	}
 
-	var listObjects []types.Object
-
-	diags.Append(tfList.ElementsAs(ctx, &listObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make([]*apisdk.Type, 0, len(listObjects))
-
-	for _, listObject := range listObjects {
-		if listObject.IsNull() {
-			apiObjects = append(apiObjects, nil)
-
-			continue
-		}
-
-		if listObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within List Is Unknown",
-				`Model field "ListNestedBlockAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel ListNestedBlockAssocExtTypeModel
-
-		d := listObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects = append(apiObjects, &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		})
-	}
-
-	return apiObjects, diags
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
 }
 
-func FromListNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.List, diag.Diagnostics) {
+func (v MapNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (MapNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var tfModel ListNestedBlockAssocExtTypeModel
-
-	if apiObjects == nil {
-		return types.ListNull(
-			tfModel.ObjectType(ctx),
-		), diags
-	}
-
-	var tfModels []*ListNestedBlockAssocExtTypeModel
-
-	for _, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels = append(tfModels, nil)
-
-			continue
-		}
-
-		tfModels = append(tfModels, &ListNestedBlockAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		})
-	}
-
-	return types.ListValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
-}
-
-func ToSetNestedBlockAssocExtType(ctx context.Context, tfSet types.Set) ([]*apisdk.Type, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	if tfSet.IsNull() {
-		return nil, diags
-	}
-
-	if tfSet.IsUnknown() {
-		diags.Append(diag.NewErrorDiagnostic(
-			"Set Value Is Unknown",
-			`Model field "SetNestedBlockAssocExtType" is unknown.`,
-		))
-
-		return nil, diags
-	}
-
-	var setObjects []types.Object
-
-	diags.Append(tfSet.ElementsAs(ctx, &setObjects, false)...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObjects := make([]*apisdk.Type, 0, len(setObjects))
-
-	for _, setObject := range setObjects {
-		if setObject.IsNull() {
-			apiObjects = append(apiObjects, nil)
-
-			continue
-		}
-
-		if setObject.IsUnknown() {
-			diags.Append(diag.NewErrorDiagnostic(
-				"Object Value Within Set Is Unknown",
-				`Model field "SetNestedBlockAssocExtType" contains an object which is unknown.`,
-			))
-
-			return nil, diags
-		}
-
-		var tfModel SetNestedBlockAssocExtTypeModel
-
-		d := setObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})
-
-		diags.Append(d...)
-
-		if diags.HasError() {
-			return nil, diags
-		}
-
-		apiObjects = append(apiObjects, &apisdk.Type{
-			BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-			Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-			Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-			NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-			StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-		})
-	}
-
-	return apiObjects, diags
-}
-
-func FromSetNestedBlockAssocExtType(ctx context.Context, apiObjects []*apisdk.Type) (types.Set, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	var tfModel SetNestedBlockAssocExtTypeModel
-
-	if apiObjects == nil {
-		return types.SetNull(
-			tfModel.ObjectType(ctx),
-		), diags
-	}
-
-	var tfModels []*SetNestedBlockAssocExtTypeModel
-
-	for _, apiObject := range apiObjects {
-		if apiObject == nil {
-			tfModels = append(tfModels, nil)
-
-			continue
-		}
-
-		tfModels = append(tfModels, &SetNestedBlockAssocExtTypeModel{
-			BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
-			Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
-			Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
-			NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
-			StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
-		})
-	}
-
-	return types.SetValueFrom(ctx, tfModel.ObjectType(ctx), tfModels)
-}
-
-func ToSingleNestedBlockAssocExtType(ctx context.Context, tfObject types.Object) (*apisdk.Type, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	if tfObject.IsNull() {
-		return nil, diags
-	}
-
-	if tfObject.IsUnknown() {
-		diags.Append(diag.NewErrorDiagnostic(
-			"Object Value Is Unknown",
-			`Model field "SingleNestedBlockAssocExtType" is unknown.`,
-		))
-
-		return nil, diags
-	}
-
-	var tfModel SingleNestedBlockAssocExtTypeModel
-
-	diags.Append(tfObject.As(ctx, &tfModel, basetypes.ObjectAsOptions{})...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	apiObject := &apisdk.Type{
-		BoolAttribute:    tfModel.BoolAttribute.ValueBoolPointer(),
-		Float64Attribute: tfModel.Float64Attribute.ValueFloat64Pointer(),
-		Int64Attribute:   tfModel.Int64Attribute.ValueInt64Pointer(),
-		NumberAttribute:  tfModel.NumberAttribute.ValueBigFloat(),
-		StringAttribute:  tfModel.StringAttribute.ValueStringPointer(),
-	}
-
-	return apiObject, diags
-}
-
-func FromSingleNestedBlockAssocExtType(ctx context.Context, apiObject *apisdk.Type) (types.Object, diag.Diagnostics) {
-	var diags diag.Diagnostics
-	var tfModel SingleNestedBlockAssocExtTypeModel
 
 	if apiObject == nil {
-		return tfModel.ObjectNull(ctx), diags
+		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
 	}
 
-	tfModel.BoolAttribute = types.BoolPointerValue(apiObject.BoolAttribute)
-	tfModel.Float64Attribute = types.Float64PointerValue(apiObject.Float64Attribute)
-	tfModel.Int64Attribute = types.Int64PointerValue(apiObject.Int64Attribute)
-	tfModel.NumberAttribute = types.NumberValue(apiObject.NumberAttribute)
-	tfModel.StringAttribute = types.StringPointerValue(apiObject.StringAttribute)
+	return MapNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
+}
 
-	return tfModel.ObjectValueFrom(ctx, tfModel)
+func (v SetNestedAttributeAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if v.IsNull() {
+		return nil, diags
+	}
+
+	if v.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"SetNestedAttributeAssocExtTypeValue Value Is Unknown",
+			`"SetNestedAttributeAssocExtTypeValue" is unknown.`,
+		))
+
+		return nil, diags
+	}
+
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
+}
+
+func (v SetNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (SetNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if apiObject == nil {
+		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	return SetNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if v.IsNull() {
+		return nil, diags
+	}
+
+	if v.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"SingleNestedAttributeAssocExtTypeValue Value Is Unknown",
+			`"SingleNestedAttributeAssocExtTypeValue" is unknown.`,
+		))
+
+		return nil, diags
+	}
+
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
+}
+
+func (v SingleNestedAttributeAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (SingleNestedAttributeAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if apiObject == nil {
+		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+	}
+
+	return SingleNestedAttributeAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
+}
+
+func (v ListNestedBlockAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if v.IsNull() {
+		return nil, diags
+	}
+
+	if v.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"ListNestedBlockAssocExtTypeValue Value Is Unknown",
+			`"ListNestedBlockAssocExtTypeValue" is unknown.`,
+		))
+
+		return nil, diags
+	}
+
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
+}
+
+func (v ListNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ListNestedBlockAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if apiObject == nil {
+		return NewListNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	return ListNestedBlockAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
+}
+
+func (v SetNestedBlockAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if v.IsNull() {
+		return nil, diags
+	}
+
+	if v.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"SetNestedBlockAssocExtTypeValue Value Is Unknown",
+			`"SetNestedBlockAssocExtTypeValue" is unknown.`,
+		))
+
+		return nil, diags
+	}
+
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
+}
+
+func (v SetNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (SetNestedBlockAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if apiObject == nil {
+		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	return SetNestedBlockAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if v.IsNull() {
+		return nil, diags
+	}
+
+	if v.IsUnknown() {
+		diags.Append(diag.NewErrorDiagnostic(
+			"SingleNestedBlockAssocExtTypeValue Value Is Unknown",
+			`"SingleNestedBlockAssocExtTypeValue" is unknown.`,
+		))
+
+		return nil, diags
+	}
+
+	return &apisdk.Type{
+		BoolAttribute:    v.BoolAttribute.ValueBoolPointer(),
+		Float64Attribute: v.Float64Attribute.ValueFloat64Pointer(),
+		Int64Attribute:   v.Int64Attribute.ValueInt64Pointer(),
+		NumberAttribute:  v.NumberAttribute.ValueBigFloat(),
+		StringAttribute:  v.StringAttribute.ValueStringPointer(),
+	}, diags
+}
+
+func (v SingleNestedBlockAssocExtTypeValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (SingleNestedBlockAssocExtTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	if apiObject == nil {
+		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+	}
+
+	return SingleNestedBlockAssocExtTypeValue{
+		BoolAttribute:    types.BoolPointerValue(apiObject.BoolAttribute),
+		Float64Attribute: types.Float64PointerValue(apiObject.Float64Attribute),
+		Int64Attribute:   types.Int64PointerValue(apiObject.Int64Attribute),
+		NumberAttribute:  types.NumberValue(apiObject.NumberAttribute),
+		StringAttribute:  types.StringPointerValue(apiObject.StringAttribute),
+		state:            attr.ValueStateKnown,
+	}, diags
 }
