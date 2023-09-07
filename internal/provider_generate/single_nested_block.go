@@ -95,7 +95,6 @@ func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 		Attributes                 string
 		Blocks                     string
 		GeneratorSingleNestedBlock GeneratorSingleNestedBlock
-		NestedObjectCustomType     string
 	}
 
 	attributesStr, err := g.Attributes.String()

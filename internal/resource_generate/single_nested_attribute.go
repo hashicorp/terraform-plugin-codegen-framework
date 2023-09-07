@@ -101,7 +101,6 @@ func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 		TypeValueName                  string
 		Attributes                     string
 		GeneratorSingleNestedAttribute GeneratorSingleNestedAttribute
-		NestedObjectCustomType         string
 	}
 
 	attributesStr, err := g.Attributes.String()

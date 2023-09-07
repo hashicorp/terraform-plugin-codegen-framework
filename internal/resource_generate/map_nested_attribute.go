@@ -121,7 +121,6 @@ func (g GeneratorMapNestedAttribute) ToString(name string) (string, error) {
 		TypeValueName               string
 		Attributes                  string
 		GeneratorMapNestedAttribute GeneratorMapNestedAttribute
-		NestedObjectCustomType      string
 	}
 
 	attributesStr, err := g.NestedObject.Attributes.String()
