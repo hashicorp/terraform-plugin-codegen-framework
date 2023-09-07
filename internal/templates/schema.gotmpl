@@ -3,7 +3,7 @@
 package {{.PackageName}}
 
 import (
-{{ImportsString}}
+{{.Imports}}
 {{- if eq .GeneratorType "DataSource"}}
 "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 {{- else if eq .GeneratorType "Provider"}}
@@ -17,12 +17,12 @@ func {{.Name}}{{.GeneratorType}}Schema(ctx context.Context) schema.Schema {
 return schema.Schema{
     {{- if gt (len .GeneratorSchema.Attributes) 0 }}
     Attributes: map[string]schema.Attribute{
-        {{- AttributesString}}
+        {{- .Attributes}}
 	},
     {{- end}}
     {{- if gt (len .GeneratorSchema.Blocks) 0 }}
 	Blocks: map[string]schema.Block{
-        {{- BlocksString}}
+        {{- .Blocks}}
 	},
     {{- end}}
     }
