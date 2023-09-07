@@ -1,41 +1,46 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.SetNestedAttribute{
+
+"{{.Name}}": schema.SetNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
-{{- AttributesString}}
+{{- .Attributes}}
 },
-{{- if $value.NestedObject.CustomType}}
-CustomType: {{$value.NestedObject.CustomType.Type}},
+{{- if .GeneratorSetNestedAttribute.NestedObject.CustomType}}
+CustomType: {{.GeneratorSetNestedAttribute.NestedObject.CustomType.Type}},
+{{- else}}
+CustomType: {{.TypeValueName}}Type{
+ObjectType: types.ObjectType{
+AttrTypes: {{.TypeValueName}}Value{}.AttributeTypes(ctx),
+},
+},
 {{- end}}
-{{- if gt (len $value.NestedObject.Validators) 0 }}
+{{- if gt (len .GeneratorSetNestedAttribute.NestedObject.Validators) 0 }}
 Validators: []validator.Object{
-{{- range $validator := $value.NestedObject.Validators}}
+{{- range $validator := .GeneratorSetNestedAttribute.NestedObject.Validators}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 },
 {{- end}}
 },
-{{- template "common_attribute" $value }}
-{{- if $value.PlanModifiers }}
+{{- template "common_attribute" .GeneratorSetNestedAttribute }}
+{{- if .GeneratorSetNestedAttribute.PlanModifiers }}
 PlanModifiers: []planmodifier.Set{
-{{- range $planmodifier := .PlanModifiers}}
+{{- range $planModifier := .GeneratorSetNestedAttribute.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
-{{- end }}
-{{- if $value.Validators }}
+{{- end}}
+{{- if .GeneratorSetNestedAttribute.Validators }}
 Validators: []validator.Set{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorSetNestedAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end}}
-{{- if $value.Default}}
-Default: {{ getSetDefault $value.Default}},
+{{- if and .GeneratorSetNestedAttribute.Default .GeneratorSetNestedAttribute.Default.Custom}}
+Default: {{ .GeneratorSetNestedAttribute.Default.Custom.SchemaDefinition}},
 {{- end}}
 },
-{{- end }}

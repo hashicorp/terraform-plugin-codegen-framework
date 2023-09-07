@@ -76,7 +76,7 @@ func (g GeneratorListNestedAttribute) Imports() *generatorschema.Imports {
 		imports.Append(v.Imports())
 	}
 
-	// TODO: This should only be added if model object helper functions are being generated.
+	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
@@ -116,12 +116,36 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 }
 
 func (g GeneratorListNestedAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"AttributesString": g.NestedObject.Attributes.String,
-		"getListDefault":   getListDefault,
+	type listNestedAttribute struct {
+		Name                         string
+		TypeValueName                string
+		Attributes                   string
+		GeneratorListNestedAttribute GeneratorListNestedAttribute
+		NestedObjectCustomType       string
+		Default                      string
 	}
 
-	t, err := template.New("list_nested_attribute").Funcs(funcMap).Parse(listNestedAttributeGoTemplate)
+	attributesStr, err := g.NestedObject.Attributes.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	var def string
+
+	if g.Default != nil && g.Default.Custom != nil {
+		def = getListDefault(*g.Default)
+	}
+
+	l := listNestedAttribute{
+		Name:                         name,
+		TypeValueName:                model.SnakeCaseToCamelCase(name),
+		Attributes:                   attributesStr,
+		GeneratorListNestedAttribute: g,
+		Default:                      def,
+	}
+
+	t, err := template.New("list_nested_attribute").Parse(listNestedAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -132,11 +156,7 @@ func (g GeneratorListNestedAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorListNestedAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, l)
 	if err != nil {
 		return "", err
 	}

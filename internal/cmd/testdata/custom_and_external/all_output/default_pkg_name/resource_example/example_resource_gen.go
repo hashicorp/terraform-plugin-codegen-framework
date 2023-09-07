@@ -55,6 +55,11 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 							Optional: true,
 						},
 					},
+					CustomType: ListNestedAttributeAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
 				},
 				Optional: true,
 			},
@@ -75,6 +80,11 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 						},
 						"string_attribute": schema.StringAttribute{
 							Optional: true,
+						},
+					},
+					CustomType: MapNestedAttributeAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: MapNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -99,6 +109,11 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 							Optional: true,
 						},
 					},
+					CustomType: SetNestedAttributeAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: SetNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
 				},
 				Optional: true,
 			},
@@ -118,6 +133,11 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 					},
 					"string_attribute": schema.StringAttribute{
 						Optional: true,
+					},
+				},
+				CustomType: SingleNestedAttributeAssocExtTypeType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
 					},
 				},
 				Optional: true,
@@ -143,6 +163,11 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 							Optional: true,
 						},
 					},
+					CustomType: ListNestedBlockAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
 				},
 			},
 			"set_nested_block_assoc_ext_type": schema.SetNestedBlock{
@@ -164,6 +189,11 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 							Optional: true,
 						},
 					},
+					CustomType: SetNestedBlockAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: SetNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
 				},
 			},
 			"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
@@ -182,6 +212,11 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 					},
 					"string_attribute": schema.StringAttribute{
 						Optional: true,
+					},
+				},
+				CustomType: SingleNestedBlockAssocExtTypeType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
 					},
 				},
 			},

@@ -64,7 +64,7 @@ func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 		imports.Append(v.Imports())
 	}
 
-	// TODO: This should only be added if model object helper functions are being generated.
+	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -96,12 +96,28 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 }
 
 func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"AttributesString": g.Attributes.String,
-		"getObjectDefault": getObjectDefault,
+	type singleNestedAttribute struct {
+		Name                           string
+		TypeValueName                  string
+		Attributes                     string
+		GeneratorSingleNestedAttribute GeneratorSingleNestedAttribute
+		NestedObjectCustomType         string
 	}
 
-	t, err := template.New("single_nested_attribute").Funcs(funcMap).Parse(singleNestedAttributeGoTemplate)
+	attributesStr, err := g.Attributes.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	l := singleNestedAttribute{
+		Name:                           name,
+		TypeValueName:                  model.SnakeCaseToCamelCase(name),
+		Attributes:                     attributesStr,
+		GeneratorSingleNestedAttribute: g,
+	}
+
+	t, err := template.New("single_nested_attribute").Parse(singleNestedAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -112,11 +128,7 @@ func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorSingleNestedAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, l)
 	if err != nil {
 		return "", err
 	}

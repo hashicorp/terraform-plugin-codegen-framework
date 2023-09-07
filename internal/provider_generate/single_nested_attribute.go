@@ -52,7 +52,7 @@ func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 		imports.Append(v.Imports())
 	}
 
-	// TODO: This should only be added if model object helper functions are being generated.
+	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -84,7 +84,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 }
 
 func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
-	type setNestedAttribute struct {
+	type singleNestedAttribute struct {
 		Name                           string
 		TypeValueName                  string
 		Attributes                     string
@@ -98,7 +98,7 @@ func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 		return "", err
 	}
 
-	l := setNestedAttribute{
+	l := singleNestedAttribute{
 		Name:                           name,
 		TypeValueName:                  model.SnakeCaseToCamelCase(name),
 		Attributes:                     attributesStr,

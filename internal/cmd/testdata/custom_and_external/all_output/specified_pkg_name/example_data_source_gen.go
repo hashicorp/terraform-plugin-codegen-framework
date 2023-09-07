@@ -57,6 +57,11 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 							Computed: true,
 						},
 					},
+					CustomType: ListNestedAttributeAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
 				},
 				Optional: true,
 			},
@@ -65,6 +70,11 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 					Attributes: map[string]schema.Attribute{
 						"bool_attribute": schema.BoolAttribute{
 							Computed: true,
+						},
+					},
+					CustomType: ListNestedAttributeOneType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedAttributeOneValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -81,8 +91,18 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 										Computed:    true,
 									},
 								},
+								CustomType: ListNestedAttributeThreeListNestedAttributeOneType{
+									ObjectType: types.ObjectType{
+										AttrTypes: ListNestedAttributeThreeListNestedAttributeOneValue{}.AttributeTypes(ctx),
+									},
+								},
 							},
 							Computed: true,
+						},
+					},
+					CustomType: ListNestedAttributeThreeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedAttributeThreeValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -98,8 +118,18 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 										Computed: true,
 									},
 								},
+								CustomType: ListNestedAttributeTwoListNestedAttributeOneType{
+									ObjectType: types.ObjectType{
+										AttrTypes: ListNestedAttributeTwoListNestedAttributeOneValue{}.AttributeTypes(ctx),
+									},
+								},
 							},
 							Computed: true,
+						},
+					},
+					CustomType: ListNestedAttributeTwoType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedAttributeTwoValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -146,6 +176,11 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 						"string_attribute": schema.StringAttribute{
 							Optional: true,
 							Computed: true,
+						},
+					},
+					CustomType: MapNestedAttributeAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: MapNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -200,6 +235,11 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 							Computed: true,
 						},
 					},
+					CustomType: SetNestedAttributeAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: SetNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
 				},
 				Optional: true,
 			},
@@ -225,12 +265,22 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 						Computed: true,
 					},
 				},
+				CustomType: SingleNestedAttributeAssocExtTypeType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+					},
+				},
 				Optional: true,
 			},
 			"single_nested_attribute_one": schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{
 					"bool_attribute": schema.BoolAttribute{
 						Computed: true,
+					},
+				},
+				CustomType: SingleNestedAttributeOneType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedAttributeOneValue{}.AttributeTypes(ctx),
 					},
 				},
 				Computed: true,
@@ -244,7 +294,17 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 								Computed:    true,
 							},
 						},
+						CustomType: SingleNestedAttributeThreeSingleNestedAttributeOneType{
+							ObjectType: types.ObjectType{
+								AttrTypes: SingleNestedAttributeThreeSingleNestedAttributeOneValue{}.AttributeTypes(ctx),
+							},
+						},
 						Computed: true,
+					},
+				},
+				CustomType: SingleNestedAttributeThreeType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedAttributeThreeValue{}.AttributeTypes(ctx),
 					},
 				},
 				Computed: true,
@@ -257,7 +317,17 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 								Computed: true,
 							},
 						},
+						CustomType: SingleNestedAttributeTwoSingleNestedAttributeOneType{
+							ObjectType: types.ObjectType{
+								AttrTypes: SingleNestedAttributeTwoSingleNestedAttributeOneValue{}.AttributeTypes(ctx),
+							},
+						},
 						Computed: true,
+					},
+				},
+				CustomType: SingleNestedAttributeTwoType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedAttributeTwoValue{}.AttributeTypes(ctx),
 					},
 				},
 				Computed: true,
@@ -287,6 +357,11 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 							Computed: true,
 						},
 					},
+					CustomType: ListNestedBlockAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
 				},
 			},
 			"list_nested_block_one": schema.ListNestedBlock{
@@ -294,6 +369,11 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 					Attributes: map[string]schema.Attribute{
 						"bool_attribute": schema.BoolAttribute{
 							Computed: true,
+						},
+					},
+					CustomType: ListNestedBlockOneType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedBlockOneValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -317,7 +397,17 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 										Computed:    true,
 									},
 								},
+								CustomType: ListNestedBlockThreeListNestedBlockOneType{
+									ObjectType: types.ObjectType{
+										AttrTypes: ListNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx),
+									},
+								},
 							},
+						},
+					},
+					CustomType: ListNestedBlockThreeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedBlockThreeValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -332,7 +422,17 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 										Computed: true,
 									},
 								},
+								CustomType: ListNestedBlockTwoListNestedBlockOneType{
+									ObjectType: types.ObjectType{
+										AttrTypes: ListNestedBlockTwoListNestedBlockOneValue{}.AttributeTypes(ctx),
+									},
+								},
 							},
+						},
+					},
+					CustomType: ListNestedBlockTwoType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedBlockTwoValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -360,6 +460,11 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 							Computed: true,
 						},
 					},
+					CustomType: SetNestedBlockAssocExtTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: SetNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
 				},
 			},
 			"single_nested_block_assoc_ext_type": schema.SingleNestedBlock{
@@ -384,11 +489,21 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 						Computed: true,
 					},
 				},
+				CustomType: SingleNestedBlockAssocExtTypeType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx),
+					},
+				},
 			},
 			"single_nested_block_one": schema.SingleNestedBlock{
 				Attributes: map[string]schema.Attribute{
 					"bool_attribute": schema.BoolAttribute{
 						Computed: true,
+					},
+				},
+				CustomType: SingleNestedBlockOneType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedBlockOneValue{}.AttributeTypes(ctx),
 					},
 				},
 			},
@@ -410,7 +525,17 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 									Computed:    true,
 								},
 							},
+							CustomType: SingleNestedBlockThreeListNestedBlockOneType{
+								ObjectType: types.ObjectType{
+									AttrTypes: SingleNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx),
+								},
+							},
 						},
+					},
+				},
+				CustomType: SingleNestedBlockThreeType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedBlockThreeValue{}.AttributeTypes(ctx),
 					},
 				},
 			},
@@ -422,6 +547,16 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 								Computed: true,
 							},
 						},
+						CustomType: SingleNestedBlockTwoSingleNestedBlockOneType{
+							ObjectType: types.ObjectType{
+								AttrTypes: SingleNestedBlockTwoSingleNestedBlockOneValue{}.AttributeTypes(ctx),
+							},
+						},
+					},
+				},
+				CustomType: SingleNestedBlockTwoType{
+					ObjectType: types.ObjectType{
+						AttrTypes: SingleNestedBlockTwoValue{}.AttributeTypes(ctx),
 					},
 				},
 			},

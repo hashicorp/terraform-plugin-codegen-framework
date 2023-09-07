@@ -615,6 +615,11 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 },
 },`,
 		},
@@ -641,6 +646,11 @@ Attributes: map[string]schema.Attribute{
 "list": schema.ListAttribute{
 ElementType: types.StringType,
 Optional: true,
+},
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
 },
 },
 },
@@ -676,7 +686,17 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: NestedListNestedType{
+ObjectType: types.ObjectType{
+AttrTypes: NestedListNestedValue{}.AttributeTypes(ctx),
 },
+},
+},
+},
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
 },
 },
 },
@@ -712,6 +732,11 @@ AttributeTypes: map[string]attr.Type{
 Optional: true,
 },
 },
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 },
 },`,
 		},
@@ -742,6 +767,16 @@ Attributes: map[string]schema.Attribute{
 Optional: true,
 },
 },
+CustomType: NestedSingleNestedType{
+ObjectType: types.ObjectType{
+AttrTypes: NestedSingleNestedValue{}.AttributeTypes(ctx),
+},
+},
+},
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
 },
 },
 },
@@ -759,6 +794,11 @@ Optional: true,
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 },
 CustomType: my_custom_type,
 },`,
@@ -774,6 +814,11 @@ CustomType: my_custom_type,
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 },
 Required: true,
@@ -791,6 +836,11 @@ Required: true,
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 },
 Optional: true,
 },`,
@@ -806,6 +856,11 @@ Optional: true,
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 },
 Computed: true,
@@ -823,6 +878,11 @@ Computed: true,
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
 },
 Sensitive: true,
 },`,
@@ -838,6 +898,11 @@ Sensitive: true,
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 },
 Description: "description",
@@ -855,6 +920,11 @@ MarkdownDescription: "description",
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 },
 DeprecationMessage: "deprecated",
@@ -880,6 +950,11 @@ DeprecationMessage: "deprecated",
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 },
 Validators: []validator.List{
@@ -928,6 +1003,11 @@ CustomType: my_custom_type,
 "list_nested_attribute": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
+},
+CustomType: ListNestedAttributeType{
+ObjectType: types.ObjectType{
+AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+},
 },
 Validators: []validator.Object{
 my_validator.Validate(),

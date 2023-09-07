@@ -1,24 +1,30 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.MapNestedAttribute{
+
+"{{.Name}}": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
-{{- AttributesString}}
+{{- .Attributes}}
 },
-{{- if $value.NestedObject.CustomType}}
-CustomType: {{$value.NestedObject.CustomType.Type}},
+{{- if .GeneratorMapNestedAttribute.NestedObject.CustomType}}
+CustomType: {{.GeneratorMapNestedAttribute.NestedObject.CustomType.Type}},
+{{- else}}
+CustomType: {{.TypeValueName}}Type{
+ObjectType: types.ObjectType{
+AttrTypes: {{.TypeValueName}}Value{}.AttributeTypes(ctx),
+},
+},
 {{- end}}
-{{- if gt (len $value.NestedObject.Validators) 0 }}
+{{- if gt (len .GeneratorMapNestedAttribute.NestedObject.Validators) 0 }}
 Validators: []validator.Object{
-{{- range $validator := $value.NestedObject.Validators}}
+{{- range $validator := .GeneratorMapNestedAttribute.NestedObject.Validators}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 },
 {{- end}}
 },
-{{- template "common_attribute" $value }}
-{{- if gt (len $value.Validators) 0 }}
+{{- template "common_attribute" .GeneratorMapNestedAttribute }}
+{{- if .GeneratorMapNestedAttribute.Validators }}
 Validators: []validator.Map{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorMapNestedAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -26,4 +32,3 @@ Validators: []validator.Map{
 },
 {{- end}}
 },
-{{- end }}

@@ -1,19 +1,26 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.SingleNestedBlock{
-{{- if gt (len $value.Attributes) 0 }}
+
+"{{.Name}}": schema.SingleNestedBlock{
+{{- if .Attributes}}
 Attributes: map[string]schema.Attribute{
-{{- AttributesString}}
+{{- .Attributes}}
 },
 {{- end}}
-{{- if gt (len $value.Blocks) 0 }}
+{{- if .Blocks}}
 Blocks: map[string]schema.Block{
-{{- BlocksString}}
+{{- .Blocks}}
 },
 {{- end}}
-{{- template "common_block" $value }}
-{{- if gt (len $value.Validators) 0 }}
-Validators: []validator.Bool{
-{{- range $validator := .Validators}}
+{{- if not .GeneratorSingleNestedBlock.CustomType}}
+CustomType: {{.TypeValueName}}Type{
+ObjectType: types.ObjectType{
+AttrTypes: {{.TypeValueName}}Value{}.AttributeTypes(ctx),
+},
+},
+{{- end}}
+{{- template "common_block" .GeneratorSingleNestedBlock }}
+{{- if .GeneratorSingleNestedBlock.Validators }}
+Validators: []validator.Object{
+{{- range $validator := .GeneratorSingleNestedBlock.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -21,4 +28,3 @@ Validators: []validator.Bool{
 },
 {{- end}}
 },
-{{- end }}
