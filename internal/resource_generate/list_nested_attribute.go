@@ -122,7 +122,6 @@ func (g GeneratorListNestedAttribute) ToString(name string) (string, error) {
 		Attributes                   string
 		GeneratorListNestedAttribute GeneratorListNestedAttribute
 		NestedObjectCustomType       string
-		Default                      string
 	}
 
 	attributesStr, err := g.NestedObject.Attributes.String()
@@ -131,18 +130,11 @@ func (g GeneratorListNestedAttribute) ToString(name string) (string, error) {
 		return "", err
 	}
 
-	var def string
-
-	if g.Default != nil && g.Default.Custom != nil {
-		def = getListDefault(*g.Default)
-	}
-
 	l := listNestedAttribute{
 		Name:                         name,
 		TypeValueName:                model.SnakeCaseToCamelCase(name),
 		Attributes:                   attributesStr,
 		GeneratorListNestedAttribute: g,
-		Default:                      def,
 	}
 
 	t, err := template.New("list_nested_attribute").Parse(listNestedAttributeGoTemplate)
