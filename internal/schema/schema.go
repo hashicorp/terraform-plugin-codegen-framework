@@ -116,32 +116,51 @@ func (g GeneratorSchema) ImportsString() (string, error) {
 }
 
 func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([]byte, error) {
-	funcMap := template.FuncMap{
-		"ImportsString":    g.ImportsString,
-		"AttributesString": g.Attributes.String,
-		"BlocksString":     g.Blocks.String,
-	}
+	attributes, err := g.Attributes.String()
 
-	t, err := template.New("schema").Funcs(funcMap).Parse(
-		templates.SchemaGoTemplate,
-	)
 	if err != nil {
 		return nil, err
 	}
 
-	var buf bytes.Buffer
+	blocks, err := g.Blocks.String()
+
+	if err != nil {
+		return nil, err
+	}
+
+	imports, err := g.ImportsString()
+
+	if err != nil {
+		return nil, err
+	}
 
 	templateData := struct {
 		Name string
 		GeneratorSchema
 		PackageName   string
 		GeneratorType string
+		Attributes    string
+		Blocks        string
+		Imports       string
 	}{
 		Name:            model.SnakeCaseToCamelCase(name),
 		GeneratorSchema: g,
 		PackageName:     packageName,
 		GeneratorType:   generatorType,
+		Attributes:      attributes,
+		Blocks:          blocks,
+		Imports:         imports,
 	}
+
+	t, err := template.New("schema").Parse(
+		templates.SchemaGoTemplate,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var buf bytes.Buffer
 
 	err = t.Execute(&buf, templateData)
 	if err != nil {

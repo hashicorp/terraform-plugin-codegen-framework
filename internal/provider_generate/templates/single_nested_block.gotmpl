@@ -19,7 +19,7 @@ AttrTypes: {{.TypeValueName}}Value{}.AttributeTypes(ctx),
 {{- end}}
 {{- template "common_block" .GeneratorSingleNestedBlock }}
 {{- if .GeneratorSingleNestedBlock.Validators }}
-Validators: []validator.Bool{
+Validators: []validator.Object{
 {{- range $validator := .GeneratorSingleNestedBlock.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},

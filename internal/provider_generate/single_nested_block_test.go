@@ -697,7 +697,7 @@ ObjectType: types.ObjectType{
 AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 },
 },
-Validators: []validator.Bool{
+Validators: []validator.Object{
 my_validator.Validate(),
 my_other_validator.Validate(),
 },

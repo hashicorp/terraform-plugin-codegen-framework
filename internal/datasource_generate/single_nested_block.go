@@ -57,7 +57,7 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 		imports.Append(v.Imports())
 	}
 
-	// TODO: This should only be added if model object helper functions are being generated.
+	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -71,7 +71,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	if !customTypeEqual(g.CustomType, h.CustomType) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -89,12 +89,35 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 }
 
 func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"AttributesString": g.Attributes.String,
-		"BlocksString":     g.Blocks.String,
+	type singleNestedBlock struct {
+		Name                       string
+		TypeValueName              string
+		Attributes                 string
+		Blocks                     string
+		GeneratorSingleNestedBlock GeneratorSingleNestedBlock
 	}
 
-	t, err := template.New("single_nested_block").Funcs(funcMap).Parse(singleNestedBlockGoTemplate)
+	attributesStr, err := g.Attributes.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	blocksStr, err := g.Blocks.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	l := singleNestedBlock{
+		Name:                       name,
+		TypeValueName:              model.SnakeCaseToCamelCase(name),
+		Attributes:                 attributesStr,
+		Blocks:                     blocksStr,
+		GeneratorSingleNestedBlock: g,
+	}
+
+	t, err := template.New("single_nested_block").Parse(singleNestedBlockGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -105,11 +128,7 @@ func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorSingleNestedBlock{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, l)
 	if err != nil {
 		return "", err
 	}

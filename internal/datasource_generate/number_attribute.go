@@ -49,7 +49,7 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !customTypeEqual(g.CustomType, h.CustomType) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 

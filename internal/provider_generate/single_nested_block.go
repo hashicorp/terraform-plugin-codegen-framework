@@ -57,7 +57,7 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 		imports.Append(v.Imports())
 	}
 
-	// TODO: This should only be added if model object helper functions are being generated.
+	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -71,7 +71,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	if !customTypeEqual(g.CustomType, h.CustomType) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -95,7 +95,6 @@ func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 		Attributes                 string
 		Blocks                     string
 		GeneratorSingleNestedBlock GeneratorSingleNestedBlock
-		NestedObjectCustomType     string
 	}
 
 	attributesStr, err := g.Attributes.String()

@@ -59,7 +59,7 @@ func (g GeneratorSetNestedAttribute) Imports() *generatorschema.Imports {
 		imports.Append(v.Imports())
 	}
 
-	// TODO: This should only be added if model object helper functions are being generated.
+	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
@@ -73,7 +73,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !customTypeEqual(g.CustomType, h.CustomType) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -81,7 +81,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !customTypeEqual(g.NestedObject.CustomType, h.NestedObject.CustomType) {
+	if !g.NestedObject.CustomType.Equal(h.NestedObject.CustomType) {
 		return false
 	}
 
@@ -99,11 +99,27 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 }
 
 func (g GeneratorSetNestedAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"AttributesString": g.NestedObject.Attributes.String,
+	type setNestedAttribute struct {
+		Name                        string
+		TypeValueName               string
+		Attributes                  string
+		GeneratorSetNestedAttribute GeneratorSetNestedAttribute
 	}
 
-	t, err := template.New("set_nested_attribute").Funcs(funcMap).Parse(setNestedAttributeGoTemplate)
+	attributesStr, err := g.NestedObject.Attributes.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	l := setNestedAttribute{
+		Name:                        name,
+		TypeValueName:               model.SnakeCaseToCamelCase(name),
+		Attributes:                  attributesStr,
+		GeneratorSetNestedAttribute: g,
+	}
+
+	t, err := template.New("set_nested_attribute").Parse(setNestedAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -114,11 +130,7 @@ func (g GeneratorSetNestedAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorSetNestedAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, l)
 	if err != nil {
 		return "", err
 	}

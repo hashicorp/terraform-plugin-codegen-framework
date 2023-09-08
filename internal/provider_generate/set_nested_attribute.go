@@ -59,7 +59,7 @@ func (g GeneratorSetNestedAttribute) Imports() *generatorschema.Imports {
 		imports.Append(v.Imports())
 	}
 
-	// TODO: This should only be added if model object helper functions are being generated.
+	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
@@ -73,7 +73,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !customTypeEqual(g.CustomType, h.CustomType) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -81,7 +81,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !customTypeEqual(g.NestedObject.CustomType, h.NestedObject.CustomType) {
+	if !g.NestedObject.CustomType.Equal(h.NestedObject.CustomType) {
 		return false
 	}
 
@@ -104,7 +104,6 @@ func (g GeneratorSetNestedAttribute) ToString(name string) (string, error) {
 		TypeValueName               string
 		Attributes                  string
 		GeneratorSetNestedAttribute GeneratorSetNestedAttribute
-		NestedObjectCustomType      string
 	}
 
 	attributesStr, err := g.NestedObject.Attributes.String()

@@ -74,7 +74,7 @@ func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {
 		imports.Append(v.Imports())
 	}
 
-	// TODO: This should only be added if model object helper functions are being generated.
+	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
@@ -88,7 +88,7 @@ func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 		return false
 	}
 
-	if !customTypeEqual(g.CustomType, h.CustomType) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -96,7 +96,7 @@ func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 		return false
 	}
 
-	if !customTypeEqual(g.NestedObject.CustomType, h.NestedObject.CustomType) {
+	if !g.NestedObject.CustomType.Equal(h.NestedObject.CustomType) {
 		return false
 	}
 
@@ -114,12 +114,35 @@ func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 }
 
 func (g GeneratorSetNestedBlock) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"AttributesString": g.NestedObject.Attributes.String,
-		"BlocksString":     g.NestedObject.Blocks.String,
+	type setNestedBlock struct {
+		Name                    string
+		TypeValueName           string
+		Attributes              string
+		Blocks                  string
+		GeneratorSetNestedBlock GeneratorSetNestedBlock
 	}
 
-	t, err := template.New("set_nested_block").Funcs(funcMap).Parse(setNestedBlockGoTemplate)
+	attributesStr, err := g.NestedObject.Attributes.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	blocksStr, err := g.NestedObject.Blocks.String()
+
+	if err != nil {
+		return "", err
+	}
+
+	l := setNestedBlock{
+		Name:                    name,
+		TypeValueName:           model.SnakeCaseToCamelCase(name),
+		Attributes:              attributesStr,
+		Blocks:                  blocksStr,
+		GeneratorSetNestedBlock: g,
+	}
+
+	t, err := template.New("set_nested_block").Parse(setNestedBlockGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -130,11 +153,7 @@ func (g GeneratorSetNestedBlock) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorSetNestedBlock{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, l)
 	if err != nil {
 		return "", err
 	}

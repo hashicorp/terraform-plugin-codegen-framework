@@ -1,33 +1,39 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.SingleNestedBlock{
-{{- if gt (len $value.Attributes) 0 }}
+
+"{{.Name}}": schema.SingleNestedBlock{
+{{- if .Attributes}}
 Attributes: map[string]schema.Attribute{
-{{- AttributesString}}
+{{- .Attributes}}
 },
 {{- end}}
-{{- if gt (len $value.Blocks) 0 }}
+{{- if .Blocks}}
 Blocks: map[string]schema.Block{
-{{- BlocksString}}
+{{- .Blocks}}
 },
 {{- end}}
-{{- template "common_block" $value }}
-{{- if $value.PlanModifiers }}
+{{- if not .GeneratorSingleNestedBlock.CustomType}}
+CustomType: {{.TypeValueName}}Type{
+ObjectType: types.ObjectType{
+AttrTypes: {{.TypeValueName}}Value{}.AttributeTypes(ctx),
+},
+},
+{{- end}}
+{{- template "common_block" .GeneratorSingleNestedBlock }}
+{{- if .GeneratorSingleNestedBlock.PlanModifiers }}
 PlanModifiers: []planmodifier.Object{
-{{- range $planmodifier := .PlanModifiers}}
-{{- if .Custom}}
-{{.Custom.SchemaDefinition}},
-{{- end}}
-{{- end}}
-},
-{{- end }}
-{{- if $value.Validators }}
-Validators: []validator.Bool{
-{{- range $validator := .Validators}}
+{{- range $planModifier := .GeneratorSingleNestedBlock.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end}}
+{{- if .GeneratorSingleNestedBlock.Validators }}
+Validators: []validator.Object{
+{{- range $validator := .GeneratorSingleNestedBlock.Validators}}
+{{- if .Custom}}
+{{.Custom.SchemaDefinition}},
+{{- end}}
+{{- end}}
 },
-{{- end }}
+{{- end}}
+},
