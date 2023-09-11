@@ -56,6 +56,9 @@ func (g GeneratorSchema) ImportsString() (string, error) {
 				{
 					Path: TfTypesImport,
 				},
+				{
+					Path: BaseTypesImport,
+				},
 			}...)
 		}
 	}
@@ -87,6 +90,9 @@ func (g GeneratorSchema) ImportsString() (string, error) {
 				},
 				{
 					Path: TfTypesImport,
+				},
+				{
+					Path: BaseTypesImport,
 				},
 			}...)
 		}
