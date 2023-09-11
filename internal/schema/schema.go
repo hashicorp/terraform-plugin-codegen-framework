@@ -28,19 +28,19 @@ type GeneratorSchema struct {
 func (g GeneratorSchema) ImportsString() (string, error) {
 	imports := NewImports()
 
-	// Both context and terraform-plugin-framework/diag packages are required if
-	// model object helpers are generated. Refer to the logic in
-	// ModelsObjectHelpersBytes() method.
 	for _, a := range g.Attributes {
 		if a == nil {
 			continue
 		}
 
+		imports.Add([]code.Import{
+			{
+				Path: ContextImport,
+			},
+		}...)
+
 		if _, ok := a.(Attributes); ok {
 			imports.Add([]code.Import{
-				{
-					Path: ContextImport,
-				},
 				{
 					Path: FmtImport,
 				},
@@ -60,19 +60,19 @@ func (g GeneratorSchema) ImportsString() (string, error) {
 		}
 	}
 
-	// Both context and terraform-plugin-framework/diag packages are required if
-	// model object helpers are generated. Refer to the logic in
-	// ModelsObjectHelpersBytes() method.
 	for _, b := range g.Blocks {
 		if b == nil {
 			continue
 		}
 
+		imports.Add([]code.Import{
+			{
+				Path: ContextImport,
+			},
+		}...)
+
 		if _, ok := b.(Blocks); ok {
 			imports.Add([]code.Import{
-				{
-					Path: ContextImport,
-				},
 				{
 					Path: FmtImport,
 				},
