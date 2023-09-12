@@ -15,7 +15,7 @@ type GeneratorNestedAttributeObject struct {
 	AssociatedExternalType *schema.AssocExtType
 	CustomType             *specschema.CustomType
 	PlanModifiers          []specschema.ObjectPlanModifier
-	Validators             []specschema.ObjectValidator
+	Validators             specschema.ObjectValidators
 }
 
 type GeneratorNestedBlockObject struct {
@@ -25,5 +25,5 @@ type GeneratorNestedBlockObject struct {
 	AssociatedExternalType *schema.AssocExtType
 	CustomType             *specschema.CustomType
 	PlanModifiers          []specschema.ObjectPlanModifier
-	Validators             []specschema.ObjectValidator
+	Validators             specschema.ObjectValidators
 }

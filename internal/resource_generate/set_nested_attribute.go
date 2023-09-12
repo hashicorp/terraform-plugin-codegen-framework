@@ -25,7 +25,7 @@ type GeneratorSetNestedAttribute struct {
 	Default       *specschema.SetDefault
 	NestedObject  GeneratorNestedAttributeObject
 	PlanModifiers []specschema.SetPlanModifier
-	Validators    []specschema.SetValidator
+	Validators    specschema.SetValidators
 }
 
 func (g GeneratorSetNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
@@ -94,7 +94,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !g.setValidatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -102,7 +102,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !g.objectValidatorsEqual(g.NestedObject.Validators, h.NestedObject.Validators) {
+	if !g.NestedObject.Validators.Equal(h.NestedObject.Validators) {
 		return false
 	}
 
@@ -171,58 +171,4 @@ func (g GeneratorSetNestedAttribute) ModelField(name string) (model.Field, error
 
 func (g GeneratorSetNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.NestedObject.Attributes
-}
-
-func (g GeneratorSetNestedAttribute) setValidatorsEqual(x, y []specschema.SetValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func (g GeneratorSetNestedAttribute) objectValidatorsEqual(x, y []specschema.ObjectValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

@@ -23,7 +23,7 @@ type GeneratorSetNestedBlock struct {
 	// because support for extracting custom import information is required.
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedBlockObject
-	Validators   []specschema.SetValidator
+	Validators   specschema.SetValidators
 }
 
 func (g GeneratorSetNestedBlock) AssocExtType() *generatorschema.AssocExtType {
@@ -81,7 +81,7 @@ func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 		return false
 	}
 
-	if !g.setValidatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -89,7 +89,7 @@ func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 		return false
 	}
 
-	if !g.objectValidatorsEqual(g.NestedObject.Validators, h.NestedObject.Validators) {
+	if !g.NestedObject.Validators.Equal(h.NestedObject.Validators) {
 		return false
 	}
 
@@ -170,58 +170,4 @@ func (g GeneratorSetNestedBlock) GetAttributes() generatorschema.GeneratorAttrib
 
 func (g GeneratorSetNestedBlock) GetBlocks() generatorschema.GeneratorBlocks {
 	return g.NestedObject.Blocks
-}
-
-func (g GeneratorSetNestedBlock) setValidatorsEqual(x, y []specschema.SetValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func (g GeneratorSetNestedBlock) objectValidatorsEqual(x, y []specschema.ObjectValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

@@ -313,7 +313,7 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &resource.SetNestedAttribute{
-				Validators: []specschema.SetValidator{
+				Validators: specschema.SetValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -327,7 +327,7 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSetNestedAttribute{
-				Validators: []specschema.SetValidator{
+				Validators: specschema.SetValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

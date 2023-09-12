@@ -97,7 +97,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorNumberAttribute{
-				Validators: []specschema.NumberValidator{
+				Validators: specschema.NumberValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",

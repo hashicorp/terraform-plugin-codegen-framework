@@ -25,7 +25,7 @@ type GeneratorListNestedAttribute struct {
 	Default       *specschema.ListDefault
 	NestedObject  GeneratorNestedAttributeObject
 	PlanModifiers []specschema.ListPlanModifier
-	Validators    []specschema.ListValidator
+	Validators    specschema.ListValidators
 }
 
 func (g GeneratorListNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
@@ -94,7 +94,7 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 		return false
 	}
 
-	if !g.listValidatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -102,7 +102,7 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 		return false
 	}
 
-	if !g.objectValidatorsEqual(g.NestedObject.Validators, h.NestedObject.Validators) {
+	if !g.NestedObject.Validators.Equal(h.NestedObject.Validators) {
 		return false
 	}
 
@@ -171,58 +171,4 @@ func (g GeneratorListNestedAttribute) ModelField(name string) (model.Field, erro
 
 func (g GeneratorListNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.NestedObject.Attributes
-}
-
-func (g GeneratorListNestedAttribute) listValidatorsEqual(x, y []specschema.ListValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func (g GeneratorListNestedAttribute) objectValidatorsEqual(x, y []specschema.ObjectValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

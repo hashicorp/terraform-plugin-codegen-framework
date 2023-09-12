@@ -330,7 +330,7 @@ func TestConvertSetAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				Validators: []specschema.SetValidator{
+				Validators: specschema.SetValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -347,7 +347,7 @@ func TestConvertSetAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				Validators: []specschema.SetValidator{
+				Validators: specschema.SetValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

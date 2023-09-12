@@ -24,7 +24,7 @@ type GeneratorSingleNestedAttribute struct {
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
-	Validators []specschema.ObjectValidator
+	Validators specschema.ObjectValidators
 }
 
 func (g GeneratorSingleNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
@@ -70,7 +70,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -139,31 +139,4 @@ func (g GeneratorSingleNestedAttribute) ModelField(name string) (model.Field, er
 
 func (g GeneratorSingleNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.Attributes
-}
-
-func (g GeneratorSingleNestedAttribute) validatorsEqual(x, y []specschema.ObjectValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

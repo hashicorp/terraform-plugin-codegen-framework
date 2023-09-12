@@ -101,7 +101,7 @@ func TestConvertStringAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &provider.StringAttribute{
-				Validators: []specschema.StringValidator{
+				Validators: specschema.StringValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -115,7 +115,7 @@ func TestConvertStringAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorStringAttribute{
-				Validators: []specschema.StringValidator{
+				Validators: specschema.StringValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

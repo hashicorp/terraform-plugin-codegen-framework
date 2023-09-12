@@ -23,7 +23,7 @@ type GeneratorListAttribute struct {
 	// because support for extracting custom import information is required.
 	CustomType  *specschema.CustomType
 	ElementType specschema.ElementType
-	Validators  []specschema.ListValidator
+	Validators  specschema.ListValidators
 }
 
 func (g GeneratorListAttribute) AttrType() attr.Type {
@@ -70,7 +70,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -145,31 +145,4 @@ func (g GeneratorListAttribute) ModelField(name string) (model.Field, error) {
 	}
 
 	return field, nil
-}
-
-func (g GeneratorListAttribute) validatorsEqual(x, y []specschema.ListValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

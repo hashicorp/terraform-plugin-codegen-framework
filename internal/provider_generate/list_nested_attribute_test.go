@@ -372,7 +372,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorListNestedAttribute{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: nil,
 					},
@@ -388,7 +388,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorListNestedAttribute{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{},
 					},
@@ -404,7 +404,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorListNestedAttribute{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -426,7 +426,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorListNestedAttribute{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -467,7 +467,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-object-validator-custom-nil": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: nil,
 						},
@@ -486,7 +486,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-object-validator-custom-import-nil": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: &specschema.CustomValidator{},
 						},
@@ -505,7 +505,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-object-validator-custom-import-empty-string": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: &specschema.CustomValidator{
 								Imports: []code.Import{
@@ -530,7 +530,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		"nested-object-validator-custom-import": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: &specschema.CustomValidator{
 								Imports: []code.Import{
@@ -912,7 +912,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorListNestedAttribute{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",
@@ -964,7 +964,7 @@ CustomType: my_custom_type,
 		"nested-object-validators": {
 			input: GeneratorListNestedAttribute{
 				NestedObject: GeneratorNestedAttributeObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: &specschema.CustomValidator{
 								SchemaDefinition: "my_validator.Validate()",

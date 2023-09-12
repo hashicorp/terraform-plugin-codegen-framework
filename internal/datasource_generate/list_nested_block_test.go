@@ -403,7 +403,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorListNestedBlock{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: nil,
 					},
@@ -419,7 +419,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorListNestedBlock{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{},
 					},
@@ -435,7 +435,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorListNestedBlock{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -457,7 +457,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorListNestedBlock{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -498,7 +498,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 		"nested-object-validator-custom-nil": {
 			input: GeneratorListNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: nil,
 						},
@@ -517,7 +517,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 		"nested-object-validator-custom-import-nil": {
 			input: GeneratorListNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: &specschema.CustomValidator{},
 						},
@@ -536,7 +536,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 		"nested-object-validator-custom-import-empty-string": {
 			input: GeneratorListNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: &specschema.CustomValidator{
 								Imports: []code.Import{
@@ -561,7 +561,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 		"nested-object-validator-custom-import": {
 			input: GeneratorListNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: &specschema.CustomValidator{
 								Imports: []code.Import{
@@ -962,7 +962,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorListNestedBlock{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",
@@ -1010,7 +1010,7 @@ CustomType: my_custom_type,
 		"nested-object-validators": {
 			input: GeneratorListNestedBlock{
 				NestedObject: GeneratorNestedBlockObject{
-					Validators: []specschema.ObjectValidator{
+					Validators: specschema.ObjectValidators{
 						{
 							Custom: &specschema.CustomValidator{
 								SchemaDefinition: "my_validator.Validate()",

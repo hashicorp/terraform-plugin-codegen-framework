@@ -25,8 +25,8 @@ github.com/hashicorp/go-hclog v1.5.0 h1:bI2ocEMgcVlz55Oj1xZNBsVi900c7II+fWDyV9o+
 github.com/hashicorp/go-hclog v1.5.0/go.mod h1:W4Qnvbt70Wk/zYJryRzDRU/4r0kIg0PVHBcfoyhpF5M=
 github.com/hashicorp/go-multierror v1.0.0 h1:iVjPR7a6H0tWELX5NxNe7bYopibicUzc7uPribsnS6o=
 github.com/hashicorp/go-multierror v1.0.0/go.mod h1:dHtQlpGsu+cZNNAkkCN/P3hoUDHhCYQXV3UM06sGGrk=
-github.com/hashicorp/terraform-plugin-codegen-spec v0.0.0-20230907075053-4d185f8d1f8d h1:tJpCK4Du553Br0SFcxtvQyzWCWbGoZUcSspMjD3g8Uo=
-github.com/hashicorp/terraform-plugin-codegen-spec v0.0.0-20230907075053-4d185f8d1f8d/go.mod h1:4aZFKiOI2xiQFOpeQMMyDL8vRmKAZXHUY4kWol7Fdco=
+github.com/hashicorp/terraform-plugin-codegen-spec v0.0.0-20230912071553-f66834b095e1 h1:FNNtIEpjDcV6l0K3/lVfCj9AeZ3+M50YI/q4bYeyDco=
+github.com/hashicorp/terraform-plugin-codegen-spec v0.0.0-20230912071553-f66834b095e1/go.mod h1:4aZFKiOI2xiQFOpeQMMyDL8vRmKAZXHUY4kWol7Fdco=
 github.com/hashicorp/terraform-plugin-framework v1.4.0 h1:WKbtCRtNrjsh10eA7NZvC/Qyr7zp77j+D21aDO5th9c=
 github.com/hashicorp/terraform-plugin-framework v1.4.0/go.mod h1:XC0hPcQbBvlbxwmjxuV/8sn8SbZRg4XwGMs22f+kqV0=
 github.com/hashicorp/terraform-plugin-go v0.19.0 h1:BuZx/6Cp+lkmiG0cOBk6Zps0Cb2tmqQpDM3iAtnhDQU=

@@ -101,7 +101,7 @@ func TestConvertBoolAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &provider.BoolAttribute{
-				Validators: []specschema.BoolValidator{
+				Validators: specschema.BoolValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -115,7 +115,7 @@ func TestConvertBoolAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorBoolAttribute{
-				Validators: []specschema.BoolValidator{
+				Validators: specschema.BoolValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

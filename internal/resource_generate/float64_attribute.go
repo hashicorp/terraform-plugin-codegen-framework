@@ -27,7 +27,7 @@ type GeneratorFloat64Attribute struct {
 	CustomType    *specschema.CustomType
 	Default       *specschema.Float64Default
 	PlanModifiers []specschema.Float64PlanModifier
-	Validators    []specschema.Float64Validator
+	Validators    specschema.Float64Validators
 }
 
 func (g GeneratorFloat64Attribute) AttrType() attr.Type {
@@ -74,7 +74,7 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -133,31 +133,4 @@ func (g GeneratorFloat64Attribute) ModelField(name string) (model.Field, error) 
 	}
 
 	return field, nil
-}
-
-func (g GeneratorFloat64Attribute) validatorsEqual(x, y []specschema.Float64Validator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

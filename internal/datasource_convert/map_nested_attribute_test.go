@@ -313,7 +313,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &datasource.MapNestedAttribute{
-				Validators: []specschema.MapValidator{
+				Validators: specschema.MapValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -327,7 +327,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorMapNestedAttribute{
-				Validators: []specschema.MapValidator{
+				Validators: specschema.MapValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

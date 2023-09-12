@@ -272,7 +272,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &provider.ObjectAttribute{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -286,7 +286,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorObjectAttribute{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

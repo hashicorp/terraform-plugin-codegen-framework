@@ -22,7 +22,7 @@ type GeneratorInt64Attribute struct {
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
-	Validators []specschema.Int64Validator
+	Validators specschema.Int64Validators
 }
 
 func (g GeneratorInt64Attribute) AttrType() attr.Type {
@@ -53,7 +53,7 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -96,31 +96,4 @@ func (g GeneratorInt64Attribute) ModelField(name string) (model.Field, error) {
 	}
 
 	return field, nil
-}
-
-func (g GeneratorInt64Attribute) validatorsEqual(x, y []specschema.Int64Validator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

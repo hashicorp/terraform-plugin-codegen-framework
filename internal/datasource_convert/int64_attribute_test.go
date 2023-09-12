@@ -122,7 +122,7 @@ func TestConvertInt64Attribute(t *testing.T) {
 		},
 		"validators": {
 			input: &datasource.Int64Attribute{
-				Validators: []specschema.Int64Validator{
+				Validators: specschema.Int64Validators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -136,7 +136,7 @@ func TestConvertInt64Attribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorInt64Attribute{
-				Validators: []specschema.Int64Validator{
+				Validators: specschema.Int64Validators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

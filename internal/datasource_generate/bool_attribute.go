@@ -22,7 +22,7 @@ type GeneratorBoolAttribute struct {
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
-	Validators []specschema.BoolValidator
+	Validators specschema.BoolValidators
 }
 
 func (g GeneratorBoolAttribute) AttrType() attr.Type {
@@ -53,7 +53,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -98,68 +98,4 @@ func (g GeneratorBoolAttribute) ModelField(name string) (model.Field, error) {
 	}
 
 	return field, nil
-}
-
-func (g GeneratorBoolAttribute) validatorsEqual(x, y []specschema.BoolValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func customValidatorsEqual(x, y *specschema.CustomValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil || y == nil {
-		return false
-	}
-
-	if len(x.Imports) != len(y.Imports) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x.Imports {
-		if v.Path != y.Imports[k].Path {
-			return false
-		}
-
-		if v.Alias != nil && y.Imports[k].Alias == nil {
-			return false
-		}
-
-		if v.Alias == nil && y.Imports[k].Alias != nil {
-			return false
-		}
-
-		if v.Alias != nil && y.Imports[k].Alias != nil {
-			if *v.Alias != *y.Imports[k].Alias {
-				return false
-			}
-		}
-	}
-
-	return x.SchemaDefinition == y.SchemaDefinition
 }

@@ -109,7 +109,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorFloat64Attribute{
-				Validators: []specschema.Float64Validator{
+				Validators: specschema.Float64Validators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",

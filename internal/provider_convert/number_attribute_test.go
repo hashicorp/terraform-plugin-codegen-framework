@@ -101,7 +101,7 @@ func TestConvertNumberAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &provider.NumberAttribute{
-				Validators: []specschema.NumberValidator{
+				Validators: specschema.NumberValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -115,7 +115,7 @@ func TestConvertNumberAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorNumberAttribute{
-				Validators: []specschema.NumberValidator{
+				Validators: specschema.NumberValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

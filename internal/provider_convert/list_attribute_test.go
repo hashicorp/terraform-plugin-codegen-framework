@@ -298,7 +298,7 @@ func TestConvertListAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -315,7 +315,7 @@ func TestConvertListAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

@@ -263,7 +263,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorSingleNestedBlock{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: nil,
 					},
@@ -279,7 +279,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorSingleNestedBlock{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{},
 					},
@@ -295,7 +295,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorSingleNestedBlock{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -317,7 +317,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorSingleNestedBlock{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -677,7 +677,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorSingleNestedBlock{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",

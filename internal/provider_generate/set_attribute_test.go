@@ -376,7 +376,7 @@ DeprecationMessage: "deprecated",
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				Validators: []specschema.SetValidator{
+				Validators: specschema.SetValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",

@@ -329,7 +329,7 @@ func TestConvertMapAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				Validators: []specschema.MapValidator{
+				Validators: specschema.MapValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -346,7 +346,7 @@ func TestConvertMapAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				Validators: []specschema.MapValidator{
+				Validators: specschema.MapValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
