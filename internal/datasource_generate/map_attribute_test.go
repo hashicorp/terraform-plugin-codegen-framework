@@ -392,7 +392,7 @@ DeprecationMessage: "deprecated",
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				Validators: []specschema.MapValidator{
+				Validators: specschema.MapValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",

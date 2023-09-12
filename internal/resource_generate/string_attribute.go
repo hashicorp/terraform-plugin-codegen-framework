@@ -26,7 +26,7 @@ type GeneratorStringAttribute struct {
 	CustomType    *specschema.CustomType
 	Default       *specschema.StringDefault
 	PlanModifiers []specschema.StringPlanModifier
-	Validators    []specschema.StringValidator
+	Validators    specschema.StringValidators
 }
 
 func (g GeneratorStringAttribute) AttrType() attr.Type {
@@ -73,7 +73,7 @@ func (g GeneratorStringAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -132,31 +132,4 @@ func (g GeneratorStringAttribute) ModelField(name string) (model.Field, error) {
 	}
 
 	return field, nil
-}
-
-func (g GeneratorStringAttribute) validatorsEqual(x, y []specschema.StringValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

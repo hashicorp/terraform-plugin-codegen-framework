@@ -97,7 +97,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorStringAttribute{
-				Validators: []specschema.StringValidator{
+				Validators: specschema.StringValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",

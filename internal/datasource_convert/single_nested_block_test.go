@@ -320,7 +320,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 		},
 		"validators": {
 			input: &datasource.SingleNestedBlock{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -334,7 +334,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorSingleNestedBlock{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

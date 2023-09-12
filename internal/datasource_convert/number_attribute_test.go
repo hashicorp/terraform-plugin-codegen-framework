@@ -122,7 +122,7 @@ func TestConvertNumberAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &datasource.NumberAttribute{
-				Validators: []specschema.NumberValidator{
+				Validators: specschema.NumberValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -136,7 +136,7 @@ func TestConvertNumberAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorNumberAttribute{
-				Validators: []specschema.NumberValidator{
+				Validators: specschema.NumberValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

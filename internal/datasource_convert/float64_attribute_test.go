@@ -122,7 +122,7 @@ func TestConvertFloat64Attribute(t *testing.T) {
 		},
 		"validators": {
 			input: &datasource.Float64Attribute{
-				Validators: []specschema.Float64Validator{
+				Validators: specschema.Float64Validators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -136,7 +136,7 @@ func TestConvertFloat64Attribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorFloat64Attribute{
-				Validators: []specschema.Float64Validator{
+				Validators: specschema.Float64Validators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

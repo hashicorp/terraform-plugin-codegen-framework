@@ -23,7 +23,7 @@ type GeneratorSetAttribute struct {
 	// because support for extracting custom import information is required.
 	CustomType  *specschema.CustomType
 	ElementType specschema.ElementType
-	Validators  []specschema.SetValidator
+	Validators  specschema.SetValidators
 }
 
 func (g GeneratorSetAttribute) AttrType() attr.Type {
@@ -67,7 +67,7 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !g.validatorsEqual(g.Validators, h.Validators) {
+	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -142,31 +142,4 @@ func (g GeneratorSetAttribute) ModelField(name string) (model.Field, error) {
 	}
 
 	return field, nil
-}
-
-func (g GeneratorSetAttribute) validatorsEqual(x, y []specschema.SetValidator) bool {
-	if x == nil && y == nil {
-		return true
-	}
-
-	if x == nil && y != nil {
-		return false
-	}
-
-	if x != nil && y == nil {
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	//TODO: Sort before comparing.
-	for k, v := range x {
-		if !customValidatorsEqual(v.Custom, y[k].Custom) {
-			return false
-		}
-	}
-
-	return true
 }

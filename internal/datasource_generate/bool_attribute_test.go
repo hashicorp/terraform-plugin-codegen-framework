@@ -61,7 +61,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorBoolAttribute{
-				Validators: []specschema.BoolValidator{
+				Validators: specschema.BoolValidators{
 					{
 						Custom: nil,
 					},
@@ -74,7 +74,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorBoolAttribute{
-				Validators: []specschema.BoolValidator{
+				Validators: specschema.BoolValidators{
 					{
 						Custom: &specschema.CustomValidator{},
 					},
@@ -87,7 +87,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
-				Validators: []specschema.BoolValidator{
+				Validators: specschema.BoolValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -106,7 +106,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorBoolAttribute{
-				Validators: []specschema.BoolValidator{
+				Validators: specschema.BoolValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -254,7 +254,7 @@ DeprecationMessage: "deprecated",
 
 		"validators-empty": {
 			input: GeneratorBoolAttribute{
-				Validators: []specschema.BoolValidator{},
+				Validators: specschema.BoolValidators{},
 			},
 			expected: `
 "bool_attribute": schema.BoolAttribute{
@@ -262,7 +262,7 @@ DeprecationMessage: "deprecated",
 		},
 		"validators": {
 			input: GeneratorBoolAttribute{
-				Validators: []specschema.BoolValidator{
+				Validators: specschema.BoolValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",

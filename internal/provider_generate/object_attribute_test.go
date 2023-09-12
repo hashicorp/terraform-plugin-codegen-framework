@@ -177,7 +177,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorObjectAttribute{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: nil,
 					},
@@ -190,7 +190,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorObjectAttribute{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{},
 					},
@@ -203,7 +203,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorObjectAttribute{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -222,7 +222,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorObjectAttribute{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -755,7 +755,7 @@ DeprecationMessage: "deprecated",
 						String: &specschema.StringType{},
 					},
 				},
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",

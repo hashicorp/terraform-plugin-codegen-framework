@@ -312,7 +312,7 @@ func TestConvertListNestedAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &provider.ListNestedAttribute{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -326,7 +326,7 @@ func TestConvertListNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: provider_generate.GeneratorListNestedAttribute{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

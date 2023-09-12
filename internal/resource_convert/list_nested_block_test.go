@@ -356,7 +356,7 @@ func TestConvertListNestedBlock(t *testing.T) {
 		},
 		"validators": {
 			input: &resource.ListNestedBlock{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -370,7 +370,7 @@ func TestConvertListNestedBlock(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorListNestedBlock{
-				Validators: []specschema.ListValidator{
+				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

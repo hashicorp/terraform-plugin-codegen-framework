@@ -291,7 +291,7 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 		},
 		"validators": {
 			input: &resource.SingleNestedAttribute{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{
@@ -305,7 +305,7 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedAttribute{
-				Validators: []specschema.ObjectValidator{
+				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
 							Imports: []code.Import{

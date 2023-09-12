@@ -109,7 +109,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorInt64Attribute{
-				Validators: []specschema.Int64Validator{
+				Validators: specschema.Int64Validators{
 					{
 						Custom: &specschema.CustomValidator{
 							SchemaDefinition: "my_validator.Validate()",
