@@ -66,7 +66,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !elementTypeEqual(g.ElementType, h.ElementType) {
+	if !g.ElementType.Equal(h.ElementType) {
 		return false
 	}
 
