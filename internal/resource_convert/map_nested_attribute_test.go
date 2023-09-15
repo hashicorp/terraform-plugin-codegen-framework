@@ -343,7 +343,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.MapNestedAttribute{
-				PlanModifiers: []specschema.MapPlanModifier{
+				PlanModifiers: specschema.MapPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -357,7 +357,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorMapNestedAttribute{
-				PlanModifiers: []specschema.MapPlanModifier{
+				PlanModifiers: specschema.MapPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

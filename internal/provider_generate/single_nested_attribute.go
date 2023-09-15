@@ -62,7 +62,22 @@ func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 
 func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSingleNestedAttribute)
+
 	if !ok {
+		return false
+	}
+
+	for k := range g.Attributes {
+		if _, ok := h.Attributes[k]; !ok {
+			return false
+		}
+
+		if !g.Attributes[k].Equal(h.Attributes[k]) {
+			return false
+		}
+	}
+
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
 		return false
 	}
 
@@ -74,13 +89,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	for k, a := range g.Attributes {
-		if !a.Equal(h.Attributes[k]) {
-			return false
-		}
-	}
-
-	return true
+	return g.SingleNestedAttribute.Equal(h.SingleNestedAttribute)
 }
 
 func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {

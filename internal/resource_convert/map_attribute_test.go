@@ -366,7 +366,7 @@ func TestConvertMapAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				PlanModifiers: []specschema.MapPlanModifier{
+				PlanModifiers: specschema.MapPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -383,7 +383,7 @@ func TestConvertMapAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				PlanModifiers: []specschema.MapPlanModifier{
+				PlanModifiers: specschema.MapPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

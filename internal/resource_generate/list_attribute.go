@@ -24,7 +24,7 @@ type GeneratorListAttribute struct {
 	CustomType    *specschema.CustomType
 	Default       *specschema.ListDefault
 	ElementType   specschema.ElementType
-	PlanModifiers []specschema.ListPlanModifier
+	PlanModifiers specschema.ListPlanModifiers
 	Validators    specschema.ListValidators
 }
 

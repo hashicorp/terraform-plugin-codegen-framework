@@ -24,7 +24,7 @@ type GeneratorObjectAttribute struct {
 	AttributeTypes []specschema.ObjectAttributeType
 	CustomType     *specschema.CustomType
 	Default        *specschema.ObjectDefault
-	PlanModifiers  []specschema.ObjectPlanModifier
+	PlanModifiers  specschema.ObjectPlanModifiers
 	Validators     specschema.ObjectValidators
 }
 

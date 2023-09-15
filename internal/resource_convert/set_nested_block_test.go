@@ -245,9 +245,9 @@ func TestConvertSetNestedBlock(t *testing.T) {
 								NestedObject: resource.NestedBlockObject{
 									Attributes: []resource.Attribute{
 										{
-											Name: "nested_bool",
+											Name: "bool_attribute",
 											Bool: &resource.BoolAttribute{
-												ComputedOptionalRequired: "computed",
+												ComputedOptionalRequired: "optional",
 											},
 										},
 									},
@@ -285,9 +285,9 @@ func TestConvertSetNestedBlock(t *testing.T) {
 							SingleNested: &resource.SingleNestedBlock{
 								Attributes: []resource.Attribute{
 									{
-										Name: "nested_bool",
+										Name: "bool_attribute",
 										Bool: &resource.BoolAttribute{
-											ComputedOptionalRequired: "computed",
+											ComputedOptionalRequired: "optional",
 										},
 									},
 								},
@@ -386,7 +386,7 @@ func TestConvertSetNestedBlock(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.SetNestedBlock{
-				PlanModifiers: []specschema.SetPlanModifier{
+				PlanModifiers: specschema.SetPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -400,7 +400,7 @@ func TestConvertSetNestedBlock(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSetNestedBlock{
-				PlanModifiers: []specschema.SetPlanModifier{
+				PlanModifiers: specschema.SetPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

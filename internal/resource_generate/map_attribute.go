@@ -24,7 +24,7 @@ type GeneratorMapAttribute struct {
 	CustomType    *specschema.CustomType
 	Default       *specschema.MapDefault
 	ElementType   specschema.ElementType
-	PlanModifiers []specschema.MapPlanModifier
+	PlanModifiers specschema.MapPlanModifiers
 	Validators    specschema.MapValidators
 }
 

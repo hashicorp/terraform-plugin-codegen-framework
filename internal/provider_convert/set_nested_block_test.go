@@ -245,9 +245,9 @@ func TestConvertSetNestedBlock(t *testing.T) {
 								NestedObject: provider.NestedBlockObject{
 									Attributes: []provider.Attribute{
 										{
-											Name: "nested_bool",
+											Name: "bool_attribute",
 											Bool: &provider.BoolAttribute{
-												OptionalRequired: "computed",
+												OptionalRequired: "optional",
 											},
 										},
 									},
@@ -285,9 +285,9 @@ func TestConvertSetNestedBlock(t *testing.T) {
 							SingleNested: &provider.SingleNestedBlock{
 								Attributes: []provider.Attribute{
 									{
-										Name: "nested_bool",
+										Name: "bool_attribute",
 										Bool: &provider.BoolAttribute{
-											OptionalRequired: "computed",
+											OptionalRequired: "optional",
 										},
 									},
 								},

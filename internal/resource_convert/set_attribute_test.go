@@ -366,7 +366,7 @@ func TestConvertSetAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				PlanModifiers: []specschema.SetPlanModifier{
+				PlanModifiers: specschema.SetPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -383,7 +383,7 @@ func TestConvertSetAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				PlanModifiers: []specschema.SetPlanModifier{
+				PlanModifiers: specschema.SetPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

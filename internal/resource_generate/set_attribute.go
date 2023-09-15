@@ -24,7 +24,7 @@ type GeneratorSetAttribute struct {
 	CustomType    *specschema.CustomType
 	Default       *specschema.SetDefault
 	ElementType   specschema.ElementType
-	PlanModifiers []specschema.SetPlanModifier
+	PlanModifiers specschema.SetPlanModifiers
 	Validators    specschema.SetValidators
 }
 

@@ -73,6 +73,7 @@ func (g GeneratorListNestedBlock) Imports() *generatorschema.Imports {
 
 func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 	h, ok := ga.(GeneratorListNestedBlock)
+
 	if !ok {
 		return false
 	}
@@ -85,21 +86,11 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 		return false
 	}
 
-	if !g.NestedObject.CustomType.Equal(h.NestedObject.CustomType) {
+	if !g.NestedObject.Equal(h.NestedObject) {
 		return false
 	}
 
-	if !g.NestedObject.Validators.Equal(h.NestedObject.Validators) {
-		return false
-	}
-
-	for k, a := range g.NestedObject.Attributes {
-		if !a.Equal(h.NestedObject.Attributes[k]) {
-			return false
-		}
-	}
-
-	return true
+	return g.ListNestedBlock.Equal(h.ListNestedBlock)
 }
 
 func (g GeneratorListNestedBlock) ToString(name string) (string, error) {

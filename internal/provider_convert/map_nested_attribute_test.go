@@ -221,7 +221,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 		},
 		"computed": {
 			input: &provider.MapNestedAttribute{
-				OptionalRequired: "computed",
+				OptionalRequired: "optional",
 			},
 			expected: provider_generate.GeneratorMapNestedAttribute{
 				MapNestedAttribute: schema.MapNestedAttribute{

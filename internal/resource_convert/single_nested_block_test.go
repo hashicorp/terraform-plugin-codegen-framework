@@ -350,7 +350,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.SingleNestedBlock{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -364,7 +364,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedBlock{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
