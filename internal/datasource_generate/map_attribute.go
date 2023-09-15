@@ -53,9 +53,8 @@ func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-// Equal does not delegate to g.ListAttribute.Equal(h.ListAttribute) as the
-// call returns false owing to !a.GetType().Equal(b.GetType()) returning false
-// when the ElementType is nil.
+// Equal does not delegate to g.MapAttribute.Equal(h.MapAttribute) as the
+// call returns false when the ElementType is nil.
 func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorMapAttribute)
 	if !ok {
