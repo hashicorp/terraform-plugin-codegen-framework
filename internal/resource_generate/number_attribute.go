@@ -23,7 +23,7 @@ type GeneratorNumberAttribute struct {
 	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	Default       *specschema.NumberDefault
-	PlanModifiers []specschema.NumberPlanModifier
+	PlanModifiers specschema.NumberPlanModifiers
 	Validators    specschema.NumberValidators
 }
 
@@ -62,6 +62,14 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	}
 
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 

@@ -133,7 +133,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorStringAttribute{
-				PlanModifiers: []specschema.StringPlanModifier{
+				PlanModifiers: specschema.StringPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							SchemaDefinition: "my_plan_modifier.Modify()",

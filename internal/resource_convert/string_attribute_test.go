@@ -152,7 +152,7 @@ func TestConvertStringAttribute(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.StringAttribute{
-				PlanModifiers: []specschema.StringPlanModifier{
+				PlanModifiers: specschema.StringPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -166,7 +166,7 @@ func TestConvertStringAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorStringAttribute{
-				PlanModifiers: []specschema.StringPlanModifier{
+				PlanModifiers: specschema.StringPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

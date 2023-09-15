@@ -152,7 +152,7 @@ func TestConvertNumberAttribute(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.NumberAttribute{
-				PlanModifiers: []specschema.NumberPlanModifier{
+				PlanModifiers: specschema.NumberPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -166,7 +166,7 @@ func TestConvertNumberAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorNumberAttribute{
-				PlanModifiers: []specschema.NumberPlanModifier{
+				PlanModifiers: specschema.NumberPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

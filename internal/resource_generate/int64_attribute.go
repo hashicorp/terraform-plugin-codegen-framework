@@ -25,7 +25,7 @@ type GeneratorInt64Attribute struct {
 	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	Default       *specschema.Int64Default
-	PlanModifiers []specschema.Int64PlanModifier
+	PlanModifiers specschema.Int64PlanModifiers
 	Validators    specschema.Int64Validators
 }
 
@@ -70,6 +70,14 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 	}
 
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 

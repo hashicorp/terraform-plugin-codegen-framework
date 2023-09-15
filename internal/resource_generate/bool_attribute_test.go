@@ -143,7 +143,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-nil": {
 			input: GeneratorBoolAttribute{
-				PlanModifiers: []specschema.BoolPlanModifier{
+				PlanModifiers: specschema.BoolPlanModifiers{
 					{
 						Custom: nil,
 					},
@@ -156,7 +156,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorBoolAttribute{
-				PlanModifiers: []specschema.BoolPlanModifier{
+				PlanModifiers: specschema.BoolPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{},
@@ -171,7 +171,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
-				PlanModifiers: []specschema.BoolPlanModifier{
+				PlanModifiers: specschema.BoolPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -190,7 +190,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorBoolAttribute{
-				PlanModifiers: []specschema.BoolPlanModifier{
+				PlanModifiers: specschema.BoolPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -446,7 +446,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorBoolAttribute{
-				PlanModifiers: []specschema.BoolPlanModifier{
+				PlanModifiers: specschema.BoolPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							SchemaDefinition: "my_plan_modifier.Modify()",

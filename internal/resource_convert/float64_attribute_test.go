@@ -152,7 +152,7 @@ func TestConvertFloat64Attribute(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.Float64Attribute{
-				PlanModifiers: []specschema.Float64PlanModifier{
+				PlanModifiers: specschema.Float64PlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -166,7 +166,7 @@ func TestConvertFloat64Attribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorFloat64Attribute{
-				PlanModifiers: []specschema.Float64PlanModifier{
+				PlanModifiers: specschema.Float64PlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

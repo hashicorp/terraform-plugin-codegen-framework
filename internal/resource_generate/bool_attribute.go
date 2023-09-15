@@ -25,7 +25,7 @@ type GeneratorBoolAttribute struct {
 	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	Default       *specschema.BoolDefault
-	PlanModifiers []specschema.BoolPlanModifier
+	PlanModifiers specschema.BoolPlanModifiers
 	Validators    specschema.BoolValidators
 }
 
@@ -70,6 +70,14 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	}
 
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 

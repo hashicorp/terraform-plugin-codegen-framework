@@ -77,7 +77,15 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
 	if !g.ElementType.Equal(h.ElementType) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
