@@ -11,8 +11,7 @@ import (
 )
 
 type AssocExtType struct {
-	imp *code.Import
-	typ string
+	*schema.AssociatedExternalType
 }
 
 func NewAssocExtType(assocExtType *schema.AssociatedExternalType) *AssocExtType {
@@ -21,8 +20,7 @@ func NewAssocExtType(assocExtType *schema.AssociatedExternalType) *AssocExtType 
 	}
 
 	return &AssocExtType{
-		imp: assocExtType.Import,
-		typ: assocExtType.Type,
+		AssociatedExternalType: assocExtType,
 	}
 }
 
@@ -33,12 +31,12 @@ func (a *AssocExtType) Imports() *Imports {
 		return imports
 	}
 
-	if a.imp == nil {
+	if a.AssociatedExternalType.Import == nil {
 		return imports
 	}
 
-	if len(a.imp.Path) > 0 {
-		imports.Add(*a.imp)
+	if len(a.AssociatedExternalType.Import.Path) > 0 {
+		imports.Add(*a.AssociatedExternalType.Import)
 
 		imports.Add(code.Import{
 			Path: BaseTypesImport,
@@ -53,7 +51,7 @@ func (a *AssocExtType) Type() string {
 		return ""
 	}
 
-	return a.typ
+	return a.AssociatedExternalType.Type
 }
 
 func (a *AssocExtType) TypeReference() string {
@@ -61,7 +59,19 @@ func (a *AssocExtType) TypeReference() string {
 		return ""
 	}
 
-	tr, _ := strings.CutPrefix(a.typ, "*")
+	tr, _ := strings.CutPrefix(a.AssociatedExternalType.Type, "*")
 
 	return tr
+}
+
+func (a *AssocExtType) Equal(other *AssocExtType) bool {
+	if a == nil && other == nil {
+		return true
+	}
+
+	if a == nil || other == nil {
+		return false
+	}
+
+	return a.AssociatedExternalType.Equal(other.AssociatedExternalType)
 }

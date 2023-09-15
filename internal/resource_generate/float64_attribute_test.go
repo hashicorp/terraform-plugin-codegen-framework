@@ -133,7 +133,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorFloat64Attribute{
-				PlanModifiers: []specschema.Float64PlanModifier{
+				PlanModifiers: specschema.Float64PlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							SchemaDefinition: "my_plan_modifier.Modify()",

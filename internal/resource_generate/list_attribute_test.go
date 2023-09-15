@@ -315,7 +315,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-nil": {
 			input: GeneratorListAttribute{
-				PlanModifiers: []specschema.ListPlanModifier{
+				PlanModifiers: specschema.ListPlanModifiers{
 					{
 						Custom: nil,
 					},
@@ -328,7 +328,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorListAttribute{
-				PlanModifiers: []specschema.ListPlanModifier{
+				PlanModifiers: specschema.ListPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{},
@@ -343,7 +343,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorListAttribute{
-				PlanModifiers: []specschema.ListPlanModifier{
+				PlanModifiers: specschema.ListPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -362,7 +362,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorListAttribute{
-				PlanModifiers: []specschema.ListPlanModifier{
+				PlanModifiers: specschema.ListPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -891,7 +891,7 @@ my_other_validator.Validate(),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				PlanModifiers: []specschema.ListPlanModifier{
+				PlanModifiers: specschema.ListPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							SchemaDefinition: "my_plan_modifier.Modify()",

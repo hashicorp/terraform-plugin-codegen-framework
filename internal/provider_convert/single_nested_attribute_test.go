@@ -197,26 +197,6 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 				},
 			},
 		},
-		"computed": {
-			input: &provider.SingleNestedAttribute{
-				OptionalRequired: "computed",
-			},
-			expected: provider_generate.GeneratorSingleNestedAttribute{
-				SingleNestedAttribute: schema.SingleNestedAttribute{
-					Optional: true,
-				},
-			},
-		},
-		"computed_optional": {
-			input: &provider.SingleNestedAttribute{
-				OptionalRequired: "computed_optional",
-			},
-			expected: provider_generate.GeneratorSingleNestedAttribute{
-				SingleNestedAttribute: schema.SingleNestedAttribute{
-					Optional: true,
-				},
-			},
-		},
 		"optional": {
 			input: &provider.SingleNestedAttribute{
 				OptionalRequired: "optional",

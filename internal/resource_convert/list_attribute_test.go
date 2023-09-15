@@ -367,7 +367,7 @@ func TestConvertListAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				PlanModifiers: []specschema.ListPlanModifier{
+				PlanModifiers: specschema.ListPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -384,7 +384,7 @@ func TestConvertListAttribute(t *testing.T) {
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				PlanModifiers: []specschema.ListPlanModifier{
+				PlanModifiers: specschema.ListPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

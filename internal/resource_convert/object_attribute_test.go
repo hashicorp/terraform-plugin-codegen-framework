@@ -323,7 +323,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.ObjectAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -337,7 +337,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorObjectAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

@@ -420,7 +420,7 @@ my_other_validator.Validate(),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
-				PlanModifiers: []specschema.SetPlanModifier{
+				PlanModifiers: specschema.SetPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							SchemaDefinition: "my_plan_modifier.Modify()",

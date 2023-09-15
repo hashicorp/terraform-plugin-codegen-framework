@@ -67,7 +67,32 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 
 func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 	h, ok := ga.(GeneratorSingleNestedBlock)
+
 	if !ok {
+		return false
+	}
+
+	for k := range g.Attributes {
+		if _, ok := h.Attributes[k]; !ok {
+			return false
+		}
+
+		if !g.Attributes[k].Equal(h.Attributes[k]) {
+			return false
+		}
+	}
+
+	for k := range g.Blocks {
+		if _, ok := h.Blocks[k]; !ok {
+			return false
+		}
+
+		if !g.Blocks[k].Equal(h.Blocks[k]) {
+			return false
+		}
+	}
+
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
 		return false
 	}
 
@@ -79,13 +104,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	for k, a := range g.Attributes {
-		if !a.Equal(h.Attributes[k]) {
-			return false
-		}
-	}
-
-	return true
+	return g.SingleNestedBlock.Equal(h.SingleNestedBlock)
 }
 
 func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {

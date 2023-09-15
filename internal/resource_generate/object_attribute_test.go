@@ -259,7 +259,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-nil": {
 			input: GeneratorObjectAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: nil,
 					},
@@ -272,7 +272,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorObjectAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{},
@@ -287,7 +287,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorObjectAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -306,7 +306,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorObjectAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -962,7 +962,7 @@ my_other_validator.Validate(),
 						String: &specschema.StringType{},
 					},
 				},
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							SchemaDefinition: "my_plan_modifier.Modify()",

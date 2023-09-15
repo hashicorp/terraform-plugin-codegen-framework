@@ -218,9 +218,9 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 							NestedObject: datasource.NestedBlockObject{
 								Attributes: []datasource.Attribute{
 									{
-										Name: "nested_bool",
+										Name: "bool_attribute",
 										Bool: &datasource.BoolAttribute{
-											ComputedOptionalRequired: "computed",
+											ComputedOptionalRequired: "optional",
 										},
 									},
 								},
@@ -253,9 +253,9 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 						SingleNested: &datasource.SingleNestedBlock{
 							Attributes: []datasource.Attribute{
 								{
-									Name: "nested_bool",
+									Name: "bool_attribute",
 									Bool: &datasource.BoolAttribute{
-										ComputedOptionalRequired: "computed",
+										ComputedOptionalRequired: "optional",
 									},
 								},
 							},

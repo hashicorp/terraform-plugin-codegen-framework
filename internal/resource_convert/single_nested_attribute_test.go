@@ -321,7 +321,7 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.SingleNestedAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -335,7 +335,7 @@ func TestConvertSingleNestedAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorSingleNestedAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

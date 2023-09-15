@@ -25,7 +25,7 @@ type GeneratorStringAttribute struct {
 	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	Default       *specschema.StringDefault
-	PlanModifiers []specschema.StringPlanModifier
+	PlanModifiers specschema.StringPlanModifiers
 	Validators    specschema.StringValidators
 }
 
@@ -70,6 +70,14 @@ func (g GeneratorStringAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	}
 
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 

@@ -686,7 +686,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorSingleNestedAttribute{
-				PlanModifiers: []specschema.ObjectPlanModifier{
+				PlanModifiers: specschema.ObjectPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							SchemaDefinition: "my_plan_modifier.Modify()",

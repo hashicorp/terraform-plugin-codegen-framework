@@ -54,8 +54,7 @@ func (g GeneratorListAttribute) Imports() *generatorschema.Imports {
 }
 
 // Equal does not delegate to g.ListAttribute.Equal(h.ListAttribute) as the
-// call returns false owing to !a.GetType().Equal(b.GetType()) returning false
-// when the ElementType is nil.
+// call returns false when the ElementType is nil.
 func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorListAttribute)
 	if !ok {
@@ -66,7 +65,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !elementTypeEqual(g.ElementType, h.ElementType) {
+	if !g.ElementType.Equal(h.ElementType) {
 		return false
 	}
 

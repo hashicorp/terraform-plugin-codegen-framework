@@ -53,6 +53,8 @@ func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
+// Equal does not delegate to g.SetAttribute.Equal(h.SetAttribute) as the
+// call returns false when the ElementType is nil.
 func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSetAttribute)
 	if !ok {
@@ -63,7 +65,7 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !elementTypeEqual(g.ElementType, h.ElementType) {
+	if !g.ElementType.Equal(h.ElementType) {
 		return false
 	}
 

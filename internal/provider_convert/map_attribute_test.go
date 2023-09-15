@@ -185,38 +185,6 @@ func TestConvertMapAttribute(t *testing.T) {
 				},
 			},
 		},
-		"computed": {
-			input: &provider.MapAttribute{
-				OptionalRequired: "optional",
-				ElementType: specschema.ElementType{
-					String: &specschema.StringType{},
-				},
-			},
-			expected: provider_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					Optional: true,
-				},
-				ElementType: specschema.ElementType{
-					String: &specschema.StringType{},
-				},
-			},
-		},
-		"computed_optional": {
-			input: &provider.MapAttribute{
-				OptionalRequired: "computed_optional",
-				ElementType: specschema.ElementType{
-					String: &specschema.StringType{},
-				},
-			},
-			expected: provider_generate.GeneratorMapAttribute{
-				MapAttribute: schema.MapAttribute{
-					Optional: true,
-				},
-				ElementType: specschema.ElementType{
-					String: &specschema.StringType{},
-				},
-			},
-		},
 		"optional": {
 			input: &provider.MapAttribute{
 				OptionalRequired: "optional",

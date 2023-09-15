@@ -152,7 +152,7 @@ func TestConvertBoolAttribute(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.BoolAttribute{
-				PlanModifiers: []specschema.BoolPlanModifier{
+				PlanModifiers: specschema.BoolPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -166,7 +166,7 @@ func TestConvertBoolAttribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorBoolAttribute{
-				PlanModifiers: []specschema.BoolPlanModifier{
+				PlanModifiers: specschema.BoolPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

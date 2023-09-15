@@ -24,7 +24,7 @@ type GeneratorSetNestedAttribute struct {
 	CustomType    *specschema.CustomType
 	Default       *specschema.SetDefault
 	NestedObject  GeneratorNestedAttributeObject
-	PlanModifiers []specschema.SetPlanModifier
+	PlanModifiers specschema.SetPlanModifiers
 	Validators    specschema.SetValidators
 }
 
@@ -86,6 +86,7 @@ func (g GeneratorSetNestedAttribute) Imports() *generatorschema.Imports {
 
 func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSetNestedAttribute)
+
 	if !ok {
 		return false
 	}
@@ -94,25 +95,23 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
+		return false
+	}
+
 	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
-	if !g.NestedObject.CustomType.Equal(h.NestedObject.CustomType) {
+	if !g.NestedObject.Equal(h.NestedObject) {
 		return false
 	}
 
-	if !g.NestedObject.Validators.Equal(h.NestedObject.Validators) {
-		return false
-	}
-
-	for k, a := range g.NestedObject.Attributes {
-		if !a.Equal(h.NestedObject.Attributes[k]) {
-			return false
-		}
-	}
-
-	return true
+	return g.SetNestedAttribute.Equal(h.SetNestedAttribute)
 }
 
 func (g GeneratorSetNestedAttribute) ToString(name string) (string, error) {

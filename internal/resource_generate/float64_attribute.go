@@ -26,7 +26,7 @@ type GeneratorFloat64Attribute struct {
 	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	Default       *specschema.Float64Default
-	PlanModifiers []specschema.Float64PlanModifier
+	PlanModifiers specschema.Float64PlanModifiers
 	Validators    specschema.Float64Validators
 }
 
@@ -71,6 +71,14 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 	}
 
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 

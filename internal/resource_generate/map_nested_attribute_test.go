@@ -1019,7 +1019,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorMapNestedAttribute{
-				PlanModifiers: []specschema.MapPlanModifier{
+				PlanModifiers: specschema.MapPlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							SchemaDefinition: "my_plan_modifier.Modify()",

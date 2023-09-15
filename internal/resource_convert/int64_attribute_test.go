@@ -152,7 +152,7 @@ func TestConvertInt64Attribute(t *testing.T) {
 		},
 		"plan-modifiers": {
 			input: &resource.Int64Attribute{
-				PlanModifiers: []specschema.Int64PlanModifier{
+				PlanModifiers: specschema.Int64PlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{
@@ -166,7 +166,7 @@ func TestConvertInt64Attribute(t *testing.T) {
 				},
 			},
 			expected: resource_generate.GeneratorInt64Attribute{
-				PlanModifiers: []specschema.Int64PlanModifier{
+				PlanModifiers: specschema.Int64PlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
 							Imports: []code.Import{

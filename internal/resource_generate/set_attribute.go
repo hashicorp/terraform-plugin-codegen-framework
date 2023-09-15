@@ -24,7 +24,7 @@ type GeneratorSetAttribute struct {
 	CustomType    *specschema.CustomType
 	Default       *specschema.SetDefault
 	ElementType   specschema.ElementType
-	PlanModifiers []specschema.SetPlanModifier
+	PlanModifiers specschema.SetPlanModifiers
 	Validators    specschema.SetValidators
 }
 
@@ -65,6 +65,8 @@ func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
+// Equal does not delegate to g.SetAttribute.Equal(h.SetAttribute) as the
+// call returns false when the ElementType is nil.
 func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSetAttribute)
 	if !ok {
@@ -75,7 +77,15 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !elementTypeEqual(g.ElementType, h.ElementType) {
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.ElementType.Equal(h.ElementType) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 

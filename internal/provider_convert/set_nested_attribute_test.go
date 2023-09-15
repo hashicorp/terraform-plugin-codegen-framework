@@ -219,26 +219,6 @@ func TestConvertSetNestedAttribute(t *testing.T) {
 				},
 			},
 		},
-		"computed": {
-			input: &provider.SetNestedAttribute{
-				OptionalRequired: "computed",
-			},
-			expected: provider_generate.GeneratorSetNestedAttribute{
-				SetNestedAttribute: schema.SetNestedAttribute{
-					Optional: true,
-				},
-			},
-		},
-		"computed_optional": {
-			input: &provider.SetNestedAttribute{
-				OptionalRequired: "computed_optional",
-			},
-			expected: provider_generate.GeneratorSetNestedAttribute{
-				SetNestedAttribute: schema.SetNestedAttribute{
-					Optional: true,
-				},
-			},
-		},
 		"optional": {
 			input: &provider.SetNestedAttribute{
 				OptionalRequired: "optional",

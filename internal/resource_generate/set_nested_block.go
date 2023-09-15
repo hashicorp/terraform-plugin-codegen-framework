@@ -23,7 +23,7 @@ type GeneratorSetNestedBlock struct {
 	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
 	NestedObject  GeneratorNestedBlockObject
-	PlanModifiers []specschema.SetPlanModifier
+	PlanModifiers specschema.SetPlanModifiers
 	Validators    specschema.SetValidators
 }
 
@@ -84,6 +84,7 @@ func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {
 
 func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 	h, ok := ga.(GeneratorSetNestedBlock)
+
 	if !ok {
 		return false
 	}
@@ -92,25 +93,19 @@ func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 		return false
 	}
 
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
+		return false
+	}
+
 	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
-	if !g.NestedObject.CustomType.Equal(h.NestedObject.CustomType) {
+	if !g.NestedObject.Equal(h.NestedObject) {
 		return false
 	}
 
-	if !g.NestedObject.Validators.Equal(h.NestedObject.Validators) {
-		return false
-	}
-
-	for k, a := range g.NestedObject.Attributes {
-		if !a.Equal(h.NestedObject.Attributes[k]) {
-			return false
-		}
-	}
-
-	return true
+	return g.SetNestedBlock.Equal(h.SetNestedBlock)
 }
 
 func (g GeneratorSetNestedBlock) ToString(name string) (string, error) {

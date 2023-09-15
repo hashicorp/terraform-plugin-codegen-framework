@@ -24,7 +24,7 @@ type GeneratorMapAttribute struct {
 	CustomType    *specschema.CustomType
 	Default       *specschema.MapDefault
 	ElementType   specschema.ElementType
-	PlanModifiers []specschema.MapPlanModifier
+	PlanModifiers specschema.MapPlanModifiers
 	Validators    specschema.MapValidators
 }
 
@@ -65,9 +65,8 @@ func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-// Equal does not delegate to g.ListAttribute.Equal(h.ListAttribute) as the
-// call returns false owing to !a.GetType().Equal(b.GetType()) returning false
-// when the ElementType is nil.
+// Equal does not delegate to g.MapAttribute.Equal(h.MapAttribute) as the
+// call returns false when the ElementType is nil.
 func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorMapAttribute)
 	if !ok {
@@ -78,7 +77,15 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !elementTypeEqual(g.ElementType, h.ElementType) {
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.ElementType.Equal(h.ElementType) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 

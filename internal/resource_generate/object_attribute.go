@@ -24,7 +24,7 @@ type GeneratorObjectAttribute struct {
 	AttributeTypes []specschema.ObjectAttributeType
 	CustomType     *specschema.CustomType
 	Default        *specschema.ObjectDefault
-	PlanModifiers  []specschema.ObjectPlanModifier
+	PlanModifiers  specschema.ObjectPlanModifiers
 	Validators     specschema.ObjectValidators
 }
 
@@ -72,6 +72,14 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	}
 
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
