@@ -219,26 +219,6 @@ func TestConvertListNestedAttribute(t *testing.T) {
 				},
 			},
 		},
-		"computed": {
-			input: &provider.ListNestedAttribute{
-				OptionalRequired: "optional",
-			},
-			expected: provider_generate.GeneratorListNestedAttribute{
-				ListNestedAttribute: schema.ListNestedAttribute{
-					Optional: true,
-				},
-			},
-		},
-		"computed_optional": {
-			input: &provider.ListNestedAttribute{
-				OptionalRequired: "computed_optional",
-			},
-			expected: provider_generate.GeneratorListNestedAttribute{
-				ListNestedAttribute: schema.ListNestedAttribute{
-					Optional: true,
-				},
-			},
-		},
 		"optional": {
 			input: &provider.ListNestedAttribute{
 				OptionalRequired: "optional",

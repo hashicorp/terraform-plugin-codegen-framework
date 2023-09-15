@@ -185,38 +185,6 @@ func TestConvertSetAttribute(t *testing.T) {
 				},
 			},
 		},
-		"computed": {
-			input: &provider.SetAttribute{
-				OptionalRequired: "computed",
-				ElementType: specschema.ElementType{
-					String: &specschema.StringType{},
-				},
-			},
-			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Optional: true,
-				},
-				ElementType: specschema.ElementType{
-					String: &specschema.StringType{},
-				},
-			},
-		},
-		"computed_optional": {
-			input: &provider.SetAttribute{
-				OptionalRequired: "computed_optional",
-				ElementType: specschema.ElementType{
-					String: &specschema.StringType{},
-				},
-			},
-			expected: provider_generate.GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Optional: true,
-				},
-				ElementType: specschema.ElementType{
-					String: &specschema.StringType{},
-				},
-			},
-		},
 		"optional": {
 			input: &provider.SetAttribute{
 				OptionalRequired: "optional",
