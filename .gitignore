@@ -5,7 +5,7 @@
 *.so
 *.dylib
 
-terraform-plugin-codegen-framework
+tfplugingen-framework
 
 # Test binary, built with `go test -c`
 *.test
