@@ -12,7 +12,7 @@ import (
 
 // GetAttrTypes generates the strings for use within templates for specifying the types to use with
 // object attribute types.
-func GetAttrTypes(attrTypes []specschema.ObjectAttributeType) string {
+func GetAttrTypes(attrTypes specschema.ObjectAttributeTypes) string {
 	var aTypes strings.Builder
 
 	for _, v := range attrTypes {

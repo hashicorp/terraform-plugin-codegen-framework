@@ -108,7 +108,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 								{
 									Name: "object_attribute",
 									Object: &resource.ObjectAttribute{
-										AttributeTypes: []specschema.ObjectAttributeType{
+										AttributeTypes: specschema.ObjectAttributeTypes{
 											{
 												Name: "obj_bool",
 												Bool: &specschema.BoolType{},
@@ -254,7 +254,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
 							},
-							AttributeTypes: []specschema.ObjectAttributeType{
+							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "obj_bool",
 									Bool: &specschema.BoolType{},

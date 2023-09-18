@@ -284,7 +284,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
-							AttributeTypes: []specschema.ObjectAttributeType{
+							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "bool",
 									Bool: &specschema.BoolType{},
@@ -339,7 +339,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 									Path: "github.com/my_account/my_project/nested_object",
 								},
 							},
-							AttributeTypes: []specschema.ObjectAttributeType{
+							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "bool",
 									Bool: &specschema.BoolType{
@@ -711,7 +711,7 @@ AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
 							},
-							AttributeTypes: []specschema.ObjectAttributeType{
+							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name:   "str",
 									String: &specschema.StringType{},

@@ -21,7 +21,7 @@ type GeneratorObjectAttribute struct {
 
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
-	AttributeTypes []specschema.ObjectAttributeType
+	AttributeTypes specschema.ObjectAttributeTypes
 	CustomType     *specschema.CustomType
 	Default        *specschema.ObjectDefault
 	PlanModifiers  specschema.ObjectPlanModifiers
@@ -67,7 +67,12 @@ func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 
 func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorObjectAttribute)
+
 	if !ok {
+		return false
+	}
+
+	if !g.AttributeTypes.Equal(h.AttributeTypes) {
 		return false
 	}
 

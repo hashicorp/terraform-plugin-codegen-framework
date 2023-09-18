@@ -156,7 +156,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 			input: GeneratorSingleNestedBlock{
 				Attributes: generatorschema.GeneratorAttributes{
 					"obj": GeneratorObjectAttribute{
-						AttributeTypes: []specschema.ObjectAttributeType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name: "bool",
 								Bool: &specschema.BoolType{},
@@ -207,7 +207,7 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 								Path: "github.com/my_account/my_project/nested_object",
 							},
 						},
-						AttributeTypes: []specschema.ObjectAttributeType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name: "bool",
 								Bool: &specschema.BoolType{
@@ -483,7 +483,7 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 						ObjectAttribute: schema.ObjectAttribute{
 							Optional: true,
 						},
-						AttributeTypes: []specschema.ObjectAttributeType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name:   "str",
 								String: &specschema.StringType{},
