@@ -134,7 +134,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 					{
 						Name: "object_attribute",
 						Object: &datasource.ObjectAttribute{
-							AttributeTypes: []specschema.ObjectAttributeType{
+							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "obj_bool",
 									Bool: &specschema.BoolType{},
@@ -151,7 +151,7 @@ func TestConvertSingleNestedBlock(t *testing.T) {
 						ObjectAttribute: schema.ObjectAttribute{
 							Optional: true,
 						},
-						AttributeTypes: []specschema.ObjectAttributeType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name: "obj_bool",
 								Bool: &specschema.BoolType{},

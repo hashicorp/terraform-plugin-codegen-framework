@@ -137,7 +137,7 @@ func AttrImports() *Imports {
 	return imports
 }
 
-func GetAttrTypesImports(customType *specschema.CustomType, attrTypes []specschema.ObjectAttributeType) *Imports {
+func GetAttrTypesImports(customType *specschema.CustomType, attrTypes specschema.ObjectAttributeTypes) *Imports {
 	imports := NewImports()
 
 	if customType != nil && customType.HasImport() {

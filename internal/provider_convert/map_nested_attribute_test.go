@@ -149,7 +149,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 						{
 							Name: "object_attribute",
 							Object: &provider.ObjectAttribute{
-								AttributeTypes: []specschema.ObjectAttributeType{
+								AttributeTypes: specschema.ObjectAttributeTypes{
 									{
 										Name: "obj_bool",
 										Bool: &specschema.BoolType{},
@@ -168,7 +168,7 @@ func TestConvertMapNestedAttribute(t *testing.T) {
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
 							},
-							AttributeTypes: []specschema.ObjectAttributeType{
+							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "obj_bool",
 									Bool: &specschema.BoolType{},

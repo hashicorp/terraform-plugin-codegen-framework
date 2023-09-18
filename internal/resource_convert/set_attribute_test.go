@@ -97,7 +97,7 @@ func TestConvertSetAttribute(t *testing.T) {
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
-								AttributeTypes: []specschema.ObjectAttributeType{
+								AttributeTypes: specschema.ObjectAttributeTypes{
 									{
 										Name:   "str",
 										String: &specschema.StringType{},
@@ -113,7 +113,7 @@ func TestConvertSetAttribute(t *testing.T) {
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
-								AttributeTypes: []specschema.ObjectAttributeType{
+								AttributeTypes: specschema.ObjectAttributeTypes{
 									{
 										Name:   "str",
 										String: &specschema.StringType{},
@@ -129,7 +129,7 @@ func TestConvertSetAttribute(t *testing.T) {
 			input: &resource.SetAttribute{
 				ElementType: specschema.ElementType{
 					Object: &specschema.ObjectType{
-						AttributeTypes: []specschema.ObjectAttributeType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name:   "str",
 								String: &specschema.StringType{},
@@ -141,7 +141,7 @@ func TestConvertSetAttribute(t *testing.T) {
 			expected: resource_generate.GeneratorSetAttribute{
 				ElementType: specschema.ElementType{
 					Object: &specschema.ObjectType{
-						AttributeTypes: []specschema.ObjectAttributeType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name:   "str",
 								String: &specschema.StringType{},
@@ -155,7 +155,7 @@ func TestConvertSetAttribute(t *testing.T) {
 			input: &resource.SetAttribute{
 				ElementType: specschema.ElementType{
 					Object: &specschema.ObjectType{
-						AttributeTypes: []specschema.ObjectAttributeType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name: "list",
 								List: &specschema.ListType{
@@ -171,7 +171,7 @@ func TestConvertSetAttribute(t *testing.T) {
 			expected: resource_generate.GeneratorSetAttribute{
 				ElementType: specschema.ElementType{
 					Object: &specschema.ObjectType{
-						AttributeTypes: []specschema.ObjectAttributeType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name: "list",
 								List: &specschema.ListType{

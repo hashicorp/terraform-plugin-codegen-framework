@@ -29,7 +29,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"attribute-type-bool": {
 			input: &datasource.ObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_bool",
 						Bool: &specschema.BoolType{},
@@ -37,7 +37,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_bool",
 						Bool: &specschema.BoolType{},
@@ -47,7 +47,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"attribute-type-string": {
 			input: &datasource.ObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name:   "obj_string",
 						String: &specschema.StringType{},
@@ -55,7 +55,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name:   "obj_string",
 						String: &specschema.StringType{},
@@ -65,7 +65,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"attribute-type-list-string": {
 			input: &datasource.ObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_list_string",
 						List: &specschema.ListType{
@@ -77,7 +77,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_list_string",
 						List: &specschema.ListType{
@@ -91,7 +91,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"attribute-type-map-string": {
 			input: &datasource.ObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_map_string",
 						Map: &specschema.MapType{
@@ -103,7 +103,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_map_string",
 						Map: &specschema.MapType{
@@ -117,13 +117,13 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"attribute-type-list-object-string": {
 			input: &datasource.ObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_list_object_string",
 						List: &specschema.ListType{
 							ElementType: specschema.ElementType{
 								Object: &specschema.ObjectType{
-									AttributeTypes: []specschema.ObjectAttributeType{
+									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
 											Name:   "obj_str",
 											String: &specschema.StringType{},
@@ -136,13 +136,13 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_list_object_string",
 						List: &specschema.ListType{
 							ElementType: specschema.ElementType{
 								Object: &specschema.ObjectType{
-									AttributeTypes: []specschema.ObjectAttributeType{
+									AttributeTypes: specschema.ObjectAttributeTypes{
 										{
 											Name:   "obj_str",
 											String: &specschema.StringType{},
@@ -157,7 +157,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"attribute-type-object-string": {
 			input: &datasource.ObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name:   "obj_string",
 						String: &specschema.StringType{},
@@ -165,7 +165,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name:   "obj_string",
 						String: &specschema.StringType{},
@@ -175,7 +175,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 		},
 		"attribute-type-object-list-string": {
 			input: &datasource.ObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_list_string",
 						List: &specschema.ListType{
@@ -187,7 +187,7 @@ func TestConvertObjectAttribute(t *testing.T) {
 				},
 			},
 			expected: datasource_generate.GeneratorObjectAttribute{
-				AttributeTypes: []specschema.ObjectAttributeType{
+				AttributeTypes: specschema.ObjectAttributeTypes{
 					{
 						Name: "obj_list_string",
 						List: &specschema.ListType{
