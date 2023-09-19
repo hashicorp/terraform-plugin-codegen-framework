@@ -55,7 +55,8 @@ type GeneratorBlockAssocExtType interface {
 type Type int64
 
 const (
-	GeneratorBoolAttribute Type = iota
+	InvalidGeneratorSchemaType Type = iota
+	GeneratorBoolAttribute
 	GeneratorFloat64Attribute
 	GeneratorInt64Attribute
 	GeneratorListAttribute
