@@ -8,9 +8,7 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -28,10 +26,8 @@ type GeneratorListAttribute struct {
 	Validators    specschema.ListValidators
 }
 
-func (g GeneratorListAttribute) AttrType() attr.Type {
-	return types.ListType{
-		//TODO: Add ElemType?
-	}
+func (g GeneratorListAttribute) GeneratorSchemaType() generatorschema.Type {
+	return generatorschema.GeneratorListAttribute
 }
 
 func (g GeneratorListAttribute) ElemType() specschema.ElementType {

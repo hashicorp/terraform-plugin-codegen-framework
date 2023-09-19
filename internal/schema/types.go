@@ -5,7 +5,6 @@ package schema
 
 import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
@@ -28,16 +27,16 @@ type Elements interface {
 }
 
 type GeneratorAttribute interface {
-	AttrType() attr.Type
 	Equal(GeneratorAttribute) bool
+	GeneratorSchemaType() Type
 	Imports() *Imports
 	ModelField(string) (model.Field, error)
 	ToString(string) (string, error)
 }
 
 type GeneratorBlock interface {
-	AttrType() attr.Type
 	Equal(GeneratorBlock) bool
+	GeneratorSchemaType() Type
 	Imports() *Imports
 	ModelField(string) (model.Field, error)
 	ToString(string) (string, error)
@@ -52,3 +51,24 @@ type GeneratorBlockAssocExtType interface {
 	GeneratorBlock
 	AssocExtType() *AssocExtType
 }
+
+type Type int64
+
+const (
+	GeneratorBoolAttribute Type = iota
+	GeneratorFloat64Attribute
+	GeneratorInt64Attribute
+	GeneratorListAttribute
+	GeneratorListNestedAttribute
+	GeneratorListNestedBlock
+	GeneratorMapAttribute
+	GeneratorMapNestedAttribute
+	GeneratorNumberAttribute
+	GeneratorObjectAttribute
+	GeneratorSetAttribute
+	GeneratorSetNestedAttribute
+	GeneratorSetNestedBlock
+	GeneratorSingleNestedAttribute
+	GeneratorSingleNestedBlock
+	GeneratorStringAttribute
+)

@@ -8,9 +8,7 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -25,8 +23,8 @@ type GeneratorFloat64Attribute struct {
 	Validators specschema.Float64Validators
 }
 
-func (g GeneratorFloat64Attribute) AttrType() attr.Type {
-	return types.Float64Type
+func (g GeneratorFloat64Attribute) GeneratorSchemaType() generatorschema.Type {
+	return generatorschema.GeneratorFloat64Attribute
 }
 
 func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {

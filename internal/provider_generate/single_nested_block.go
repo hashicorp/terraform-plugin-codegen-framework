@@ -8,9 +8,7 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -32,10 +30,8 @@ func (g GeneratorSingleNestedBlock) AssocExtType() *generatorschema.AssocExtType
 	return g.AssociatedExternalType
 }
 
-func (g GeneratorSingleNestedBlock) AttrType() attr.Type {
-	return types.ObjectType{
-		//TODO: Add AttrTypes?
-	}
+func (g GeneratorSingleNestedBlock) GeneratorSchemaType() generatorschema.Type {
+	return generatorschema.GeneratorSingleNestedBlock
 }
 
 func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
