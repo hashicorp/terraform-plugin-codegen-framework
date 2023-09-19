@@ -15,7 +15,7 @@ type ScaffoldCommand struct {
 
 func (cmd *ScaffoldCommand) Help() string {
 	helpText := `
-	Usage: terraform-plugin-codegen-framework scaffold <subcommand> [<args>]
+	Usage: tfplugingen-framework scaffold <subcommand> [<args>]
 	
 	  This command has subcommands for scaffolding Terraform Plugin Framework code.
 	

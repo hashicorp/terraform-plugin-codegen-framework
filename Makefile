@@ -1,5 +1,5 @@
 build:
-	go build ./cmd/terraform-plugin-codegen-framework
+	go build ./cmd/tfplugingen-framework
 
 lint:
 	golangci-lint run
@@ -16,43 +16,43 @@ generate:
 
 # Regenerate testdata folder
 testdata:
-	go run ./cmd/terraform-plugin-codegen-framework generate all \
+	go run ./cmd/tfplugingen-framework generate all \
 		--input ./internal/cmd/testdata/custom_and_external/ir.json \
 		--package specified \
 		--output ./internal/cmd/testdata/custom_and_external/all_output/specified_pkg_name
 
-	go run ./cmd/terraform-plugin-codegen-framework generate all \
+	go run ./cmd/tfplugingen-framework generate all \
 		--input ./internal/cmd/testdata/custom_and_external/ir.json \
 		--output ./internal/cmd/testdata/custom_and_external/all_output/default_pkg_name
 
-	go run ./cmd/terraform-plugin-codegen-framework generate resources \
+	go run ./cmd/tfplugingen-framework generate resources \
 		--input ./internal/cmd/testdata/custom_and_external/ir.json \
 		--package generated \
 		--output ./internal/cmd/testdata/custom_and_external/resources_output
 
-	go run ./cmd/terraform-plugin-codegen-framework generate data-sources \
+	go run ./cmd/tfplugingen-framework generate data-sources \
 		--input ./internal/cmd/testdata/custom_and_external/ir.json \
 		--package generated \
 		--output ./internal/cmd/testdata/custom_and_external/data_sources_output
 
-	go run ./cmd/terraform-plugin-codegen-framework generate provider \
+	go run ./cmd/tfplugingen-framework generate provider \
 		--input ./internal/cmd/testdata/custom_and_external/ir.json \
 		--package generated \
 		--output ./internal/cmd/testdata/custom_and_external/provider_output
 
-	go run ./cmd/terraform-plugin-codegen-framework scaffold resource \
+	go run ./cmd/tfplugingen-framework scaffold resource \
 		--name thing \
 		--force \
 		--package scaffold \
 		--output-dir ./internal/cmd/testdata/scaffold/resource
 
-	go run ./cmd/terraform-plugin-codegen-framework scaffold data-source \
+	go run ./cmd/tfplugingen-framework scaffold data-source \
 		--name thing \
 		--force \
 		--package scaffold \
 		--output-dir ./internal/cmd/testdata/scaffold/data_source
 
-	go run ./cmd/terraform-plugin-codegen-framework scaffold provider \
+	go run ./cmd/tfplugingen-framework scaffold provider \
 		--name examplecloud \
 		--force \
 		--package scaffold \

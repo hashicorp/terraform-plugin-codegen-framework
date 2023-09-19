@@ -51,7 +51,7 @@ func (cmd *GenerateResourcesCommand) Help() string {
 		}
 	})
 
-	strBuilder.WriteString("\nUsage: terraform-plugin-codegen-framework generate resources [<args>]\n\n")
+	strBuilder.WriteString("\nUsage: tfplugingen-framework generate resources [<args>]\n\n")
 	cmd.Flags().VisitAll(func(f *flag.Flag) {
 		if f.DefValue != "" {
 			strBuilder.WriteString(fmt.Sprintf("    --%s <ARG> %s%s%s  (default: %q)\n",

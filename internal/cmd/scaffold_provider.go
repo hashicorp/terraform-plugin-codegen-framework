@@ -52,7 +52,7 @@ func (cmd *ScaffoldProviderCommand) Help() string {
 		}
 	})
 
-	strBuilder.WriteString("\nUsage: terraform-plugin-codegen-framework scaffold provider [<args>]\n\n")
+	strBuilder.WriteString("\nUsage: tfplugingen-framework scaffold provider [<args>]\n\n")
 	cmd.Flags().VisitAll(func(f *flag.Flag) {
 		if f.DefValue != "" {
 			strBuilder.WriteString(fmt.Sprintf("    --%s <ARG> %s%s%s  (default: %q)\n",

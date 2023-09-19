@@ -15,7 +15,7 @@ type GenerateCommand struct {
 
 func (cmd *GenerateCommand) Help() string {
 	helpText := `
-	Usage: terraform-plugin-codegen-framework generate <subcommand> [<args>]
+	Usage: tfplugingen-framework generate <subcommand> [<args>]
 	
 	  This command has subcommands for Terraform Plugin Framework code generation.
 	
