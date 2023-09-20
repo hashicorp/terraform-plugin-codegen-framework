@@ -59,6 +59,16 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 }
 
 func (g GeneratorNumberAttribute) ToString(name string) (string, error) {
+	type attribute struct {
+		Name                     string
+		GeneratorNumberAttribute GeneratorNumberAttribute
+	}
+
+	a := attribute{
+		Name:                     name,
+		GeneratorNumberAttribute: g,
+	}
+
 	t, err := template.New("number_attribute").Parse(numberAttributeGoTemplate)
 	if err != nil {
 		return "", err
@@ -70,11 +80,7 @@ func (g GeneratorNumberAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorNumberAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

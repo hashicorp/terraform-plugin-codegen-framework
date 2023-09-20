@@ -105,7 +105,7 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 }
 
 func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
-	type listNestedBlock struct {
+	type block struct {
 		Name                     string
 		TypeValueName            string
 		Attributes               string
@@ -125,7 +125,7 @@ func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
 		return "", err
 	}
 
-	l := listNestedBlock{
+	b := block{
 		Name:                     name,
 		TypeValueName:            model.SnakeCaseToCamelCase(name),
 		Attributes:               attributesStr,
@@ -144,7 +144,7 @@ func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	err = t.Execute(&buf, l)
+	err = t.Execute(&buf, b)
 	if err != nil {
 		return "", err
 	}

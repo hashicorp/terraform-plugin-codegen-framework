@@ -1,9 +1,9 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.StringAttribute{
-{{- template "common_attribute" $value }}
-{{- if $value.Validators }}
+
+"{{.Name}}": schema.StringAttribute{
+{{- template "common_attribute" .GeneratorStringAttribute }}
+{{- if gt (len .GeneratorStringAttribute.Validators) 0 }}
 Validators: []validator.String{
-{{- range $validator := .Validators}}
+{{- range .GeneratorStringAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -11,4 +11,3 @@ Validators: []validator.String{
 },
 {{- end }}
 },
-{{- end }}

@@ -89,7 +89,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 }
 
 func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
-	type singleNestedAttribute struct {
+	type attribute struct {
 		Name                           string
 		TypeValueName                  string
 		Attributes                     string
@@ -102,7 +102,7 @@ func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 		return "", err
 	}
 
-	l := singleNestedAttribute{
+	a := attribute{
 		Name:                           name,
 		TypeValueName:                  model.SnakeCaseToCamelCase(name),
 		Attributes:                     attributesStr,
@@ -120,7 +120,7 @@ func (g GeneratorSingleNestedAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	err = t.Execute(&buf, l)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

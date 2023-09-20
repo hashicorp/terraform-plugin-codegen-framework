@@ -794,7 +794,7 @@ DeprecationMessage: "deprecated",
 AttributeTypes: map[string]attr.Type{
 "str": types.StringType,
 },
-Validators: []validator.Bool{
+Validators: []validator.Object{
 my_validator.Validate(),
 my_other_validator.Validate(),
 },

@@ -59,6 +59,16 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 }
 
 func (g GeneratorInt64Attribute) ToString(name string) (string, error) {
+	type attribute struct {
+		Name                    string
+		GeneratorInt64Attribute GeneratorInt64Attribute
+	}
+
+	a := attribute{
+		Name:                    name,
+		GeneratorInt64Attribute: g,
+	}
+
 	t, err := template.New("int64_attribute").Parse(int64AttributeGoTemplate)
 	if err != nil {
 		return "", err
@@ -70,11 +80,7 @@ func (g GeneratorInt64Attribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorInt64Attribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

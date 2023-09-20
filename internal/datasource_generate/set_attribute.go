@@ -101,11 +101,19 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 }
 
 func (g GeneratorSetAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getElementType": generatorschema.GetElementType,
+	type attribute struct {
+		Name                  string
+		ElementType           string
+		GeneratorSetAttribute GeneratorSetAttribute
 	}
 
-	t, err := template.New("set_attribute").Funcs(funcMap).Parse(setAttributeGoTemplate)
+	a := attribute{
+		Name:                  name,
+		ElementType:           generatorschema.GetElementType(g.ElementType),
+		GeneratorSetAttribute: g,
+	}
+
+	t, err := template.New("set_attribute").Parse(setAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -116,11 +124,7 @@ func (g GeneratorSetAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorSetAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

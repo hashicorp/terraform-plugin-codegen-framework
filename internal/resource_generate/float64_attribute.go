@@ -87,24 +87,36 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 	return g.Float64Attribute.Equal(h.Float64Attribute)
 }
 
-func getFloat64Default(float64Default specschema.Float64Default) string {
-	if float64Default.Static != nil {
-		return fmt.Sprintf("float64default.StaticFloat64(%s)", strconv.FormatFloat(*float64Default.Static, 'f', -1, 64))
+func float64Default(d *specschema.Float64Default) string {
+	if d == nil {
+		return ""
 	}
 
-	if float64Default.Custom != nil {
-		return float64Default.Custom.SchemaDefinition
+	if d.Static != nil {
+		return fmt.Sprintf("float64default.StaticFloat64(%s)", strconv.FormatFloat(*d.Static, 'f', -1, 64))
+	}
+
+	if d.Custom != nil {
+		return d.Custom.SchemaDefinition
 	}
 
 	return ""
 }
 
 func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getFloat64Default": getFloat64Default,
+	type attribute struct {
+		Name                      string
+		Default                   string
+		GeneratorFloat64Attribute GeneratorFloat64Attribute
 	}
 
-	t, err := template.New("float64_attribute").Funcs(funcMap).Parse(float64AttributeGoTemplate)
+	a := attribute{
+		Name:                      name,
+		Default:                   float64Default(g.Default),
+		GeneratorFloat64Attribute: g,
+	}
+
+	t, err := template.New("float64_attribute").Parse(float64AttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -115,11 +127,7 @@ func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorFloat64Attribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

@@ -1,9 +1,9 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.BoolAttribute{
-{{- template "common_attribute" $value }}
-{{- if $value.Validators }}
+
+"{{.Name}}": schema.BoolAttribute{
+{{- template "common_attribute" .GeneratorBoolAttribute }}
+{{- if gt (len .GeneratorBoolAttribute.Validators) 0 }}
 Validators: []validator.Bool{
-{{- range $validator := .Validators}}
+{{- range .GeneratorBoolAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -11,4 +11,3 @@ Validators: []validator.Bool{
 },
 {{- end }}
 },
-{{- end }}
