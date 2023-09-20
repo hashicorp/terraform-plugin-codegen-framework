@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
-func TestGeneratorFloat64Attribute_ToString(t *testing.T) {
+func TestGeneratorFloat64Attribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -138,7 +138,7 @@ my_other_validator.Validate(),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToString("float64_attribute")
+			got, err := testCase.input.Schema("float64_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

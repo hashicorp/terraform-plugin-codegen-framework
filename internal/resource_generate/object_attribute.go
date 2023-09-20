@@ -102,7 +102,7 @@ func objectDefault(d *specschema.ObjectDefault) string {
 	return ""
 }
 
-func (g GeneratorObjectAttribute) ToString(name string) (string, error) {
+func (g GeneratorObjectAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                     string
 		AttributeTypes           string

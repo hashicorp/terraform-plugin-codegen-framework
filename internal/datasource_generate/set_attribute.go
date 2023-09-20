@@ -100,7 +100,7 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 	return true
 }
 
-func (g GeneratorSetAttribute) ToString(name string) (string, error) {
+func (g GeneratorSetAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                  string
 		ElementType           string

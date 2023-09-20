@@ -85,7 +85,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 	return g.SetNestedAttribute.Equal(h.SetNestedAttribute)
 }
 
-func (g GeneratorSetNestedAttribute) ToString(name string) (string, error) {
+func (g GeneratorSetNestedAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                        string
 		TypeValueName               string
@@ -93,7 +93,7 @@ func (g GeneratorSetNestedAttribute) ToString(name string) (string, error) {
 		GeneratorSetNestedAttribute GeneratorSetNestedAttribute
 	}
 
-	attributesStr, err := g.NestedObject.Attributes.String()
+	attributesStr, err := g.NestedObject.Attributes.Schema()
 
 	if err != nil {
 		return "", err

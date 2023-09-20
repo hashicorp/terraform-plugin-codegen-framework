@@ -90,7 +90,7 @@ func numberDefault(d *specschema.NumberDefault) string {
 	return ""
 }
 
-func (g GeneratorNumberAttribute) ToString(name string) (string, error) {
+func (g GeneratorNumberAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                     string
 		Default                  string

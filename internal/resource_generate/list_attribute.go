@@ -128,7 +128,7 @@ func listDefault(d *specschema.ListDefault) string {
 	return ""
 }
 
-func (g GeneratorListAttribute) ToString(name string) (string, error) {
+func (g GeneratorListAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                   string
 		Default                string

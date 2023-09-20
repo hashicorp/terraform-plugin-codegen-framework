@@ -103,7 +103,7 @@ func float64Default(d *specschema.Float64Default) string {
 	return ""
 }
 
-func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {
+func (g GeneratorFloat64Attribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                      string
 		Default                   string

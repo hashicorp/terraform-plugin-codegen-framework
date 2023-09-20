@@ -10,7 +10,7 @@ import (
 
 type GeneratorBlocks map[string]GeneratorBlock
 
-func (g GeneratorBlocks) String() (string, error) {
+func (g GeneratorBlocks) Schema() (string, error) {
 	var s strings.Builder
 
 	// Using sorted keys to guarantee block order as maps are unordered in Go.
@@ -27,7 +27,7 @@ func (g GeneratorBlocks) String() (string, error) {
 			continue
 		}
 
-		str, err := g[k].ToString(k)
+		str, err := g[k].Schema(k)
 
 		if err != nil {
 			return "", err

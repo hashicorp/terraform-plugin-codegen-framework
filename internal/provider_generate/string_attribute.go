@@ -58,7 +58,7 @@ func (g GeneratorStringAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	return g.StringAttribute.Equal(h.StringAttribute)
 }
 
-func (g GeneratorStringAttribute) ToString(name string) (string, error) {
+func (g GeneratorStringAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                     string
 		GeneratorStringAttribute GeneratorStringAttribute

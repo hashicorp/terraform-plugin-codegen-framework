@@ -102,7 +102,7 @@ func boolDefault(d *specschema.BoolDefault) string {
 	return ""
 }
 
-func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
+func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                   string
 		Default                string

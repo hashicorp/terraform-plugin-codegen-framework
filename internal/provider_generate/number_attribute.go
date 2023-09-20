@@ -81,7 +81,7 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	return g.NumberAttribute.Equal(h.NumberAttribute)
 }
 
-func (g GeneratorNumberAttribute) ToString(name string) (string, error) {
+func (g GeneratorNumberAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                     string
 		GeneratorNumberAttribute GeneratorNumberAttribute

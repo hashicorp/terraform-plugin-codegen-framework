@@ -58,7 +58,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	return g.BoolAttribute.Equal(h.BoolAttribute)
 }
 
-func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
+func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                   string
 		GeneratorBoolAttribute GeneratorBoolAttribute

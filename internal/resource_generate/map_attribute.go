@@ -132,7 +132,7 @@ func mapDefault(d *specschema.MapDefault) string {
 	return ""
 }
 
-func (g GeneratorMapAttribute) ToString(name string) (string, error) {
+func (g GeneratorMapAttribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                  string
 		Default               string

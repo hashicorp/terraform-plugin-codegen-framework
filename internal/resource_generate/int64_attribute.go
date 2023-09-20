@@ -102,7 +102,7 @@ func int64Default(d *specschema.Int64Default) string {
 	return ""
 }
 
-func (g GeneratorInt64Attribute) ToString(name string) (string, error) {
+func (g GeneratorInt64Attribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                    string
 		Default                 string

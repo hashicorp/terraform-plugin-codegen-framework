@@ -89,7 +89,7 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 	return g.ListNestedBlock.Equal(h.ListNestedBlock)
 }
 
-func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
+func (g GeneratorListNestedBlock) Schema(name string) (string, error) {
 	type block struct {
 		Name                     string
 		TypeValueName            string
@@ -98,13 +98,13 @@ func (g GeneratorListNestedBlock) ToString(name string) (string, error) {
 		GeneratorListNestedBlock GeneratorListNestedBlock
 	}
 
-	attributesStr, err := g.NestedObject.Attributes.String()
+	attributesStr, err := g.NestedObject.Attributes.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	blocksStr, err := g.NestedObject.Blocks.String()
+	blocksStr, err := g.NestedObject.Blocks.Schema()
 
 	if err != nil {
 		return "", err

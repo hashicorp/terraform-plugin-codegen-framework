@@ -618,7 +618,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 	}
 }
 
-func TestGeneratorSetNestedBlock_ToString(t *testing.T) {
+func TestGeneratorSetNestedBlock_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -1078,7 +1078,7 @@ my_other_plan_modifier.Modify(),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToString("set_nested_block")
+			got, err := testCase.input.Schema("set_nested_block")
 
 			if err != nil {
 				t.Error(err)

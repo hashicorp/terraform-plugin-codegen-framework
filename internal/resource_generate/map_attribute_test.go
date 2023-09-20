@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
-func TestGeneratorMapAttribute_ToString(t *testing.T) {
+func TestGeneratorMapAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -650,7 +650,7 @@ ElementType: stringCustomType,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToString("map_attribute")
+			got, err := testCase.input.Schema("map_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

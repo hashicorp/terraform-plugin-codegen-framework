@@ -58,7 +58,7 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 	return g.Int64Attribute.Equal(h.Int64Attribute)
 }
 
-func (g GeneratorInt64Attribute) ToString(name string) (string, error) {
+func (g GeneratorInt64Attribute) Schema(name string) (string, error) {
 	type attribute struct {
 		Name                    string
 		GeneratorInt64Attribute GeneratorInt64Attribute
