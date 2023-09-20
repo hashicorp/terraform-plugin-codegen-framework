@@ -8,9 +8,7 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -25,8 +23,8 @@ type GeneratorInt64Attribute struct {
 	Validators specschema.Int64Validators
 }
 
-func (g GeneratorInt64Attribute) AttrType() attr.Type {
-	return types.Int64Type
+func (g GeneratorInt64Attribute) GeneratorSchemaType() generatorschema.Type {
+	return generatorschema.GeneratorInt64Attribute
 }
 
 func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {

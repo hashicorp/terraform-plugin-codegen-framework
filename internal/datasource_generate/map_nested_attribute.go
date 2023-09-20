@@ -8,9 +8,7 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -30,10 +28,8 @@ func (g GeneratorMapNestedAttribute) AssocExtType() *generatorschema.AssocExtTyp
 	return g.NestedObject.AssociatedExternalType
 }
 
-func (g GeneratorMapNestedAttribute) AttrType() attr.Type {
-	return types.MapType{
-		//TODO: Add ElemType?
-	}
+func (g GeneratorMapNestedAttribute) GeneratorSchemaType() generatorschema.Type {
+	return generatorschema.GeneratorMapNestedAttribute
 }
 
 func (g GeneratorMapNestedAttribute) Imports() *generatorschema.Imports {

@@ -13,8 +13,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templates"
@@ -342,135 +340,105 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 
 	// Populate fields map for use in template.
 	for _, k := range attributeKeys {
-		if g.Attributes[k].AttrType() == types.BoolType {
+		switch g.Attributes[k].GeneratorSchemaType() {
+		case GeneratorBoolAttribute:
 			fields[k] = field{
 				AttrType:  "basetypes.BoolType{}",
 				AttrValue: "basetypes.BoolValue",
 			}
-		}
-
-		if g.Attributes[k].AttrType() == types.Float64Type {
+		case GeneratorFloat64Attribute:
 			fields[k] = field{
 				AttrType:  "basetypes.Float64Type{}",
 				AttrValue: "basetypes.Float64Value",
 			}
-		}
-
-		if g.Attributes[k].AttrType() == types.Int64Type {
+		case GeneratorInt64Attribute:
 			fields[k] = field{
 				AttrType:  "basetypes.Int64Type{}",
 				AttrValue: "basetypes.Int64Value",
 			}
-		}
-
-		// ListType could either be a ListAttribute or a ListNestedAttribute.
-		if _, ok := g.Attributes[k].AttrType().(basetypes.ListType); ok {
-			// If attribute does not implement Attributes interface it is a ListAttribute else it is a ListNestedAttribute.
-			if _, ok := g.Attributes[k].(Attributes); !ok {
-				if e, ok := g.Attributes[k].(Elements); ok {
-					elemType, err := elementTypeString(e.ElemType())
-					if err != nil {
-						return nil, err
-					}
-					fields[k] = field{
-						AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %s,\n}", elemType),
-						AttrValue: "basetypes.ListValue",
-					}
-				} else {
-					return nil, fmt.Errorf("%s.%s attribute is a ListType but does not implement Elements interface", name, k)
+		case GeneratorListAttribute:
+			if e, ok := g.Attributes[k].(Elements); ok {
+				elemType, err := elementTypeString(e.ElemType())
+				if err != nil {
+					return nil, err
 				}
-			} else {
 				fields[k] = field{
-					AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+					AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %s,\n}", elemType),
 					AttrValue: "basetypes.ListValue",
-					FieldType: "ListNestedAttribute",
-				}
-			}
-		}
-
-		// MapType could either be a MapAttribute or a MapNestedAttribute.
-		if _, ok := g.Attributes[k].AttrType().(basetypes.MapType); ok {
-			// If attribute does not implement Attributes interface it is a MapAttribute else it is a MapNestedAttribute.
-			if _, ok := g.Attributes[k].(Attributes); !ok {
-				if e, ok := g.Attributes[k].(Elements); ok {
-					elemType, err := elementTypeString(e.ElemType())
-					if err != nil {
-						return nil, err
-					}
-					fields[k] = field{
-						AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %s,\n}", elemType),
-						AttrValue: "basetypes.MapValue",
-					}
-				} else {
-					return nil, fmt.Errorf("%s.%s attribute is a MapType but does not implement Elements interface", name, k)
 				}
 			} else {
-				fields[k] = field{
-					AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-					AttrValue: "basetypes.MapValue",
-					FieldType: "MapNestedAttribute",
-				}
+				return nil, fmt.Errorf("%s.%s attribute is a ListType but does not implement Elements interface", name, k)
 			}
-		}
-
-		if g.Attributes[k].AttrType() == types.NumberType {
+		case GeneratorListNestedAttribute:
+			fields[k] = field{
+				AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+				AttrValue: "basetypes.ListValue",
+				FieldType: "ListNestedAttribute",
+			}
+		case GeneratorMapAttribute:
+			if e, ok := g.Attributes[k].(Elements); ok {
+				elemType, err := elementTypeString(e.ElemType())
+				if err != nil {
+					return nil, err
+				}
+				fields[k] = field{
+					AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %s,\n}", elemType),
+					AttrValue: "basetypes.MapValue",
+				}
+			} else {
+				return nil, fmt.Errorf("%s.%s attribute is a MapType but does not implement Elements interface", name, k)
+			}
+		case GeneratorMapNestedAttribute:
+			fields[k] = field{
+				AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+				AttrValue: "basetypes.MapValue",
+				FieldType: "MapNestedAttribute",
+			}
+		case GeneratorNumberAttribute:
 			fields[k] = field{
 				AttrType:  "basetypes.NumberType{}",
 				AttrValue: "basetypes.NumberValue",
 			}
-		}
-
-		// ObjectType could either be an ObjectAttribute or a SingleNestedAttribute.
-		if _, ok := g.Attributes[k].AttrType().(basetypes.ObjectType); ok {
-			// If attribute does not implement Attributes interface it is an ObjectAttribute else it is a SingleNestedAttribute.
-			if _, ok := g.Attributes[k].(Attributes); !ok {
-				if o, ok := g.Attributes[k].(Attrs); ok {
-					attrTypes, err := attrTypesString(o.AttrTypes())
-					if err != nil {
-						return nil, err
-					}
-					fields[k] = field{
-						AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", attrTypes),
-						AttrValue: "basetypes.ObjectValue",
-					}
-				} else {
-					return nil, fmt.Errorf("%s.%s attribute is an ObjectType but does not implement Attrs interface", name, k)
+		case GeneratorObjectAttribute:
+			if o, ok := g.Attributes[k].(Attrs); ok {
+				attrTypes, err := attrTypesString(o.AttrTypes())
+				if err != nil {
+					return nil, err
 				}
-			} else {
 				fields[k] = field{
-					AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+					AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", attrTypes),
 					AttrValue: "basetypes.ObjectValue",
-					FieldType: "SingleNestedAttribute",
-				}
-			}
-		}
-
-		// SetType could either be a SetAttribute or a SetNestedAttribute.
-		if _, ok := g.Attributes[k].AttrType().(basetypes.SetType); ok {
-			// If attribute does not implement Attributes interface it is a SetAttribute else it is a SetNestedAttribute.
-			if _, ok := g.Attributes[k].(Attributes); !ok {
-				if e, ok := g.Attributes[k].(Elements); ok {
-					elemType, err := elementTypeString(e.ElemType())
-					if err != nil {
-						return nil, err
-					}
-					fields[k] = field{
-						AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %s,\n}", elemType),
-						AttrValue: "basetypes.SetValue",
-					}
-				} else {
-					return nil, fmt.Errorf("%s.%s attribute is a SetType but does not implement Elements interface", name, k)
 				}
 			} else {
-				fields[k] = field{
-					AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-					AttrValue: "basetypes.SetValue",
-					FieldType: "SetNestedAttribute",
-				}
+				return nil, fmt.Errorf("%s.%s attribute is an ObjectType but does not implement Attrs interface", name, k)
 			}
-		}
+		case GeneratorSetAttribute:
+			if e, ok := g.Attributes[k].(Elements); ok {
+				elemType, err := elementTypeString(e.ElemType())
+				if err != nil {
+					return nil, err
+				}
+				fields[k] = field{
+					AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %s,\n}", elemType),
+					AttrValue: "basetypes.SetValue",
+				}
+			} else {
+				return nil, fmt.Errorf("%s.%s attribute is a SetType but does not implement Elements interface", name, k)
+			}
+		case GeneratorSetNestedAttribute:
+			fields[k] = field{
+				AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+				AttrValue: "basetypes.SetValue",
+				FieldType: "SetNestedAttribute",
+			}
+		case GeneratorSingleNestedAttribute:
+			fields[k] = field{
+				AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
+				AttrValue: "basetypes.ObjectValue",
+				FieldType: "SingleNestedAttribute",
+			}
 
-		if g.Attributes[k].AttrType() == types.StringType {
+		case GeneratorStringAttribute:
 			fields[k] = field{
 				AttrType:  "basetypes.StringType{}",
 				AttrValue: "basetypes.StringValue",
@@ -499,23 +467,20 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 
 	// Populate fields map for use in template.
 	for _, k := range blockKeys {
-		if _, ok := g.Blocks[k].AttrType().(basetypes.ListType); ok {
+		switch g.Blocks[k].GeneratorSchemaType() {
+		case GeneratorListNestedBlock:
 			fields[k] = field{
 				AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.ListValue",
 				FieldType: "ListNestedBlock",
 			}
-		}
-
-		if _, ok := g.Blocks[k].AttrType().(basetypes.SetType); ok {
+		case GeneratorSetNestedBlock:
 			fields[k] = field{
 				AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.SetValue",
 				FieldType: "SetNestedBlock",
 			}
-		}
-
-		if _, ok := g.Blocks[k].AttrType().(basetypes.ObjectType); ok {
+		case GeneratorSingleNestedBlock:
 			fields[k] = field{
 				AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
 				AttrValue: "basetypes.ObjectValue",
@@ -652,16 +617,16 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		sort.Strings(attributeAttributeKeys)
 
 		for _, x := range attributeAttributeKeys {
-			switch attributeAttributes[x].AttrType().(type) {
-			case basetypes.BoolTypable:
+			switch attributeAttributes[x].GeneratorSchemaType() {
+			case GeneratorBoolAttribute:
 				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
-			case basetypes.Int64Typable:
-				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
-			case basetypes.Float64Typable:
+			case GeneratorFloat64Attribute:
 				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
-			case basetypes.NumberTypable:
+			case GeneratorInt64Attribute:
+				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case GeneratorNumberAttribute:
 				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
-			case basetypes.StringTypable:
+			case GeneratorStringAttribute:
 				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
 			}
 		}
@@ -669,23 +634,23 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		var t *template.Template
 		var err error
 
-		switch attributeAssocExtType.AttrType().(type) {
-		case basetypes.ListTypable:
+		switch attributeAssocExtType.GeneratorSchemaType() {
+		case GeneratorListNestedAttribute:
 			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case basetypes.MapTypable:
+		case GeneratorMapNestedAttribute:
 			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case basetypes.ObjectTypable:
+		case GeneratorSetNestedAttribute:
 			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case basetypes.SetTypable:
+		case GeneratorSingleNestedAttribute:
 			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
@@ -693,7 +658,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		}
 
 		if t == nil {
-			return nil, fmt.Errorf("no matching template for type: %T", attributeAssocExtType.AttrType())
+			return nil, fmt.Errorf("no matching template for type: %T", attributeAssocExtType.GeneratorSchemaType())
 		}
 
 		var templateBuf bytes.Buffer
@@ -771,16 +736,16 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		sort.Strings(blockAttributeKeys)
 
 		for _, x := range blockAttributeKeys {
-			switch blockAttributes[x].AttrType().(type) {
-			case basetypes.BoolTypable:
+			switch blockAttributes[x].GeneratorSchemaType() {
+			case GeneratorBoolAttribute:
 				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
-			case basetypes.Int64Typable:
-				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
-			case basetypes.Float64Typable:
+			case GeneratorFloat64Attribute:
 				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
-			case basetypes.NumberTypable:
+			case GeneratorInt64Attribute:
+				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+			case GeneratorNumberAttribute:
 				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
-			case basetypes.StringTypable:
+			case GeneratorStringAttribute:
 				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
 			}
 		}
@@ -788,18 +753,18 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		var t *template.Template
 		var err error
 
-		switch blockAssocExtType.AttrType().(type) {
-		case basetypes.ListTypable:
+		switch blockAssocExtType.GeneratorSchemaType() {
+		case GeneratorListNestedBlock:
 			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case basetypes.ObjectTypable:
+		case GeneratorSetNestedBlock:
 			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case basetypes.SetTypable:
+		case GeneratorSingleNestedBlock:
 			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
@@ -807,7 +772,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		}
 
 		if t == nil {
-			return nil, fmt.Errorf("no matching template for type: %T", blockAssocExtType.AttrType())
+			return nil, fmt.Errorf("no matching template for type: %T", blockAssocExtType.GeneratorSchemaType())
 		}
 
 		var templateBuf bytes.Buffer

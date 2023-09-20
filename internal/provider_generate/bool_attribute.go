@@ -8,9 +8,7 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -25,8 +23,8 @@ type GeneratorBoolAttribute struct {
 	Validators specschema.BoolValidators
 }
 
-func (g GeneratorBoolAttribute) AttrType() attr.Type {
-	return types.BoolType
+func (g GeneratorBoolAttribute) GeneratorSchemaType() generatorschema.Type {
+	return generatorschema.GeneratorBoolAttribute
 }
 
 func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {

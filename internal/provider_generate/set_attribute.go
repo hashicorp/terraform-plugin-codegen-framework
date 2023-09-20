@@ -8,9 +8,7 @@ import (
 	"text/template"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -26,10 +24,8 @@ type GeneratorSetAttribute struct {
 	Validators  specschema.SetValidators
 }
 
-func (g GeneratorSetAttribute) AttrType() attr.Type {
-	return types.SetType{
-		//TODO: Add ElemType?
-	}
+func (g GeneratorSetAttribute) GeneratorSchemaType() generatorschema.Type {
+	return generatorschema.GeneratorSetAttribute
 }
 
 func (g GeneratorSetAttribute) ElemType() specschema.ElementType {
