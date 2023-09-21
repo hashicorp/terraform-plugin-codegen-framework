@@ -78,7 +78,11 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	return g.NumberAttribute.Equal(h.NumberAttribute)
 }
 
-func getNumberDefault(d specschema.NumberDefault) string {
+func numberDefault(d *specschema.NumberDefault) string {
+	if d == nil {
+		return ""
+	}
+
 	if d.Custom != nil {
 		return d.Custom.SchemaDefinition
 	}
@@ -86,12 +90,20 @@ func getNumberDefault(d specschema.NumberDefault) string {
 	return ""
 }
 
-func (g GeneratorNumberAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getNumberDefault": getNumberDefault,
+func (g GeneratorNumberAttribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                     string
+		Default                  string
+		GeneratorNumberAttribute GeneratorNumberAttribute
 	}
 
-	t, err := template.New("number_attribute").Funcs(funcMap).Parse(numberAttributeGoTemplate)
+	a := attribute{
+		Name:                     name,
+		Default:                  numberDefault(g.Default),
+		GeneratorNumberAttribute: g,
+	}
+
+	t, err := template.New("number_attribute").Parse(numberAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -102,11 +114,7 @@ func (g GeneratorNumberAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorNumberAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

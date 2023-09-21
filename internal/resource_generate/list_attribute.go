@@ -116,7 +116,11 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	return true
 }
 
-func getListDefault(d specschema.ListDefault) string {
+func listDefault(d *specschema.ListDefault) string {
+	if d == nil {
+		return ""
+	}
+
 	if d.Custom != nil {
 		return d.Custom.SchemaDefinition
 	}
@@ -124,13 +128,22 @@ func getListDefault(d specschema.ListDefault) string {
 	return ""
 }
 
-func (g GeneratorListAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getElementType": generatorschema.GetElementType,
-		"getListDefault": getListDefault,
+func (g GeneratorListAttribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                   string
+		Default                string
+		ElementType            string
+		GeneratorListAttribute GeneratorListAttribute
 	}
 
-	t, err := template.New("list_attribute").Funcs(funcMap).Parse(listAttributeGoTemplate)
+	a := attribute{
+		Name:                   name,
+		Default:                listDefault(g.Default),
+		ElementType:            generatorschema.GetElementType(g.ElementType),
+		GeneratorListAttribute: g,
+	}
+
+	t, err := template.New("list_attribute").Parse(listAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -141,11 +154,7 @@ func (g GeneratorListAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorListAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

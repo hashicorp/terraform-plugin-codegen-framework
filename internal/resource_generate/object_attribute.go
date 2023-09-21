@@ -90,7 +90,11 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 
 	return g.ObjectAttribute.Equal(h.ObjectAttribute)
 }
-func getObjectDefault(d specschema.ObjectDefault) string {
+func objectDefault(d *specschema.ObjectDefault) string {
+	if d == nil {
+		return ""
+	}
+
 	if d.Custom != nil {
 		return d.Custom.SchemaDefinition
 	}
@@ -98,13 +102,22 @@ func getObjectDefault(d specschema.ObjectDefault) string {
 	return ""
 }
 
-func (g GeneratorObjectAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getAttrTypes":     generatorschema.GetAttrTypes,
-		"getObjectDefault": getObjectDefault,
+func (g GeneratorObjectAttribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                     string
+		AttributeTypes           string
+		Default                  string
+		GeneratorObjectAttribute GeneratorObjectAttribute
 	}
 
-	t, err := template.New("object_attribute").Funcs(funcMap).Parse(objectAttributeGoTemplate)
+	a := attribute{
+		Name:                     name,
+		Default:                  objectDefault(g.Default),
+		AttributeTypes:           generatorschema.GetAttrTypes(g.AttributeTypes),
+		GeneratorObjectAttribute: g,
+	}
+
+	t, err := template.New("object_attribute").Parse(objectAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -115,11 +128,7 @@ func (g GeneratorObjectAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorObjectAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

@@ -1,29 +1,28 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.ObjectAttribute{
+
+"{{.Name}}": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
-{{ getAttrTypes .AttributeTypes}}
+{{.AttributeTypes}}
 },
-{{- template "common_attribute" $value }}
-{{- if $value.PlanModifiers }}
+{{- template "common_attribute" .GeneratorObjectAttribute }}
+{{- if gt (len .GeneratorObjectAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Object{
-{{- range $planmodifier := .PlanModifiers}}
+{{- range $planmodifier := .GeneratorObjectAttribute.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Validators }}
-Validators: []validator.Bool{
-{{- range $validator := .Validators}}
+{{- if gt (len .GeneratorObjectAttribute.Validators) 0 }}
+Validators: []validator.Object{
+{{- range $validator := .GeneratorObjectAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
-{{- end}}
-{{- if $value.Default}}
-Default: {{ getObjectDefault $value.Default}},
+{{- end }}
+{{- if .Default}}
+Default: {{.Default}},
 {{- end}}
 },
-{{- end }}

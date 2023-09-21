@@ -96,12 +96,20 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	return true
 }
 
-func (g GeneratorListAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getElementType": generatorschema.GetElementType,
+func (g GeneratorListAttribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                   string
+		ElementType            string
+		GeneratorListAttribute GeneratorListAttribute
 	}
 
-	t, err := template.New("list_attribute").Funcs(funcMap).Parse(listAttributeGoTemplate)
+	a := attribute{
+		Name:                   name,
+		ElementType:            generatorschema.GetElementType(g.ElementType),
+		GeneratorListAttribute: g,
+	}
+
+	t, err := template.New("list_attribute").Parse(listAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -112,11 +120,7 @@ func (g GeneratorListAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorListAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

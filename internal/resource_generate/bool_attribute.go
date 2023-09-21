@@ -86,24 +86,36 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	return g.BoolAttribute.Equal(h.BoolAttribute)
 }
 
-func getBoolDefault(boolDefault specschema.BoolDefault) string {
-	if boolDefault.Static != nil {
-		return fmt.Sprintf("booldefault.StaticBool(%t)", *boolDefault.Static)
+func boolDefault(d *specschema.BoolDefault) string {
+	if d == nil {
+		return ""
 	}
 
-	if boolDefault.Custom != nil {
-		return boolDefault.Custom.SchemaDefinition
+	if d.Static != nil {
+		return fmt.Sprintf("booldefault.StaticBool(%t)", *d.Static)
+	}
+
+	if d.Custom != nil {
+		return d.Custom.SchemaDefinition
 	}
 
 	return ""
 }
 
-func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getBoolDefault": getBoolDefault,
+func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                   string
+		Default                string
+		GeneratorBoolAttribute GeneratorBoolAttribute
 	}
 
-	t, err := template.New("bool_attribute").Funcs(funcMap).Parse(boolAttributeGoTemplate)
+	a := attribute{
+		Name:                   name,
+		Default:                boolDefault(g.Default),
+		GeneratorBoolAttribute: g,
+	}
+
+	t, err := template.New("bool_attribute").Parse(boolAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -114,11 +126,7 @@ func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorBoolAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

@@ -1,10 +1,10 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.SetAttribute{
-ElementType: {{ getElementType .ElementType}},
-{{- template "common_attribute" $value }}
-{{- if gt (len $value.Validators) 0 }}
+
+"{{.Name}}": schema.SetAttribute{
+ElementType: {{.ElementType}},
+{{- template "common_attribute" .GeneratorSetAttribute }}
+{{- if gt (len .GeneratorSetAttribute.Validators) 0 }}
 Validators: []validator.Set{
-{{- range $validator := .Validators}}
+{{- range .GeneratorSetAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -12,4 +12,3 @@ Validators: []validator.Set{
 },
 {{- end}}
 },
-{{- end }}

@@ -348,7 +348,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 	}
 }
 
-func TestGeneratorSingleNestedAttribute_ToString(t *testing.T) {
+func TestGeneratorSingleNestedAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -672,7 +672,7 @@ my_other_validator.Validate(),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToString("single_nested_attribute")
+			got, err := testCase.input.Schema("single_nested_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

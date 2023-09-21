@@ -113,8 +113,8 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 	return g.SingleNestedBlock.Equal(h.SingleNestedBlock)
 }
 
-func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
-	type singleNestedBlock struct {
+func (g GeneratorSingleNestedBlock) Schema(name string) (string, error) {
+	type block struct {
 		Name                       string
 		TypeValueName              string
 		Attributes                 string
@@ -122,19 +122,19 @@ func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 		GeneratorSingleNestedBlock GeneratorSingleNestedBlock
 	}
 
-	attributesStr, err := g.Attributes.String()
+	attributesStr, err := g.Attributes.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	blocksStr, err := g.Blocks.String()
+	blocksStr, err := g.Blocks.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	l := singleNestedBlock{
+	b := block{
 		Name:                       name,
 		TypeValueName:              model.SnakeCaseToCamelCase(name),
 		Attributes:                 attributesStr,
@@ -153,7 +153,7 @@ func (g GeneratorSingleNestedBlock) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	err = t.Execute(&buf, l)
+	err = t.Execute(&buf, b)
 	if err != nil {
 		return "", err
 	}

@@ -1,26 +1,25 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.Float64Attribute{
-{{- template "common_attribute" $value }}
-{{- if $value.PlanModifiers }}
+
+"{{.Name}}": schema.Float64Attribute{
+{{- template "common_attribute" .GeneratorFloat64Attribute }}
+{{- if gt (len .GeneratorFloat64Attribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Float64{
-{{- range $planmodifier := .PlanModifiers}}
+{{- range $planmodifier := .GeneratorFloat64Attribute.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Validators }}
+{{- if gt (len .GeneratorFloat64Attribute.Validators) 0 }}
 Validators: []validator.Float64{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorFloat64Attribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Default}}
-Default: {{ getFloat64Default $value.Default}},
+{{- if .Default}}
+Default: {{.Default}},
 {{- end}}
 },
-{{- end }}

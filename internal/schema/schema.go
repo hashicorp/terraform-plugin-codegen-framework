@@ -120,13 +120,13 @@ func (g GeneratorSchema) ImportsString() (string, error) {
 }
 
 func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([]byte, error) {
-	attributes, err := g.Attributes.String()
+	attributes, err := g.Attributes.Schema()
 
 	if err != nil {
 		return nil, err
 	}
 
-	blocks, err := g.Blocks.String()
+	blocks, err := g.Blocks.Schema()
 
 	if err != nil {
 		return nil, err

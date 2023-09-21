@@ -86,7 +86,11 @@ func (g GeneratorStringAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	return g.StringAttribute.Equal(h.StringAttribute)
 }
 
-func getStringDefault(d specschema.StringDefault) string {
+func stringDefault(d *specschema.StringDefault) string {
+	if d == nil {
+		return ""
+	}
+
 	if d.Static != nil {
 		return fmt.Sprintf("stringdefault.StaticString(%q)", *d.Static)
 	}
@@ -98,12 +102,20 @@ func getStringDefault(d specschema.StringDefault) string {
 	return ""
 }
 
-func (g GeneratorStringAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getStringDefault": getStringDefault,
+func (g GeneratorStringAttribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                     string
+		Default                  string
+		GeneratorStringAttribute GeneratorStringAttribute
 	}
 
-	t, err := template.New("string_attribute").Funcs(funcMap).Parse(stringAttributeGoTemplate)
+	a := attribute{
+		Name:                     name,
+		Default:                  stringDefault(g.Default),
+		GeneratorStringAttribute: g,
+	}
+
+	t, err := template.New("string_attribute").Parse(stringAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -114,11 +126,7 @@ func (g GeneratorStringAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorStringAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

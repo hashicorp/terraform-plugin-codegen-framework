@@ -100,12 +100,20 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 	return true
 }
 
-func (g GeneratorMapAttribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getElementType": generatorschema.GetElementType,
+func (g GeneratorMapAttribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                  string
+		ElementType           string
+		GeneratorMapAttribute GeneratorMapAttribute
 	}
 
-	t, err := template.New("map_attribute").Funcs(funcMap).Parse(mapAttributeGoTemplate)
+	a := attribute{
+		Name:                  name,
+		ElementType:           generatorschema.GetElementType(g.ElementType),
+		GeneratorMapAttribute: g,
+	}
+
+	t, err := template.New("map_attribute").Parse(mapAttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -116,11 +124,7 @@ func (g GeneratorMapAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorMapAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

@@ -1,9 +1,9 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.Int64Attribute{
-{{- template "common_attribute" $value }}
-{{- if gt (len $value.Validators) 0 }}
+
+"{{.Name}}": schema.Int64Attribute{
+{{- template "common_attribute" .GeneratorInt64Attribute }}
+{{- if gt (len .GeneratorInt64Attribute.Validators) 0 }}
 Validators: []validator.Int64{
-{{- range $validator := .Validators}}
+{{- range .GeneratorInt64Attribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -11,4 +11,3 @@ Validators: []validator.Int64{
 },
 {{- end }}
 },
-{{- end }}

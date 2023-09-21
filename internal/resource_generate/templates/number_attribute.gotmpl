@@ -1,26 +1,25 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.NumberAttribute{
-{{- template "common_attribute" $value }}
-{{- if $value.PlanModifiers }}
+
+"{{.Name}}": schema.NumberAttribute{
+{{- template "common_attribute" .GeneratorNumberAttribute }}
+{{- if gt (len .GeneratorNumberAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Number{
-{{- range $planmodifier := .PlanModifiers}}
+{{- range $planmodifier := .GeneratorNumberAttribute.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Validators }}
+{{- if gt (len .GeneratorNumberAttribute.Validators) 0 }}
 Validators: []validator.Number{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorNumberAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Default}}
-Default: {{ getNumberDefault $value.Default}},
+{{- if .Default}}
+Default: {{.Default}},
 {{- end}}
 },
-{{- end }}

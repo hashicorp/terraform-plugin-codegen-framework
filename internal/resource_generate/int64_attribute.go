@@ -86,7 +86,11 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 	return g.Int64Attribute.Equal(h.Int64Attribute)
 }
 
-func getInt64Default(d specschema.Int64Default) string {
+func int64Default(d *specschema.Int64Default) string {
+	if d == nil {
+		return ""
+	}
+
 	if d.Static != nil {
 		return fmt.Sprintf("int64default.StaticInt64(%d)", *d.Static)
 	}
@@ -98,12 +102,20 @@ func getInt64Default(d specschema.Int64Default) string {
 	return ""
 }
 
-func (g GeneratorInt64Attribute) ToString(name string) (string, error) {
-	funcMap := template.FuncMap{
-		"getInt64Default": getInt64Default,
+func (g GeneratorInt64Attribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                    string
+		Default                 string
+		GeneratorInt64Attribute GeneratorInt64Attribute
 	}
 
-	t, err := template.New("int64_attribute").Funcs(funcMap).Parse(int64AttributeGoTemplate)
+	a := attribute{
+		Name:                    name,
+		Default:                 int64Default(g.Default),
+		GeneratorInt64Attribute: g,
+	}
+
+	t, err := template.New("int64_attribute").Parse(int64AttributeGoTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -114,11 +126,7 @@ func (g GeneratorInt64Attribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorInt64Attribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

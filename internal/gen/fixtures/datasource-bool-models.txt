@@ -1,4 +1,0 @@
-
-type exampleDataSourceModel struct {
-	BoolAttribute my_value_type `tfsdk:"bool_attribute"`
-}

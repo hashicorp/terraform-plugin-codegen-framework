@@ -58,7 +58,17 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	return g.BoolAttribute.Equal(h.BoolAttribute)
 }
 
-func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
+func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                   string
+		GeneratorBoolAttribute GeneratorBoolAttribute
+	}
+
+	a := attribute{
+		Name:                   name,
+		GeneratorBoolAttribute: g,
+	}
+
 	t, err := template.New("bool_attribute").Parse(boolAttributeGoTemplate)
 	if err != nil {
 		return "", err
@@ -70,11 +80,7 @@ func (g GeneratorBoolAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorBoolAttribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

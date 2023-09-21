@@ -1,27 +1,26 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.MapAttribute{
-ElementType: {{ getElementType .ElementType}},
-{{- template "common_attribute" $value }}
-{{- if $value.PlanModifiers }}
+
+"{{.Name}}": schema.MapAttribute{
+ElementType: {{.ElementType}},
+{{- template "common_attribute" .GeneratorMapAttribute }}
+{{- if gt (len .GeneratorMapAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Map{
-{{- range $planmodifier := .PlanModifiers}}
+{{- range $planmodifier := .GeneratorMapAttribute.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Validators }}
+{{- if gt (len .GeneratorMapAttribute.Validators) 0 }}
 Validators: []validator.Map{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorMapAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
-{{- end}}
-{{- if $value.Default}}
-Default: {{ getMapDefault $value.Default}},
+{{- end }}
+{{- if .Default}}
+Default: {{.Default}},
 {{- end}}
 },
-{{- end }}

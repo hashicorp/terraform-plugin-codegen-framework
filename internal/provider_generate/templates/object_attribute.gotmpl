@@ -1,12 +1,12 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.ObjectAttribute{
+
+"{{.Name}}": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
-{{ getAttrTypes .AttributeTypes}}
+{{.AttributeTypes}}
 },
-{{- template "common_attribute" $value }}
-{{- if $value.Validators }}
-Validators: []validator.Bool{
-{{- range $validator := .Validators}}
+{{- template "common_attribute" .GeneratorObjectAttribute }}
+{{- if gt (len .GeneratorObjectAttribute.Validators) 0 }}
+Validators: []validator.Object{
+{{- range .GeneratorObjectAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -14,4 +14,3 @@ Validators: []validator.Bool{
 },
 {{- end}}
 },
-{{- end }}

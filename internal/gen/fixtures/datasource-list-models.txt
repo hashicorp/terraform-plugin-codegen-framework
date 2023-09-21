@@ -1,5 +1,0 @@
-
-type exampleDataSourceModel struct {
-	ListStringAttribute     types.List `tfsdk:"list_string_attribute"`
-	ListListStringAttribute types.List `tfsdk:"list_list_string_attribute"`
-}

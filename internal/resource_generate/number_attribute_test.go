@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
-func TestGeneratorNumberAttribute_ToString(t *testing.T) {
+func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -176,7 +176,7 @@ Default: my_number_default.Default(),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToString("number_attribute")
+			got, err := testCase.input.Schema("number_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

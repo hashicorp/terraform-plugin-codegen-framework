@@ -1,26 +1,25 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.StringAttribute{
-{{- template "common_attribute" $value }}
-{{- if $value.PlanModifiers }}
+
+"{{.Name}}": schema.StringAttribute{
+{{- template "common_attribute" .GeneratorStringAttribute }}
+{{- if gt (len .GeneratorStringAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.String{
-{{- range $planmodifier := .PlanModifiers}}
+{{- range $planmodifier := .GeneratorStringAttribute.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Validators }}
+{{- if gt (len .GeneratorStringAttribute.Validators) 0 }}
 Validators: []validator.String{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorStringAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Default}}
-Default: {{ getStringDefault $value.Default}},
+{{- if .Default}}
+Default: {{.Default}},
 {{- end}}
 },
-{{- end }}

@@ -1,9 +1,9 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.Float64Attribute{
-{{- template "common_attribute" $value }}
-{{- if $value.Validators }}
+
+"{{.Name}}": schema.Float64Attribute{
+{{- template "common_attribute" .GeneratorFloat64Attribute }}
+{{- if gt (len .GeneratorFloat64Attribute.Validators) 0 }}
 Validators: []validator.Float64{
-{{- range $validator := .Validators}}
+{{- range .GeneratorFloat64Attribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
@@ -11,4 +11,3 @@ Validators: []validator.Float64{
 },
 {{- end }}
 },
-{{- end }}

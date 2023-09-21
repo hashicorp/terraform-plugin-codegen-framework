@@ -330,7 +330,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 	}
 }
 
-func TestGeneratorListAttribute_ToString(t *testing.T) {
+func TestGeneratorListAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -906,7 +906,7 @@ ElementType: stringCustomType,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.input.ToString("list_attribute")
+			got, err := testCase.input.Schema("list_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

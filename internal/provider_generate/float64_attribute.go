@@ -58,7 +58,17 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 	return g.Float64Attribute.Equal(h.Float64Attribute)
 }
 
-func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {
+func (g GeneratorFloat64Attribute) Schema(name string) (string, error) {
+	type attribute struct {
+		Name                      string
+		GeneratorFloat64Attribute GeneratorFloat64Attribute
+	}
+
+	a := attribute{
+		Name:                      name,
+		GeneratorFloat64Attribute: g,
+	}
+
 	t, err := template.New("float64_attribute").Parse(float64AttributeGoTemplate)
 	if err != nil {
 		return "", err
@@ -70,11 +80,7 @@ func (g GeneratorFloat64Attribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	attrib := map[string]GeneratorFloat64Attribute{
-		name: g,
-	}
-
-	err = t.Execute(&buf, attrib)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}

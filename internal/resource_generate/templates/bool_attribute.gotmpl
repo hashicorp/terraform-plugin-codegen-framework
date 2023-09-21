@@ -1,26 +1,25 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.BoolAttribute{
-{{- template "common_attribute" $value }}
-{{- if $value.PlanModifiers }}
+
+"{{.Name}}": schema.BoolAttribute{
+{{- template "common_attribute" .GeneratorBoolAttribute }}
+{{- if gt (len .GeneratorBoolAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Bool{
-{{- range $planmodifier := .PlanModifiers}}
+{{- range $planmodifier := .GeneratorBoolAttribute.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Validators }}
+{{- if gt (len .GeneratorBoolAttribute.Validators) 0 }}
 Validators: []validator.Bool{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorBoolAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Default}}
-Default: {{ getBoolDefault $value.Default}},
+{{- if .Default}}
+Default: {{.Default}},
 {{- end}}
 },
-{{- end }}

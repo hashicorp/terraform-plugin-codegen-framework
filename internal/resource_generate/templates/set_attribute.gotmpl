@@ -1,27 +1,26 @@
-{{ range $key, $value := . }}
-"{{$key}}": schema.SetAttribute{
-ElementType: {{ getElementType .ElementType}},
-{{- template "common_attribute" $value }}
-{{- if $value.PlanModifiers }}
+
+"{{.Name}}": schema.SetAttribute{
+ElementType: {{.ElementType}},
+{{- template "common_attribute" .GeneratorSetAttribute }}
+{{- if gt (len .GeneratorSetAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Set{
-{{- range $planmodifier := .PlanModifiers}}
+{{- range $planmodifier := .GeneratorSetAttribute.PlanModifiers}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
 {{- end }}
-{{- if $value.Validators }}
+{{- if gt (len .GeneratorSetAttribute.Validators) 0 }}
 Validators: []validator.Set{
-{{- range $validator := .Validators}}
+{{- range $validator := .GeneratorSetAttribute.Validators}}
 {{- if .Custom}}
 {{.Custom.SchemaDefinition}},
 {{- end}}
 {{- end}}
 },
-{{- end}}
-{{- if $value.Default}}
-Default: {{ getSetDefault $value.Default}},
+{{- end }}
+{{- if .Default}}
+Default: {{.Default}},
 {{- end}}
 },
-{{- end }}

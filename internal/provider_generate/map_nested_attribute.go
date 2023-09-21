@@ -85,21 +85,21 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 	return g.MapNestedAttribute.Equal(h.MapNestedAttribute)
 }
 
-func (g GeneratorMapNestedAttribute) ToString(name string) (string, error) {
-	type mapNestedAttribute struct {
+func (g GeneratorMapNestedAttribute) Schema(name string) (string, error) {
+	type attribute struct {
 		Name                        string
 		TypeValueName               string
 		Attributes                  string
 		GeneratorMapNestedAttribute GeneratorMapNestedAttribute
 	}
 
-	attributesStr, err := g.NestedObject.Attributes.String()
+	attributesStr, err := g.NestedObject.Attributes.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	l := mapNestedAttribute{
+	a := attribute{
 		Name:                        name,
 		TypeValueName:               model.SnakeCaseToCamelCase(name),
 		Attributes:                  attributesStr,
@@ -117,7 +117,7 @@ func (g GeneratorMapNestedAttribute) ToString(name string) (string, error) {
 
 	var buf strings.Builder
 
-	err = t.Execute(&buf, l)
+	err = t.Execute(&buf, a)
 	if err != nil {
 		return "", err
 	}
