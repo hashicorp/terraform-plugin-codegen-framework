@@ -165,7 +165,7 @@ func (g GeneratorSingleNestedBlock) ModelField(name string) (model.Field, error)
 	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
-		ValueType: model.ObjectValueType,
+		ValueType: model.SnakeCaseToCamelCase(name) + "Value",
 	}
 
 	if g.CustomType != nil {

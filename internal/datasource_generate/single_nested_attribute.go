@@ -132,7 +132,7 @@ func (g GeneratorSingleNestedAttribute) ModelField(name string) (model.Field, er
 	field := model.Field{
 		Name:      model.SnakeCaseToCamelCase(name),
 		TfsdkName: name,
-		ValueType: model.ObjectValueType,
+		ValueType: model.SnakeCaseToCamelCase(name) + "Value",
 	}
 
 	if g.CustomType != nil {
