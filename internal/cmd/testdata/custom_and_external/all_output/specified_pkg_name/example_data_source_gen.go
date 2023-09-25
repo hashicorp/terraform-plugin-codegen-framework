@@ -565,33 +565,33 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 }
 
 type ExampleModel struct {
-	BoolAttribute                     types.Bool   `tfsdk:"bool_attribute"`
-	ListListAttribute                 types.List   `tfsdk:"list_list_attribute"`
-	ListMapAttribute                  types.List   `tfsdk:"list_map_attribute"`
-	ListNestedAttributeAssocExtType   types.List   `tfsdk:"list_nested_attribute_assoc_ext_type"`
-	ListNestedAttributeOne            types.List   `tfsdk:"list_nested_attribute_one"`
-	ListNestedAttributeThree          types.List   `tfsdk:"list_nested_attribute_three"`
-	ListNestedAttributeTwo            types.List   `tfsdk:"list_nested_attribute_two"`
-	ListObjectAttribute               types.List   `tfsdk:"list_object_attribute"`
-	ListObjectObjectAttribute         types.List   `tfsdk:"list_object_object_attribute"`
-	MapNestedAttributeAssocExtType    types.Map    `tfsdk:"map_nested_attribute_assoc_ext_type"`
-	ObjectAttribute                   types.Object `tfsdk:"object_attribute"`
-	ObjectListAttribute               types.Object `tfsdk:"object_list_attribute"`
-	ObjectListObjectAttribute         types.Object `tfsdk:"object_list_object_attribute"`
-	SetNestedAttributeAssocExtType    types.Set    `tfsdk:"set_nested_attribute_assoc_ext_type"`
-	SingleNestedAttributeAssocExtType types.Object `tfsdk:"single_nested_attribute_assoc_ext_type"`
-	SingleNestedAttributeOne          types.Object `tfsdk:"single_nested_attribute_one"`
-	SingleNestedAttributeThree        types.Object `tfsdk:"single_nested_attribute_three"`
-	SingleNestedAttributeTwo          types.Object `tfsdk:"single_nested_attribute_two"`
-	ListNestedBlockAssocExtType       types.List   `tfsdk:"list_nested_block_assoc_ext_type"`
-	ListNestedBlockOne                types.List   `tfsdk:"list_nested_block_one"`
-	ListNestedBlockThree              types.List   `tfsdk:"list_nested_block_three"`
-	ListNestedBlockTwo                types.List   `tfsdk:"list_nested_block_two"`
-	SetNestedBlockAssocExtType        types.Set    `tfsdk:"set_nested_block_assoc_ext_type"`
-	SingleNestedBlockAssocExtType     types.Object `tfsdk:"single_nested_block_assoc_ext_type"`
-	SingleNestedBlockOne              types.Object `tfsdk:"single_nested_block_one"`
-	SingleNestedBlockThree            types.Object `tfsdk:"single_nested_block_three"`
-	SingleNestedBlockTwo              types.Object `tfsdk:"single_nested_block_two"`
+	BoolAttribute                     types.Bool                             `tfsdk:"bool_attribute"`
+	ListListAttribute                 types.List                             `tfsdk:"list_list_attribute"`
+	ListMapAttribute                  types.List                             `tfsdk:"list_map_attribute"`
+	ListNestedAttributeAssocExtType   types.List                             `tfsdk:"list_nested_attribute_assoc_ext_type"`
+	ListNestedAttributeOne            types.List                             `tfsdk:"list_nested_attribute_one"`
+	ListNestedAttributeThree          types.List                             `tfsdk:"list_nested_attribute_three"`
+	ListNestedAttributeTwo            types.List                             `tfsdk:"list_nested_attribute_two"`
+	ListObjectAttribute               types.List                             `tfsdk:"list_object_attribute"`
+	ListObjectObjectAttribute         types.List                             `tfsdk:"list_object_object_attribute"`
+	MapNestedAttributeAssocExtType    types.Map                              `tfsdk:"map_nested_attribute_assoc_ext_type"`
+	ObjectAttribute                   types.Object                           `tfsdk:"object_attribute"`
+	ObjectListAttribute               types.Object                           `tfsdk:"object_list_attribute"`
+	ObjectListObjectAttribute         types.Object                           `tfsdk:"object_list_object_attribute"`
+	SetNestedAttributeAssocExtType    types.Set                              `tfsdk:"set_nested_attribute_assoc_ext_type"`
+	SingleNestedAttributeAssocExtType SingleNestedAttributeAssocExtTypeValue `tfsdk:"single_nested_attribute_assoc_ext_type"`
+	SingleNestedAttributeOne          SingleNestedAttributeOneValue          `tfsdk:"single_nested_attribute_one"`
+	SingleNestedAttributeThree        SingleNestedAttributeThreeValue        `tfsdk:"single_nested_attribute_three"`
+	SingleNestedAttributeTwo          SingleNestedAttributeTwoValue          `tfsdk:"single_nested_attribute_two"`
+	ListNestedBlockAssocExtType       types.List                             `tfsdk:"list_nested_block_assoc_ext_type"`
+	ListNestedBlockOne                types.List                             `tfsdk:"list_nested_block_one"`
+	ListNestedBlockThree              types.List                             `tfsdk:"list_nested_block_three"`
+	ListNestedBlockTwo                types.List                             `tfsdk:"list_nested_block_two"`
+	SetNestedBlockAssocExtType        types.Set                              `tfsdk:"set_nested_block_assoc_ext_type"`
+	SingleNestedBlockAssocExtType     SingleNestedBlockAssocExtTypeValue     `tfsdk:"single_nested_block_assoc_ext_type"`
+	SingleNestedBlockOne              SingleNestedBlockOneValue              `tfsdk:"single_nested_block_one"`
+	SingleNestedBlockThree            SingleNestedBlockThreeValue            `tfsdk:"single_nested_block_three"`
+	SingleNestedBlockTwo              SingleNestedBlockTwoValue              `tfsdk:"single_nested_block_two"`
 }
 
 var _ basetypes.ObjectTypable = ListNestedAttributeAssocExtTypeType{}

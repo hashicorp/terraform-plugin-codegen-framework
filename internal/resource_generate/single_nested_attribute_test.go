@@ -767,7 +767,7 @@ func TestGeneratorSingleNestedAttribute_ModelField(t *testing.T) {
 		"default": {
 			expected: model.Field{
 				Name:      "SingleNestedAttribute",
-				ValueType: "types.Object",
+				ValueType: "SingleNestedAttributeValue",
 				TfsdkName: "single_nested_attribute",
 			},
 		},
