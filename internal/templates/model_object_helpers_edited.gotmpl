@@ -1,0 +1,240 @@
+
+
+var _ basetypes.ObjectValuable = {{.Name}}Value{}
+
+type {{.Name}}Value struct {
+{{- range $key, $value := .Fields }}
+{{$value.FieldName}} {{$value.AttrValue}} `tfsdk:"{{$key}}"`
+{{- end}}
+state attr.ValueState
+}
+
+func (v {{.Name}}Value) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+attrTypes := make(map[string]tftypes.Type, {{len .Fields}})
+
+var val tftypes.Value
+var err error
+
+{{range $key, $value := .Fields }}
+attrTypes["{{$key}}"] = {{$value.AttrType}}.TerraformType(ctx)
+{{- end}}
+
+objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+switch v.state {
+case attr.ValueStateKnown:
+vals := make(map[string]tftypes.Value, {{len .Fields}})
+
+{{range $key, $value := .Fields }}
+val, err = v.{{$value.FieldName}}.ToTerraformValue(ctx)
+
+if err != nil {
+return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+}
+
+vals["{{$key}}"] = val
+
+{{end}}
+
+if err := tftypes.ValidateValue(objectType, vals); err != nil {
+return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+}
+
+return tftypes.NewValue(objectType, vals), nil
+case attr.ValueStateNull:
+return tftypes.NewValue(objectType, nil), nil
+case attr.ValueStateUnknown:
+return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+default:
+panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+}
+}
+
+func (v {{.Name}}Value) IsNull() bool {
+return v.state == attr.ValueStateNull
+}
+
+func (v {{.Name}}Value) IsUnknown() bool {
+return v.state == attr.ValueStateUnknown
+}
+
+func (v {{.Name}}Value) String() string {
+return "{{.Name}}Value"
+}
+
+func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+{{- range $key, $value := .Fields }}
+{{- if eq $value.FieldType "ListNestedAttribute" "ListNestedBlock"}}
+{{$value.FieldNameLCFirst}} := types.ListValueMust(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+v.{{$value.FieldName}}.Elements(),
+)
+
+if v.{{$value.FieldName}}.IsNull() {
+{{$value.FieldNameLCFirst}} = types.ListNull(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+if v.{{$value.FieldName}}.IsUnknown() {
+{{$value.FieldNameLCFirst}} = types.ListUnknown(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+{{else if eq $value.FieldType "MapNestedAttribute"}}
+{{$value.FieldNameLCFirst}} := types.MapValueMust(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+v.{{$value.FieldName}}.Elements(),
+)
+
+if v.{{$value.FieldName}}.IsNull() {
+{{$value.FieldNameLCFirst}} = types.MapNull(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+if v.{{$value.FieldName}}.IsUnknown() {
+{{$value.FieldNameLCFirst}} = types.MapUnknown(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+{{else if eq $value.FieldType "SetNestedAttribute" "SetNestedBlock"}}
+{{$value.FieldNameLCFirst}} := types.SetValueMust(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+v.{{$value.FieldName}}.Elements(),
+)
+
+if v.{{$value.FieldName}}.IsNull() {
+{{$value.FieldNameLCFirst}} = types.SetNull(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+if v.{{$value.FieldName}}.IsUnknown() {
+{{$value.FieldNameLCFirst}} = types.SetUnknown(
+{{$value.FieldName}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$value.FieldName}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+{{else if eq $value.FieldType "SingleNestedAttribute" "SingleNestedBlock"}}
+var {{$value.FieldNameLCFirst}} basetypes.ObjectValue
+
+if v.{{$value.FieldName}}.IsNull() {
+{{$value.FieldNameLCFirst}} = types.ObjectNull(
+{{$value.FieldName}}Value{}.AttributeTypes(ctx),
+)
+}
+
+if v.{{$value.FieldName}}.IsUnknown() {
+{{$value.FieldNameLCFirst}} = types.ObjectUnknown(
+{{$value.FieldName}}Value{}.AttributeTypes(ctx),
+)
+}
+
+if !v.{{$value.FieldName}}.IsNull() && !v.{{$value.FieldName}}.IsUnknown() {
+{{$value.FieldNameLCFirst}} = types.ObjectValueMust(
+{{$value.FieldName}}Value{}.AttributeTypes(ctx),
+v.{{$value.FieldName}}.Attributes(),
+)
+}
+{{end}}
+{{- end}}
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+{{- range $key, $value := .Fields }}
+"{{$key}}": {{$value.AttrType}},
+{{- end}}
+},
+map[string]attr.Value{
+{{- range $key, $value := .Fields }}
+{{- if eq $value.FieldType "ListNestedAttribute" "MapNestedAttribute" "SetNestedAttribute" "SingleNestedAttribute" "ListNestedBlock" "SetNestedBlock" "SingleNestedBlock"}}
+"{{$key}}": {{$value.FieldNameLCFirst}},
+{{- else}}
+"{{$key}}": v.{{$value.FieldName}},
+{{- end}}
+{{- end}}
+})
+
+return objVal, diags
+}
+
+func (v {{.Name}}Value) Equal(o attr.Value) bool {
+other, ok := o.({{.Name}}Value)
+
+if !ok {
+return false
+}
+
+if v.state != other.state {
+return false
+}
+
+if v.state != attr.ValueStateKnown {
+return true
+}
+
+{{range $key, $value := .Fields }}
+{{- if eq $value.AttrValue "baseTypes.BoolValue" "baseTypes.Float64Value" "baseTypes.Int64Value" "baseTypes.NumberValue" "baseTypes.StringValue"}}
+if v.{{$value.FieldName}} != other.{{$value.FieldName}} {
+return false
+}
+{{- else}}
+if !v.{{$value.FieldName}}.Equal(other.{{$value.FieldName}}) {
+return false
+}
+{{- end}}
+{{end}}
+
+return true
+}
+
+func (v {{.Name}}Value) Type(ctx context.Context) attr.Type {
+return {{.Name}}Type{
+basetypes.ObjectType{
+AttrTypes: v.AttributeTypes(ctx),
+},
+}
+}
+
+func (v {{.Name}}Value) AttributeTypes(ctx context.Context) map[string]attr.Type {
+return map[string]attr.Type{
+{{- range $key, $value := .Fields }}
+"{{$key}}": {{$value.AttrType}},
+{{- end}}
+}
+}

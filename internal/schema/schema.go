@@ -265,6 +265,19 @@ func (g GeneratorSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 			continue
 		}
 
+		if c, ok := g.Attributes[k].(CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+
+			continue
+		}
+
+		// TODO: Remove once refactored to Generator<Type>Attribute|Block
 		if a, ok := g.Attributes[k].(Attributes); ok {
 			ng := GeneratorSchema{
 				Attributes: a.GetAttributes(),
@@ -358,7 +371,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 			}
 		case GeneratorListAttribute:
 			if e, ok := g.Attributes[k].(Elements); ok {
-				elemType, err := elementTypeString(e.ElemType())
+				elemType, err := ElementTypeString(e.ElemType())
 				if err != nil {
 					return nil, err
 				}
@@ -377,7 +390,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 			}
 		case GeneratorMapAttribute:
 			if e, ok := g.Attributes[k].(Elements); ok {
-				elemType, err := elementTypeString(e.ElemType())
+				elemType, err := ElementTypeString(e.ElemType())
 				if err != nil {
 					return nil, err
 				}
@@ -401,7 +414,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 			}
 		case GeneratorObjectAttribute:
 			if o, ok := g.Attributes[k].(Attrs); ok {
-				attrTypes, err := attrTypesString(o.AttrTypes())
+				attrTypes, err := AttrTypesString(o.AttrTypes())
 				if err != nil {
 					return nil, err
 				}
@@ -414,7 +427,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 			}
 		case GeneratorSetAttribute:
 			if e, ok := g.Attributes[k].(Elements); ok {
-				elemType, err := elementTypeString(e.ElemType())
+				elemType, err := ElementTypeString(e.ElemType())
 				if err != nil {
 					return nil, err
 				}
@@ -882,7 +895,7 @@ func stringObjectField(name string) objectField {
 	}
 }
 
-func elementTypeString(elementType specschema.ElementType) (string, error) {
+func ElementTypeString(elementType specschema.ElementType) (string, error) {
 	switch {
 	case elementType.Bool != nil:
 		return "types.BoolType", nil
@@ -891,13 +904,13 @@ func elementTypeString(elementType specschema.ElementType) (string, error) {
 	case elementType.Int64 != nil:
 		return "types.Int64Type", nil
 	case elementType.List != nil:
-		elemType, err := elementTypeString(elementType.List.ElementType)
+		elemType, err := ElementTypeString(elementType.List.ElementType)
 		if err != nil {
 			return "", err
 		}
 		return fmt.Sprintf("types.ListType{\nElemType: %s,\n}", elemType), nil
 	case elementType.Map != nil:
-		elemType, err := elementTypeString(elementType.Map.ElementType)
+		elemType, err := ElementTypeString(elementType.Map.ElementType)
 		if err != nil {
 			return "", err
 		}
@@ -905,13 +918,13 @@ func elementTypeString(elementType specschema.ElementType) (string, error) {
 	case elementType.Number != nil:
 		return "types.NumberType", nil
 	case elementType.Object != nil:
-		attrTypesStr, err := attrTypesString(elementType.Object.AttributeTypes)
+		attrTypesStr, err := AttrTypesString(elementType.Object.AttributeTypes)
 		if err != nil {
 			return "", err
 		}
 		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", attrTypesStr), nil
 	case elementType.Set != nil:
-		elemType, err := elementTypeString(elementType.Set.ElementType)
+		elemType, err := ElementTypeString(elementType.Set.ElementType)
 		if err != nil {
 			return "", err
 		}
@@ -923,7 +936,7 @@ func elementTypeString(elementType specschema.ElementType) (string, error) {
 	return "", errors.New("no matching element type found")
 }
 
-func attrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) {
+func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) {
 	var attrTypesStr []string
 
 	for _, v := range attrTypes {
@@ -935,13 +948,13 @@ func attrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 		case v.Int64 != nil:
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.Int64Type", v.Name))
 		case v.List != nil:
-			elemType, err := elementTypeString(v.List.ElementType)
+			elemType, err := ElementTypeString(v.List.ElementType)
 			if err != nil {
 				return "", err
 			}
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.ListType{\nElemType: %s,\n}", v.Name, elemType))
 		case v.Map != nil:
-			elemType, err := elementTypeString(v.Map.ElementType)
+			elemType, err := ElementTypeString(v.Map.ElementType)
 			if err != nil {
 				return "", err
 			}
@@ -949,13 +962,13 @@ func attrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 		case v.Number != nil:
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.NumberType", v.Name))
 		case v.Object != nil:
-			objAttrTypesStr, err := attrTypesString(v.Object.AttributeTypes)
+			objAttrTypesStr, err := AttrTypesString(v.Object.AttributeTypes)
 			if err != nil {
 				return "", err
 			}
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n}\n}", v.Name, objAttrTypesStr))
 		case v.Set != nil:
-			elemType, err := elementTypeString(v.Set.ElementType)
+			elemType, err := ElementTypeString(v.Set.ElementType)
 			if err != nil {
 				return "", err
 			}

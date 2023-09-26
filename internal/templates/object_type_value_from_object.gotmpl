@@ -1,0 +1,40 @@
+
+
+func (t {{.Name}}Type) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+state := attr.ValueStateKnown
+
+attributes := in.Attributes()
+
+{{range $key, $value := .AttrValues }}
+{{$key.CamelCaseLCFirst}}, ok := attributes["{{$key}}"]
+
+if !ok {
+diags.AddError(
+"Attribute Missing",
+`{{$key}} is missing from object`)
+
+return nil, diags
+}
+
+{{$key.CamelCaseLCFirst}}Val, ok := {{$key.CamelCaseLCFirst}}.({{$value}})
+
+if !ok {
+diags.AddError(
+"Attribute Wrong Type",
+fmt.Sprintf(`{{$key}} expected to be {{$value}}, was: %T`, {{$key.CamelCaseLCFirst}}))
+}
+
+if {{$key.CamelCaseLCFirst}}Val.IsUnknown() {
+state = attr.ValueStateUnknown
+}
+{{end}}
+
+return {{.Name}}Value{
+{{- range $key, $value := .AttrValues }}
+{{$key.CamelCase}}: {{$key.CamelCaseLCFirst}}Val,
+{{- end}}
+state: state,
+}, diags
+}

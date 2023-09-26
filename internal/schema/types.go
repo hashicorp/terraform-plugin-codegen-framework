@@ -22,6 +22,10 @@ type Blocks interface {
 	GetBlocks() GeneratorBlocks
 }
 
+type CustomTypeAndValue interface {
+	CustomTypeAndValue(name string) ([]byte, error)
+}
+
 type Elements interface {
 	ElemType() specschema.ElementType
 }
