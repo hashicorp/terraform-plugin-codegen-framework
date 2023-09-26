@@ -225,14 +225,14 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 }
 
 type ExampleModel struct {
-	BoolAttribute                     my_bool_value `tfsdk:"bool_attribute"`
-	ListNestedAttributeAssocExtType   types.List    `tfsdk:"list_nested_attribute_assoc_ext_type"`
-	MapNestedAttributeAssocExtType    types.Map     `tfsdk:"map_nested_attribute_assoc_ext_type"`
-	SetNestedAttributeAssocExtType    types.Set     `tfsdk:"set_nested_attribute_assoc_ext_type"`
-	SingleNestedAttributeAssocExtType types.Object  `tfsdk:"single_nested_attribute_assoc_ext_type"`
-	ListNestedBlockAssocExtType       types.List    `tfsdk:"list_nested_block_assoc_ext_type"`
-	SetNestedBlockAssocExtType        types.Set     `tfsdk:"set_nested_block_assoc_ext_type"`
-	SingleNestedBlockAssocExtType     types.Object  `tfsdk:"single_nested_block_assoc_ext_type"`
+	BoolAttribute                     my_bool_value                          `tfsdk:"bool_attribute"`
+	ListNestedAttributeAssocExtType   types.List                             `tfsdk:"list_nested_attribute_assoc_ext_type"`
+	MapNestedAttributeAssocExtType    types.Map                              `tfsdk:"map_nested_attribute_assoc_ext_type"`
+	SetNestedAttributeAssocExtType    types.Set                              `tfsdk:"set_nested_attribute_assoc_ext_type"`
+	SingleNestedAttributeAssocExtType SingleNestedAttributeAssocExtTypeValue `tfsdk:"single_nested_attribute_assoc_ext_type"`
+	ListNestedBlockAssocExtType       types.List                             `tfsdk:"list_nested_block_assoc_ext_type"`
+	SetNestedBlockAssocExtType        types.Set                              `tfsdk:"set_nested_block_assoc_ext_type"`
+	SingleNestedBlockAssocExtType     SingleNestedBlockAssocExtTypeValue     `tfsdk:"single_nested_block_assoc_ext_type"`
 }
 
 var _ basetypes.ObjectTypable = ListNestedAttributeAssocExtTypeType{}
