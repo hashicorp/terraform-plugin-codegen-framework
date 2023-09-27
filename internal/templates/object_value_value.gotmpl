@@ -1,0 +1,8 @@
+
+
+type {{.Name}}Value struct {
+{{- range $key, $value := .AttrValues }}
+{{$key.CamelCase}} {{$value}} `tfsdk:"{{$key}}"`
+{{- end}}
+state attr.ValueState
+}

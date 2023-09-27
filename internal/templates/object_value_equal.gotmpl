@@ -1,0 +1,31 @@
+
+
+func (v {{.Name}}Value) Equal(o attr.Value) bool {
+other, ok := o.({{.Name}}Value)
+
+if !ok {
+return false
+}
+
+if v.state != other.state {
+return false
+}
+
+if v.state != attr.ValueStateKnown {
+return true
+}
+
+{{range $key, $value := .AttrValues }}
+{{- if eq $value "baseTypes.BoolValue" "baseTypes.Float64Value" "baseTypes.Int64Value" "baseTypes.NumberValue" "baseTypes.StringValue"}}
+if v.{{$key.CamelCase}} != other.{{$key.CamelCase}} {
+return false
+}
+{{- else}}
+if !v.{{$key.CamelCase}}.Equal(other.{{$key.CamelCase}}) {
+return false
+}
+{{- end}}
+{{end}}
+
+return true
+}
