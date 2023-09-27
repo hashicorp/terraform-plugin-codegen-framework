@@ -153,7 +153,7 @@ type CustomObjectType struct {
 	templates  map[string]string
 }
 
-func NewCustomObjectType(name string, fields map[key]field, attrValues map[key]string) CustomObjectType {
+func NewCustomObjectType(name string, attrValues map[string]string) CustomObjectType {
 	t := map[string]string{
 		"equal":              templates.ObjectTypeEqualTemplate,
 		"string":             templates.ObjectTypeStringTemplate,
@@ -168,9 +168,15 @@ func NewCustomObjectType(name string, fields map[key]field, attrValues map[key]s
 		"valueUnknown":       templates.ObjectTypeValueUnknownTemplate,
 	}
 
+	a := make(map[key]string, len(attrValues))
+
+	for k, v := range attrValues {
+		a[key(k)] = v
+	}
+
 	return CustomObjectType{
 		Name:       name,
-		AttrValues: attrValues,
+		AttrValues: a,
 		templates:  t,
 	}
 }
@@ -460,52 +466,6 @@ type field struct {
 	FieldNameLCFirst string
 }
 
-func (g GeneratorListNestedAttribute) AttributeAttrValues() (map[key]string, error) {
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.NestedObject.Attributes))
-
-	for k := range g.NestedObject.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
-
-	attrValues := make(map[key]string)
-
-	for _, k := range attributeKeys {
-		switch g.NestedObject.Attributes[k].GeneratorSchemaType() {
-		case generatorschema.GeneratorBoolAttribute:
-			attrValues[key(k)] = "basetypes.BoolValue"
-		case generatorschema.GeneratorFloat64Attribute:
-			attrValues[key(k)] = "basetypes.Float64Value"
-		case generatorschema.GeneratorInt64Attribute:
-			attrValues[key(k)] = "basetypes.Int64Value"
-		case generatorschema.GeneratorListAttribute:
-			attrValues[key(k)] = "basetypes.ListValue"
-		case generatorschema.GeneratorListNestedAttribute:
-			attrValues[key(k)] = "basetypes.ListValue"
-		case generatorschema.GeneratorMapAttribute:
-			attrValues[key(k)] = "basetypes.MapValue"
-		case generatorschema.GeneratorMapNestedAttribute:
-			attrValues[key(k)] = "basetypes.MapValue"
-		case generatorschema.GeneratorNumberAttribute:
-			attrValues[key(k)] = "basetypes.NumberValue"
-		case generatorschema.GeneratorObjectAttribute:
-			attrValues[key(k)] = "basetypes.ObjectValue"
-		case generatorschema.GeneratorSetAttribute:
-			attrValues[key(k)] = "basetypes.SetValue"
-		case generatorschema.GeneratorSetNestedAttribute:
-			attrValues[key(k)] = "basetypes.SetValue"
-		case generatorschema.GeneratorSingleNestedAttribute:
-			attrValues[key(k)] = "basetypes.ObjectValue"
-		case generatorschema.GeneratorStringAttribute:
-			attrValues[key(k)] = "basetypes.StringValue"
-		}
-	}
-
-	return attrValues, nil
-}
-
 type key string
 
 func (k key) CamelCaseLCFirst() string {
@@ -688,13 +648,13 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 		return nil, err
 	}
 
-	attributeAttrValues, err := g.AttributeAttrValues()
+	attributeAttrValues, err := g.NestedObject.Attributes.AttrValues()
 
 	if err != nil {
 		return nil, err
 	}
 
-	c := NewCustomObjectType(name, fields, attributeAttrValues)
+	c := NewCustomObjectType(name, attributeAttrValues)
 
 	b, err := c.Render()
 
