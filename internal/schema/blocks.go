@@ -4,11 +4,98 @@
 package schema
 
 import (
+	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
 type GeneratorBlocks map[string]GeneratorBlock
+
+// AttributeTypes returns a mapping of block names to string representations of the
+// block type.
+func (g GeneratorBlocks) AttributeTypes() (map[string]string, error) {
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g))
+
+	for k := range g {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	attributeTypes := make(map[string]string, len(g))
+
+	for _, k := range blockKeys {
+		switch g[k].GeneratorSchemaType() {
+		case GeneratorListNestedBlock:
+			attributeTypes[k] = "ListNested"
+		case GeneratorSetNestedBlock:
+			attributeTypes[k] = "SetNested"
+		case GeneratorSingleNestedBlock:
+			attributeTypes[k] = "SingleNested"
+		}
+	}
+
+	return attributeTypes, nil
+}
+
+// AttrTypes returns a mapping of block names to string representations of the
+// underlying attr.Type.
+func (g GeneratorBlocks) AttrTypes() (map[string]string, error) {
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g))
+
+	for k := range g {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	attrTypes := make(map[string]string, len(g))
+
+	for _, k := range blockKeys {
+		switch g[k].GeneratorSchemaType() {
+		case GeneratorListNestedBlock:
+			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k))
+		case GeneratorSetNestedBlock:
+			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k))
+		case GeneratorSingleNestedBlock:
+			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k))
+		}
+	}
+
+	return attrTypes, nil
+}
+
+// AttrValues returns a mapping of block names to string representations of the
+// underlying attr.Value.
+func (g GeneratorBlocks) AttrValues() (map[string]string, error) {
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g))
+
+	for k := range g {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	attrValues := make(map[string]string, len(g))
+
+	for _, k := range blockKeys {
+		switch g[k].GeneratorSchemaType() {
+		case GeneratorListNestedBlock:
+			attrValues[k] = "basetypes.ListValue"
+		case GeneratorSetNestedBlock:
+			attrValues[k] = "basetypes.SetValue"
+		case GeneratorSingleNestedBlock:
+			attrValues[k] = "basetypes.ObjectValue"
+		}
+	}
+
+	return attrValues, nil
+}
 
 func (g GeneratorBlocks) Schema() (string, error) {
 	var s strings.Builder

@@ -186,6 +186,7 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 
 	buf.Write(b)
 
+	// TODO: Remove once refactored to Generator<Type>Attribute|Block
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
 	var attributeKeys = make([]string, 0, len(g.NestedObject.Attributes))
 
@@ -198,7 +199,6 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 	// Recursively call CustomTypeAndValue() for each attribute that implements
 	// CustomTypeAndValue interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
-
 		// TODO: Also need to consider how to handle instances in which an associated_external_type
 		// has been defined on a type which does not implement CustomTypeAndValue (e.g., bool)
 		// If To/From methods are going to be hung off custom value type, then will to generate

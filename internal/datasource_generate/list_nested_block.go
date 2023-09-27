@@ -4,6 +4,8 @@
 package datasource_generate
 
 import (
+	"bytes"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -157,4 +159,181 @@ func (g GeneratorListNestedBlock) GetAttributes() generatorschema.GeneratorAttri
 
 func (g GeneratorListNestedBlock) GetBlocks() generatorschema.GeneratorBlocks {
 	return g.NestedObject.Blocks
+}
+
+func (g GeneratorListNestedBlock) CustomTypeAndValue(name string) ([]byte, error) {
+	var buf bytes.Buffer
+
+	attributeAttrValues, err := g.NestedObject.Attributes.AttrValues()
+
+	if err != nil {
+		return nil, err
+	}
+
+	blockAttrValues, err := g.NestedObject.Blocks.AttrValues()
+
+	if err != nil {
+		return nil, err
+	}
+
+	attributesBlocksAttrValues := make(map[string]string, len(g.NestedObject.Attributes)+len(g.NestedObject.Blocks))
+
+	for k, v := range attributeAttrValues {
+		attributesBlocksAttrValues[k] = v
+	}
+
+	for k, v := range blockAttrValues {
+		attributesBlocksAttrValues[k] = v
+	}
+
+	objectType := generatorschema.NewCustomObjectType(name, attributesBlocksAttrValues)
+
+	b, err := objectType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	attributeTypes, err := g.NestedObject.Attributes.AttributeTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	blockTypes, err := g.NestedObject.Blocks.AttributeTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	attributesBlocksTypes := make(map[string]string, len(g.NestedObject.Attributes)+len(g.NestedObject.Blocks))
+
+	for k, v := range attributeTypes {
+		attributesBlocksTypes[k] = v
+	}
+
+	for k, v := range blockTypes {
+		attributesBlocksTypes[k] = v
+	}
+
+	attributeAttrTypes, err := g.NestedObject.Attributes.AttrTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	blockAttrTypes, err := g.NestedObject.Blocks.AttrTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	attributesBlocksAttrTypes := make(map[string]string, len(g.NestedObject.Attributes)+len(g.NestedObject.Blocks))
+
+	for k, v := range attributeAttrTypes {
+		attributesBlocksAttrTypes[k] = v
+	}
+
+	for k, v := range blockAttrTypes {
+		attributesBlocksAttrTypes[k] = v
+	}
+
+	objectValue := generatorschema.NewCustomObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues)
+
+	b, err = objectValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	// TODO: Remove once refactored to Generator<Type>Attribute|Block
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var attributeKeys = make([]string, 0, len(g.NestedObject.Attributes))
+
+	for k := range g.NestedObject.Attributes {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var blockKeys = make([]string, 0, len(g.NestedObject.Blocks))
+
+	for k := range g.NestedObject.Blocks {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	// Recursively call CustomTypeAndValue() for each attribute that implements
+	// CustomTypeAndValue interface (i.e, nested attributes).
+	for _, k := range attributeKeys {
+		// TODO: Also need to consider how to handle instances in which an associated_external_type
+		// has been defined on a type which does not implement CustomTypeAndValue (e.g., bool)
+		// If To/From methods are going to be hung off custom value type, then will to generate
+		// "wrapped" / embedded types that embed bool in a type that can have To/From methods
+		// added to it.
+		if c, ok := g.NestedObject.Attributes[k].(generatorschema.CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+
+			continue
+		}
+
+		// TODO: Remove once refactored to Generator<Type>Attribute|Block
+		if a, ok := g.NestedObject.Attributes[k].(generatorschema.Attributes); ok {
+			ng := generatorschema.GeneratorSchema{
+				Attributes: a.GetAttributes(),
+			}
+
+			b, err := ng.ModelObjectHelpersTemplate(k)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.WriteString("\n")
+			buf.Write(b)
+		}
+	}
+
+	for _, k := range blockKeys {
+		if c, ok := g.NestedObject.Blocks[k].(generatorschema.CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+
+			continue
+		}
+
+		// TODO: Remove once refactored to Generator<Type>Attribute|Block
+		if a, ok := g.NestedObject.Blocks[k].(generatorschema.Blocks); ok {
+			ng := generatorschema.GeneratorSchema{
+				Attributes: a.GetAttributes(),
+				Blocks:     a.GetBlocks(),
+			}
+
+			b, err := ng.ModelObjectHelpersTemplate(k)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.WriteString("\n")
+			buf.Write(b)
+		}
+	}
+
+	return buf.Bytes(), nil
 }

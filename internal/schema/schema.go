@@ -306,6 +306,19 @@ func (g GeneratorSchema) ModelsObjectHelpersBytes() ([]byte, error) {
 			continue
 		}
 
+		if c, ok := g.Blocks[k].(CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+
+			continue
+		}
+
+		// TODO: Remove once refactored to Generator<Type>Attribute|Block
 		if b, ok := g.Blocks[k].(Blocks); ok {
 			ng := GeneratorSchema{
 				Attributes: b.GetAttributes(),
