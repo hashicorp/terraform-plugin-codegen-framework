@@ -4,6 +4,8 @@
 package provider_generate
 
 import (
+	"bytes"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -144,4 +146,94 @@ func (g GeneratorSingleNestedAttribute) ModelField(name string) (model.Field, er
 
 func (g GeneratorSingleNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.Attributes
+}
+
+func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+	var buf bytes.Buffer
+
+	attributeAttrValues, err := g.Attributes.AttrValues()
+
+	if err != nil {
+		return nil, err
+	}
+
+	objectType := generatorschema.NewCustomObjectType(name, attributeAttrValues)
+
+	b, err := objectType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	attributeTypes, err := g.Attributes.AttributeTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	attributeAttrTypes, err := g.Attributes.AttrTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	objectValue := generatorschema.NewCustomObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues)
+
+	b, err = objectValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	// TODO: Remove once refactored to Generator<Type>Attribute|Block
+	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
+	var attributeKeys = make([]string, 0, len(g.Attributes))
+
+	for k := range g.Attributes {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	// Recursively call CustomTypeAndValue() for each attribute that implements
+	// CustomTypeAndValue interface (i.e, nested attributes).
+	for _, k := range attributeKeys {
+		// TODO: Also need to consider how to handle instances in which an associated_external_type
+		// has been defined on a type which does not implement CustomTypeAndValue (e.g., bool)
+		// If To/From methods are going to be hung off custom value type, then will to generate
+		// "wrapped" / embedded types that embed bool in a type that can have To/From methods
+		// added to it.
+		if c, ok := g.Attributes[k].(generatorschema.CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+
+			continue
+		}
+
+		// TODO: Remove once refactored to Generator<Type>Attribute|Block
+		if a, ok := g.Attributes[k].(generatorschema.Attributes); ok {
+			ng := generatorschema.GeneratorSchema{
+				Attributes: a.GetAttributes(),
+			}
+
+			b, err := ng.ModelObjectHelpersTemplate(k)
+			if err != nil {
+				return nil, err
+			}
+
+			buf.WriteString("\n")
+			buf.Write(b)
+		}
+	}
+
+	return buf.Bytes(), nil
 }
