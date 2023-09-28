@@ -195,14 +195,7 @@ func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 	var modelFields []model.Field
 
-	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.Attributes))
-
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.Attributes.SortedKeys()
 
 	for _, k := range attributeKeys {
 		if g.Attributes[k] == nil {
@@ -249,14 +242,7 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
-	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.Attributes))
-
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.Attributes.SortedKeys()
 
 	for _, k := range attributeKeys {
 		if g.Attributes[k] == nil {
@@ -313,14 +299,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
-	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.Attributes))
-
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.Attributes.SortedKeys()
 
 	for _, k := range attributeKeys {
 		if g.Attributes[k] == nil {

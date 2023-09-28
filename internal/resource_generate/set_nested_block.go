@@ -265,14 +265,7 @@ func (g GeneratorSetNestedBlock) CustomTypeAndValue(name string) ([]byte, error)
 
 	buf.Write(b)
 
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.NestedObject.Attributes))
-
-	for k := range g.NestedObject.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.NestedObject.Attributes.SortedKeys()
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
 	var blockKeys = make([]string, 0, len(g.NestedObject.Blocks))

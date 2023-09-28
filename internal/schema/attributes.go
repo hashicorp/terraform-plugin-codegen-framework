@@ -16,14 +16,7 @@ type GeneratorAttributes map[string]GeneratorAttribute
 // AttributeTypes returns a mapping of attribute names to string representations of the
 // attribute type.
 func (g GeneratorAttributes) AttributeTypes() (map[string]string, error) {
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g))
-
-	for k := range g {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.SortedKeys()
 
 	attributeTypes := make(map[string]string, len(g))
 
@@ -64,14 +57,7 @@ func (g GeneratorAttributes) AttributeTypes() (map[string]string, error) {
 // AttrTypes returns a mapping of attribute names to string representations of the
 // underlying attr.Type.
 func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g))
-
-	for k := range g {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.SortedKeys()
 
 	attrTypes := make(map[string]string, len(g))
 
@@ -144,14 +130,7 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 // AttrValues returns a mapping of attribute names to string representations of the
 // underlying attr.Value.
 func (g GeneratorAttributes) AttrValues() (map[string]string, error) {
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g))
-
-	for k := range g {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.SortedKeys()
 
 	attrValues := make(map[string]string, len(g))
 
@@ -216,4 +195,16 @@ func (g GeneratorAttributes) Schema() (string, error) {
 	}
 
 	return s.String(), nil
+}
+
+func (g GeneratorAttributes) SortedKeys() []string {
+	var attributeKeys = make([]string, 0, len(g))
+
+	for k := range g {
+		attributeKeys = append(attributeKeys, k)
+	}
+
+	sort.Strings(attributeKeys)
+
+	return attributeKeys
 }

@@ -264,14 +264,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 
 	buf.Write(b)
 
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.Attributes))
-
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.Attributes.SortedKeys()
 
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
 	var blockKeys = make([]string, 0, len(g.Blocks))
