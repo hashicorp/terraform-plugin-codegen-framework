@@ -211,14 +211,7 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 		modelFields = append(modelFields, modelField)
 	}
 
-	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g.Blocks))
-
-	for k := range g.Blocks {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.Blocks.SortedKeys()
 
 	for _, k := range blockKeys {
 		if g.Blocks[k] == nil {
@@ -260,14 +253,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 		}
 	}
 
-	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g.Blocks))
-
-	for k := range g.Blocks {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.Blocks.SortedKeys()
 
 	for _, k := range blockKeys {
 		if g.Blocks[k] == nil {
@@ -411,14 +397,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		buf.Write(templateBuf.Bytes())
 	}
 
-	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g.Blocks))
-
-	for k := range g.Blocks {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.Blocks.SortedKeys()
 
 	for _, k := range blockKeys {
 		if g.Blocks[k] == nil {

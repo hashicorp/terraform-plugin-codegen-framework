@@ -5,7 +5,6 @@ package datasource_generate
 
 import (
 	"bytes"
-	"sort"
 	"strings"
 	"text/template"
 
@@ -216,7 +215,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 		return nil, err
 	}
 
-	blockTypes, err := g.Blocks.AttributeTypes()
+	blockTypes, err := g.Blocks.BlockTypes()
 
 	if err != nil {
 		return nil, err
@@ -266,14 +265,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 
 	attributeKeys := g.Attributes.SortedKeys()
 
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g.Blocks))
-
-	for k := range g.Blocks {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.Blocks.SortedKeys()
 
 	// Recursively call CustomTypeAndValue() for each attribute that implements
 	// CustomTypeAndValue interface (i.e, nested attributes).

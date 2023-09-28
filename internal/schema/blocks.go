@@ -13,45 +13,31 @@ import (
 
 type GeneratorBlocks map[string]GeneratorBlock
 
-// AttributeTypes returns a mapping of block names to string representations of the
+// BlockTypes returns a mapping of block names to string representations of the
 // block type.
-func (g GeneratorBlocks) AttributeTypes() (map[string]string, error) {
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g))
+func (g GeneratorBlocks) BlockTypes() (map[string]string, error) {
+	blockKeys := g.SortedKeys()
 
-	for k := range g {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
-
-	attributeTypes := make(map[string]string, len(g))
+	blockTypes := make(map[string]string, len(g))
 
 	for _, k := range blockKeys {
 		switch g[k].GeneratorSchemaType() {
 		case GeneratorListNestedBlock:
-			attributeTypes[k] = "ListNested"
+			blockTypes[k] = "ListNested"
 		case GeneratorSetNestedBlock:
-			attributeTypes[k] = "SetNested"
+			blockTypes[k] = "SetNested"
 		case GeneratorSingleNestedBlock:
-			attributeTypes[k] = "SingleNested"
+			blockTypes[k] = "SingleNested"
 		}
 	}
 
-	return attributeTypes, nil
+	return blockTypes, nil
 }
 
 // AttrTypes returns a mapping of block names to string representations of the
 // underlying attr.Type.
 func (g GeneratorBlocks) AttrTypes() (map[string]string, error) {
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g))
-
-	for k := range g {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.SortedKeys()
 
 	attrTypes := make(map[string]string, len(g))
 
@@ -72,14 +58,7 @@ func (g GeneratorBlocks) AttrTypes() (map[string]string, error) {
 // AttrValues returns a mapping of block names to string representations of the
 // underlying attr.Value.
 func (g GeneratorBlocks) AttrValues() (map[string]string, error) {
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g))
-
-	for k := range g {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.SortedKeys()
 
 	attrValues := make(map[string]string, len(g))
 
@@ -124,4 +103,16 @@ func (g GeneratorBlocks) Schema() (string, error) {
 	}
 
 	return s.String(), nil
+}
+
+func (g GeneratorBlocks) SortedKeys() []string {
+	var blockKeys = make([]string, 0, len(g))
+
+	for k := range g {
+		blockKeys = append(blockKeys, k)
+	}
+
+	sort.Strings(blockKeys)
+
+	return blockKeys
 }
