@@ -274,7 +274,6 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 
 	buf.Write(b)
 
-	// TODO: Remove once refactored to Generator<Type>Attribute|Block
 	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
 	var attributeKeys = make([]string, 0, len(g.Attributes))
 
@@ -296,11 +295,6 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 	// Recursively call CustomTypeAndValue() for each attribute that implements
 	// CustomTypeAndValue interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
-		// TODO: Also need to consider how to handle instances in which an associated_external_type
-		// has been defined on a type which does not implement CustomTypeAndValue (e.g., bool)
-		// If To/From methods are going to be hung off custom value type, then will to generate
-		// "wrapped" / embedded types that embed bool in a type that can have To/From methods
-		// added to it.
 		if c, ok := g.Attributes[k].(generatorschema.CustomTypeAndValue); ok {
 			b, err := c.CustomTypeAndValue(k)
 
@@ -308,23 +302,6 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 				return nil, err
 			}
 
-			buf.Write(b)
-
-			continue
-		}
-
-		// TODO: Remove once refactored to Generator<Type>Attribute|Block
-		if a, ok := g.Attributes[k].(generatorschema.Attributes); ok {
-			ng := generatorschema.GeneratorSchema{
-				Attributes: a.GetAttributes(),
-			}
-
-			b, err := ng.ModelObjectHelpersTemplate(k)
-			if err != nil {
-				return nil, err
-			}
-
-			buf.WriteString("\n")
 			buf.Write(b)
 		}
 	}
@@ -337,24 +314,6 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 				return nil, err
 			}
 
-			buf.Write(b)
-
-			continue
-		}
-
-		// TODO: Remove once refactored to Generator<Type>Attribute|Block
-		if a, ok := g.Blocks[k].(generatorschema.Blocks); ok {
-			ng := generatorschema.GeneratorSchema{
-				Attributes: a.GetAttributes(),
-				Blocks:     a.GetBlocks(),
-			}
-
-			b, err := ng.ModelObjectHelpersTemplate(k)
-			if err != nil {
-				return nil, err
-			}
-
-			buf.WriteString("\n")
 			buf.Write(b)
 		}
 	}
