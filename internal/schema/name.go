@@ -7,16 +7,6 @@ import "strings"
 
 type Name string
 
-func (n Name) CamelCaseLCFirst() string {
-	camelCased := n.CamelCase()
-
-	if len(camelCased) < 2 {
-		return strings.ToLower(camelCased)
-	}
-
-	return strings.ToLower(camelCased[:1]) + camelCased[1:]
-}
-
 func (n Name) CamelCase() string {
 	split := strings.Split(string(n), "_")
 
@@ -39,6 +29,16 @@ func (n Name) CamelCase() string {
 	}
 
 	return camelCased
+}
+
+func (n Name) CamelCaseLCFirst() string {
+	camelCased := n.CamelCase()
+
+	if len(camelCased) < 2 {
+		return strings.ToLower(camelCased)
+	}
+
+	return strings.ToLower(camelCased[:1]) + camelCased[1:]
 }
 
 func (n Name) String() string {
