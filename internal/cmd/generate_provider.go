@@ -146,8 +146,8 @@ func generateProviderCode(spec spec.Specification, outputPath, packageName, gene
 		log.Fatal(err)
 	}
 
-	// generate model object helpers code
-	modelsObjectHelpersBytes, err := g.ModelsObjectHelpersBytes()
+	// generate custom type and value types code
+	customTypeValueBytes, err := g.CustomTypeValueBytes()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -170,8 +170,8 @@ func generateProviderCode(spec spec.Specification, outputPath, packageName, gene
 		log.Fatal(err)
 	}
 
-	// format model object helpers code
-	formattedProvidersModelObjectHelpers, err := format.Format(modelsObjectHelpersBytes)
+	// format custom type and value types code
+	formattedCustomTypeValue, err := format.Format(customTypeValueBytes)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -183,7 +183,7 @@ func generateProviderCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// write code
-	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedProvidersModelObjectHelpers, formattedProviderToFrom, outputPath, packageName)
+	err = output.WriteProviders(formattedProvidersSchema, formattedProvidersModels, formattedCustomTypeValue, formattedProviderToFrom, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

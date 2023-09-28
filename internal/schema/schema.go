@@ -244,11 +244,9 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 	return modelFields, nil
 }
 
-// ModelsObjectHelpersBytes iterates over all the attributes and blocks to determine whether
-// any of them implement the Attributes interface (i.e., they are nested attributes or
-// nested blocks). If any of the attributes or blocks fill the Attributes interface,
-// then ModelObjectHelpersTemplate is called.
-func (g GeneratorSchema) ModelsObjectHelpersBytes() ([]byte, error) {
+// CustomTypeValueBytes iterates over all the attributes and blocks to generate code
+// for custom type and value types for use in the schema and data models.
+func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
 	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.

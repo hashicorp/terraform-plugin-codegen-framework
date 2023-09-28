@@ -67,11 +67,11 @@ func (g GeneratorSchemas) ModelsBytes() (map[string][]byte, error) {
 	return modelsBytes, nil
 }
 
-func (g GeneratorSchemas) ModelsObjectHelpersBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) CustomTypeValueBytes() (map[string][]byte, error) {
 	modelsObjectHelpersBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, s := range g.schemas {
-		b, err := s.ModelsObjectHelpersBytes()
+		b, err := s.CustomTypeValueBytes()
 		if err != nil {
 			return nil, err
 		}
