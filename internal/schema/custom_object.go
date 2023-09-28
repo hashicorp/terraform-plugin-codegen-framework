@@ -68,6 +68,8 @@ func (c CustomObjectType) Render() ([]byte, error) {
 			return nil, err
 		}
 
+		buf.Write([]byte("\n"))
+
 		buf.Write(b)
 	}
 
@@ -391,6 +393,8 @@ func (c CustomObjectValue) Render() ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		buf.Write([]byte("\n"))
 
 		buf.Write(b)
 	}

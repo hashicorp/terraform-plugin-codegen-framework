@@ -1,5 +1,3 @@
-
-
 func (v {{.Name}}Value) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
 attrTypes := make(map[string]tftypes.Type, {{len .AttrTypes}})
 

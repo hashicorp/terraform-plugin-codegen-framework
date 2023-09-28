@@ -1,5 +1,4 @@
 
-
 func (t {{.Name}}Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
 if in.Type() == nil {
 return New{{.Name}}ValueNull(), nil
