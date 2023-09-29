@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
 type GeneratorBlocks map[string]GeneratorBlock
@@ -42,13 +40,15 @@ func (g GeneratorBlocks) AttrTypes() (map[string]string, error) {
 	attrTypes := make(map[string]string, len(g))
 
 	for _, k := range blockKeys {
+		name := FrameworkIdentifier(k)
+
 		switch g[k].GeneratorSchemaType() {
 		case GeneratorListNestedBlock:
-			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorSetNestedBlock:
-			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorSingleNestedBlock:
-			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", name.ToPascalCase())
 		}
 	}
 

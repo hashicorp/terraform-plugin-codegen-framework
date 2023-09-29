@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
 type GeneratorAttributes map[string]GeneratorAttribute
@@ -62,6 +60,8 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 	attrTypes := make(map[string]string, len(g))
 
 	for _, k := range attributeKeys {
+		name := FrameworkIdentifier(k)
+
 		switch g[k].GeneratorSchemaType() {
 		case GeneratorBoolAttribute:
 			attrTypes[k] = "basetypes.BoolType{}"
@@ -80,7 +80,7 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 				return nil, fmt.Errorf("%s attribute is a ListType but does not implement Elements interface", k)
 			}
 		case GeneratorListNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorMapAttribute:
 			if e, ok := g[k].(Elements); ok {
 				elemType, err := ElementTypeString(e.ElemType())
@@ -92,7 +92,7 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 				return nil, fmt.Errorf("%s attribute is a MapType but does not implement Elements interface", k)
 			}
 		case GeneratorMapNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypes[k] = fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorNumberAttribute:
 			attrTypes[k] = "basetypes.NumberType{}"
 		case GeneratorObjectAttribute:
@@ -116,9 +116,9 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 				return nil, fmt.Errorf("%s attribute is a SetType but does not implement Elements interface", k)
 			}
 		case GeneratorSetNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorSingleNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k))
+			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", name.ToPascalCase())
 		case GeneratorStringAttribute:
 			attrTypes[k] = "basetypes.StringType{}"
 		}

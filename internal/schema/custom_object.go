@@ -6,12 +6,10 @@ package schema
 import (
 	"bytes"
 	"text/template"
-
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
 type CustomObjectType struct {
-	Name       string
+	Name       FrameworkIdentifier
 	AttrValues map[FrameworkIdentifier]string
 	templates  map[string]string
 }
@@ -38,7 +36,7 @@ func NewCustomObjectType(name string, attrValues map[string]string) CustomObject
 	}
 
 	return CustomObjectType{
-		Name:       name,
+		Name:       FrameworkIdentifier(name),
 		AttrValues: a,
 		templates:  t,
 	}
@@ -88,7 +86,7 @@ func (c CustomObjectType) renderEqual() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -110,7 +108,7 @@ func (c CustomObjectType) renderString() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -132,7 +130,7 @@ func (c CustomObjectType) renderTypable() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -154,7 +152,7 @@ func (c CustomObjectType) renderType() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -177,7 +175,7 @@ func (c CustomObjectType) renderValue() ([]byte, error) {
 		Name       string
 		AttrValues map[FrameworkIdentifier]string
 	}{
-		Name:       model.SnakeCaseToCamelCase(c.Name),
+		Name:       c.Name.ToPascalCase(),
 		AttrValues: c.AttrValues,
 	})
 
@@ -201,7 +199,7 @@ func (c CustomObjectType) renderValueFromObject() ([]byte, error) {
 		Name       string
 		AttrValues map[FrameworkIdentifier]string
 	}{
-		Name:       model.SnakeCaseToCamelCase(c.Name),
+		Name:       c.Name.ToPascalCase(),
 		AttrValues: c.AttrValues,
 	})
 
@@ -224,7 +222,7 @@ func (c CustomObjectType) renderValueFromTerraform() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -246,7 +244,7 @@ func (c CustomObjectType) renderValueMust() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -268,7 +266,7 @@ func (c CustomObjectType) renderValueNull() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -290,7 +288,7 @@ func (c CustomObjectType) renderValueType() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -312,7 +310,7 @@ func (c CustomObjectType) renderValueUnknown() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -323,7 +321,7 @@ func (c CustomObjectType) renderValueUnknown() ([]byte, error) {
 }
 
 type CustomObjectValue struct {
-	Name           string
+	Name           FrameworkIdentifier
 	AttributeTypes map[FrameworkIdentifier]string
 	AttrTypes      map[FrameworkIdentifier]string
 	AttrValues     map[FrameworkIdentifier]string
@@ -363,7 +361,7 @@ func NewCustomObjectValue(name string, attributeTypes, attrTypes, attrValues map
 	}
 
 	return CustomObjectValue{
-		Name:           name,
+		Name:           FrameworkIdentifier(name),
 		AttributeTypes: attribTypes,
 		AttrTypes:      attrTyps,
 		AttrValues:     attrVals,
@@ -415,7 +413,7 @@ func (c CustomObjectValue) renderAttributeTypes() ([]byte, error) {
 		Name      string
 		AttrTypes map[FrameworkIdentifier]string
 	}{
-		Name:      model.SnakeCaseToCamelCase(c.Name),
+		Name:      c.Name.ToPascalCase(),
 		AttrTypes: c.AttrTypes,
 	})
 
@@ -439,7 +437,7 @@ func (c CustomObjectValue) renderEqual() ([]byte, error) {
 		Name       string
 		AttrValues map[FrameworkIdentifier]string
 	}{
-		Name:       model.SnakeCaseToCamelCase(c.Name),
+		Name:       c.Name.ToPascalCase(),
 		AttrValues: c.AttrValues,
 	})
 
@@ -462,7 +460,7 @@ func (c CustomObjectValue) renderIsNull() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -484,7 +482,7 @@ func (c CustomObjectValue) renderIsUnknown() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -506,7 +504,7 @@ func (c CustomObjectValue) renderString() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -530,7 +528,7 @@ func (c CustomObjectValue) renderToObjectValue() ([]byte, error) {
 		AttributeTypes map[FrameworkIdentifier]string
 		AttrTypes      map[FrameworkIdentifier]string
 	}{
-		Name:           model.SnakeCaseToCamelCase(c.Name),
+		Name:           c.Name.ToPascalCase(),
 		AttributeTypes: c.AttributeTypes,
 		AttrTypes:      c.AttrTypes,
 	})
@@ -555,7 +553,7 @@ func (c CustomObjectValue) renderToTerraformValue() ([]byte, error) {
 		Name      string
 		AttrTypes map[FrameworkIdentifier]string
 	}{
-		Name:      model.SnakeCaseToCamelCase(c.Name),
+		Name:      c.Name.ToPascalCase(),
 		AttrTypes: c.AttrTypes,
 	})
 
@@ -578,7 +576,7 @@ func (c CustomObjectValue) renderType() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -600,7 +598,7 @@ func (c CustomObjectValue) renderValuable() ([]byte, error) {
 	err = t.Execute(&buf, struct {
 		Name string
 	}{
-		Name: model.SnakeCaseToCamelCase(c.Name),
+		Name: c.Name.ToPascalCase(),
 	})
 
 	if err != nil {
@@ -623,7 +621,7 @@ func (c CustomObjectValue) renderValue() ([]byte, error) {
 		Name       string
 		AttrValues map[FrameworkIdentifier]string
 	}{
-		Name:       model.SnakeCaseToCamelCase(c.Name),
+		Name:       c.Name.ToPascalCase(),
 		AttrValues: c.AttrValues,
 	})
 

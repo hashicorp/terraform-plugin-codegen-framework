@@ -147,7 +147,7 @@ func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([
 		Blocks        string
 		Imports       string
 	}{
-		Name:            model.SnakeCaseToCamelCase(name),
+		Name:            FrameworkIdentifier(name).ToPascalCase(),
 		GeneratorSchema: g,
 		PackageName:     packageName,
 		GeneratorType:   generatorType,
@@ -183,7 +183,7 @@ func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 	}
 
 	m := model.Model{
-		Name:   model.SnakeCaseToCamelCase(name),
+		Name:   FrameworkIdentifier(name).ToPascalCase(),
 		Fields: fields,
 	}
 
@@ -329,17 +329,19 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		sort.Strings(attributeAttributeKeys)
 
 		for _, x := range attributeAttributeKeys {
+			name := FrameworkIdentifier(x)
+
 			switch attributeAttributes[x].GeneratorSchemaType() {
 			case GeneratorBoolAttribute:
-				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, boolObjectField(name.ToPascalCase()))
 			case GeneratorFloat64Attribute:
-				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, float64ObjectField(name.ToPascalCase()))
 			case GeneratorInt64Attribute:
-				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, int64ObjectField(name.ToPascalCase()))
 			case GeneratorNumberAttribute:
-				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, numberObjectField(name.ToPascalCase()))
 			case GeneratorStringAttribute:
-				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, stringObjectField(name.ToPascalCase()))
 			}
 		}
 
@@ -382,10 +384,10 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			TypeName      string
 			Fields        []objectField
 		}{
-			Name:          model.SnakeCaseToCamelCase(k),
+			Name:          FrameworkIdentifier(k).ToPascalCase(),
 			Type:          assocExtType.Type(),
 			TypeReference: assocExtType.TypeReference(),
-			TypeName:      model.DotNotationToCamelCase(assocExtType.TypeReference()),
+			TypeName:      dotNotationToPascalCase(assocExtType.TypeReference()),
 			Fields:        fields,
 		}
 
@@ -441,17 +443,19 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		sort.Strings(blockAttributeKeys)
 
 		for _, x := range blockAttributeKeys {
+			name := FrameworkIdentifier(x)
+
 			switch blockAttributes[x].GeneratorSchemaType() {
 			case GeneratorBoolAttribute:
-				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, boolObjectField(name.ToPascalCase()))
 			case GeneratorFloat64Attribute:
-				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, float64ObjectField(name.ToPascalCase()))
 			case GeneratorInt64Attribute:
-				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, int64ObjectField(name.ToPascalCase()))
 			case GeneratorNumberAttribute:
-				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, numberObjectField(name.ToPascalCase()))
 			case GeneratorStringAttribute:
-				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, stringObjectField(name.ToPascalCase()))
 			}
 		}
 
@@ -489,10 +493,10 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			TypeName      string
 			Fields        []objectField
 		}{
-			Name:          model.SnakeCaseToCamelCase(k),
+			Name:          FrameworkIdentifier(k).ToPascalCase(),
 			Type:          assocExtType.Type(),
 			TypeReference: assocExtType.TypeReference(),
-			TypeName:      model.DotNotationToCamelCase(assocExtType.TypeReference()),
+			TypeName:      dotNotationToPascalCase(assocExtType.TypeReference()),
 			Fields:        fields,
 		}
 
@@ -671,4 +675,28 @@ func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 	}
 
 	return strings.Join(attrTypesStr, ",\n"), nil
+}
+
+func dotNotationToPascalCase(input string) string {
+	inputSplit := strings.Split(input, ".")
+
+	var ucName string
+
+	for _, v := range inputSplit {
+		if len(v) < 1 {
+			continue
+		}
+
+		firstChar := v[0:1]
+		ucFirstChar := strings.ToUpper(firstChar)
+
+		if len(v) < 2 {
+			ucName += ucFirstChar
+			continue
+		}
+
+		ucName += ucFirstChar + v[1:]
+	}
+
+	return ucName
 }
