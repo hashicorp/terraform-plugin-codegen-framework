@@ -100,7 +100,7 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 	return true
 }
 
-func (g GeneratorMapAttribute) Schema(name string) (string, error) {
+func (g GeneratorMapAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                  string
 		ElementType           string
@@ -108,7 +108,7 @@ func (g GeneratorMapAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                  name,
+		Name:                  name.ToString(),
 		ElementType:           generatorschema.GetElementType(g.ElementType),
 		GeneratorMapAttribute: g,
 	}

@@ -128,7 +128,7 @@ func listDefault(d *specschema.ListDefault) string {
 	return ""
 }
 
-func (g GeneratorListAttribute) Schema(name string) (string, error) {
+func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                   string
 		Default                string
@@ -137,7 +137,7 @@ func (g GeneratorListAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                   name,
+		Name:                   name.ToString(),
 		Default:                listDefault(g.Default),
 		ElementType:            generatorschema.GetElementType(g.ElementType),
 		GeneratorListAttribute: g,

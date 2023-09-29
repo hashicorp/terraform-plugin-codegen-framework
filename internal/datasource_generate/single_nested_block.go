@@ -104,7 +104,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 	return g.SingleNestedBlock.Equal(h.SingleNestedBlock)
 }
 
-func (g GeneratorSingleNestedBlock) Schema(name string) (string, error) {
+func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type block struct {
 		Name                       string
 		TypeValueName              string
@@ -126,8 +126,8 @@ func (g GeneratorSingleNestedBlock) Schema(name string) (string, error) {
 	}
 
 	b := block{
-		Name:                       name,
-		TypeValueName:              model.SnakeCaseToCamelCase(name),
+		Name:                       name.ToString(),
+		TypeValueName:              name.ToPascalCase(),
 		Attributes:                 attributesStr,
 		Blocks:                     blocksStr,
 		GeneratorSingleNestedBlock: g,

@@ -102,7 +102,7 @@ func objectDefault(d *specschema.ObjectDefault) string {
 	return ""
 }
 
-func (g GeneratorObjectAttribute) Schema(name string) (string, error) {
+func (g GeneratorObjectAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                     string
 		AttributeTypes           string
@@ -111,7 +111,7 @@ func (g GeneratorObjectAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                     name,
+		Name:                     name.ToString(),
 		Default:                  objectDefault(g.Default),
 		AttributeTypes:           generatorschema.GetAttrTypes(g.AttributeTypes),
 		GeneratorObjectAttribute: g,

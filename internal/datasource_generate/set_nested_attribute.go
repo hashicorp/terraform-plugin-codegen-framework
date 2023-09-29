@@ -86,7 +86,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 	return g.SetNestedAttribute.Equal(h.SetNestedAttribute)
 }
 
-func (g GeneratorSetNestedAttribute) Schema(name string) (string, error) {
+func (g GeneratorSetNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                        string
 		TypeValueName               string
@@ -101,8 +101,8 @@ func (g GeneratorSetNestedAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                        name,
-		TypeValueName:               model.SnakeCaseToCamelCase(name),
+		Name:                        name.ToString(),
+		TypeValueName:               name.ToPascalCase(),
 		Attributes:                  attributesStr,
 		GeneratorSetNestedAttribute: g,
 	}

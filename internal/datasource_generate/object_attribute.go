@@ -71,7 +71,7 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	return g.ObjectAttribute.Equal(h.ObjectAttribute)
 }
 
-func (g GeneratorObjectAttribute) Schema(name string) (string, error) {
+func (g GeneratorObjectAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                     string
 		AttributeTypes           string
@@ -79,7 +79,7 @@ func (g GeneratorObjectAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                     name,
+		Name:                     name.ToString(),
 		AttributeTypes:           generatorschema.GetAttrTypes(g.AttributeTypes),
 		GeneratorObjectAttribute: g,
 	}

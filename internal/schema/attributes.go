@@ -185,7 +185,7 @@ func (g GeneratorAttributes) Schema() (string, error) {
 			continue
 		}
 
-		str, err := g[k].Schema(k)
+		str, err := g[k].Schema(FrameworkIdentifier(k))
 
 		if err != nil {
 			return "", err

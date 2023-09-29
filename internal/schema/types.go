@@ -35,7 +35,7 @@ type GeneratorAttribute interface {
 	GeneratorSchemaType() Type
 	Imports() *Imports
 	ModelField(FrameworkIdentifier) (model.Field, error)
-	Schema(string) (string, error)
+	Schema(FrameworkIdentifier) (string, error)
 }
 
 type GeneratorBlock interface {
@@ -43,7 +43,7 @@ type GeneratorBlock interface {
 	GeneratorSchemaType() Type
 	Imports() *Imports
 	ModelField(FrameworkIdentifier) (model.Field, error)
-	Schema(string) (string, error)
+	Schema(FrameworkIdentifier) (string, error)
 }
 
 type GeneratorAttributeAssocExtType interface {
