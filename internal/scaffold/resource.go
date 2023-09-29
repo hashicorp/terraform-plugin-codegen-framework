@@ -7,11 +7,11 @@ import (
 	"bytes"
 	"text/template"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 // ResourceBytes will create scaffolding Go code bytes for a Terraform Plugin Framework resource
-func ResourceBytes(resourceIdentifier util.FrameworkIdentifier, packageName string) ([]byte, error) {
+func ResourceBytes(resourceIdentifier schema.FrameworkIdentifier, packageName string) ([]byte, error) {
 	t, err := template.New("resource_scaffold").Parse(resourceScaffoldGoTemplate)
 	if err != nil {
 		return nil, err

@@ -16,11 +16,11 @@ return true
 
 {{range $key, $value := .AttrValues }}
 {{- if eq $value "baseTypes.BoolValue" "baseTypes.Float64Value" "baseTypes.Int64Value" "baseTypes.NumberValue" "baseTypes.StringValue"}}
-if v.{{$key.CamelCase}} != other.{{$key.CamelCase}} {
+if v.{{$key.ToPascalCase}} != other.{{$key.ToPascalCase}} {
 return false
 }
 {{- else}}
-if !v.{{$key.CamelCase}}.Equal(other.{{$key.CamelCase}}) {
+if !v.{{$key.ToPascalCase}}.Equal(other.{{$key.ToPascalCase}}) {
 return false
 }
 {{- end}}

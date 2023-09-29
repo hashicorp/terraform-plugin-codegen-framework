@@ -16,7 +16,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/scaffold"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type ScaffoldDataSourceCommand struct {
@@ -105,7 +105,7 @@ func (cmd *ScaffoldDataSourceCommand) runInternal(_ context.Context) error {
 		return errors.New("--name flag is required")
 	}
 
-	dataSourceIdentifier := util.FrameworkIdentifier(cmd.flagDataSourceNameSnake)
+	dataSourceIdentifier := schema.FrameworkIdentifier(cmd.flagDataSourceNameSnake)
 	if !dataSourceIdentifier.Valid() {
 		return fmt.Errorf("'%s' is not a valid Terraform data source identifier", cmd.flagDataSourceNameSnake)
 	}

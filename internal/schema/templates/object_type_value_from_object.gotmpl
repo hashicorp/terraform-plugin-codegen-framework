@@ -7,7 +7,7 @@ state := attr.ValueStateKnown
 attributes := in.Attributes()
 
 {{range $key, $value := .AttrValues }}
-{{$key.CamelCaseLCFirst}}, ok := attributes["{{$key}}"]
+{{$key.ToCamelCase}}, ok := attributes["{{$key}}"]
 
 if !ok {
 diags.AddError(
@@ -17,22 +17,22 @@ diags.AddError(
 return nil, diags
 }
 
-{{$key.CamelCaseLCFirst}}Val, ok := {{$key.CamelCaseLCFirst}}.({{$value}})
+{{$key.ToCamelCase}}Val, ok := {{$key.ToCamelCase}}.({{$value}})
 
 if !ok {
 diags.AddError(
 "Attribute Wrong Type",
-fmt.Sprintf(`{{$key}} expected to be {{$value}}, was: %T`, {{$key.CamelCaseLCFirst}}))
+fmt.Sprintf(`{{$key}} expected to be {{$value}}, was: %T`, {{$key.ToCamelCase}}))
 }
 
-if {{$key.CamelCaseLCFirst}}Val.IsUnknown() {
+if {{$key.ToCamelCase}}Val.IsUnknown() {
 state = attr.ValueStateUnknown
 }
 {{end}}
 
 return {{.Name}}Value{
 {{- range $key, $value := .AttrValues }}
-{{$key.CamelCase}}: {{$key.CamelCaseLCFirst}}Val,
+{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
 {{- end}}
 state: state,
 }, diags

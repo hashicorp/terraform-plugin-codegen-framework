@@ -8,53 +8,53 @@ func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValu
 {{- else if eq $value "SetNested"}}
 {{- $typesType := "Set"}}
 {{- end}}
-{{$key.CamelCaseLCFirst}} := types.{{$typesType}}ValueMust(
-{{$key.CamelCase}}Type{
+{{$key.ToCamelCase}} := types.{{$typesType}}ValueMust(
+{{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$key.CamelCase}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 },
 },
-v.{{$key.CamelCase}}.Elements(),
+v.{{$key.ToPascalCase}}.Elements(),
 )
 
-if v.{{$key.CamelCase}}.IsNull() {
-{{$key.CamelCaseLCFirst}} = types.{{$typesType}}Null(
-{{$key.CamelCase}}Type{
+if v.{{$key.ToPascalCase}}.IsNull() {
+{{$key.ToCamelCase}} = types.{{$typesType}}Null(
+{{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$key.CamelCase}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 },
 },
 )
 }
 
-if v.{{$key.CamelCase}}.IsUnknown() {
-{{$key.CamelCaseLCFirst}} = types.{{$typesType}}Unknown(
-{{$key.CamelCase}}Type{
+if v.{{$key.ToPascalCase}}.IsUnknown() {
+{{$key.ToCamelCase}} = types.{{$typesType}}Unknown(
+{{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$key.CamelCase}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 },
 },
 )
 }
 {{else if eq $value "SingleNested"}}
-var {{$key.CamelCaseLCFirst}} basetypes.ObjectValue
+var {{$key.ToCamelCase}} basetypes.ObjectValue
 
-if v.{{$key.CamelCase}}.IsNull() {
-{{$key.CamelCaseLCFirst}} = types.ObjectNull(
-{{$key.CamelCase}}Value{}.AttributeTypes(ctx),
+if v.{{$key.ToPascalCase}}.IsNull() {
+{{$key.ToCamelCase}} = types.ObjectNull(
+{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 )
 }
 
-if v.{{$key.CamelCase}}.IsUnknown() {
-{{$key.CamelCaseLCFirst}} = types.ObjectUnknown(
-{{$key.CamelCase}}Value{}.AttributeTypes(ctx),
+if v.{{$key.ToPascalCase}}.IsUnknown() {
+{{$key.ToCamelCase}} = types.ObjectUnknown(
+{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 )
 }
 
-if !v.{{$key.CamelCase}}.IsNull() && !v.{{$key.CamelCase}}.IsUnknown() {
-{{$key.CamelCaseLCFirst}} = types.ObjectValueMust(
-{{$key.CamelCase}}Value{}.AttributeTypes(ctx),
-v.{{$key.CamelCase}}.Attributes(),
+if !v.{{$key.ToPascalCase}}.IsNull() && !v.{{$key.ToPascalCase}}.IsUnknown() {
+{{$key.ToCamelCase}} = types.ObjectValueMust(
+{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+v.{{$key.ToPascalCase}}.Attributes(),
 )
 }
 {{end}}
@@ -68,9 +68,9 @@ map[string]attr.Type{
 map[string]attr.Value{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested" "SingleNested"}}
-"{{$key}}": {{$key.CamelCaseLCFirst}},
+"{{$key}}": {{$key.ToCamelCase}},
 {{- else}}
-"{{$key}}": v.{{$key.CamelCase}},
+"{{$key}}": v.{{$key.ToPascalCase}},
 {{- end}}
 {{- end}}
 })

@@ -1,19 +1,19 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package util_test
+package schema_test
 
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestFrameworkIdentifier_Valid(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		identifier util.FrameworkIdentifier
+		identifier schema.FrameworkIdentifier
 		want       bool
 	}{
 		"invalid - empty": {
@@ -70,7 +70,7 @@ func TestFrameworkIdentifier_ToCamelCase(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		identifier util.FrameworkIdentifier
+		identifier schema.FrameworkIdentifier
 		want       string
 	}{
 		"lowercase alphabet": {
@@ -111,7 +111,7 @@ func TestFrameworkIdentifier_ToPascalCase(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		identifier util.FrameworkIdentifier
+		identifier schema.FrameworkIdentifier
 		want       string
 	}{
 		"lowercase alphabet": {

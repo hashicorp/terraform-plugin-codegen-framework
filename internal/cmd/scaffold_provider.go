@@ -16,7 +16,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/scaffold"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type ScaffoldProviderCommand struct {
@@ -105,7 +105,7 @@ func (cmd *ScaffoldProviderCommand) runInternal(_ context.Context) error {
 		return errors.New("--name flag is required")
 	}
 
-	providerIdentifier := util.FrameworkIdentifier(cmd.flagProviderNameSnake)
+	providerIdentifier := schema.FrameworkIdentifier(cmd.flagProviderNameSnake)
 	if !providerIdentifier.Valid() {
 		return fmt.Errorf("'%s' is not a valid Terraform provider identifier", cmd.flagProviderNameSnake)
 	}

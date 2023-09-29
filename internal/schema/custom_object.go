@@ -12,7 +12,7 @@ import (
 
 type CustomObjectType struct {
 	Name       string
-	AttrValues map[Name]string
+	AttrValues map[FrameworkIdentifier]string
 	templates  map[string]string
 }
 
@@ -31,10 +31,10 @@ func NewCustomObjectType(name string, attrValues map[string]string) CustomObject
 		"valueUnknown":       ObjectTypeValueUnknownTemplate,
 	}
 
-	a := make(map[Name]string, len(attrValues))
+	a := make(map[FrameworkIdentifier]string, len(attrValues))
 
 	for k, v := range attrValues {
-		a[Name(k)] = v
+		a[FrameworkIdentifier(k)] = v
 	}
 
 	return CustomObjectType{
@@ -175,7 +175,7 @@ func (c CustomObjectType) renderValue() ([]byte, error) {
 
 	err = t.Execute(&buf, struct {
 		Name       string
-		AttrValues map[Name]string
+		AttrValues map[FrameworkIdentifier]string
 	}{
 		Name:       model.SnakeCaseToCamelCase(c.Name),
 		AttrValues: c.AttrValues,
@@ -199,7 +199,7 @@ func (c CustomObjectType) renderValueFromObject() ([]byte, error) {
 
 	err = t.Execute(&buf, struct {
 		Name       string
-		AttrValues map[Name]string
+		AttrValues map[FrameworkIdentifier]string
 	}{
 		Name:       model.SnakeCaseToCamelCase(c.Name),
 		AttrValues: c.AttrValues,
@@ -324,9 +324,9 @@ func (c CustomObjectType) renderValueUnknown() ([]byte, error) {
 
 type CustomObjectValue struct {
 	Name           string
-	AttributeTypes map[Name]string
-	AttrTypes      map[Name]string
-	AttrValues     map[Name]string
+	AttributeTypes map[FrameworkIdentifier]string
+	AttrTypes      map[FrameworkIdentifier]string
+	AttrValues     map[FrameworkIdentifier]string
 	templates      map[string]string
 }
 
@@ -344,22 +344,22 @@ func NewCustomObjectValue(name string, attributeTypes, attrTypes, attrValues map
 		"value":            ObjectValueValueTemplate,
 	}
 
-	attribTypes := make(map[Name]string, len(attributeTypes))
+	attribTypes := make(map[FrameworkIdentifier]string, len(attributeTypes))
 
 	for k, v := range attributeTypes {
-		attribTypes[Name(k)] = v
+		attribTypes[FrameworkIdentifier(k)] = v
 	}
 
-	attrTyps := make(map[Name]string, len(attrTypes))
+	attrTyps := make(map[FrameworkIdentifier]string, len(attrTypes))
 
 	for k, v := range attrTypes {
-		attrTyps[Name(k)] = v
+		attrTyps[FrameworkIdentifier(k)] = v
 	}
 
-	attrVals := make(map[Name]string, len(attrValues))
+	attrVals := make(map[FrameworkIdentifier]string, len(attrValues))
 
 	for k, v := range attrValues {
-		attrVals[Name(k)] = v
+		attrVals[FrameworkIdentifier(k)] = v
 	}
 
 	return CustomObjectValue{
@@ -413,7 +413,7 @@ func (c CustomObjectValue) renderAttributeTypes() ([]byte, error) {
 
 	err = t.Execute(&buf, struct {
 		Name      string
-		AttrTypes map[Name]string
+		AttrTypes map[FrameworkIdentifier]string
 	}{
 		Name:      model.SnakeCaseToCamelCase(c.Name),
 		AttrTypes: c.AttrTypes,
@@ -437,7 +437,7 @@ func (c CustomObjectValue) renderEqual() ([]byte, error) {
 
 	err = t.Execute(&buf, struct {
 		Name       string
-		AttrValues map[Name]string
+		AttrValues map[FrameworkIdentifier]string
 	}{
 		Name:       model.SnakeCaseToCamelCase(c.Name),
 		AttrValues: c.AttrValues,
@@ -527,8 +527,8 @@ func (c CustomObjectValue) renderToObjectValue() ([]byte, error) {
 
 	err = t.Execute(&buf, struct {
 		Name           string
-		AttributeTypes map[Name]string
-		AttrTypes      map[Name]string
+		AttributeTypes map[FrameworkIdentifier]string
+		AttrTypes      map[FrameworkIdentifier]string
 	}{
 		Name:           model.SnakeCaseToCamelCase(c.Name),
 		AttributeTypes: c.AttributeTypes,
@@ -553,7 +553,7 @@ func (c CustomObjectValue) renderToTerraformValue() ([]byte, error) {
 
 	err = t.Execute(&buf, struct {
 		Name      string
-		AttrTypes map[Name]string
+		AttrTypes map[FrameworkIdentifier]string
 	}{
 		Name:      model.SnakeCaseToCamelCase(c.Name),
 		AttrTypes: c.AttrTypes,
@@ -621,7 +621,7 @@ func (c CustomObjectValue) renderValue() ([]byte, error) {
 
 	err = t.Execute(&buf, struct {
 		Name       string
-		AttrValues map[Name]string
+		AttrValues map[FrameworkIdentifier]string
 	}{
 		Name:       model.SnakeCaseToCamelCase(c.Name),
 		AttrValues: c.AttrValues,
