@@ -88,10 +88,10 @@ func (g GeneratorFloat64Attribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorFloat64Attribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorFloat64Attribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.Float64ValueType,
 	}
 

@@ -202,7 +202,7 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 			continue
 		}
 
-		modelField, err := g.Attributes[k].ModelField(k)
+		modelField, err := g.Attributes[k].ModelField(FrameworkIdentifier(k))
 
 		if err != nil {
 			return nil, err
@@ -218,7 +218,7 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 			continue
 		}
 
-		modelField, err := g.Blocks[k].ModelField(k)
+		modelField, err := g.Blocks[k].ModelField(FrameworkIdentifier(k))
 
 		if err != nil {
 			return nil, err

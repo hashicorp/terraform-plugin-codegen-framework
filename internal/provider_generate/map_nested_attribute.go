@@ -126,10 +126,10 @@ func (g GeneratorMapNestedAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorMapNestedAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorMapNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.MapValueType,
 	}
 

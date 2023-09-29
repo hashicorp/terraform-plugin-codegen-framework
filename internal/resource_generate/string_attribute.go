@@ -134,10 +134,10 @@ func (g GeneratorStringAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorStringAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorStringAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.StringValueType,
 	}
 

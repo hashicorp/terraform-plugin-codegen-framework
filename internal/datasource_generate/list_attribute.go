@@ -132,10 +132,10 @@ func (g GeneratorListAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorListAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorListAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.ListValueType,
 	}
 

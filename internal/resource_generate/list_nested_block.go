@@ -153,10 +153,10 @@ func (g GeneratorListNestedBlock) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorListNestedBlock) ModelField(name string) (model.Field, error) {
+func (g GeneratorListNestedBlock) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.ListValueType,
 	}
 

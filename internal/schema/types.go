@@ -34,7 +34,7 @@ type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	GeneratorSchemaType() Type
 	Imports() *Imports
-	ModelField(string) (model.Field, error)
+	ModelField(FrameworkIdentifier) (model.Field, error)
 	Schema(string) (string, error)
 }
 
@@ -42,7 +42,7 @@ type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	GeneratorSchemaType() Type
 	Imports() *Imports
-	ModelField(string) (model.Field, error)
+	ModelField(FrameworkIdentifier) (model.Field, error)
 	Schema(string) (string, error)
 }
 

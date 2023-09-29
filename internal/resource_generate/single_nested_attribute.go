@@ -149,11 +149,11 @@ func (g GeneratorSingleNestedAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorSingleNestedAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorSingleNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
-		ValueType: model.SnakeCaseToCamelCase(name) + "Value",
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
+		ValueType: name.ToPascalCase() + "Value",
 	}
 
 	if g.CustomType != nil {

@@ -50,3 +50,10 @@ func (identifier FrameworkIdentifier) ToPascalCase() string {
 		return strings.ToUpper(strings.Replace(s, "_", "", -1))
 	})
 }
+
+// ToString returns the FrameworkIdentifier as a string without any formatting.
+// Example:
+//   - example_resource_thing -> example_resource_thing
+func (identifier FrameworkIdentifier) ToString() string {
+	return string(identifier)
+}
