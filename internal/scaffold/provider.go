@@ -11,7 +11,7 @@ import (
 )
 
 // ProviderBytes will create scaffolding Go code bytes for a Terraform Plugin Framework provider
-func ProviderBytes(providerIdentifier util.FrameworkIdentifer, packageName string) ([]byte, error) {
+func ProviderBytes(providerIdentifier util.FrameworkIdentifier, packageName string) ([]byte, error) {
 	t, err := template.New("provider_scaffold").Parse(providerScaffoldGoTemplate)
 	if err != nil {
 		return nil, err

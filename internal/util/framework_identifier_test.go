@@ -13,7 +13,7 @@ func TestFrameworkIdentifier_Valid(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		identifier util.FrameworkIdentifer
+		identifier util.FrameworkIdentifier
 		want       bool
 	}{
 		"invalid - empty": {
@@ -70,7 +70,7 @@ func TestFrameworkIdentifier_ToCamelCase(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		identifier util.FrameworkIdentifer
+		identifier util.FrameworkIdentifier
 		want       string
 	}{
 		"lowercase alphabet": {
@@ -111,7 +111,7 @@ func TestFrameworkIdentifier_ToPascalCase(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		identifier util.FrameworkIdentifer
+		identifier util.FrameworkIdentifier
 		want       string
 	}{
 		"lowercase alphabet": {

@@ -12,10 +12,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/mitchellh/cli"
+
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/scaffold"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
-	"github.com/mitchellh/cli"
 )
 
 type ScaffoldResourceCommand struct {
@@ -104,7 +105,7 @@ func (cmd *ScaffoldResourceCommand) runInternal(_ context.Context) error {
 		return errors.New("--name flag is required")
 	}
 
-	resourceIdentifier := util.FrameworkIdentifer(cmd.flagResourceNameSnake)
+	resourceIdentifier := util.FrameworkIdentifier(cmd.flagResourceNameSnake)
 	if !resourceIdentifier.Valid() {
 		return fmt.Errorf("'%s' is not a valid Terraform resource identifier", cmd.flagResourceNameSnake)
 	}
