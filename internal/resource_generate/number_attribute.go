@@ -90,7 +90,7 @@ func numberDefault(d *specschema.NumberDefault) string {
 	return ""
 }
 
-func (g GeneratorNumberAttribute) Schema(name string) (string, error) {
+func (g GeneratorNumberAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                     string
 		Default                  string
@@ -98,7 +98,7 @@ func (g GeneratorNumberAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                     name,
+		Name:                     name.ToString(),
 		Default:                  numberDefault(g.Default),
 		GeneratorNumberAttribute: g,
 	}
@@ -122,10 +122,10 @@ func (g GeneratorNumberAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorNumberAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorNumberAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.NumberValueType,
 	}
 

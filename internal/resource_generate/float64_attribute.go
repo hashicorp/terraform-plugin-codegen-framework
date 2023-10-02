@@ -103,7 +103,7 @@ func float64Default(d *specschema.Float64Default) string {
 	return ""
 }
 
-func (g GeneratorFloat64Attribute) Schema(name string) (string, error) {
+func (g GeneratorFloat64Attribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                      string
 		Default                   string
@@ -111,7 +111,7 @@ func (g GeneratorFloat64Attribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                      name,
+		Name:                      name.ToString(),
 		Default:                   float64Default(g.Default),
 		GeneratorFloat64Attribute: g,
 	}
@@ -135,10 +135,10 @@ func (g GeneratorFloat64Attribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorFloat64Attribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorFloat64Attribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.Float64ValueType,
 	}
 

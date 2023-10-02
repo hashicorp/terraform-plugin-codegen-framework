@@ -4,6 +4,7 @@
 package resource_generate
 
 import (
+	"bytes"
 	"strings"
 	"text/template"
 
@@ -113,7 +114,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 	return g.SingleNestedBlock.Equal(h.SingleNestedBlock)
 }
 
-func (g GeneratorSingleNestedBlock) Schema(name string) (string, error) {
+func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type block struct {
 		Name                       string
 		TypeValueName              string
@@ -135,8 +136,8 @@ func (g GeneratorSingleNestedBlock) Schema(name string) (string, error) {
 	}
 
 	b := block{
-		Name:                       name,
-		TypeValueName:              model.SnakeCaseToCamelCase(name),
+		Name:                       name.ToString(),
+		TypeValueName:              name.ToPascalCase(),
 		Attributes:                 attributesStr,
 		Blocks:                     blocksStr,
 		GeneratorSingleNestedBlock: g,
@@ -161,11 +162,11 @@ func (g GeneratorSingleNestedBlock) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorSingleNestedBlock) ModelField(name string) (model.Field, error) {
+func (g GeneratorSingleNestedBlock) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
-		ValueType: model.SnakeCaseToCamelCase(name) + "Value",
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
+		ValueType: name.ToPascalCase() + "Value",
 	}
 
 	if g.CustomType != nil {
@@ -181,4 +182,126 @@ func (g GeneratorSingleNestedBlock) GetAttributes() generatorschema.GeneratorAtt
 
 func (g GeneratorSingleNestedBlock) GetBlocks() generatorschema.GeneratorBlocks {
 	return g.Blocks
+}
+
+func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, error) {
+	var buf bytes.Buffer
+
+	attributeAttrValues, err := g.Attributes.AttrValues()
+
+	if err != nil {
+		return nil, err
+	}
+
+	blockAttrValues, err := g.Blocks.AttrValues()
+
+	if err != nil {
+		return nil, err
+	}
+
+	attributesBlocksAttrValues := make(map[string]string, len(g.Attributes)+len(g.Blocks))
+
+	for k, v := range attributeAttrValues {
+		attributesBlocksAttrValues[k] = v
+	}
+
+	for k, v := range blockAttrValues {
+		attributesBlocksAttrValues[k] = v
+	}
+
+	objectType := generatorschema.NewCustomObjectType(name, attributesBlocksAttrValues)
+
+	b, err := objectType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	attributeTypes, err := g.Attributes.AttributeTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	blockTypes, err := g.Blocks.BlockTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	attributesBlocksTypes := make(map[string]string, len(g.Attributes)+len(g.Blocks))
+
+	for k, v := range attributeTypes {
+		attributesBlocksTypes[k] = v
+	}
+
+	for k, v := range blockTypes {
+		attributesBlocksTypes[k] = v
+	}
+
+	attributeAttrTypes, err := g.Attributes.AttrTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	blockAttrTypes, err := g.Blocks.AttrTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	attributesBlocksAttrTypes := make(map[string]string, len(g.Attributes)+len(g.Blocks))
+
+	for k, v := range attributeAttrTypes {
+		attributesBlocksAttrTypes[k] = v
+	}
+
+	for k, v := range blockAttrTypes {
+		attributesBlocksAttrTypes[k] = v
+	}
+
+	objectValue := generatorschema.NewCustomObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues)
+
+	b, err = objectValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	attributeKeys := g.Attributes.SortedKeys()
+
+	blockKeys := g.Blocks.SortedKeys()
+
+	// Recursively call CustomTypeAndValue() for each attribute that implements
+	// CustomTypeAndValue interface (i.e, nested attributes).
+	for _, k := range attributeKeys {
+		if c, ok := g.Attributes[k].(generatorschema.CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+		}
+	}
+
+	for _, k := range blockKeys {
+		if c, ok := g.Blocks[k].(generatorschema.CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+		}
+	}
+
+	return buf.Bytes(), nil
 }

@@ -4,6 +4,7 @@
 package provider_generate
 
 import (
+	"bytes"
 	"strings"
 	"text/template"
 
@@ -85,7 +86,7 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 	return g.ListNestedAttribute.Equal(h.ListNestedAttribute)
 }
 
-func (g GeneratorListNestedAttribute) Schema(name string) (string, error) {
+func (g GeneratorListNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                         string
 		TypeValueName                string
@@ -100,8 +101,8 @@ func (g GeneratorListNestedAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                         name,
-		TypeValueName:                model.SnakeCaseToCamelCase(name),
+		Name:                         name.ToString(),
+		TypeValueName:                name.ToPascalCase(),
 		Attributes:                   attributesStr,
 		GeneratorListNestedAttribute: g,
 	}
@@ -125,10 +126,10 @@ func (g GeneratorListNestedAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorListNestedAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorListNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.ListValueType,
 	}
 
@@ -141,4 +142,64 @@ func (g GeneratorListNestedAttribute) ModelField(name string) (model.Field, erro
 
 func (g GeneratorListNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
 	return g.NestedObject.Attributes
+}
+
+func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+	var buf bytes.Buffer
+
+	attributeAttrValues, err := g.NestedObject.Attributes.AttrValues()
+
+	if err != nil {
+		return nil, err
+	}
+
+	objectType := generatorschema.NewCustomObjectType(name, attributeAttrValues)
+
+	b, err := objectType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	attributeTypes, err := g.NestedObject.Attributes.AttributeTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	attributeAttrTypes, err := g.NestedObject.Attributes.AttrTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	objectValue := generatorschema.NewCustomObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues)
+
+	b, err = objectValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	attributeKeys := g.NestedObject.Attributes.SortedKeys()
+
+	// Recursively call CustomTypeAndValue() for each attribute that implements
+	// CustomTypeAndValue interface (i.e, nested attributes).
+	for _, k := range attributeKeys {
+		if c, ok := g.NestedObject.Attributes[k].(generatorschema.CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+		}
+	}
+
+	return buf.Bytes(), nil
 }

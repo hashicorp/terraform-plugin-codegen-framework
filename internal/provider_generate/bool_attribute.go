@@ -58,14 +58,14 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	return g.BoolAttribute.Equal(h.BoolAttribute)
 }
 
-func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
+func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                   string
 		GeneratorBoolAttribute GeneratorBoolAttribute
 	}
 
 	a := attribute{
-		Name:                   name,
+		Name:                   name.ToString(),
 		GeneratorBoolAttribute: g,
 	}
 
@@ -88,10 +88,10 @@ func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorBoolAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorBoolAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.BoolValueType,
 	}
 

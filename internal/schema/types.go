@@ -22,6 +22,10 @@ type Blocks interface {
 	GetBlocks() GeneratorBlocks
 }
 
+type CustomTypeAndValue interface {
+	CustomTypeAndValue(name string) ([]byte, error)
+}
+
 type Elements interface {
 	ElemType() specschema.ElementType
 }
@@ -30,16 +34,16 @@ type GeneratorAttribute interface {
 	Equal(GeneratorAttribute) bool
 	GeneratorSchemaType() Type
 	Imports() *Imports
-	ModelField(string) (model.Field, error)
-	Schema(string) (string, error)
+	ModelField(FrameworkIdentifier) (model.Field, error)
+	Schema(FrameworkIdentifier) (string, error)
 }
 
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	GeneratorSchemaType() Type
 	Imports() *Imports
-	ModelField(string) (model.Field, error)
-	Schema(string) (string, error)
+	ModelField(FrameworkIdentifier) (model.Field, error)
+	Schema(FrameworkIdentifier) (string, error)
 }
 
 type GeneratorAttributeAssocExtType interface {

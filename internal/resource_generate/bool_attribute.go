@@ -102,7 +102,7 @@ func boolDefault(d *specschema.BoolDefault) string {
 	return ""
 }
 
-func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
+func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                   string
 		Default                string
@@ -110,7 +110,7 @@ func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                   name,
+		Name:                   name.ToString(),
 		Default:                boolDefault(g.Default),
 		GeneratorBoolAttribute: g,
 	}
@@ -134,10 +134,10 @@ func (g GeneratorBoolAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorBoolAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorBoolAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.BoolValueType,
 	}
 

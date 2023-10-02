@@ -58,14 +58,14 @@ func (g GeneratorStringAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	return g.StringAttribute.Equal(h.StringAttribute)
 }
 
-func (g GeneratorStringAttribute) Schema(name string) (string, error) {
+func (g GeneratorStringAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                     string
 		GeneratorStringAttribute GeneratorStringAttribute
 	}
 
 	a := attribute{
-		Name:                     name,
+		Name:                     name.ToString(),
 		GeneratorStringAttribute: g,
 	}
 
@@ -88,10 +88,10 @@ func (g GeneratorStringAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorStringAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorStringAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.StringValueType,
 	}
 

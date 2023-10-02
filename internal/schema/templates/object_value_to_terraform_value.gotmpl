@@ -1,0 +1,40 @@
+func (v {{.Name}}Value) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+attrTypes := make(map[string]tftypes.Type, {{len .AttrTypes}})
+
+var val tftypes.Value
+var err error
+
+{{range $key, $value := .AttrTypes }}
+attrTypes["{{$key}}"] = {{$value}}.TerraformType(ctx)
+{{- end}}
+
+objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+switch v.state {
+case attr.ValueStateKnown:
+vals := make(map[string]tftypes.Value, {{len .AttrTypes}})
+
+{{range $key, $value := .AttrTypes }}
+val, err = v.{{$key.ToPascalCase}}.ToTerraformValue(ctx)
+
+if err != nil {
+return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+}
+
+vals["{{$key}}"] = val
+
+{{end}}
+
+if err := tftypes.ValidateValue(objectType, vals); err != nil {
+return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+}
+
+return tftypes.NewValue(objectType, vals), nil
+case attr.ValueStateNull:
+return tftypes.NewValue(objectType, nil), nil
+case attr.ValueStateUnknown:
+return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+default:
+panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+}
+}

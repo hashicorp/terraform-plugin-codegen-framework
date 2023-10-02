@@ -96,7 +96,7 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 	return true
 }
 
-func (g GeneratorMapAttribute) Schema(name string) (string, error) {
+func (g GeneratorMapAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                  string
 		ElementType           string
@@ -104,7 +104,7 @@ func (g GeneratorMapAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                  name,
+		Name:                  name.ToString(),
 		ElementType:           generatorschema.GetElementType(g.ElementType),
 		GeneratorMapAttribute: g,
 	}
@@ -128,10 +128,10 @@ func (g GeneratorMapAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorMapAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorMapAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.MapValueType,
 	}
 

@@ -1,0 +1,21 @@
+
+func New{{.Name}}ValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) {{.Name}}Value {
+object, diags := New{{.Name}}Value(attributeTypes, attributes)
+
+if diags.HasError() {
+// This could potentially be added to the diag package.
+diagsStrings := make([]string, 0, len(diags))
+
+for _, diagnostic := range diags {
+diagsStrings = append(diagsStrings, fmt.Sprintf(
+"%s | %s | %s",
+diagnostic.Severity(),
+diagnostic.Summary(),
+diagnostic.Detail()))
+}
+
+panic("New{{.Name}}ValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+}
+
+return object
+}

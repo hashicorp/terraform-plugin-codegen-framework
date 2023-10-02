@@ -15,7 +15,7 @@ import (
 // If packageName is an empty string, this indicates that the flag was not set, and the default behaviour is
 // then to create a package and directory per data source. If packageName is set then all generated code is
 // placed into the same directory and package.
-func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObjectHelpers, dataSourcesToFrom map[string][]byte, outputDir, packageName string) error {
+func WriteDataSources(dataSourcesSchema, dataSourcesModels, customTypeValue, dataSourcesToFrom map[string][]byte, outputDir, packageName string) error {
 	for k, v := range dataSourcesSchema {
 		dirName := ""
 
@@ -45,7 +45,7 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObje
 			return err
 		}
 
-		_, err = f.Write(dataSourcesModelObjectHelpers[k])
+		_, err = f.Write(customTypeValue[k])
 		if err != nil {
 			return err
 		}
@@ -63,7 +63,7 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, dataSourcesModelObje
 // If packageName is an empty string, this indicates that the flag was not set, and the default behaviour is
 // then to create a package and directory per resource. If packageName is set then all generated code is
 // placed into the same directory and package.
-func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelpers, resourcesToFrom map[string][]byte, outputDir, packageName string) error {
+func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resourcesToFrom map[string][]byte, outputDir, packageName string) error {
 	for k, v := range resourcesSchema {
 		dirName := ""
 
@@ -93,7 +93,7 @@ func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelper
 			return err
 		}
 
-		_, err = f.Write(resourcesModelObjectHelpers[k])
+		_, err = f.Write(customTypeValue[k])
 		if err != nil {
 			return err
 		}
@@ -111,7 +111,7 @@ func WriteResources(resourcesSchema, resourcesModels, resourcesModelObjectHelper
 // If packageName is an empty string, this indicates that the flag was not set, and the default behaviour is
 // then to create a package and directory for the provider. If packageName is set then all generated code is
 // placed into the same directory and package.
-func WriteProviders(providersSchema, providerModels, providerModelObjectHelpers, providerToFrom map[string][]byte, outputDir, packageName string) error {
+func WriteProviders(providersSchema, providerModels, customTypeValue, providerToFrom map[string][]byte, outputDir, packageName string) error {
 	for k, v := range providersSchema {
 		dirName := ""
 
@@ -141,7 +141,7 @@ func WriteProviders(providersSchema, providerModels, providerModelObjectHelpers,
 			return err
 		}
 
-		_, err = f.Write(providerModelObjectHelpers[k])
+		_, err = f.Write(customTypeValue[k])
 		if err != nil {
 			return err
 		}

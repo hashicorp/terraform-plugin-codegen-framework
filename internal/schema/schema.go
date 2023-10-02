@@ -147,7 +147,7 @@ func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([
 		Blocks        string
 		Imports       string
 	}{
-		Name:            model.SnakeCaseToCamelCase(name),
+		Name:            FrameworkIdentifier(name).ToPascalCase(),
 		GeneratorSchema: g,
 		PackageName:     packageName,
 		GeneratorType:   generatorType,
@@ -183,7 +183,7 @@ func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 	}
 
 	m := model.Model{
-		Name:   model.SnakeCaseToCamelCase(name),
+		Name:   FrameworkIdentifier(name).ToPascalCase(),
 		Fields: fields,
 	}
 
@@ -195,21 +195,14 @@ func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 	var modelFields []model.Field
 
-	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.Attributes))
-
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.Attributes.SortedKeys()
 
 	for _, k := range attributeKeys {
 		if g.Attributes[k] == nil {
 			continue
 		}
 
-		modelField, err := g.Attributes[k].ModelField(k)
+		modelField, err := g.Attributes[k].ModelField(FrameworkIdentifier(k))
 
 		if err != nil {
 			return nil, err
@@ -218,21 +211,14 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 		modelFields = append(modelFields, modelField)
 	}
 
-	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g.Blocks))
-
-	for k := range g.Blocks {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.Blocks.SortedKeys()
 
 	for _, k := range blockKeys {
 		if g.Blocks[k] == nil {
 			continue
 		}
 
-		modelField, err := g.Blocks[k].ModelField(k)
+		modelField, err := g.Blocks[k].ModelField(FrameworkIdentifier(k))
 
 		if err != nil {
 			return nil, err
@@ -244,316 +230,49 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 	return modelFields, nil
 }
 
-// ModelsObjectHelpersBytes iterates over all the attributes and blocks to determine whether
-// any of them implement the Attributes interface (i.e., they are nested attributes or
-// nested blocks). If any of the attributes or blocks fill the Attributes interface,
-// then ModelObjectHelpersTemplate is called.
-func (g GeneratorSchema) ModelsObjectHelpersBytes() ([]byte, error) {
+// CustomTypeValueBytes iterates over all the attributes and blocks to generate code
+// for custom type and value types for use in the schema and data models.
+func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
-	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.Attributes))
-
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.Attributes.SortedKeys()
 
 	for _, k := range attributeKeys {
 		if g.Attributes[k] == nil {
 			continue
 		}
 
-		if a, ok := g.Attributes[k].(Attributes); ok {
-			ng := GeneratorSchema{
-				Attributes: a.GetAttributes(),
-			}
+		if c, ok := g.Attributes[k].(CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
 
-			modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
 			if err != nil {
 				return nil, err
 			}
 
-			buf.Write(modelObjectHelpers)
+			buf.Write(b)
 		}
 	}
 
-	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g.Blocks))
-
-	for k := range g.Blocks {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.Blocks.SortedKeys()
 
 	for _, k := range blockKeys {
 		if g.Blocks[k] == nil {
 			continue
 		}
 
-		if b, ok := g.Blocks[k].(Blocks); ok {
-			ng := GeneratorSchema{
-				Attributes: b.GetAttributes(),
-				Blocks:     b.GetBlocks(),
-			}
+		if c, ok := g.Blocks[k].(CustomTypeAndValue); ok {
+			b, err := c.CustomTypeAndValue(k)
 
-			modelObjectHelpers, err := ng.ModelObjectHelpersTemplate(k)
 			if err != nil {
 				return nil, err
 			}
 
-			buf.Write(modelObjectHelpers)
+			buf.Write(b)
 		}
 	}
 
 	if buf.Len() > 0 {
 		buf.WriteString("\n")
-	}
-
-	return buf.Bytes(), nil
-}
-
-// ModelObjectHelpersTemplate is used to generate custom type and value types for nested attributes and
-// blocks by executing a template. If any of the attributes contain nested attributes, or any of the
-// blocks contain nested blocks, then ModelObjectHelpersTemplate is called recursively.
-func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error) {
-	type field struct {
-		AttrType         string
-		AttrValue        string
-		FieldName        string
-		FieldType        string
-		FieldNameLCFirst string
-	}
-
-	fields := make(map[string]field)
-
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.Attributes))
-
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
-
-	// Populate fields map for use in template.
-	for _, k := range attributeKeys {
-		switch g.Attributes[k].GeneratorSchemaType() {
-		case GeneratorBoolAttribute:
-			fields[k] = field{
-				AttrType:  "basetypes.BoolType{}",
-				AttrValue: "basetypes.BoolValue",
-			}
-		case GeneratorFloat64Attribute:
-			fields[k] = field{
-				AttrType:  "basetypes.Float64Type{}",
-				AttrValue: "basetypes.Float64Value",
-			}
-		case GeneratorInt64Attribute:
-			fields[k] = field{
-				AttrType:  "basetypes.Int64Type{}",
-				AttrValue: "basetypes.Int64Value",
-			}
-		case GeneratorListAttribute:
-			if e, ok := g.Attributes[k].(Elements); ok {
-				elemType, err := elementTypeString(e.ElemType())
-				if err != nil {
-					return nil, err
-				}
-				fields[k] = field{
-					AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %s,\n}", elemType),
-					AttrValue: "basetypes.ListValue",
-				}
-			} else {
-				return nil, fmt.Errorf("%s.%s attribute is a ListType but does not implement Elements interface", name, k)
-			}
-		case GeneratorListNestedAttribute:
-			fields[k] = field{
-				AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-				AttrValue: "basetypes.ListValue",
-				FieldType: "ListNestedAttribute",
-			}
-		case GeneratorMapAttribute:
-			if e, ok := g.Attributes[k].(Elements); ok {
-				elemType, err := elementTypeString(e.ElemType())
-				if err != nil {
-					return nil, err
-				}
-				fields[k] = field{
-					AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %s,\n}", elemType),
-					AttrValue: "basetypes.MapValue",
-				}
-			} else {
-				return nil, fmt.Errorf("%s.%s attribute is a MapType but does not implement Elements interface", name, k)
-			}
-		case GeneratorMapNestedAttribute:
-			fields[k] = field{
-				AttrType:  fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-				AttrValue: "basetypes.MapValue",
-				FieldType: "MapNestedAttribute",
-			}
-		case GeneratorNumberAttribute:
-			fields[k] = field{
-				AttrType:  "basetypes.NumberType{}",
-				AttrValue: "basetypes.NumberValue",
-			}
-		case GeneratorObjectAttribute:
-			if o, ok := g.Attributes[k].(Attrs); ok {
-				attrTypes, err := attrTypesString(o.AttrTypes())
-				if err != nil {
-					return nil, err
-				}
-				fields[k] = field{
-					AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", attrTypes),
-					AttrValue: "basetypes.ObjectValue",
-				}
-			} else {
-				return nil, fmt.Errorf("%s.%s attribute is an ObjectType but does not implement Attrs interface", name, k)
-			}
-		case GeneratorSetAttribute:
-			if e, ok := g.Attributes[k].(Elements); ok {
-				elemType, err := elementTypeString(e.ElemType())
-				if err != nil {
-					return nil, err
-				}
-				fields[k] = field{
-					AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %s,\n}", elemType),
-					AttrValue: "basetypes.SetValue",
-				}
-			} else {
-				return nil, fmt.Errorf("%s.%s attribute is a SetType but does not implement Elements interface", name, k)
-			}
-		case GeneratorSetNestedAttribute:
-			fields[k] = field{
-				AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-				AttrValue: "basetypes.SetValue",
-				FieldType: "SetNestedAttribute",
-			}
-		case GeneratorSingleNestedAttribute:
-			fields[k] = field{
-				AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-				AttrValue: "basetypes.ObjectValue",
-				FieldType: "SingleNestedAttribute",
-			}
-
-		case GeneratorStringAttribute:
-			fields[k] = field{
-				AttrType:  "basetypes.StringType{}",
-				AttrValue: "basetypes.StringValue",
-			}
-		}
-
-		f := fields[k]
-
-		camelCaseName := model.SnakeCaseToCamelCase(k)
-		lcFirstName := strings.ToLower(camelCaseName[:1]) + camelCaseName[1:]
-
-		f.FieldName = camelCaseName
-		f.FieldNameLCFirst = lcFirstName
-
-		fields[k] = f
-	}
-
-	// Using sorted keys to guarantee attribute order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g.Blocks))
-
-	for k := range g.Blocks {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
-
-	// Populate fields map for use in template.
-	for _, k := range blockKeys {
-		switch g.Blocks[k].GeneratorSchemaType() {
-		case GeneratorListNestedBlock:
-			fields[k] = field{
-				AttrType:  fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-				AttrValue: "basetypes.ListValue",
-				FieldType: "ListNestedBlock",
-			}
-		case GeneratorSetNestedBlock:
-			fields[k] = field{
-				AttrType:  fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-				AttrValue: "basetypes.SetValue",
-				FieldType: "SetNestedBlock",
-			}
-		case GeneratorSingleNestedBlock:
-			fields[k] = field{
-				AttrType:  fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", model.SnakeCaseToCamelCase(k)),
-				AttrValue: "basetypes.ObjectValue",
-				FieldType: "SingleNestedBlock",
-			}
-		}
-
-		f := fields[k]
-
-		camelCaseName := model.SnakeCaseToCamelCase(k)
-		lcFirstName := strings.ToLower(camelCaseName[:1]) + camelCaseName[1:]
-
-		f.FieldName = camelCaseName
-		f.FieldNameLCFirst = lcFirstName
-
-		fields[k] = f
-	}
-
-	t, err := template.New("model_object_helpers").Parse(templates.ModelObjectHelpersTemplate)
-	if err != nil {
-		return nil, err
-	}
-
-	var buf bytes.Buffer
-
-	templateData := struct {
-		Name   string
-		Fields map[string]field
-	}{
-		Name:   model.SnakeCaseToCamelCase(name),
-		Fields: fields,
-	}
-
-	err = t.Execute(&buf, templateData)
-	if err != nil {
-		return nil, err
-	}
-
-	// Recursively call ModelObjectHelpersTemplate() for each attribute that implements
-	// Attributes interface (i.e, nested attributes).
-	for _, k := range attributeKeys {
-		if a, ok := g.Attributes[k].(Attributes); ok {
-			ng := GeneratorSchema{
-				Attributes: a.GetAttributes(),
-			}
-
-			b, err := ng.ModelObjectHelpersTemplate(k)
-			if err != nil {
-				return nil, err
-			}
-
-			buf.WriteString("\n")
-			buf.Write(b)
-		}
-	}
-
-	// Recursively call ModelObjectHelpersTemplate() for each block that implements
-	// Blocks interface (i.e, nested blocks).
-	for _, k := range blockKeys {
-		if b, ok := g.Blocks[k].(Blocks); ok {
-			ng := GeneratorSchema{
-				Attributes: b.GetAttributes(),
-				Blocks:     b.GetBlocks(),
-			}
-
-			byt, err := ng.ModelObjectHelpersTemplate(k)
-			if err != nil {
-				return nil, err
-			}
-
-			buf.WriteString("\n")
-			buf.Write(byt)
-		}
 	}
 
 	return buf.Bytes(), nil
@@ -566,14 +285,7 @@ func (g GeneratorSchema) ModelObjectHelpersTemplate(name string) ([]byte, error)
 func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
-	// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-	var attributeKeys = make([]string, 0, len(g.Attributes))
-
-	for k := range g.Attributes {
-		attributeKeys = append(attributeKeys, k)
-	}
-
-	sort.Strings(attributeKeys)
+	attributeKeys := g.Attributes.SortedKeys()
 
 	for _, k := range attributeKeys {
 		if g.Attributes[k] == nil {
@@ -617,17 +329,19 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		sort.Strings(attributeAttributeKeys)
 
 		for _, x := range attributeAttributeKeys {
+			name := FrameworkIdentifier(x)
+
 			switch attributeAttributes[x].GeneratorSchemaType() {
 			case GeneratorBoolAttribute:
-				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, boolObjectField(name.ToPascalCase()))
 			case GeneratorFloat64Attribute:
-				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, float64ObjectField(name.ToPascalCase()))
 			case GeneratorInt64Attribute:
-				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, int64ObjectField(name.ToPascalCase()))
 			case GeneratorNumberAttribute:
-				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, numberObjectField(name.ToPascalCase()))
 			case GeneratorStringAttribute:
-				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, stringObjectField(name.ToPascalCase()))
 			}
 		}
 
@@ -670,10 +384,10 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			TypeName      string
 			Fields        []objectField
 		}{
-			Name:          model.SnakeCaseToCamelCase(k),
+			Name:          FrameworkIdentifier(k).ToPascalCase(),
 			Type:          assocExtType.Type(),
 			TypeReference: assocExtType.TypeReference(),
-			TypeName:      model.DotNotationToCamelCase(assocExtType.TypeReference()),
+			TypeName:      dotNotationToPascalCase(assocExtType.TypeReference()),
 			Fields:        fields,
 		}
 
@@ -685,14 +399,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		buf.Write(templateBuf.Bytes())
 	}
 
-	// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-	var blockKeys = make([]string, 0, len(g.Blocks))
-
-	for k := range g.Blocks {
-		blockKeys = append(blockKeys, k)
-	}
-
-	sort.Strings(blockKeys)
+	blockKeys := g.Blocks.SortedKeys()
 
 	for _, k := range blockKeys {
 		if g.Blocks[k] == nil {
@@ -736,17 +443,19 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		sort.Strings(blockAttributeKeys)
 
 		for _, x := range blockAttributeKeys {
+			name := FrameworkIdentifier(x)
+
 			switch blockAttributes[x].GeneratorSchemaType() {
 			case GeneratorBoolAttribute:
-				fields = append(fields, boolObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, boolObjectField(name.ToPascalCase()))
 			case GeneratorFloat64Attribute:
-				fields = append(fields, float64ObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, float64ObjectField(name.ToPascalCase()))
 			case GeneratorInt64Attribute:
-				fields = append(fields, int64ObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, int64ObjectField(name.ToPascalCase()))
 			case GeneratorNumberAttribute:
-				fields = append(fields, numberObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, numberObjectField(name.ToPascalCase()))
 			case GeneratorStringAttribute:
-				fields = append(fields, stringObjectField(model.SnakeCaseToCamelCase(x)))
+				fields = append(fields, stringObjectField(name.ToPascalCase()))
 			}
 		}
 
@@ -784,10 +493,10 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			TypeName      string
 			Fields        []objectField
 		}{
-			Name:          model.SnakeCaseToCamelCase(k),
+			Name:          FrameworkIdentifier(k).ToPascalCase(),
 			Type:          assocExtType.Type(),
 			TypeReference: assocExtType.TypeReference(),
-			TypeName:      model.DotNotationToCamelCase(assocExtType.TypeReference()),
+			TypeName:      dotNotationToPascalCase(assocExtType.TypeReference()),
 			Fields:        fields,
 		}
 
@@ -882,7 +591,7 @@ func stringObjectField(name string) objectField {
 	}
 }
 
-func elementTypeString(elementType specschema.ElementType) (string, error) {
+func ElementTypeString(elementType specschema.ElementType) (string, error) {
 	switch {
 	case elementType.Bool != nil:
 		return "types.BoolType", nil
@@ -891,13 +600,13 @@ func elementTypeString(elementType specschema.ElementType) (string, error) {
 	case elementType.Int64 != nil:
 		return "types.Int64Type", nil
 	case elementType.List != nil:
-		elemType, err := elementTypeString(elementType.List.ElementType)
+		elemType, err := ElementTypeString(elementType.List.ElementType)
 		if err != nil {
 			return "", err
 		}
 		return fmt.Sprintf("types.ListType{\nElemType: %s,\n}", elemType), nil
 	case elementType.Map != nil:
-		elemType, err := elementTypeString(elementType.Map.ElementType)
+		elemType, err := ElementTypeString(elementType.Map.ElementType)
 		if err != nil {
 			return "", err
 		}
@@ -905,13 +614,13 @@ func elementTypeString(elementType specschema.ElementType) (string, error) {
 	case elementType.Number != nil:
 		return "types.NumberType", nil
 	case elementType.Object != nil:
-		attrTypesStr, err := attrTypesString(elementType.Object.AttributeTypes)
+		attrTypesStr, err := AttrTypesString(elementType.Object.AttributeTypes)
 		if err != nil {
 			return "", err
 		}
 		return fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", attrTypesStr), nil
 	case elementType.Set != nil:
-		elemType, err := elementTypeString(elementType.Set.ElementType)
+		elemType, err := ElementTypeString(elementType.Set.ElementType)
 		if err != nil {
 			return "", err
 		}
@@ -923,7 +632,7 @@ func elementTypeString(elementType specschema.ElementType) (string, error) {
 	return "", errors.New("no matching element type found")
 }
 
-func attrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) {
+func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) {
 	var attrTypesStr []string
 
 	for _, v := range attrTypes {
@@ -935,13 +644,13 @@ func attrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 		case v.Int64 != nil:
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.Int64Type", v.Name))
 		case v.List != nil:
-			elemType, err := elementTypeString(v.List.ElementType)
+			elemType, err := ElementTypeString(v.List.ElementType)
 			if err != nil {
 				return "", err
 			}
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.ListType{\nElemType: %s,\n}", v.Name, elemType))
 		case v.Map != nil:
-			elemType, err := elementTypeString(v.Map.ElementType)
+			elemType, err := ElementTypeString(v.Map.ElementType)
 			if err != nil {
 				return "", err
 			}
@@ -949,13 +658,13 @@ func attrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 		case v.Number != nil:
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.NumberType", v.Name))
 		case v.Object != nil:
-			objAttrTypesStr, err := attrTypesString(v.Object.AttributeTypes)
+			objAttrTypesStr, err := AttrTypesString(v.Object.AttributeTypes)
 			if err != nil {
 				return "", err
 			}
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n}\n}", v.Name, objAttrTypesStr))
 		case v.Set != nil:
-			elemType, err := elementTypeString(v.Set.ElementType)
+			elemType, err := ElementTypeString(v.Set.ElementType)
 			if err != nil {
 				return "", err
 			}
@@ -966,4 +675,28 @@ func attrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 	}
 
 	return strings.Join(attrTypesStr, ",\n"), nil
+}
+
+func dotNotationToPascalCase(input string) string {
+	inputSplit := strings.Split(input, ".")
+
+	var ucName string
+
+	for _, v := range inputSplit {
+		if len(v) < 1 {
+			continue
+		}
+
+		firstChar := v[0:1]
+		ucFirstChar := strings.ToUpper(firstChar)
+
+		if len(v) < 2 {
+			ucName += ucFirstChar
+			continue
+		}
+
+		ucName += ucFirstChar + v[1:]
+	}
+
+	return ucName
 }

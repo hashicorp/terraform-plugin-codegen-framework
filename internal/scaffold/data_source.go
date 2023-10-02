@@ -7,11 +7,11 @@ import (
 	"bytes"
 	"text/template"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/util"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 // DataSourceBytes will create scaffolding Go code bytes for a Terraform Plugin Framework data source
-func DataSourceBytes(dataSourceIdentifier util.FrameworkIdentifer, packageName string) ([]byte, error) {
+func DataSourceBytes(dataSourceIdentifier schema.FrameworkIdentifier, packageName string) ([]byte, error) {
 	t, err := template.New("data_source_scaffold").Parse(dataSourceScaffoldGoTemplate)
 	if err != nil {
 		return nil, err

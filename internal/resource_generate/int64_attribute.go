@@ -102,7 +102,7 @@ func int64Default(d *specschema.Int64Default) string {
 	return ""
 }
 
-func (g GeneratorInt64Attribute) Schema(name string) (string, error) {
+func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                    string
 		Default                 string
@@ -110,7 +110,7 @@ func (g GeneratorInt64Attribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                    name,
+		Name:                    name.ToString(),
 		Default:                 int64Default(g.Default),
 		GeneratorInt64Attribute: g,
 	}
@@ -134,10 +134,10 @@ func (g GeneratorInt64Attribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorInt64Attribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorInt64Attribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.Int64ValueType,
 	}
 

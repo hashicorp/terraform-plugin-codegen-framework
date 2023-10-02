@@ -100,7 +100,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	return true
 }
 
-func (g GeneratorListAttribute) Schema(name string) (string, error) {
+func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                   string
 		ElementType            string
@@ -108,7 +108,7 @@ func (g GeneratorListAttribute) Schema(name string) (string, error) {
 	}
 
 	a := attribute{
-		Name:                   name,
+		Name:                   name.ToString(),
 		ElementType:            generatorschema.GetElementType(g.ElementType),
 		GeneratorListAttribute: g,
 	}
@@ -132,10 +132,10 @@ func (g GeneratorListAttribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorListAttribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorListAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.ListValueType,
 	}
 

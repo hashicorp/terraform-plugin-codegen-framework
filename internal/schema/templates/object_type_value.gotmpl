@@ -1,0 +1,85 @@
+
+func New{{.Name}}Value(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) ({{.Name}}Value, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+ctx := context.Background()
+
+for name, attributeType := range attributeTypes {
+attribute, ok := attributes[name]
+
+if !ok {
+diags.AddError(
+"Missing {{.Name}}Value Attribute Value",
+"While creating a {{.Name}}Value value, a missing attribute value was detected. "+
+"A {{.Name}}Value must contain values for all attributes, even if null or unknown. "+
+"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+fmt.Sprintf("{{.Name}}Value Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+)
+
+continue
+}
+
+if !attributeType.Equal(attribute.Type(ctx)) {
+diags.AddError(
+"Invalid {{.Name}}Value Attribute Type",
+"While creating a {{.Name}}Value value, an invalid attribute value was detected. "+
+"A {{.Name}}Value must use a matching attribute type for the value. "+
+"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+fmt.Sprintf("{{.Name}}Value Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+fmt.Sprintf("{{.Name}}Value Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+)
+}
+}
+
+for name := range attributes {
+_, ok := attributeTypes[name]
+
+if !ok {
+diags.AddError(
+"Extra {{.Name}}Value Attribute Value",
+"While creating a {{.Name}}Value value, an extra attribute value was detected. "+
+"A {{.Name}}Value must not contain values beyond the expected attribute types. "+
+"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+fmt.Sprintf("Extra {{.Name}}Value Attribute Name: %s", name),
+)
+}
+}
+
+if diags.HasError() {
+return New{{.Name}}ValueUnknown(), diags
+}
+
+state := attr.ValueStateKnown
+
+{{range $key, $value := .AttrValues }}
+{{$key.ToCamelCase}}, ok := attributes["{{$key}}"]
+
+if !ok {
+diags.AddError(
+"Attribute Missing",
+`{{$key}} is missing from object`)
+
+return New{{$.Name}}ValueNull(), diags
+}
+
+{{$key.ToCamelCase}}Val, ok := {{$key.ToCamelCase}}.({{$value}})
+
+if !ok {
+diags.AddError(
+"Attribute Wrong Type",
+fmt.Sprintf(`{{$key}} expected to be {{$value}}, was: %T`, {{$key.ToCamelCase}}))
+}
+
+if {{$key.ToCamelCase}}Val.IsUnknown() {
+state = attr.ValueStateUnknown
+}
+{{end}}
+
+return {{.Name}}Value{
+{{- range $key, $value := .AttrValues }}
+{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
+{{- end}}
+state: state,
+}, diags
+}

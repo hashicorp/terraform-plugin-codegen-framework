@@ -1,0 +1,79 @@
+
+func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+{{- range $key, $value := .AttributeTypes }}
+{{- if eq $value "ListNested" "MapNested" "SetNested"}}
+{{- $typesType := "List"}}
+{{- if eq $value "MapNested"}}
+{{- $typesType := "Map"}}
+{{- else if eq $value "SetNested"}}
+{{- $typesType := "Set"}}
+{{- end}}
+{{$key.ToCamelCase}} := types.{{$typesType}}ValueMust(
+{{$key.ToPascalCase}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+},
+},
+v.{{$key.ToPascalCase}}.Elements(),
+)
+
+if v.{{$key.ToPascalCase}}.IsNull() {
+{{$key.ToCamelCase}} = types.{{$typesType}}Null(
+{{$key.ToPascalCase}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+if v.{{$key.ToPascalCase}}.IsUnknown() {
+{{$key.ToCamelCase}} = types.{{$typesType}}Unknown(
+{{$key.ToPascalCase}}Type{
+basetypes.ObjectType{
+AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+},
+},
+)
+}
+{{else if eq $value "SingleNested"}}
+var {{$key.ToCamelCase}} basetypes.ObjectValue
+
+if v.{{$key.ToPascalCase}}.IsNull() {
+{{$key.ToCamelCase}} = types.ObjectNull(
+{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+)
+}
+
+if v.{{$key.ToPascalCase}}.IsUnknown() {
+{{$key.ToCamelCase}} = types.ObjectUnknown(
+{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+)
+}
+
+if !v.{{$key.ToPascalCase}}.IsNull() && !v.{{$key.ToPascalCase}}.IsUnknown() {
+{{$key.ToCamelCase}} = types.ObjectValueMust(
+{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+v.{{$key.ToPascalCase}}.Attributes(),
+)
+}
+{{end}}
+{{- end}}
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+{{- range $key, $value := .AttributeTypes }}
+"{{$key}}": {{index $.AttrTypes $key}},
+{{- end}}
+},
+map[string]attr.Value{
+{{- range $key, $value := .AttributeTypes }}
+{{- if eq $value "ListNested" "MapNested" "SetNested" "SingleNested"}}
+"{{$key}}": {{$key.ToCamelCase}},
+{{- else}}
+"{{$key}}": v.{{$key.ToPascalCase}},
+{{- end}}
+{{- end}}
+})
+
+return objVal, diags
+}

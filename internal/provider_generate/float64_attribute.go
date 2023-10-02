@@ -58,14 +58,14 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 	return g.Float64Attribute.Equal(h.Float64Attribute)
 }
 
-func (g GeneratorFloat64Attribute) Schema(name string) (string, error) {
+func (g GeneratorFloat64Attribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                      string
 		GeneratorFloat64Attribute GeneratorFloat64Attribute
 	}
 
 	a := attribute{
-		Name:                      name,
+		Name:                      name.ToString(),
 		GeneratorFloat64Attribute: g,
 	}
 
@@ -88,10 +88,10 @@ func (g GeneratorFloat64Attribute) Schema(name string) (string, error) {
 	return buf.String(), nil
 }
 
-func (g GeneratorFloat64Attribute) ModelField(name string) (model.Field, error) {
+func (g GeneratorFloat64Attribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
-		Name:      model.SnakeCaseToCamelCase(name),
-		TfsdkName: name,
+		Name:      name.ToPascalCase(),
+		TfsdkName: name.ToString(),
 		ValueType: model.Float64ValueType,
 	}
 
