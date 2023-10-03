@@ -6,6 +6,7 @@ package main
 import (
 	"io"
 	"os"
+	"runtime/debug"
 
 	"github.com/mattn/go-colorable"
 	"github.com/mitchellh/cli"
@@ -15,10 +16,17 @@ import (
 
 func main() {
 	name := "tfplugingen-framework"
-	version := name + " Version " + version
-	if commit != "" {
-		version += " from commit " + commit
-	}
+	version := name + " version: " + version
+	version += " commit: " + func() string {
+		if info, ok := debug.ReadBuildInfo(); ok {
+			for _, setting := range info.Settings {
+				if setting.Key == "vcs.revision" {
+					return setting.Value
+				}
+			}
+		}
+		return ""
+	}()
 
 	os.Exit(runCLI(
 		name,
