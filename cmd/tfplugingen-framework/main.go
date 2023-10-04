@@ -14,10 +14,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 )
 
+// version will be set by goreleaser via ldflags
+// https://goreleaser.com/cookbooks/using-main.version/
 func main() {
 	name := "tfplugingen-framework"
-	version := name + " version: " + version
-	version += " commit: " + func() string {
+	version := name + " commit: " + func() string {
 		if info, ok := debug.ReadBuildInfo(); ok {
 			for _, setting := range info.Settings {
 				if setting.Key == "vcs.revision" {
@@ -25,7 +26,7 @@ func main() {
 				}
 			}
 		}
-		return ""
+		return "local"
 	}()
 
 	os.Exit(runCLI(
