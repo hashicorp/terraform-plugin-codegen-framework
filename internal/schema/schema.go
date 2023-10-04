@@ -171,22 +171,6 @@ func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte
 func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 	var models []model.Model
 
-	fields, err := g.ModelFields()
-	if err != nil {
-		return nil, err
-	}
-
-	m := model.Model{
-		Name:   FrameworkIdentifier(name).ToPascalCase(),
-		Fields: fields,
-	}
-
-	models = append(models, m)
-
-	return models, nil
-}
-
-func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 	var modelFields []model.Field
 
 	attributeKeys := g.Attributes.SortedKeys()
@@ -221,7 +205,14 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 		modelFields = append(modelFields, modelField)
 	}
 
-	return modelFields, nil
+	m := model.Model{
+		Name:   FrameworkIdentifier(name).ToPascalCase(),
+		Fields: modelFields,
+	}
+
+	models = append(models, m)
+
+	return models, nil
 }
 
 // CustomTypeValueBytes iterates over all the attributes and blocks to generate code
