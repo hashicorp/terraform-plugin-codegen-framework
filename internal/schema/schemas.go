@@ -41,7 +41,7 @@ func (g GeneratorSchemas) Schemas(packageName, generatorType string) (map[string
 	return schemasBytes, nil
 }
 
-func (g GeneratorSchemas) ModelsBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) Models() (map[string][]byte, error) {
 	modelsBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, schema := range g.schemas {
@@ -67,7 +67,7 @@ func (g GeneratorSchemas) ModelsBytes() (map[string][]byte, error) {
 	return modelsBytes, nil
 }
 
-func (g GeneratorSchemas) CustomTypeValueBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) CustomTypeValue() (map[string][]byte, error) {
 	customTypeValueBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, s := range g.schemas {

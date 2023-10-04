@@ -141,13 +141,13 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// generate model code
-	modelsBytes, err := g.ModelsBytes()
+	models, err := g.Models()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// generate custom type and value types code
-	customTypeValueBytes, err := g.CustomTypeValueBytes()
+	customTypeValue, err := g.CustomTypeValue()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -165,13 +165,13 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// format model code
-	formattedResourcesModels, err := format.Format(modelsBytes)
+	formattedModels, err := format.Format(models)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// format custom type and value types code
-	formattedCustomTypeValue, err := format.Format(customTypeValueBytes)
+	formattedCustomTypeValue, err := format.Format(customTypeValue)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -183,7 +183,7 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// write code
-	err = output.WriteResources(formattedSchemas, formattedResourcesModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	err = output.WriteResources(formattedSchemas, formattedModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

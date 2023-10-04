@@ -141,13 +141,13 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// generate model code
-	modelsBytes, err := g.ModelsBytes()
+	models, err := g.Models()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// generate custom type and value types code
-	customTypeValueBytes, err := g.CustomTypeValueBytes()
+	customTypeValue, err := g.CustomTypeValue()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -165,13 +165,13 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// format model code
-	formattedDataSourcesModels, err := format.Format(modelsBytes)
+	formattedModels, err := format.Format(models)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// format custom type and value types code
-	formattedCustomTypeValue, err := format.Format(customTypeValueBytes)
+	formattedCustomTypeValue, err := format.Format(customTypeValue)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -183,7 +183,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// write code
-	err = output.WriteDataSources(formattedSchemas, formattedDataSourcesModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	err = output.WriteDataSources(formattedSchemas, formattedModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}
