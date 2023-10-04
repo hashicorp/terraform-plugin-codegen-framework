@@ -14,7 +14,6 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templates"
 )
 
 type GeneratorSchema struct {
@@ -156,7 +155,7 @@ func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([
 	}
 
 	t, err := template.New("schema").Parse(
-		templates.SchemaGoTemplate,
+		SchemaGoTemplate,
 	)
 
 	if err != nil {

@@ -75,3 +75,6 @@ var ObjectValueValuableTemplate string
 
 //go:embed templates/object_value_value.gotmpl
 var ObjectValueValueTemplate string
+
+//go:embed templates/schema.gotmpl
+var SchemaGoTemplate string
