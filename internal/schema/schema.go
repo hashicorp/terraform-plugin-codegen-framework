@@ -276,11 +276,10 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// ModelsToFromBytes generates code for expand and flatten functions.
-// Whilst associated external types can be defined on any attribute
-// type, the only types which are processed are list, map, set and
-// single nested attributes, and list, set and single nested blocks.
-func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
+// ToFromFunctions generates code for converting to an associated
+// external type from a framework type, and from an associated
+// external type to a framework type.
+func (g GeneratorSchema) ToFromFunctions() ([]byte, error) {
 	var buf bytes.Buffer
 
 	attributeKeys := g.Attributes.SortedKeys()
@@ -291,7 +290,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		}
 
 		if t, ok := g.Attributes[k].(ToFrom); ok {
-			b, err := t.ToFrom(k)
+			b, err := t.ToFromFunctions(k)
 
 			if err != nil {
 				return nil, err
@@ -313,7 +312,7 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 		}
 
 		if t, ok := g.Blocks[k].(ToFrom); ok {
-			b, err := t.ToFrom(k)
+			b, err := t.ToFromFunctions(k)
 
 			if err != nil {
 				return nil, err

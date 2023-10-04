@@ -299,7 +299,7 @@ func (g GeneratorListNestedBlock) CustomTypeAndValue(name string) ([]byte, error
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorListNestedBlock) ToFrom(name string) ([]byte, error) {
+func (g GeneratorListNestedBlock) ToFromFunctions(name string) ([]byte, error) {
 	if g.NestedObject.AssociatedExternalType == nil {
 		return nil, nil
 	}

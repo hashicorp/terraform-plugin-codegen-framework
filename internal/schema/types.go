@@ -57,7 +57,7 @@ type GeneratorBlockAssocExtType interface {
 }
 
 type ToFrom interface {
-	ToFrom(name string) ([]byte, error)
+	ToFromFunctions(name string) ([]byte, error)
 }
 
 type Type int64

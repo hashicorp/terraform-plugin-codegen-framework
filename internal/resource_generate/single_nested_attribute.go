@@ -227,7 +227,7 @@ func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte,
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorSingleNestedAttribute) ToFrom(name string) ([]byte, error) {
+func (g GeneratorSingleNestedAttribute) ToFromFunctions(name string) ([]byte, error) {
 	if g.AssociatedExternalType == nil {
 		return nil, nil
 	}

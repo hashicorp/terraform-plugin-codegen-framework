@@ -82,11 +82,11 @@ func (g GeneratorSchemas) CustomTypeValueBytes() (map[string][]byte, error) {
 	return customTypeValueBytes, nil
 }
 
-func (g GeneratorSchemas) ModelsToFromBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) ToFromFunctions() (map[string][]byte, error) {
 	modelsExpandFlattenBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, s := range g.schemas {
-		b, err := s.ModelsToFromBytes()
+		b, err := s.ToFromFunctions()
 		if err != nil {
 			return nil, err
 		}

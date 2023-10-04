@@ -153,7 +153,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// generate "expand" and "flatten" code
-	modelsToFromBytes, err := g.ModelsToFromBytes()
+	toFromFunctions, err := g.ToFromFunctions()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -177,13 +177,13 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// format "expand" and "flatten" code
-	formattedDataSourcesToFrom, err := format.Format(modelsToFromBytes)
+	formattedToFromFunctions, err := format.Format(toFromFunctions)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// write code
-	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedCustomTypeValue, formattedDataSourcesToFrom, outputPath, packageName)
+	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

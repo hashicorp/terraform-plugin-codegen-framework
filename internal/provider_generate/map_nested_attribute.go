@@ -204,7 +204,7 @@ func (g GeneratorMapNestedAttribute) CustomTypeAndValue(name string) ([]byte, er
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorMapNestedAttribute) ToFrom(name string) ([]byte, error) {
+func (g GeneratorMapNestedAttribute) ToFromFunctions(name string) ([]byte, error) {
 	if g.NestedObject.AssociatedExternalType == nil {
 		return nil, nil
 	}

@@ -229,7 +229,7 @@ func (g GeneratorSetNestedAttribute) CustomTypeAndValue(name string) ([]byte, er
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorSetNestedAttribute) ToFrom(name string) ([]byte, error) {
+func (g GeneratorSetNestedAttribute) ToFromFunctions(name string) ([]byte, error) {
 	if g.NestedObject.AssociatedExternalType == nil {
 		return nil, nil
 	}

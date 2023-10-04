@@ -296,7 +296,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorSingleNestedBlock) ToFrom(name string) ([]byte, error) {
+func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error) {
 	if g.AssociatedExternalType == nil {
 		return nil, nil
 	}
