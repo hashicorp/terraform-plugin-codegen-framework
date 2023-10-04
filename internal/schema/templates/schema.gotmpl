@@ -15,12 +15,12 @@ import (
 
 func {{.Name}}{{.GeneratorType}}Schema(ctx context.Context) schema.Schema {
 return schema.Schema{
-    {{- if gt (len .GeneratorSchema.Attributes) 0 }}
+    {{- if .Attributes}}
     Attributes: map[string]schema.Attribute{
         {{- .Attributes}}
 	},
     {{- end}}
-    {{- if gt (len .GeneratorSchema.Blocks) 0 }}
+    {{- if .Blocks }}
 	Blocks: map[string]schema.Block{
         {{- .Blocks}}
 	},

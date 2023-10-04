@@ -137,26 +137,22 @@ func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([
 	}
 
 	templateData := struct {
-		Name string
-		GeneratorSchema
+		Name          string
 		PackageName   string
 		GeneratorType string
 		Attributes    string
 		Blocks        string
 		Imports       string
 	}{
-		Name:            FrameworkIdentifier(name).ToPascalCase(),
-		GeneratorSchema: g,
-		PackageName:     packageName,
-		GeneratorType:   generatorType,
-		Attributes:      attributes,
-		Blocks:          blocks,
-		Imports:         imports,
+		Name:          FrameworkIdentifier(name).ToPascalCase(),
+		PackageName:   packageName,
+		GeneratorType: generatorType,
+		Attributes:    attributes,
+		Blocks:        blocks,
+		Imports:       imports,
 	}
 
-	t, err := template.New("schema").Parse(
-		SchemaGoTemplate,
-	)
+	t, err := template.New("schema").Parse(SchemaGoTemplate)
 
 	if err != nil {
 		return nil, err
