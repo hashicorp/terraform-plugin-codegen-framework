@@ -21,7 +21,7 @@ type GeneratorSchema struct {
 	Blocks     GeneratorBlocks
 }
 
-func (g GeneratorSchema) ImportsString() (string, error) {
+func (g GeneratorSchema) Imports() (string, error) {
 	imports := NewImports()
 
 	for _, a := range g.Attributes {
@@ -130,7 +130,7 @@ func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([
 		return nil, err
 	}
 
-	imports, err := g.ImportsString()
+	imports, err := g.Imports()
 
 	if err != nil {
 		return nil, err
