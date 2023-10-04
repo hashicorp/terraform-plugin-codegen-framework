@@ -9,6 +9,3 @@ import (
 
 //go:embed schema.gotmpl
 var SchemaGoTemplate string
-
-//go:embed to_from.gotmpl
-var ToFromTemplate string

@@ -7,6 +7,12 @@ import (
 	_ "embed"
 )
 
+//go:embed templates/object_from.gotmpl
+var ObjectFromTemplate string
+
+//go:embed templates/object_to.gotmpl
+var ObjectToTemplate string
+
 //go:embed templates/object_type_equal.gotmpl
 var ObjectTypeEqualTemplate string
 

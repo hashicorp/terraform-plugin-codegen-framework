@@ -1,0 +1,15 @@
+
+func (v {{.Name}}Value) From{{.AssocExtType.ToPascalCase}}(ctx context.Context, apiObject {{.AssocExtType.Type}}) ({{.Name}}Value, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return New{{.Name}}ValueNull(), diags
+}
+
+return {{.Name}}Value{
+{{- range $key, $value := .FromFuncs }}
+{{$key.ToPascalCase}}: types.{{$value}}(apiObject.{{$key.ToPascalCase}}),
+{{- end}}
+state: attr.ValueStateKnown,
+}, diags
+}

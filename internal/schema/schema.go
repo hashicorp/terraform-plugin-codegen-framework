@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"sort"
 	"strings"
 	"text/template"
 
@@ -292,111 +291,15 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
-		// Only process attributes implementing GeneratorAttributeAssocExtType.
-		var attributeAssocExtType GeneratorAttributeAssocExtType
-		var ok bool
+		if t, ok := g.Attributes[k].(ToFrom); ok {
+			b, err := t.ToFrom(k)
 
-		if attributeAssocExtType, ok = g.Attributes[k].(GeneratorAttributeAssocExtType); !ok {
-			continue
-		}
-
-		// Only process if AssocExtType() is not nil.
-		assocExtType := attributeAssocExtType.AssocExtType()
-
-		if assocExtType == nil {
-			continue
-		}
-
-		// Only process if attribute implements Attributes (i.e., list, map, set, single
-		// nested attributes).
-		a, ok := g.Attributes[k].(Attributes)
-
-		if !ok {
-			continue
-		}
-
-		var fields []objectField
-
-		attributeAttributes := a.GetAttributes()
-
-		// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-		var attributeAttributeKeys = make([]string, 0, len(attributeAttributes))
-
-		for aa := range attributeAttributes {
-			attributeAttributeKeys = append(attributeAttributeKeys, aa)
-		}
-
-		sort.Strings(attributeAttributeKeys)
-
-		for _, x := range attributeAttributeKeys {
-			name := FrameworkIdentifier(x)
-
-			switch attributeAttributes[x].GeneratorSchemaType() {
-			case GeneratorBoolAttribute:
-				fields = append(fields, boolObjectField(name.ToPascalCase()))
-			case GeneratorFloat64Attribute:
-				fields = append(fields, float64ObjectField(name.ToPascalCase()))
-			case GeneratorInt64Attribute:
-				fields = append(fields, int64ObjectField(name.ToPascalCase()))
-			case GeneratorNumberAttribute:
-				fields = append(fields, numberObjectField(name.ToPascalCase()))
-			case GeneratorStringAttribute:
-				fields = append(fields, stringObjectField(name.ToPascalCase()))
-			}
-		}
-
-		var t *template.Template
-		var err error
-
-		switch attributeAssocExtType.GeneratorSchemaType() {
-		case GeneratorListNestedAttribute:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case GeneratorMapNestedAttribute:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSetNestedAttribute:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSingleNestedAttribute:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
+
+			buf.Write(b)
 		}
-
-		if t == nil {
-			return nil, fmt.Errorf("no matching template for type: %T", attributeAssocExtType.GeneratorSchemaType())
-		}
-
-		var templateBuf bytes.Buffer
-
-		templateData := struct {
-			Name          string
-			Type          string
-			TypeReference string
-			TypeName      string
-			Fields        []objectField
-		}{
-			Name:          FrameworkIdentifier(k).ToPascalCase(),
-			Type:          assocExtType.Type(),
-			TypeReference: assocExtType.TypeReference(),
-			TypeName:      dotNotationToPascalCase(assocExtType.TypeReference()),
-			Fields:        fields,
-		}
-
-		err = t.Execute(&templateBuf, templateData)
-		if err != nil {
-			return nil, err
-		}
-
-		buf.Write(templateBuf.Bytes())
 	}
 
 	blockKeys := g.Blocks.SortedKeys()
@@ -406,189 +309,22 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
-		// Only process blocks implementing GeneratorBlockAssocExtType.
-		var blockAssocExtType GeneratorBlockAssocExtType
-		var ok bool
-
-		if blockAssocExtType, ok = g.Blocks[k].(GeneratorBlockAssocExtType); !ok {
+		if g.Blocks[k] == nil {
 			continue
 		}
 
-		// Only process if AssocExtType() is not nil.
-		assocExtType := blockAssocExtType.AssocExtType()
+		if t, ok := g.Blocks[k].(ToFrom); ok {
+			b, err := t.ToFrom(k)
 
-		if assocExtType == nil {
-			continue
-		}
-
-		// Only process if block implements Attributes (i.e., list, set, single
-		// nested blocks).
-		a, ok := g.Blocks[k].(Attributes)
-
-		if !ok {
-			continue
-		}
-
-		var fields []objectField
-
-		blockAttributes := a.GetAttributes()
-
-		// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-		var blockAttributeKeys = make([]string, 0, len(blockAttributes))
-
-		for ba := range blockAttributes {
-			blockAttributeKeys = append(blockAttributeKeys, ba)
-		}
-
-		sort.Strings(blockAttributeKeys)
-
-		for _, x := range blockAttributeKeys {
-			name := FrameworkIdentifier(x)
-
-			switch blockAttributes[x].GeneratorSchemaType() {
-			case GeneratorBoolAttribute:
-				fields = append(fields, boolObjectField(name.ToPascalCase()))
-			case GeneratorFloat64Attribute:
-				fields = append(fields, float64ObjectField(name.ToPascalCase()))
-			case GeneratorInt64Attribute:
-				fields = append(fields, int64ObjectField(name.ToPascalCase()))
-			case GeneratorNumberAttribute:
-				fields = append(fields, numberObjectField(name.ToPascalCase()))
-			case GeneratorStringAttribute:
-				fields = append(fields, stringObjectField(name.ToPascalCase()))
-			}
-		}
-
-		var t *template.Template
-		var err error
-
-		switch blockAssocExtType.GeneratorSchemaType() {
-		case GeneratorListNestedBlock:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case GeneratorSetNestedBlock:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSingleNestedBlock:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
+
+			buf.Write(b)
 		}
-
-		if t == nil {
-			return nil, fmt.Errorf("no matching template for type: %T", blockAssocExtType.GeneratorSchemaType())
-		}
-
-		var templateBuf bytes.Buffer
-
-		templateData := struct {
-			Name          string
-			Type          string
-			TypeReference string
-			TypeName      string
-			Fields        []objectField
-		}{
-			Name:          FrameworkIdentifier(k).ToPascalCase(),
-			Type:          assocExtType.Type(),
-			TypeReference: assocExtType.TypeReference(),
-			TypeName:      dotNotationToPascalCase(assocExtType.TypeReference()),
-			Fields:        fields,
-		}
-
-		err = t.Execute(&templateBuf, templateData)
-		if err != nil {
-			return nil, err
-		}
-
-		buf.Write(templateBuf.Bytes())
 	}
 
 	return buf.Bytes(), nil
-}
-
-type field struct {
-	DefaultTo   string
-	DefaultFrom string
-}
-
-type objectField struct {
-	Name string
-	field
-}
-
-func boolField() field {
-	return field{
-		DefaultTo:   "ValueBoolPointer",
-		DefaultFrom: "BoolPointerValue",
-	}
-}
-
-func int64Field() field {
-	return field{
-		DefaultTo:   "ValueInt64Pointer",
-		DefaultFrom: "Int64PointerValue",
-	}
-}
-
-func float64Field() field {
-	return field{
-		DefaultTo:   "ValueFloat64Pointer",
-		DefaultFrom: "Float64PointerValue",
-	}
-}
-
-func numberField() field {
-	return field{
-		DefaultTo:   "ValueBigFloat",
-		DefaultFrom: "NumberValue",
-	}
-}
-
-func stringField() field {
-	return field{
-		DefaultTo:   "ValueStringPointer",
-		DefaultFrom: "StringPointerValue",
-	}
-}
-
-func boolObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: boolField(),
-	}
-}
-
-func int64ObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: int64Field(),
-	}
-}
-
-func float64ObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: float64Field(),
-	}
-}
-
-func numberObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: numberField(),
-	}
-}
-
-func stringObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: stringField(),
-	}
 }
 
 func ElementTypeString(elementType specschema.ElementType) (string, error) {
@@ -675,28 +411,4 @@ func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 	}
 
 	return strings.Join(attrTypesStr, ",\n"), nil
-}
-
-func dotNotationToPascalCase(input string) string {
-	inputSplit := strings.Split(input, ".")
-
-	var ucName string
-
-	for _, v := range inputSplit {
-		if len(v) < 1 {
-			continue
-		}
-
-		firstChar := v[0:1]
-		ucFirstChar := strings.ToUpper(firstChar)
-
-		if len(v) < 2 {
-			ucName += ucFirstChar
-			continue
-		}
-
-		ucName += ucFirstChar + v[1:]
-	}
-
-	return ucName
 }
