@@ -117,7 +117,7 @@ func (g GeneratorSchema) Imports() (string, error) {
 	return sb.String(), nil
 }
 
-func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([]byte, error) {
+func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte, error) {
 	attributes, err := g.Attributes.Schema()
 
 	if err != nil {

@@ -135,7 +135,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 
 	// convert framework schema to []byte
 	g := schema.NewGeneratorSchemas(s)
-	schemaBytes, err := g.SchemasBytes(packageName, generatorType)
+	schemas, err := g.Schemas(packageName, generatorType)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
@@ -159,7 +159,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// format schema code
-	formattedDataSourcesSchema, err := format.Format(schemaBytes)
+	formattedSchemas, err := format.Format(schemas)
 	if err != nil {
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
@@ -183,7 +183,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// write code
-	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	err = output.WriteDataSources(formattedSchemas, formattedDataSourcesModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

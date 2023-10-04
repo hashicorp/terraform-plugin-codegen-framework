@@ -135,7 +135,7 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName, gene
 
 	// convert framework schema to []byte
 	g := schema.NewGeneratorSchemas(s)
-	schemaBytes, err := g.SchemasBytes(packageName, generatorType)
+	schemas, err := g.Schemas(packageName, generatorType)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
@@ -159,7 +159,7 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// format schema code
-	formattedResourcesSchema, err := format.Format(schemaBytes)
+	formattedSchemas, err := format.Format(schemas)
 	if err != nil {
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
@@ -183,7 +183,7 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// write code
-	err = output.WriteResources(formattedResourcesSchema, formattedResourcesModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	err = output.WriteResources(formattedSchemas, formattedResourcesModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

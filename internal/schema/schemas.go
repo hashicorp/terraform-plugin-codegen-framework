@@ -20,7 +20,7 @@ func NewGeneratorSchemas(schemas map[string]GeneratorSchema) GeneratorSchemas {
 	}
 }
 
-func (g GeneratorSchemas) SchemasBytes(packageName, generatorType string) (map[string][]byte, error) {
+func (g GeneratorSchemas) Schemas(packageName, generatorType string) (map[string][]byte, error) {
 	schemasBytes := make(map[string][]byte, len(g.schemas))
 
 	for k, s := range g.schemas {
@@ -29,7 +29,7 @@ func (g GeneratorSchemas) SchemasBytes(packageName, generatorType string) (map[s
 			packageName = fmt.Sprintf("%s_%s", strings.ToLower(generatorType), k)
 		}
 
-		b, err := s.SchemaBytes(k, packageName, generatorType)
+		b, err := s.Schema(k, packageName, generatorType)
 
 		if err != nil {
 			return nil, err
