@@ -4,6 +4,7 @@
 package datasource_generate
 
 import (
+	"bytes"
 	"strings"
 	"text/template"
 
@@ -17,6 +18,7 @@ import (
 type GeneratorBoolAttribute struct {
 	schema.BoolAttribute
 
+	AssociatedExternalType *generatorschema.AssocExtType
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
@@ -100,4 +102,50 @@ func (g GeneratorBoolAttribute) ModelField(name generatorschema.FrameworkIdentif
 	}
 
 	return field, nil
+}
+
+func (g GeneratorBoolAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	boolType := generatorschema.NewCustomBoolType(name)
+
+	b, err := boolType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	boolValue := generatorschema.NewCustomBoolValue(name)
+
+	b, err = boolValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorBoolAttribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	toFrom := generatorschema.NewToFromBool(name, g.AssociatedExternalType)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

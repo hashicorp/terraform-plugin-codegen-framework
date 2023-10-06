@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertBoolAttribute(a *datasource.BoolAttribute) (datasource_generate.GeneratorBoolAttribute, error) {
@@ -28,7 +29,8 @@ func convertBoolAttribute(a *datasource.BoolAttribute) (datasource_generate.Gene
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
 	}, nil
 }

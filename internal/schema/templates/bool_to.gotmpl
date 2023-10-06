@@ -1,0 +1,20 @@
+func (v {{.Name}}Value) To{{.AssocExtType.ToPascalCase}}(ctx context.Context) ({{.AssocExtType.Type}}, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if v.IsNull() {
+return nil, diags
+}
+
+if v.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"{{.Name}}Value Value Is Unknown",
+`"{{.Name}}Value" is unknown.`,
+))
+
+return nil, diags
+}
+
+a := {{.AssocExtType.TypeReference}}(v.ValueBoolPointer())
+
+return &a, diags
+}

@@ -1,0 +1,22 @@
+
+func (t {{.Name}}Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+attrValue, err := t.BoolType.ValueFromTerraform(ctx, in)
+
+if err != nil {
+return nil, err
+}
+
+boolValue, ok := attrValue.(basetypes.BoolValue)
+
+if !ok {
+return nil, fmt.Errorf("unexpected value type of %T", attrValue)
+}
+
+boolValuable, diags := t.ValueFromBool(ctx, boolValue)
+
+if diags.HasError() {
+return nil, fmt.Errorf("unexpected error converting BoolValue to BoolValuable: %v", diags)
+}
+
+return boolValuable, nil
+}
