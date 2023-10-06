@@ -206,7 +206,7 @@ func TestGeneratorDataSourceSchemas_ModelsBytes(t *testing.T) {
 			t.Parallel()
 
 			g := schema.NewGeneratorSchemas(testCase.input)
-			got, err := g.ModelsBytes()
+			got, err := g.Models()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

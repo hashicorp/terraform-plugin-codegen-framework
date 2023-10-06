@@ -20,7 +20,7 @@ func NewGeneratorSchemas(schemas map[string]GeneratorSchema) GeneratorSchemas {
 	}
 }
 
-func (g GeneratorSchemas) SchemasBytes(packageName, generatorType string) (map[string][]byte, error) {
+func (g GeneratorSchemas) Schemas(packageName, generatorType string) (map[string][]byte, error) {
 	schemasBytes := make(map[string][]byte, len(g.schemas))
 
 	for k, s := range g.schemas {
@@ -29,7 +29,7 @@ func (g GeneratorSchemas) SchemasBytes(packageName, generatorType string) (map[s
 			packageName = fmt.Sprintf("%s_%s", strings.ToLower(generatorType), k)
 		}
 
-		b, err := s.SchemaBytes(k, packageName, generatorType)
+		b, err := s.Schema(k, packageName, generatorType)
 
 		if err != nil {
 			return nil, err
@@ -41,7 +41,7 @@ func (g GeneratorSchemas) SchemasBytes(packageName, generatorType string) (map[s
 	return schemasBytes, nil
 }
 
-func (g GeneratorSchemas) ModelsBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) Models() (map[string][]byte, error) {
 	modelsBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, schema := range g.schemas {
@@ -67,7 +67,7 @@ func (g GeneratorSchemas) ModelsBytes() (map[string][]byte, error) {
 	return modelsBytes, nil
 }
 
-func (g GeneratorSchemas) CustomTypeValueBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) CustomTypeValue() (map[string][]byte, error) {
 	customTypeValueBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, s := range g.schemas {
@@ -82,11 +82,11 @@ func (g GeneratorSchemas) CustomTypeValueBytes() (map[string][]byte, error) {
 	return customTypeValueBytes, nil
 }
 
-func (g GeneratorSchemas) ModelsToFromBytes() (map[string][]byte, error) {
+func (g GeneratorSchemas) ToFromFunctions() (map[string][]byte, error) {
 	modelsExpandFlattenBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, s := range g.schemas {
-		b, err := s.ModelsToFromBytes()
+		b, err := s.ToFromFunctions()
 		if err != nil {
 			return nil, err
 		}
