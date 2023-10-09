@@ -1,12 +1,16 @@
-# terraform-plugin-codegen-framework
+# Terraform Plugin Framework Code Generator
 
-_Experimental: This code is under active development and not intended for production usage._
+> _[Terraform Provider Code Generation](https://developer.hashicorp.com/terraform/plugin/code-generation) is currently in tech preview._
 
 ## Overview
 
-Terraform Plugin Code Generation Framework is a binary which converts a [specification](https://github.com/hashicorp/terraform-plugin-codegen-spec) into Go code for use in a Terraform Plugin Provider.
+Terraform Plugin Framework Code Generator is a CLI tool which converts a [Provider Code Specification](https://developer.hashicorp.com//terraform/plugin/code-generation/specification) into Go code for use in a Terraform [Plugin Framework](https://developer.hashicorp.com/terraform/plugin/framework) Provider.
 
-The generator will output a schema, and the associated types for use in the CRUD operations performed by a Terraform provider. Additionally, scaffolding output can be generated to provide a skeleton of a Terraform provider.
+The generator currently outputs a schema, and the associated types for use in CRUD operations performed by a Terraform provider. Additionally, scaffolding output can be generated to provide a skeleton of a Terraform provider.
+
+## Documentation
+
+Full usage info and examples live on the HashiCorp developer site: https://developer.hashicorp.com/terraform/plugin/code-generation/framework-generator
 
 ## Usage
 
