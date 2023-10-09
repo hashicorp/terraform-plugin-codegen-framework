@@ -4,8 +4,10 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"os"
+	"runtime/debug"
 
 	"github.com/mattn/go-colorable"
 	"github.com/mitchellh/cli"
@@ -13,12 +15,23 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 )
 
+// version will be set by goreleaser via ldflags
+// https://goreleaser.com/cookbooks/using-main.version/
 func main() {
 	name := "tfplugingen-framework"
-	version := name + " Version " + version
-	if commit != "" {
-		version += " from commit " + commit
-	}
+	version := name + func() string {
+		if info, ok := debug.ReadBuildInfo(); ok {
+			for _, setting := range info.Settings {
+				if setting.Key == "vcs.revision" {
+					return fmt.Sprintf(" commit: %s", setting.Value)
+				}
+			}
+
+			return fmt.Sprintf(" module: %s", info.Main.Version)
+		}
+
+		return " local"
+	}()
 
 	os.Exit(runCLI(
 		name,

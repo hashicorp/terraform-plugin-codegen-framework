@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"sort"
 	"strings"
 	"text/template"
 
@@ -15,7 +14,6 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templates"
 )
 
 type GeneratorSchema struct {
@@ -23,7 +21,7 @@ type GeneratorSchema struct {
 	Blocks     GeneratorBlocks
 }
 
-func (g GeneratorSchema) ImportsString() (string, error) {
+func (g GeneratorSchema) Imports() (string, error) {
 	imports := NewImports()
 
 	for _, a := range g.Attributes {
@@ -119,7 +117,7 @@ func (g GeneratorSchema) ImportsString() (string, error) {
 	return sb.String(), nil
 }
 
-func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([]byte, error) {
+func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte, error) {
 	attributes, err := g.Attributes.Schema()
 
 	if err != nil {
@@ -132,33 +130,29 @@ func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([
 		return nil, err
 	}
 
-	imports, err := g.ImportsString()
+	imports, err := g.Imports()
 
 	if err != nil {
 		return nil, err
 	}
 
 	templateData := struct {
-		Name string
-		GeneratorSchema
+		Name          string
 		PackageName   string
 		GeneratorType string
 		Attributes    string
 		Blocks        string
 		Imports       string
 	}{
-		Name:            FrameworkIdentifier(name).ToPascalCase(),
-		GeneratorSchema: g,
-		PackageName:     packageName,
-		GeneratorType:   generatorType,
-		Attributes:      attributes,
-		Blocks:          blocks,
-		Imports:         imports,
+		Name:          FrameworkIdentifier(name).ToPascalCase(),
+		PackageName:   packageName,
+		GeneratorType: generatorType,
+		Attributes:    attributes,
+		Blocks:        blocks,
+		Imports:       imports,
 	}
 
-	t, err := template.New("schema").Parse(
-		templates.SchemaGoTemplate,
-	)
+	t, err := template.New("schema").Parse(SchemaGoTemplate)
 
 	if err != nil {
 		return nil, err
@@ -177,22 +171,6 @@ func (g GeneratorSchema) SchemaBytes(name, packageName, generatorType string) ([
 func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 	var models []model.Model
 
-	fields, err := g.ModelFields()
-	if err != nil {
-		return nil, err
-	}
-
-	m := model.Model{
-		Name:   FrameworkIdentifier(name).ToPascalCase(),
-		Fields: fields,
-	}
-
-	models = append(models, m)
-
-	return models, nil
-}
-
-func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 	var modelFields []model.Field
 
 	attributeKeys := g.Attributes.SortedKeys()
@@ -227,7 +205,14 @@ func (g GeneratorSchema) ModelFields() ([]model.Field, error) {
 		modelFields = append(modelFields, modelField)
 	}
 
-	return modelFields, nil
+	m := model.Model{
+		Name:   FrameworkIdentifier(name).ToPascalCase(),
+		Fields: modelFields,
+	}
+
+	models = append(models, m)
+
+	return models, nil
 }
 
 // CustomTypeValueBytes iterates over all the attributes and blocks to generate code
@@ -278,11 +263,10 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// ModelsToFromBytes generates code for expand and flatten functions.
-// Whilst associated external types can be defined on any attribute
-// type, the only types which are processed are list, map, set and
-// single nested attributes, and list, set and single nested blocks.
-func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
+// ToFromFunctions generates code for converting to an associated
+// external type from a framework type, and from an associated
+// external type to a framework type.
+func (g GeneratorSchema) ToFromFunctions() ([]byte, error) {
 	var buf bytes.Buffer
 
 	attributeKeys := g.Attributes.SortedKeys()
@@ -292,111 +276,15 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
-		// Only process attributes implementing GeneratorAttributeAssocExtType.
-		var attributeAssocExtType GeneratorAttributeAssocExtType
-		var ok bool
+		if t, ok := g.Attributes[k].(ToFrom); ok {
+			b, err := t.ToFromFunctions(k)
 
-		if attributeAssocExtType, ok = g.Attributes[k].(GeneratorAttributeAssocExtType); !ok {
-			continue
-		}
-
-		// Only process if AssocExtType() is not nil.
-		assocExtType := attributeAssocExtType.AssocExtType()
-
-		if assocExtType == nil {
-			continue
-		}
-
-		// Only process if attribute implements Attributes (i.e., list, map, set, single
-		// nested attributes).
-		a, ok := g.Attributes[k].(Attributes)
-
-		if !ok {
-			continue
-		}
-
-		var fields []objectField
-
-		attributeAttributes := a.GetAttributes()
-
-		// Using sorted attributeKeys to guarantee attribute order as maps are unordered in Go.
-		var attributeAttributeKeys = make([]string, 0, len(attributeAttributes))
-
-		for aa := range attributeAttributes {
-			attributeAttributeKeys = append(attributeAttributeKeys, aa)
-		}
-
-		sort.Strings(attributeAttributeKeys)
-
-		for _, x := range attributeAttributeKeys {
-			name := FrameworkIdentifier(x)
-
-			switch attributeAttributes[x].GeneratorSchemaType() {
-			case GeneratorBoolAttribute:
-				fields = append(fields, boolObjectField(name.ToPascalCase()))
-			case GeneratorFloat64Attribute:
-				fields = append(fields, float64ObjectField(name.ToPascalCase()))
-			case GeneratorInt64Attribute:
-				fields = append(fields, int64ObjectField(name.ToPascalCase()))
-			case GeneratorNumberAttribute:
-				fields = append(fields, numberObjectField(name.ToPascalCase()))
-			case GeneratorStringAttribute:
-				fields = append(fields, stringObjectField(name.ToPascalCase()))
-			}
-		}
-
-		var t *template.Template
-		var err error
-
-		switch attributeAssocExtType.GeneratorSchemaType() {
-		case GeneratorListNestedAttribute:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case GeneratorMapNestedAttribute:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSetNestedAttribute:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSingleNestedAttribute:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
+
+			buf.Write(b)
 		}
-
-		if t == nil {
-			return nil, fmt.Errorf("no matching template for type: %T", attributeAssocExtType.GeneratorSchemaType())
-		}
-
-		var templateBuf bytes.Buffer
-
-		templateData := struct {
-			Name          string
-			Type          string
-			TypeReference string
-			TypeName      string
-			Fields        []objectField
-		}{
-			Name:          FrameworkIdentifier(k).ToPascalCase(),
-			Type:          assocExtType.Type(),
-			TypeReference: assocExtType.TypeReference(),
-			TypeName:      dotNotationToPascalCase(assocExtType.TypeReference()),
-			Fields:        fields,
-		}
-
-		err = t.Execute(&templateBuf, templateData)
-		if err != nil {
-			return nil, err
-		}
-
-		buf.Write(templateBuf.Bytes())
 	}
 
 	blockKeys := g.Blocks.SortedKeys()
@@ -406,189 +294,22 @@ func (g GeneratorSchema) ModelsToFromBytes() ([]byte, error) {
 			continue
 		}
 
-		// Only process blocks implementing GeneratorBlockAssocExtType.
-		var blockAssocExtType GeneratorBlockAssocExtType
-		var ok bool
-
-		if blockAssocExtType, ok = g.Blocks[k].(GeneratorBlockAssocExtType); !ok {
+		if g.Blocks[k] == nil {
 			continue
 		}
 
-		// Only process if AssocExtType() is not nil.
-		assocExtType := blockAssocExtType.AssocExtType()
+		if t, ok := g.Blocks[k].(ToFrom); ok {
+			b, err := t.ToFromFunctions(k)
 
-		if assocExtType == nil {
-			continue
-		}
-
-		// Only process if block implements Attributes (i.e., list, set, single
-		// nested blocks).
-		a, ok := g.Blocks[k].(Attributes)
-
-		if !ok {
-			continue
-		}
-
-		var fields []objectField
-
-		blockAttributes := a.GetAttributes()
-
-		// Using sorted blockKeys to guarantee block order as maps are unordered in Go.
-		var blockAttributeKeys = make([]string, 0, len(blockAttributes))
-
-		for ba := range blockAttributes {
-			blockAttributeKeys = append(blockAttributeKeys, ba)
-		}
-
-		sort.Strings(blockAttributeKeys)
-
-		for _, x := range blockAttributeKeys {
-			name := FrameworkIdentifier(x)
-
-			switch blockAttributes[x].GeneratorSchemaType() {
-			case GeneratorBoolAttribute:
-				fields = append(fields, boolObjectField(name.ToPascalCase()))
-			case GeneratorFloat64Attribute:
-				fields = append(fields, float64ObjectField(name.ToPascalCase()))
-			case GeneratorInt64Attribute:
-				fields = append(fields, int64ObjectField(name.ToPascalCase()))
-			case GeneratorNumberAttribute:
-				fields = append(fields, numberObjectField(name.ToPascalCase()))
-			case GeneratorStringAttribute:
-				fields = append(fields, stringObjectField(name.ToPascalCase()))
-			}
-		}
-
-		var t *template.Template
-		var err error
-
-		switch blockAssocExtType.GeneratorSchemaType() {
-		case GeneratorListNestedBlock:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
 			if err != nil {
 				return nil, err
 			}
-		case GeneratorSetNestedBlock:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
-		case GeneratorSingleNestedBlock:
-			t, err = template.New("to_from").Parse(templates.ToFromTemplate)
-			if err != nil {
-				return nil, err
-			}
+
+			buf.Write(b)
 		}
-
-		if t == nil {
-			return nil, fmt.Errorf("no matching template for type: %T", blockAssocExtType.GeneratorSchemaType())
-		}
-
-		var templateBuf bytes.Buffer
-
-		templateData := struct {
-			Name          string
-			Type          string
-			TypeReference string
-			TypeName      string
-			Fields        []objectField
-		}{
-			Name:          FrameworkIdentifier(k).ToPascalCase(),
-			Type:          assocExtType.Type(),
-			TypeReference: assocExtType.TypeReference(),
-			TypeName:      dotNotationToPascalCase(assocExtType.TypeReference()),
-			Fields:        fields,
-		}
-
-		err = t.Execute(&templateBuf, templateData)
-		if err != nil {
-			return nil, err
-		}
-
-		buf.Write(templateBuf.Bytes())
 	}
 
 	return buf.Bytes(), nil
-}
-
-type field struct {
-	DefaultTo   string
-	DefaultFrom string
-}
-
-type objectField struct {
-	Name string
-	field
-}
-
-func boolField() field {
-	return field{
-		DefaultTo:   "ValueBoolPointer",
-		DefaultFrom: "BoolPointerValue",
-	}
-}
-
-func int64Field() field {
-	return field{
-		DefaultTo:   "ValueInt64Pointer",
-		DefaultFrom: "Int64PointerValue",
-	}
-}
-
-func float64Field() field {
-	return field{
-		DefaultTo:   "ValueFloat64Pointer",
-		DefaultFrom: "Float64PointerValue",
-	}
-}
-
-func numberField() field {
-	return field{
-		DefaultTo:   "ValueBigFloat",
-		DefaultFrom: "NumberValue",
-	}
-}
-
-func stringField() field {
-	return field{
-		DefaultTo:   "ValueStringPointer",
-		DefaultFrom: "StringPointerValue",
-	}
-}
-
-func boolObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: boolField(),
-	}
-}
-
-func int64ObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: int64Field(),
-	}
-}
-
-func float64ObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: float64Field(),
-	}
-}
-
-func numberObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: numberField(),
-	}
-}
-
-func stringObjectField(name string) objectField {
-	return objectField{
-		Name:  name,
-		field: stringField(),
-	}
 }
 
 func ElementTypeString(elementType specschema.ElementType) (string, error) {
@@ -675,28 +396,4 @@ func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 	}
 
 	return strings.Join(attrTypesStr, ",\n"), nil
-}
-
-func dotNotationToPascalCase(input string) string {
-	inputSplit := strings.Split(input, ".")
-
-	var ucName string
-
-	for _, v := range inputSplit {
-		if len(v) < 1 {
-			continue
-		}
-
-		firstChar := v[0:1]
-		ucFirstChar := strings.ToUpper(firstChar)
-
-		if len(v) < 2 {
-			ucName += ucFirstChar
-			continue
-		}
-
-		ucName += ucFirstChar + v[1:]
-	}
-
-	return ucName
 }

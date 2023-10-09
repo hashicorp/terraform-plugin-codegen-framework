@@ -76,6 +76,31 @@ func (g GeneratorBlocks) AttrValues() (map[string]string, error) {
 	return attrValues, nil
 }
 
+// FromFuncs returns a mapping of block names to string representations of the
+// function that converts a Go value to a framework value.
+func (g GeneratorBlocks) FromFuncs() map[string]string {
+	attributeKeys := g.SortedKeys()
+
+	fromFuncs := make(map[string]string, len(g))
+
+	for _, k := range attributeKeys {
+		switch g[k].GeneratorSchemaType() {
+		case GeneratorBoolAttribute:
+			fromFuncs[k] = "BoolPointerValue"
+		case GeneratorFloat64Attribute:
+			fromFuncs[k] = "Float64PointerValue"
+		case GeneratorInt64Attribute:
+			fromFuncs[k] = "Int64PointerValue"
+		case GeneratorNumberAttribute:
+			fromFuncs[k] = "NumberValue"
+		case GeneratorStringAttribute:
+			fromFuncs[k] = "StringPointerValue"
+		}
+	}
+
+	return fromFuncs
+}
+
 func (g GeneratorBlocks) Schema() (string, error) {
 	var s strings.Builder
 
@@ -103,6 +128,31 @@ func (g GeneratorBlocks) Schema() (string, error) {
 	}
 
 	return s.String(), nil
+}
+
+// ToFuncs returns a mapping of block names to string representations of the
+// function that converts a framework value to a Go value.
+func (g GeneratorBlocks) ToFuncs() map[string]string {
+	attributeKeys := g.SortedKeys()
+
+	toFuncs := make(map[string]string, len(g))
+
+	for _, k := range attributeKeys {
+		switch g[k].GeneratorSchemaType() {
+		case GeneratorBoolAttribute:
+			toFuncs[k] = "ValueBoolPointer"
+		case GeneratorFloat64Attribute:
+			toFuncs[k] = "ValueFloat64Pointer"
+		case GeneratorInt64Attribute:
+			toFuncs[k] = "ValueInt64Pointer"
+		case GeneratorNumberAttribute:
+			toFuncs[k] = "ValueBigFloat"
+		case GeneratorStringAttribute:
+			toFuncs[k] = "ValueStringPointer"
+		}
+	}
+
+	return toFuncs
 }
 
 func (g GeneratorBlocks) SortedKeys() []string {

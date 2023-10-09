@@ -281,3 +281,23 @@ func (g GeneratorListNestedBlock) CustomTypeAndValue(name string) ([]byte, error
 
 	return buf.Bytes(), nil
 }
+
+func (g GeneratorListNestedBlock) ToFromFunctions(name string) ([]byte, error) {
+	if g.NestedObject.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	toFuncs := g.NestedObject.Attributes.ToFuncs()
+
+	fromFuncs := g.NestedObject.Attributes.FromFuncs()
+
+	toFrom := generatorschema.NewToFromObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}

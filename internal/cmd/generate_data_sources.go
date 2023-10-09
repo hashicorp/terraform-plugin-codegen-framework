@@ -135,55 +135,55 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 
 	// convert framework schema to []byte
 	g := schema.NewGeneratorSchemas(s)
-	schemaBytes, err := g.SchemasBytes(packageName, generatorType)
+	schemas, err := g.Schemas(packageName, generatorType)
 	if err != nil {
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
 	// generate model code
-	modelsBytes, err := g.ModelsBytes()
+	models, err := g.Models()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// generate custom type and value types code
-	customTypeValueBytes, err := g.CustomTypeValueBytes()
+	customTypeValue, err := g.CustomTypeValue()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// generate "expand" and "flatten" code
-	modelsToFromBytes, err := g.ModelsToFromBytes()
+	toFromFunctions, err := g.ToFromFunctions()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// format schema code
-	formattedDataSourcesSchema, err := format.Format(schemaBytes)
+	formattedSchemas, err := format.Format(schemas)
 	if err != nil {
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
 
 	// format model code
-	formattedDataSourcesModels, err := format.Format(modelsBytes)
+	formattedModels, err := format.Format(models)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// format custom type and value types code
-	formattedCustomTypeValue, err := format.Format(customTypeValueBytes)
+	formattedCustomTypeValue, err := format.Format(customTypeValue)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// format "expand" and "flatten" code
-	formattedDataSourcesToFrom, err := format.Format(modelsToFromBytes)
+	formattedToFromFunctions, err := format.Format(toFromFunctions)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// write code
-	err = output.WriteDataSources(formattedDataSourcesSchema, formattedDataSourcesModels, formattedCustomTypeValue, formattedDataSourcesToFrom, outputPath, packageName)
+	err = output.WriteDataSources(formattedSchemas, formattedModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

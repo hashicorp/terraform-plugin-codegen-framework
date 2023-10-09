@@ -75,3 +75,27 @@ func (a *AssocExtType) Equal(other *AssocExtType) bool {
 
 	return a.AssociatedExternalType.Equal(other.AssociatedExternalType)
 }
+
+func (a *AssocExtType) ToPascalCase() string {
+	inputSplit := strings.Split(a.TypeReference(), ".")
+
+	var ucName string
+
+	for _, v := range inputSplit {
+		if len(v) < 1 {
+			continue
+		}
+
+		firstChar := v[0:1]
+		ucFirstChar := strings.ToUpper(firstChar)
+
+		if len(v) < 2 {
+			ucName += ucFirstChar
+			continue
+		}
+
+		ucName += ucFirstChar + v[1:]
+	}
+
+	return ucName
+}
