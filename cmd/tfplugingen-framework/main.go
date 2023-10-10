@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"runtime/debug"
 
 	"github.com/mattn/go-colorable"
 	"github.com/mitchellh/cli"
@@ -15,27 +14,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 )
 
-// version will be set by goreleaser via ldflags
-// https://goreleaser.com/cookbooks/using-main.version/
 func main() {
 	name := "tfplugingen-framework"
-	version := name + func() string {
-		if info, ok := debug.ReadBuildInfo(); ok {
-			for _, setting := range info.Settings {
-				if setting.Key == "vcs.revision" {
-					return fmt.Sprintf(" commit: %s", setting.Value)
-				}
-			}
-
-			return fmt.Sprintf(" module: %s", info.Main.Version)
-		}
-
-		return " local"
-	}()
+	versionOutput := fmt.Sprintf("%s %s", name, getVersion())
 
 	os.Exit(runCLI(
 		name,
-		version,
+		versionOutput,
 		os.Args[1:],
 		os.Stdin,
 		colorable.NewColorableStdout(),
@@ -43,7 +28,7 @@ func main() {
 	))
 }
 
-func runCLI(name, version string, args []string, stdin io.Reader, stdout, stderr io.Writer) int {
+func runCLI(name, versionOutput string, args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	ui := &cli.ColoredUi{
 		ErrorColor: cli.UiColorRed,
 		WarnColor:  cli.UiColorYellow,
@@ -62,7 +47,7 @@ func runCLI(name, version string, args []string, stdin io.Reader, stdout, stderr
 		Commands:   commands,
 		HelpFunc:   cli.BasicHelpFunc(name),
 		HelpWriter: stderr,
-		Version:    version,
+		Version:    versionOutput,
 	}
 	exitCode, err := frameworkGen.Run()
 	if err != nil {

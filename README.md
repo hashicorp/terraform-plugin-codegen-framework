@@ -21,6 +21,8 @@ Full usage info and examples live on the HashiCorp developer site: https://devel
 
 ### Installation
 
+You install a copy of the binary manually from the [releases](https://github.com/hashicorp/terraform-plugin-codegen-framework/releases) tab, or install via the Go toolchain:
+
 ```shell
 go install github.com/hashicorp/terraform-plugin-codegen-framework/cmd/tfplugingen-framework@latest
 ```
