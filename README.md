@@ -6,7 +6,12 @@
 
 Terraform Plugin Framework Code Generator is a CLI tool which converts a [Provider Code Specification](https://developer.hashicorp.com//terraform/plugin/code-generation/specification) into Go code for use in a Terraform [Plugin Framework](https://developer.hashicorp.com/terraform/plugin/framework) Provider.
 
-The generator currently outputs a schema, and the associated types for use in CRUD operations performed by a Terraform provider. Additionally, scaffolding output can be generated to provide a skeleton of a Terraform provider.
+The generator currently supports outputting:
+
+ * **Schema**: With all framework functionality, such as validators and plan modifiers, and no limits on nesting.
+ * **Data Model Types**: With conversion to external Go types, if provided in the specification, such as API SDK types.
+ 
+Over time, it is anticipated that the Provider Code Specification and this generator will be further enhanced to support CRUD logic.
 
 ## Documentation
 
@@ -36,7 +41,7 @@ Refer to the [documentation](https://developer.hashicorp.com/terraform/plugin/co
 
 ### Scaffold Command
 
-The scaffold command generates skeleton code for a data source, provider, or resource.
+The scaffold command generates starter code for a data source, provider, or resource to reduce initial development effort. The templates can be customized to match provider code conventions and automatically include API client configuration.
 
 For example:
 
