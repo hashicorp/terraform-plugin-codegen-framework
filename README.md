@@ -8,8 +8,8 @@ Terraform Plugin Framework Code Generator is a CLI tool which converts a [Provid
 
 The generator currently supports outputting:
 
- * **Schema**: With all framework functionality, such as validators and plan modifiers, and no limits on nesting.
- * **Data Model Types**: With conversion to external Go types, if provided in the specification, such as API SDK types.
+ * **[Schema](https://developer.hashicorp.com/terraform/plugin/framework/handling-data/schemas)**: With all framework functionality, such as validators and plan modifiers, and no limits on nesting.
+ * **[Data Model Types](https://developer.hashicorp.com/terraform/plugin/framework/handling-data/accessing-values#get-the-entire-configuration-plan-or-state)**: With conversion to external Go types, if provided in the specification, such as API SDK types.
  
 Over time, it is anticipated that the Provider Code Specification and this generator will be further enhanced to support CRUD logic.
 
