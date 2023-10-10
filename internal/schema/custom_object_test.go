@@ -236,7 +236,7 @@ diags.AddError(
 "Attribute Missing",
 ` + "`bool_attribute is missing from object`" + `)
 
-return NewExampleValueNull(), diags
+return NewExampleValueUnknown(), diags
 }
 
 boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)

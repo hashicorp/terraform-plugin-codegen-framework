@@ -416,7 +416,7 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 			"Attribute Missing",
 			`bool_attribute is missing from object`)
 
-		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
@@ -434,7 +434,7 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 			"Attribute Missing",
 			`float64_attribute is missing from object`)
 
-		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
@@ -452,7 +452,7 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 			"Attribute Missing",
 			`int64_attribute is missing from object`)
 
-		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
@@ -470,7 +470,7 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 			"Attribute Missing",
 			`number_attribute is missing from object`)
 
-		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
@@ -488,7 +488,7 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 			"Attribute Missing",
 			`string_attribute is missing from object`)
 
-		return NewListNestedAttributeAssocExtTypeValueNull(), diags
+		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
@@ -948,7 +948,7 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`bool_attribute is missing from object`)
 
-		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
@@ -966,7 +966,7 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`float64_attribute is missing from object`)
 
-		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
@@ -984,7 +984,7 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`int64_attribute is missing from object`)
 
-		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
@@ -1002,7 +1002,7 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`number_attribute is missing from object`)
 
-		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
@@ -1020,7 +1020,7 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`string_attribute is missing from object`)
 
-		return NewMapNestedAttributeAssocExtTypeValueNull(), diags
+		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
@@ -1480,7 +1480,7 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`bool_attribute is missing from object`)
 
-		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
@@ -1498,7 +1498,7 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`float64_attribute is missing from object`)
 
-		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
@@ -1516,7 +1516,7 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`int64_attribute is missing from object`)
 
-		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
@@ -1534,7 +1534,7 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`number_attribute is missing from object`)
 
-		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
@@ -1552,7 +1552,7 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			"Attribute Missing",
 			`string_attribute is missing from object`)
 
-		return NewSetNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
@@ -2012,7 +2012,7 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 			"Attribute Missing",
 			`bool_attribute is missing from object`)
 
-		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
@@ -2030,7 +2030,7 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 			"Attribute Missing",
 			`float64_attribute is missing from object`)
 
-		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
@@ -2048,7 +2048,7 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 			"Attribute Missing",
 			`int64_attribute is missing from object`)
 
-		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
@@ -2066,7 +2066,7 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 			"Attribute Missing",
 			`number_attribute is missing from object`)
 
-		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
@@ -2084,7 +2084,7 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 			"Attribute Missing",
 			`string_attribute is missing from object`)
 
-		return NewSingleNestedAttributeAssocExtTypeValueNull(), diags
+		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
@@ -2544,7 +2544,7 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 			"Attribute Missing",
 			`bool_attribute is missing from object`)
 
-		return NewListNestedBlockAssocExtTypeValueNull(), diags
+		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
@@ -2562,7 +2562,7 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 			"Attribute Missing",
 			`float64_attribute is missing from object`)
 
-		return NewListNestedBlockAssocExtTypeValueNull(), diags
+		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
@@ -2580,7 +2580,7 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 			"Attribute Missing",
 			`int64_attribute is missing from object`)
 
-		return NewListNestedBlockAssocExtTypeValueNull(), diags
+		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
@@ -2598,7 +2598,7 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 			"Attribute Missing",
 			`number_attribute is missing from object`)
 
-		return NewListNestedBlockAssocExtTypeValueNull(), diags
+		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
@@ -2616,7 +2616,7 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 			"Attribute Missing",
 			`string_attribute is missing from object`)
 
-		return NewListNestedBlockAssocExtTypeValueNull(), diags
+		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
@@ -3076,7 +3076,7 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 			"Attribute Missing",
 			`bool_attribute is missing from object`)
 
-		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
@@ -3094,7 +3094,7 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 			"Attribute Missing",
 			`float64_attribute is missing from object`)
 
-		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
@@ -3112,7 +3112,7 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 			"Attribute Missing",
 			`int64_attribute is missing from object`)
 
-		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
@@ -3130,7 +3130,7 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 			"Attribute Missing",
 			`number_attribute is missing from object`)
 
-		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
@@ -3148,7 +3148,7 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 			"Attribute Missing",
 			`string_attribute is missing from object`)
 
-		return NewSetNestedBlockAssocExtTypeValueNull(), diags
+		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
@@ -3608,7 +3608,7 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 			"Attribute Missing",
 			`bool_attribute is missing from object`)
 
-		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
@@ -3626,7 +3626,7 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 			"Attribute Missing",
 			`float64_attribute is missing from object`)
 
-		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
@@ -3644,7 +3644,7 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 			"Attribute Missing",
 			`int64_attribute is missing from object`)
 
-		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
@@ -3662,7 +3662,7 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 			"Attribute Missing",
 			`number_attribute is missing from object`)
 
-		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
@@ -3680,7 +3680,7 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 			"Attribute Missing",
 			`string_attribute is missing from object`)
 
-		return NewSingleNestedBlockAssocExtTypeValueNull(), diags
+		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)

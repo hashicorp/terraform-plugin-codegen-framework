@@ -58,7 +58,7 @@ diags.AddError(
 "Attribute Missing",
 `{{$key}} is missing from object`)
 
-return New{{$.Name}}ValueNull(), diags
+return New{{$.Name}}ValueUnknown(), diags
 }
 
 {{$key.ToCamelCase}}Val, ok := {{$key.ToCamelCase}}.({{$value}})
