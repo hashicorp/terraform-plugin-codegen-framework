@@ -1,80 +1,59 @@
-# Intermediate Representation to Code Generator
+# Terraform Plugin Framework Code Generator
 
-## Running the Generator
+> _[Terraform Provider Code Generation](https://developer.hashicorp.com/terraform/plugin/code-generation) is currently in tech preview._
 
-### Build (local)
+## Overview
+
+Terraform Plugin Framework Code Generator is a CLI tool which converts a [Provider Code Specification](https://developer.hashicorp.com//terraform/plugin/code-generation/specification) into Go code for use in a Terraform [Plugin Framework](https://developer.hashicorp.com/terraform/plugin/framework) Provider. Additionally, scaffolding commands with customizable templates are available which generate boilerplate provider code for new data sources and resources to reduce development time.
+
+The generator currently supports outputting:
+
+ * **[Schema](https://developer.hashicorp.com/terraform/plugin/framework/handling-data/schemas)**: With all framework functionality, such as validators and plan modifiers, and no limits on nesting.
+ * **[Data Model Types](https://developer.hashicorp.com/terraform/plugin/framework/handling-data/accessing-values#get-the-entire-configuration-plan-or-state)**: With conversion to external Go types, if provided in the specification, such as API SDK types.
+ 
+Over time, it is anticipated that the Provider Code Specification and this generator will be further enhanced to support CRUD logic.
+
+## Documentation
+
+Full usage info and examples live on the HashiCorp developer site: https://developer.hashicorp.com/terraform/plugin/code-generation/framework-generator
+
+## Usage
+
+### Installation
+
 ```shell
-# Build the binary from source
-# Creates binary named `tfplugingen-framework`
-make build
+go install github.com/hashicorp/terraform-plugin-codegen-framework/cmd/tfplugingen-framework@latest
 ```
 
-### Input
+### Generate Command
 
-The generator reads an [Intermediate Representation (IR)](https://github.com/hashicorp/terraform-plugin-codegen-spec) of a Terraform Provider. Input is read from **stdin** by default in order to facilitate the chaining together of CLI commands.
-
-The following examples use an IR from the repo's integration tests [internal/cmd/testdata/custom_and_external/ir.json](./internal/cmd/testdata/custom_and_external/ir.json):
-
-```shell
-cat internal/cmd/testdata/custom_and_external/ir.json | ./tfplugingen-framework generate all
-```
-
-An alternative is to use the `--input` flag to specify a file from which the IR can be read.
+The generate command uses a specification](https://github.com/hashicorp/terraform-plugin-codegen-spec) as input and generates Terraform Provider code as output.
 
 For example:
 
 ```shell
-./tfplugingen-framework generate all --input internal/cmd/testdata/custom_and_external/ir.json
+tfplugingen-framework generate all \
+    --input specification.json \
+    --output internal/provider
 ```
 
-### Commands
-The IR JSON file contains `provider`, `resources`, and `datasources` definitions. These can all be processed together or individually with the following commands:
+Refer to the [documentation](https://developer.hashicorp.com/terraform/plugin/code-generation/framework-generator#generate-command) for further details.
+
+### Scaffold Command
+
+The scaffold command generates starter code for a data source, provider, or resource to reduce initial development effort. The templates can be customized to match provider code conventions and automatically include API client configuration.
+
+For example:
 
 ```shell
-# Generates all code for provider, resources, and data-sources
-./tfplugingen-framework generate all --input internal/cmd/testdata/custom_and_external/ir.json
-
-# Generates all code for data-sources only.
-./tfplugingen-framework generate data-sources --input internal/cmd/testdata/custom_and_external/ir.json
-
-# Generates all code for provider only.
-./tfplugingen-framework generate provider --input internal/cmd/testdata/custom_and_external/ir.json
-
-# Generates all code for resources only.
-./tfplugingen-framework generate resources --input internal/cmd/testdata/custom_and_external/ir.json
+tfplugingen-framework scaffold data-source \
+    --name example \
+    --force \
+    --output-dir internal/provider
 ```
 
-### Output
+Refer to the [documentation](https://developer.hashicorp.com/terraform/plugin/code-generation/framework-generator#scaffold-command) for further details.
 
-The generated code will default to the `./output` directory, but can also be specified with the `--output` parameter. Similarly, the name of the Go package in the generated code will default to `provider`, but can be specified with `--package`.
-```shell
-# Generates all code into a Go package named `generated` at the directory path `./internal/provider/generated`
-./tfplugingen-framework generate all --input internal/cmd/testdata/custom_and_external/ir.json --output internal/provider/generated --package generated
-```
+## License
 
-## Running the Tests
-
-```shell
-make test
-```
-
-## Overview
-
-The Intermediate Representation to Code Generator (IR2CG) uses 
-[mitchell/cli](https://github.com/mitchellh/cli) to implement a command-line interface that
-provides processing of an IR and conversion of the IR into Go code that can be used within
-a Terraform provider built using the 
-[Terraform Plugin Framework](https://developer.hashicorp.com/terraform/plugin/framework). 
-
-The general flow is as follows:
-
-* Parse command-line flags for use as configuration during processing.
-* Read the IR.
-* Validate that the IR is JSON.
-* Validate the IR against the IR Schema.
-* Unmarshall the IR onto Go types.
-* Generate Go code for schema, models and model helper functions.
-* Format the generated Go code.
-* Write the formatted Go code, one file per data source, provider or resource, into
-  `./output`.
-
+Refer to [Mozilla Public License v2.0](./LICENSE).
