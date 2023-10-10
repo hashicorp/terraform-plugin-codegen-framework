@@ -617,8 +617,6 @@ func (t ListNestedAttributeAssocExtTypeType) String() string {
 func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -639,10 +637,6 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	float64Attribute, ok := attributes["float64_attribute"]
 
 	if !ok {
@@ -659,10 +653,6 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
-	}
-
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	int64Attribute, ok := attributes["int64_attribute"]
@@ -683,10 +673,6 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
 	}
 
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	numberAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
@@ -703,10 +689,6 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
-	}
-
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	stringAttribute, ok := attributes["string_attribute"]
@@ -727,8 +709,8 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedAttributeAssocExtTypeValue{
@@ -737,7 +719,7 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -804,8 +786,6 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -822,10 +802,6 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
-	}
-
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	float64Attribute, ok := attributes["float64_attribute"]
@@ -846,10 +822,6 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
 	}
 
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	int64Attribute, ok := attributes["int64_attribute"]
 
 	if !ok {
@@ -866,10 +838,6 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
-	}
-
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	numberAttribute, ok := attributes["number_attribute"]
@@ -890,10 +858,6 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
 	}
 
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	stringAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
@@ -912,8 +876,8 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	return ListNestedAttributeAssocExtTypeValue{
@@ -922,7 +886,7 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -1185,8 +1149,6 @@ func (t ListNestedAttributeOneType) String() string {
 func (t ListNestedAttributeOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -1207,13 +1169,13 @@ func (t ListNestedAttributeOneType) ValueFromObject(ctx context.Context, in base
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedAttributeOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -1280,8 +1242,6 @@ func NewListNestedAttributeOneValue(attributeTypes map[string]attr.Type, attribu
 		return NewListNestedAttributeOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -1300,13 +1260,13 @@ func NewListNestedAttributeOneValue(attributeTypes map[string]attr.Type, attribu
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedAttributeOneValueUnknown(), diags
 	}
 
 	return ListNestedAttributeOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -1501,8 +1461,6 @@ func (t ListNestedAttributeThreeType) String() string {
 func (t ListNestedAttributeThreeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	listNestedAttributeThreeListNestedAttributeOne, ok := attributes["list_nested_attribute_three_list_nested_attribute_one"]
@@ -1523,13 +1481,13 @@ func (t ListNestedAttributeThreeType) ValueFromObject(ctx context.Context, in ba
 			fmt.Sprintf(`list_nested_attribute_three_list_nested_attribute_one expected to be basetypes.ListValue, was: %T`, listNestedAttributeThreeListNestedAttributeOne))
 	}
 
-	if listNestedAttributeThreeListNestedAttributeOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedAttributeThreeValue{
 		ListNestedAttributeThreeListNestedAttributeOne: listNestedAttributeThreeListNestedAttributeOneVal,
-		state: state,
+		state: attr.ValueStateKnown,
 	}, diags
 }
 
@@ -1596,8 +1554,6 @@ func NewListNestedAttributeThreeValue(attributeTypes map[string]attr.Type, attri
 		return NewListNestedAttributeThreeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	listNestedAttributeThreeListNestedAttributeOne, ok := attributes["list_nested_attribute_three_list_nested_attribute_one"]
 
 	if !ok {
@@ -1616,13 +1572,13 @@ func NewListNestedAttributeThreeValue(attributeTypes map[string]attr.Type, attri
 			fmt.Sprintf(`list_nested_attribute_three_list_nested_attribute_one expected to be basetypes.ListValue, was: %T`, listNestedAttributeThreeListNestedAttributeOne))
 	}
 
-	if listNestedAttributeThreeListNestedAttributeOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedAttributeThreeValueUnknown(), diags
 	}
 
 	return ListNestedAttributeThreeValue{
 		ListNestedAttributeThreeListNestedAttributeOne: listNestedAttributeThreeListNestedAttributeOneVal,
-		state: state,
+		state: attr.ValueStateKnown,
 	}, diags
 }
 
@@ -1852,8 +1808,6 @@ func (t ListNestedAttributeThreeListNestedAttributeOneType) String() string {
 func (t ListNestedAttributeThreeListNestedAttributeOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	listAttribute, ok := attributes["list_attribute"]
@@ -1874,13 +1828,13 @@ func (t ListNestedAttributeThreeListNestedAttributeOneType) ValueFromObject(ctx 
 			fmt.Sprintf(`list_attribute expected to be basetypes.ListValue, was: %T`, listAttribute))
 	}
 
-	if listAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedAttributeThreeListNestedAttributeOneValue{
 		ListAttribute: listAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -1947,8 +1901,6 @@ func NewListNestedAttributeThreeListNestedAttributeOneValue(attributeTypes map[s
 		return NewListNestedAttributeThreeListNestedAttributeOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	listAttribute, ok := attributes["list_attribute"]
 
 	if !ok {
@@ -1967,13 +1919,13 @@ func NewListNestedAttributeThreeListNestedAttributeOneValue(attributeTypes map[s
 			fmt.Sprintf(`list_attribute expected to be basetypes.ListValue, was: %T`, listAttribute))
 	}
 
-	if listAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedAttributeThreeListNestedAttributeOneValueUnknown(), diags
 	}
 
 	return ListNestedAttributeThreeListNestedAttributeOneValue{
 		ListAttribute: listAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -2174,8 +2126,6 @@ func (t ListNestedAttributeTwoType) String() string {
 func (t ListNestedAttributeTwoType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	listNestedAttributeTwoListNestedAttributeOne, ok := attributes["list_nested_attribute_two_list_nested_attribute_one"]
@@ -2196,13 +2146,13 @@ func (t ListNestedAttributeTwoType) ValueFromObject(ctx context.Context, in base
 			fmt.Sprintf(`list_nested_attribute_two_list_nested_attribute_one expected to be basetypes.ListValue, was: %T`, listNestedAttributeTwoListNestedAttributeOne))
 	}
 
-	if listNestedAttributeTwoListNestedAttributeOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedAttributeTwoValue{
 		ListNestedAttributeTwoListNestedAttributeOne: listNestedAttributeTwoListNestedAttributeOneVal,
-		state: state,
+		state: attr.ValueStateKnown,
 	}, diags
 }
 
@@ -2269,8 +2219,6 @@ func NewListNestedAttributeTwoValue(attributeTypes map[string]attr.Type, attribu
 		return NewListNestedAttributeTwoValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	listNestedAttributeTwoListNestedAttributeOne, ok := attributes["list_nested_attribute_two_list_nested_attribute_one"]
 
 	if !ok {
@@ -2289,13 +2237,13 @@ func NewListNestedAttributeTwoValue(attributeTypes map[string]attr.Type, attribu
 			fmt.Sprintf(`list_nested_attribute_two_list_nested_attribute_one expected to be basetypes.ListValue, was: %T`, listNestedAttributeTwoListNestedAttributeOne))
 	}
 
-	if listNestedAttributeTwoListNestedAttributeOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedAttributeTwoValueUnknown(), diags
 	}
 
 	return ListNestedAttributeTwoValue{
 		ListNestedAttributeTwoListNestedAttributeOne: listNestedAttributeTwoListNestedAttributeOneVal,
-		state: state,
+		state: attr.ValueStateKnown,
 	}, diags
 }
 
@@ -2525,8 +2473,6 @@ func (t ListNestedAttributeTwoListNestedAttributeOneType) String() string {
 func (t ListNestedAttributeTwoListNestedAttributeOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -2547,13 +2493,13 @@ func (t ListNestedAttributeTwoListNestedAttributeOneType) ValueFromObject(ctx co
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedAttributeTwoListNestedAttributeOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -2620,8 +2566,6 @@ func NewListNestedAttributeTwoListNestedAttributeOneValue(attributeTypes map[str
 		return NewListNestedAttributeTwoListNestedAttributeOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -2640,13 +2584,13 @@ func NewListNestedAttributeTwoListNestedAttributeOneValue(attributeTypes map[str
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedAttributeTwoListNestedAttributeOneValueUnknown(), diags
 	}
 
 	return ListNestedAttributeTwoListNestedAttributeOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -2841,8 +2785,6 @@ func (t MapNestedAttributeAssocExtTypeType) String() string {
 func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -2863,10 +2805,6 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	float64Attribute, ok := attributes["float64_attribute"]
 
 	if !ok {
@@ -2883,10 +2821,6 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
-	}
-
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	int64Attribute, ok := attributes["int64_attribute"]
@@ -2907,10 +2841,6 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
 	}
 
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	numberAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
@@ -2927,10 +2857,6 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
-	}
-
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	stringAttribute, ok := attributes["string_attribute"]
@@ -2951,8 +2877,8 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return MapNestedAttributeAssocExtTypeValue{
@@ -2961,7 +2887,7 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -3028,8 +2954,6 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -3046,10 +2970,6 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
-	}
-
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	float64Attribute, ok := attributes["float64_attribute"]
@@ -3070,10 +2990,6 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
 	}
 
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	int64Attribute, ok := attributes["int64_attribute"]
 
 	if !ok {
@@ -3090,10 +3006,6 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
-	}
-
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	numberAttribute, ok := attributes["number_attribute"]
@@ -3114,10 +3026,6 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
 	}
 
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	stringAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
@@ -3136,8 +3044,8 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	return MapNestedAttributeAssocExtTypeValue{
@@ -3146,7 +3054,7 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -3409,8 +3317,6 @@ func (t SetNestedAttributeAssocExtTypeType) String() string {
 func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -3431,10 +3337,6 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	float64Attribute, ok := attributes["float64_attribute"]
 
 	if !ok {
@@ -3451,10 +3353,6 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
-	}
-
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	int64Attribute, ok := attributes["int64_attribute"]
@@ -3475,10 +3373,6 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
 	}
 
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	numberAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
@@ -3495,10 +3389,6 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
-	}
-
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	stringAttribute, ok := attributes["string_attribute"]
@@ -3519,8 +3409,8 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SetNestedAttributeAssocExtTypeValue{
@@ -3529,7 +3419,7 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -3596,8 +3486,6 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -3614,10 +3502,6 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
-	}
-
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	float64Attribute, ok := attributes["float64_attribute"]
@@ -3638,10 +3522,6 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
 	}
 
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	int64Attribute, ok := attributes["int64_attribute"]
 
 	if !ok {
@@ -3658,10 +3538,6 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
-	}
-
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	numberAttribute, ok := attributes["number_attribute"]
@@ -3682,10 +3558,6 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
 	}
 
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	stringAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
@@ -3704,8 +3576,8 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	return SetNestedAttributeAssocExtTypeValue{
@@ -3714,7 +3586,7 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -3977,8 +3849,6 @@ func (t SingleNestedAttributeAssocExtTypeType) String() string {
 func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -3999,10 +3869,6 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	float64Attribute, ok := attributes["float64_attribute"]
 
 	if !ok {
@@ -4019,10 +3885,6 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
-	}
-
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	int64Attribute, ok := attributes["int64_attribute"]
@@ -4043,10 +3905,6 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
 	}
 
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	numberAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
@@ -4063,10 +3921,6 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
-	}
-
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	stringAttribute, ok := attributes["string_attribute"]
@@ -4087,8 +3941,8 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedAttributeAssocExtTypeValue{
@@ -4097,7 +3951,7 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -4164,8 +4018,6 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -4182,10 +4034,6 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
-	}
-
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	float64Attribute, ok := attributes["float64_attribute"]
@@ -4206,10 +4054,6 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
 	}
 
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	int64Attribute, ok := attributes["int64_attribute"]
 
 	if !ok {
@@ -4226,10 +4070,6 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
-	}
-
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	numberAttribute, ok := attributes["number_attribute"]
@@ -4250,10 +4090,6 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
 	}
 
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	stringAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
@@ -4272,8 +4108,8 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
 	return SingleNestedAttributeAssocExtTypeValue{
@@ -4282,7 +4118,7 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -4545,8 +4381,6 @@ func (t SingleNestedAttributeOneType) String() string {
 func (t SingleNestedAttributeOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -4567,13 +4401,13 @@ func (t SingleNestedAttributeOneType) ValueFromObject(ctx context.Context, in ba
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedAttributeOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -4640,8 +4474,6 @@ func NewSingleNestedAttributeOneValue(attributeTypes map[string]attr.Type, attri
 		return NewSingleNestedAttributeOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -4660,13 +4492,13 @@ func NewSingleNestedAttributeOneValue(attributeTypes map[string]attr.Type, attri
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedAttributeOneValueUnknown(), diags
 	}
 
 	return SingleNestedAttributeOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -4861,8 +4693,6 @@ func (t SingleNestedAttributeThreeType) String() string {
 func (t SingleNestedAttributeThreeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	singleNestedAttributeThreeSingleNestedAttributeOne, ok := attributes["single_nested_attribute_three_single_nested_attribute_one"]
@@ -4883,13 +4713,13 @@ func (t SingleNestedAttributeThreeType) ValueFromObject(ctx context.Context, in 
 			fmt.Sprintf(`single_nested_attribute_three_single_nested_attribute_one expected to be basetypes.ObjectValue, was: %T`, singleNestedAttributeThreeSingleNestedAttributeOne))
 	}
 
-	if singleNestedAttributeThreeSingleNestedAttributeOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedAttributeThreeValue{
 		SingleNestedAttributeThreeSingleNestedAttributeOne: singleNestedAttributeThreeSingleNestedAttributeOneVal,
-		state: state,
+		state: attr.ValueStateKnown,
 	}, diags
 }
 
@@ -4956,8 +4786,6 @@ func NewSingleNestedAttributeThreeValue(attributeTypes map[string]attr.Type, att
 		return NewSingleNestedAttributeThreeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	singleNestedAttributeThreeSingleNestedAttributeOne, ok := attributes["single_nested_attribute_three_single_nested_attribute_one"]
 
 	if !ok {
@@ -4976,13 +4804,13 @@ func NewSingleNestedAttributeThreeValue(attributeTypes map[string]attr.Type, att
 			fmt.Sprintf(`single_nested_attribute_three_single_nested_attribute_one expected to be basetypes.ObjectValue, was: %T`, singleNestedAttributeThreeSingleNestedAttributeOne))
 	}
 
-	if singleNestedAttributeThreeSingleNestedAttributeOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedAttributeThreeValueUnknown(), diags
 	}
 
 	return SingleNestedAttributeThreeValue{
 		SingleNestedAttributeThreeSingleNestedAttributeOne: singleNestedAttributeThreeSingleNestedAttributeOneVal,
-		state: state,
+		state: attr.ValueStateKnown,
 	}, diags
 }
 
@@ -5204,8 +5032,6 @@ func (t SingleNestedAttributeThreeSingleNestedAttributeOneType) String() string 
 func (t SingleNestedAttributeThreeSingleNestedAttributeOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	listAttribute, ok := attributes["list_attribute"]
@@ -5226,13 +5052,13 @@ func (t SingleNestedAttributeThreeSingleNestedAttributeOneType) ValueFromObject(
 			fmt.Sprintf(`list_attribute expected to be basetypes.ListValue, was: %T`, listAttribute))
 	}
 
-	if listAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedAttributeThreeSingleNestedAttributeOneValue{
 		ListAttribute: listAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -5299,8 +5125,6 @@ func NewSingleNestedAttributeThreeSingleNestedAttributeOneValue(attributeTypes m
 		return NewSingleNestedAttributeThreeSingleNestedAttributeOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	listAttribute, ok := attributes["list_attribute"]
 
 	if !ok {
@@ -5319,13 +5143,13 @@ func NewSingleNestedAttributeThreeSingleNestedAttributeOneValue(attributeTypes m
 			fmt.Sprintf(`list_attribute expected to be basetypes.ListValue, was: %T`, listAttribute))
 	}
 
-	if listAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedAttributeThreeSingleNestedAttributeOneValueUnknown(), diags
 	}
 
 	return SingleNestedAttributeThreeSingleNestedAttributeOneValue{
 		ListAttribute: listAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -5526,8 +5350,6 @@ func (t SingleNestedAttributeTwoType) String() string {
 func (t SingleNestedAttributeTwoType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	singleNestedAttributeTwoSingleNestedAttributeOne, ok := attributes["single_nested_attribute_two_single_nested_attribute_one"]
@@ -5548,13 +5370,13 @@ func (t SingleNestedAttributeTwoType) ValueFromObject(ctx context.Context, in ba
 			fmt.Sprintf(`single_nested_attribute_two_single_nested_attribute_one expected to be basetypes.ObjectValue, was: %T`, singleNestedAttributeTwoSingleNestedAttributeOne))
 	}
 
-	if singleNestedAttributeTwoSingleNestedAttributeOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedAttributeTwoValue{
 		SingleNestedAttributeTwoSingleNestedAttributeOne: singleNestedAttributeTwoSingleNestedAttributeOneVal,
-		state: state,
+		state: attr.ValueStateKnown,
 	}, diags
 }
 
@@ -5621,8 +5443,6 @@ func NewSingleNestedAttributeTwoValue(attributeTypes map[string]attr.Type, attri
 		return NewSingleNestedAttributeTwoValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	singleNestedAttributeTwoSingleNestedAttributeOne, ok := attributes["single_nested_attribute_two_single_nested_attribute_one"]
 
 	if !ok {
@@ -5641,13 +5461,13 @@ func NewSingleNestedAttributeTwoValue(attributeTypes map[string]attr.Type, attri
 			fmt.Sprintf(`single_nested_attribute_two_single_nested_attribute_one expected to be basetypes.ObjectValue, was: %T`, singleNestedAttributeTwoSingleNestedAttributeOne))
 	}
 
-	if singleNestedAttributeTwoSingleNestedAttributeOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedAttributeTwoValueUnknown(), diags
 	}
 
 	return SingleNestedAttributeTwoValue{
 		SingleNestedAttributeTwoSingleNestedAttributeOne: singleNestedAttributeTwoSingleNestedAttributeOneVal,
-		state: state,
+		state: attr.ValueStateKnown,
 	}, diags
 }
 
@@ -5869,8 +5689,6 @@ func (t SingleNestedAttributeTwoSingleNestedAttributeOneType) String() string {
 func (t SingleNestedAttributeTwoSingleNestedAttributeOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -5891,13 +5709,13 @@ func (t SingleNestedAttributeTwoSingleNestedAttributeOneType) ValueFromObject(ct
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedAttributeTwoSingleNestedAttributeOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -5964,8 +5782,6 @@ func NewSingleNestedAttributeTwoSingleNestedAttributeOneValue(attributeTypes map
 		return NewSingleNestedAttributeTwoSingleNestedAttributeOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -5984,13 +5800,13 @@ func NewSingleNestedAttributeTwoSingleNestedAttributeOneValue(attributeTypes map
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedAttributeTwoSingleNestedAttributeOneValueUnknown(), diags
 	}
 
 	return SingleNestedAttributeTwoSingleNestedAttributeOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -6185,8 +6001,6 @@ func (t ListNestedBlockAssocExtTypeType) String() string {
 func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -6207,10 +6021,6 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	float64Attribute, ok := attributes["float64_attribute"]
 
 	if !ok {
@@ -6227,10 +6037,6 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
-	}
-
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	int64Attribute, ok := attributes["int64_attribute"]
@@ -6251,10 +6057,6 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
 	}
 
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	numberAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
@@ -6271,10 +6073,6 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
-	}
-
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	stringAttribute, ok := attributes["string_attribute"]
@@ -6295,8 +6093,8 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedBlockAssocExtTypeValue{
@@ -6305,7 +6103,7 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -6372,8 +6170,6 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -6390,10 +6186,6 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
-	}
-
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	float64Attribute, ok := attributes["float64_attribute"]
@@ -6414,10 +6206,6 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
 	}
 
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	int64Attribute, ok := attributes["int64_attribute"]
 
 	if !ok {
@@ -6434,10 +6222,6 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
-	}
-
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	numberAttribute, ok := attributes["number_attribute"]
@@ -6458,10 +6242,6 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
 	}
 
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	stringAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
@@ -6480,8 +6260,8 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	return ListNestedBlockAssocExtTypeValue{
@@ -6490,7 +6270,7 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -6753,8 +6533,6 @@ func (t ListNestedBlockOneType) String() string {
 func (t ListNestedBlockOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -6775,13 +6553,13 @@ func (t ListNestedBlockOneType) ValueFromObject(ctx context.Context, in basetype
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedBlockOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -6848,8 +6626,6 @@ func NewListNestedBlockOneValue(attributeTypes map[string]attr.Type, attributes 
 		return NewListNestedBlockOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -6868,13 +6644,13 @@ func NewListNestedBlockOneValue(attributeTypes map[string]attr.Type, attributes 
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedBlockOneValueUnknown(), diags
 	}
 
 	return ListNestedBlockOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -7069,8 +6845,6 @@ func (t ListNestedBlockThreeType) String() string {
 func (t ListNestedBlockThreeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	listNestedBlockThreeListNestedBlockOne, ok := attributes["list_nested_block_three_list_nested_block_one"]
@@ -7091,10 +6865,6 @@ func (t ListNestedBlockThreeType) ValueFromObject(ctx context.Context, in basety
 			fmt.Sprintf(`list_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listNestedBlockThreeListNestedBlockOne))
 	}
 
-	if listNestedBlockThreeListNestedBlockOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	objectAttribute, ok := attributes["object_attribute"]
 
 	if !ok {
@@ -7113,14 +6883,14 @@ func (t ListNestedBlockThreeType) ValueFromObject(ctx context.Context, in basety
 			fmt.Sprintf(`object_attribute expected to be basetypes.ObjectValue, was: %T`, objectAttribute))
 	}
 
-	if objectAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedBlockThreeValue{
 		ListNestedBlockThreeListNestedBlockOne: listNestedBlockThreeListNestedBlockOneVal,
 		ObjectAttribute:                        objectAttributeVal,
-		state:                                  state,
+		state:                                  attr.ValueStateKnown,
 	}, diags
 }
 
@@ -7187,8 +6957,6 @@ func NewListNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribute
 		return NewListNestedBlockThreeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	listNestedBlockThreeListNestedBlockOne, ok := attributes["list_nested_block_three_list_nested_block_one"]
 
 	if !ok {
@@ -7205,10 +6973,6 @@ func NewListNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribute
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`list_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listNestedBlockThreeListNestedBlockOne))
-	}
-
-	if listNestedBlockThreeListNestedBlockOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	objectAttribute, ok := attributes["object_attribute"]
@@ -7229,14 +6993,14 @@ func NewListNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribute
 			fmt.Sprintf(`object_attribute expected to be basetypes.ObjectValue, was: %T`, objectAttribute))
 	}
 
-	if objectAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedBlockThreeValueUnknown(), diags
 	}
 
 	return ListNestedBlockThreeValue{
 		ListNestedBlockThreeListNestedBlockOne: listNestedBlockThreeListNestedBlockOneVal,
 		ObjectAttribute:                        objectAttributeVal,
-		state:                                  state,
+		state:                                  attr.ValueStateKnown,
 	}, diags
 }
 
@@ -7495,8 +7259,6 @@ func (t ListNestedBlockThreeListNestedBlockOneType) String() string {
 func (t ListNestedBlockThreeListNestedBlockOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	listAttribute, ok := attributes["list_attribute"]
@@ -7517,13 +7279,13 @@ func (t ListNestedBlockThreeListNestedBlockOneType) ValueFromObject(ctx context.
 			fmt.Sprintf(`list_attribute expected to be basetypes.ListValue, was: %T`, listAttribute))
 	}
 
-	if listAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedBlockThreeListNestedBlockOneValue{
 		ListAttribute: listAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -7590,8 +7352,6 @@ func NewListNestedBlockThreeListNestedBlockOneValue(attributeTypes map[string]at
 		return NewListNestedBlockThreeListNestedBlockOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	listAttribute, ok := attributes["list_attribute"]
 
 	if !ok {
@@ -7610,13 +7370,13 @@ func NewListNestedBlockThreeListNestedBlockOneValue(attributeTypes map[string]at
 			fmt.Sprintf(`list_attribute expected to be basetypes.ListValue, was: %T`, listAttribute))
 	}
 
-	if listAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedBlockThreeListNestedBlockOneValueUnknown(), diags
 	}
 
 	return ListNestedBlockThreeListNestedBlockOneValue{
 		ListAttribute: listAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -7817,8 +7577,6 @@ func (t ListNestedBlockTwoType) String() string {
 func (t ListNestedBlockTwoType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	listNestedBlockTwoListNestedBlockOne, ok := attributes["list_nested_block_two_list_nested_block_one"]
@@ -7839,13 +7597,13 @@ func (t ListNestedBlockTwoType) ValueFromObject(ctx context.Context, in basetype
 			fmt.Sprintf(`list_nested_block_two_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listNestedBlockTwoListNestedBlockOne))
 	}
 
-	if listNestedBlockTwoListNestedBlockOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedBlockTwoValue{
 		ListNestedBlockTwoListNestedBlockOne: listNestedBlockTwoListNestedBlockOneVal,
-		state:                                state,
+		state:                                attr.ValueStateKnown,
 	}, diags
 }
 
@@ -7912,8 +7670,6 @@ func NewListNestedBlockTwoValue(attributeTypes map[string]attr.Type, attributes 
 		return NewListNestedBlockTwoValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	listNestedBlockTwoListNestedBlockOne, ok := attributes["list_nested_block_two_list_nested_block_one"]
 
 	if !ok {
@@ -7932,13 +7688,13 @@ func NewListNestedBlockTwoValue(attributeTypes map[string]attr.Type, attributes 
 			fmt.Sprintf(`list_nested_block_two_list_nested_block_one expected to be basetypes.ListValue, was: %T`, listNestedBlockTwoListNestedBlockOne))
 	}
 
-	if listNestedBlockTwoListNestedBlockOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedBlockTwoValueUnknown(), diags
 	}
 
 	return ListNestedBlockTwoValue{
 		ListNestedBlockTwoListNestedBlockOne: listNestedBlockTwoListNestedBlockOneVal,
-		state:                                state,
+		state:                                attr.ValueStateKnown,
 	}, diags
 }
 
@@ -8168,8 +7924,6 @@ func (t ListNestedBlockTwoListNestedBlockOneType) String() string {
 func (t ListNestedBlockTwoListNestedBlockOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -8190,13 +7944,13 @@ func (t ListNestedBlockTwoListNestedBlockOneType) ValueFromObject(ctx context.Co
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return ListNestedBlockTwoListNestedBlockOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -8263,8 +8017,6 @@ func NewListNestedBlockTwoListNestedBlockOneValue(attributeTypes map[string]attr
 		return NewListNestedBlockTwoListNestedBlockOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -8283,13 +8035,13 @@ func NewListNestedBlockTwoListNestedBlockOneValue(attributeTypes map[string]attr
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewListNestedBlockTwoListNestedBlockOneValueUnknown(), diags
 	}
 
 	return ListNestedBlockTwoListNestedBlockOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -8484,8 +8236,6 @@ func (t SetNestedBlockAssocExtTypeType) String() string {
 func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -8506,10 +8256,6 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	float64Attribute, ok := attributes["float64_attribute"]
 
 	if !ok {
@@ -8526,10 +8272,6 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
-	}
-
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	int64Attribute, ok := attributes["int64_attribute"]
@@ -8550,10 +8292,6 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
 	}
 
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	numberAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
@@ -8570,10 +8308,6 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
-	}
-
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	stringAttribute, ok := attributes["string_attribute"]
@@ -8594,8 +8328,8 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SetNestedBlockAssocExtTypeValue{
@@ -8604,7 +8338,7 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -8671,8 +8405,6 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -8689,10 +8421,6 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
-	}
-
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	float64Attribute, ok := attributes["float64_attribute"]
@@ -8713,10 +8441,6 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
 	}
 
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	int64Attribute, ok := attributes["int64_attribute"]
 
 	if !ok {
@@ -8733,10 +8457,6 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
-	}
-
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	numberAttribute, ok := attributes["number_attribute"]
@@ -8757,10 +8477,6 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
 	}
 
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	stringAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
@@ -8779,8 +8495,8 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	return SetNestedBlockAssocExtTypeValue{
@@ -8789,7 +8505,7 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -9052,8 +8768,6 @@ func (t SingleNestedBlockAssocExtTypeType) String() string {
 func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -9074,10 +8788,6 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	float64Attribute, ok := attributes["float64_attribute"]
 
 	if !ok {
@@ -9094,10 +8804,6 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
-	}
-
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	int64Attribute, ok := attributes["int64_attribute"]
@@ -9118,10 +8824,6 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
 	}
 
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	numberAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
@@ -9138,10 +8840,6 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
-	}
-
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	stringAttribute, ok := attributes["string_attribute"]
@@ -9162,8 +8860,8 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedBlockAssocExtTypeValue{
@@ -9172,7 +8870,7 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -9239,8 +8937,6 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -9257,10 +8953,6 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
-	}
-
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	float64Attribute, ok := attributes["float64_attribute"]
@@ -9281,10 +8973,6 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
 	}
 
-	if float64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	int64Attribute, ok := attributes["int64_attribute"]
 
 	if !ok {
@@ -9301,10 +8989,6 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
-	}
-
-	if int64AttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	numberAttribute, ok := attributes["number_attribute"]
@@ -9325,10 +9009,6 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
 	}
 
-	if numberAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	stringAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
@@ -9347,8 +9027,8 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
 	}
 
-	if stringAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
 	return SingleNestedBlockAssocExtTypeValue{
@@ -9357,7 +9037,7 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		Int64Attribute:   int64AttributeVal,
 		NumberAttribute:  numberAttributeVal,
 		StringAttribute:  stringAttributeVal,
-		state:            state,
+		state:            attr.ValueStateKnown,
 	}, diags
 }
 
@@ -9620,8 +9300,6 @@ func (t SingleNestedBlockOneType) String() string {
 func (t SingleNestedBlockOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -9642,13 +9320,13 @@ func (t SingleNestedBlockOneType) ValueFromObject(ctx context.Context, in basety
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedBlockOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -9715,8 +9393,6 @@ func NewSingleNestedBlockOneValue(attributeTypes map[string]attr.Type, attribute
 		return NewSingleNestedBlockOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -9735,13 +9411,13 @@ func NewSingleNestedBlockOneValue(attributeTypes map[string]attr.Type, attribute
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedBlockOneValueUnknown(), diags
 	}
 
 	return SingleNestedBlockOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -9936,8 +9612,6 @@ func (t SingleNestedBlockThreeType) String() string {
 func (t SingleNestedBlockThreeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	objectAttribute, ok := attributes["object_attribute"]
@@ -9958,10 +9632,6 @@ func (t SingleNestedBlockThreeType) ValueFromObject(ctx context.Context, in base
 			fmt.Sprintf(`object_attribute expected to be basetypes.ObjectValue, was: %T`, objectAttribute))
 	}
 
-	if objectAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
-	}
-
 	singleNestedBlockThreeListNestedBlockOne, ok := attributes["single_nested_block_three_list_nested_block_one"]
 
 	if !ok {
@@ -9980,14 +9650,14 @@ func (t SingleNestedBlockThreeType) ValueFromObject(ctx context.Context, in base
 			fmt.Sprintf(`single_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, singleNestedBlockThreeListNestedBlockOne))
 	}
 
-	if singleNestedBlockThreeListNestedBlockOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedBlockThreeValue{
 		ObjectAttribute:                          objectAttributeVal,
 		SingleNestedBlockThreeListNestedBlockOne: singleNestedBlockThreeListNestedBlockOneVal,
-		state:                                    state,
+		state:                                    attr.ValueStateKnown,
 	}, diags
 }
 
@@ -10054,8 +9724,6 @@ func NewSingleNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribu
 		return NewSingleNestedBlockThreeValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	objectAttribute, ok := attributes["object_attribute"]
 
 	if !ok {
@@ -10072,10 +9740,6 @@ func NewSingleNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribu
 		diags.AddError(
 			"Attribute Wrong Type",
 			fmt.Sprintf(`object_attribute expected to be basetypes.ObjectValue, was: %T`, objectAttribute))
-	}
-
-	if objectAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
 	}
 
 	singleNestedBlockThreeListNestedBlockOne, ok := attributes["single_nested_block_three_list_nested_block_one"]
@@ -10096,14 +9760,14 @@ func NewSingleNestedBlockThreeValue(attributeTypes map[string]attr.Type, attribu
 			fmt.Sprintf(`single_nested_block_three_list_nested_block_one expected to be basetypes.ListValue, was: %T`, singleNestedBlockThreeListNestedBlockOne))
 	}
 
-	if singleNestedBlockThreeListNestedBlockOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedBlockThreeValueUnknown(), diags
 	}
 
 	return SingleNestedBlockThreeValue{
 		ObjectAttribute:                          objectAttributeVal,
 		SingleNestedBlockThreeListNestedBlockOne: singleNestedBlockThreeListNestedBlockOneVal,
-		state:                                    state,
+		state:                                    attr.ValueStateKnown,
 	}, diags
 }
 
@@ -10362,8 +10026,6 @@ func (t SingleNestedBlockThreeListNestedBlockOneType) String() string {
 func (t SingleNestedBlockThreeListNestedBlockOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	listAttribute, ok := attributes["list_attribute"]
@@ -10384,13 +10046,13 @@ func (t SingleNestedBlockThreeListNestedBlockOneType) ValueFromObject(ctx contex
 			fmt.Sprintf(`list_attribute expected to be basetypes.ListValue, was: %T`, listAttribute))
 	}
 
-	if listAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedBlockThreeListNestedBlockOneValue{
 		ListAttribute: listAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -10457,8 +10119,6 @@ func NewSingleNestedBlockThreeListNestedBlockOneValue(attributeTypes map[string]
 		return NewSingleNestedBlockThreeListNestedBlockOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	listAttribute, ok := attributes["list_attribute"]
 
 	if !ok {
@@ -10477,13 +10137,13 @@ func NewSingleNestedBlockThreeListNestedBlockOneValue(attributeTypes map[string]
 			fmt.Sprintf(`list_attribute expected to be basetypes.ListValue, was: %T`, listAttribute))
 	}
 
-	if listAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedBlockThreeListNestedBlockOneValueUnknown(), diags
 	}
 
 	return SingleNestedBlockThreeListNestedBlockOneValue{
 		ListAttribute: listAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -10684,8 +10344,6 @@ func (t SingleNestedBlockTwoType) String() string {
 func (t SingleNestedBlockTwoType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	singleNestedBlockTwoSingleNestedBlockOne, ok := attributes["single_nested_block_two_single_nested_block_one"]
@@ -10706,13 +10364,13 @@ func (t SingleNestedBlockTwoType) ValueFromObject(ctx context.Context, in basety
 			fmt.Sprintf(`single_nested_block_two_single_nested_block_one expected to be basetypes.ObjectValue, was: %T`, singleNestedBlockTwoSingleNestedBlockOne))
 	}
 
-	if singleNestedBlockTwoSingleNestedBlockOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedBlockTwoValue{
 		SingleNestedBlockTwoSingleNestedBlockOne: singleNestedBlockTwoSingleNestedBlockOneVal,
-		state:                                    state,
+		state:                                    attr.ValueStateKnown,
 	}, diags
 }
 
@@ -10779,8 +10437,6 @@ func NewSingleNestedBlockTwoValue(attributeTypes map[string]attr.Type, attribute
 		return NewSingleNestedBlockTwoValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	singleNestedBlockTwoSingleNestedBlockOne, ok := attributes["single_nested_block_two_single_nested_block_one"]
 
 	if !ok {
@@ -10799,13 +10455,13 @@ func NewSingleNestedBlockTwoValue(attributeTypes map[string]attr.Type, attribute
 			fmt.Sprintf(`single_nested_block_two_single_nested_block_one expected to be basetypes.ObjectValue, was: %T`, singleNestedBlockTwoSingleNestedBlockOne))
 	}
 
-	if singleNestedBlockTwoSingleNestedBlockOneVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedBlockTwoValueUnknown(), diags
 	}
 
 	return SingleNestedBlockTwoValue{
 		SingleNestedBlockTwoSingleNestedBlockOne: singleNestedBlockTwoSingleNestedBlockOneVal,
-		state:                                    state,
+		state:                                    attr.ValueStateKnown,
 	}, diags
 }
 
@@ -11027,8 +10683,6 @@ func (t SingleNestedBlockTwoSingleNestedBlockOneType) String() string {
 func (t SingleNestedBlockTwoSingleNestedBlockOneType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	state := attr.ValueStateKnown
-
 	attributes := in.Attributes()
 
 	boolAttribute, ok := attributes["bool_attribute"]
@@ -11049,13 +10703,13 @@ func (t SingleNestedBlockTwoSingleNestedBlockOneType) ValueFromObject(ctx contex
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return SingleNestedBlockTwoSingleNestedBlockOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 
@@ -11122,8 +10776,6 @@ func NewSingleNestedBlockTwoSingleNestedBlockOneValue(attributeTypes map[string]
 		return NewSingleNestedBlockTwoSingleNestedBlockOneValueUnknown(), diags
 	}
 
-	state := attr.ValueStateKnown
-
 	boolAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
@@ -11142,13 +10794,13 @@ func NewSingleNestedBlockTwoSingleNestedBlockOneValue(attributeTypes map[string]
 			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
 	}
 
-	if boolAttributeVal.IsUnknown() {
-		state = attr.ValueStateUnknown
+	if diags.HasError() {
+		return NewSingleNestedBlockTwoSingleNestedBlockOneValueUnknown(), diags
 	}
 
 	return SingleNestedBlockTwoSingleNestedBlockOneValue{
 		BoolAttribute: boolAttributeVal,
-		state:         state,
+		state:         attr.ValueStateKnown,
 	}, diags
 }
 

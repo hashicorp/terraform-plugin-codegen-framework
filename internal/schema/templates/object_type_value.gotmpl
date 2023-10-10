@@ -50,8 +50,6 @@ if diags.HasError() {
 return New{{.Name}}ValueUnknown(), diags
 }
 
-state := attr.ValueStateKnown
-
 {{range $key, $value := .AttrValues }}
 {{$key.ToCamelCase}}, ok := attributes["{{$key}}"]
 
@@ -70,16 +68,16 @@ diags.AddError(
 "Attribute Wrong Type",
 fmt.Sprintf(`{{$key}} expected to be {{$value}}, was: %T`, {{$key.ToCamelCase}}))
 }
-
-if {{$key.ToCamelCase}}Val.IsUnknown() {
-state = attr.ValueStateUnknown
-}
 {{end}}
+
+if diags.HasError() {
+return New{{.Name}}ValueUnknown(), diags
+}
 
 return {{.Name}}Value{
 {{- range $key, $value := .AttrValues }}
 {{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
 {{- end}}
-state: state,
+state: attr.ValueStateKnown,
 }, diags
 }
