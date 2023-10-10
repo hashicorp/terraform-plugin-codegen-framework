@@ -228,8 +228,6 @@ if diags.HasError() {
 return NewExampleValueUnknown(), diags
 }
 
-state := attr.ValueStateKnown
-
 
 boolAttribute, ok := attributes["bool_attribute"]
 
@@ -238,7 +236,7 @@ diags.AddError(
 "Attribute Missing",
 ` + "`bool_attribute is missing from object`" + `)
 
-return NewExampleValueNull(), diags
+return NewExampleValueUnknown(), diags
 }
 
 boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
@@ -249,14 +247,14 @@ diags.AddError(
 fmt.Sprintf(` + "`bool_attribute expected to be basetypes.BoolValue, was: %T`" + `, boolAttribute))
 }
 
-if boolAttributeVal.IsUnknown() {
-state = attr.ValueStateUnknown
-}
 
+if diags.HasError() {
+return NewExampleValueUnknown(), diags
+}
 
 return ExampleValue{
 BoolAttribute: boolAttributeVal,
-state: state,
+state: attr.ValueStateKnown,
 }, diags
 }`),
 		},
@@ -301,8 +299,6 @@ func TestCustomObjectType_renderValueFromObject(t *testing.T) {
 func (t ExampleType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-state := attr.ValueStateKnown
-
 attributes := in.Attributes()
 
 
@@ -324,14 +320,14 @@ diags.AddError(
 fmt.Sprintf(` + "`bool_attribute expected to be basetypes.BoolValue, was: %T`" + `, boolAttribute))
 }
 
-if boolAttributeVal.IsUnknown() {
-state = attr.ValueStateUnknown
-}
 
+if diags.HasError() {
+return nil, diags
+}
 
 return ExampleValue{
 BoolAttribute: boolAttributeVal,
-state: state,
+state: attr.ValueStateKnown,
 }, diags
 }`),
 		},
