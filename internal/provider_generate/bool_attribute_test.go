@@ -141,6 +141,110 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 				},
 			},
 		},
+		"associated-external-type": {
+			input: GeneratorBoolAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+			},
+		},
+		"associated-external-type-with-import": {
+			input: GeneratorBoolAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.BoolAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+		"associated-external-type-with-custom-type": {
+			input: GeneratorBoolAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.BoolAttribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {
@@ -162,53 +266,84 @@ func TestGeneratorBoolAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		boolAttribute     GeneratorBoolAttribute
-		expectedAttribute string
-		expectedError     error
+		input         GeneratorBoolAttribute
+		expected      string
+		expectedError error
 	}{
 		"custom-type": {
-			boolAttribute: GeneratorBoolAttribute{
+			input: GeneratorBoolAttribute{
 				CustomType: &specschema.CustomType{
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
+"bool_attribute": schema.BoolAttribute{
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorBoolAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
+			},
+			expected: `
+"bool_attribute": schema.BoolAttribute{
+CustomType: BoolAttributeType{},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorBoolAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
 "bool_attribute": schema.BoolAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"required": {
-			boolAttribute: GeneratorBoolAttribute{
+			input: GeneratorBoolAttribute{
 				BoolAttribute: schema.BoolAttribute{
 					Required: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "bool_attribute": schema.BoolAttribute{
 Required: true,
 },`,
 		},
 
 		"optional": {
-			boolAttribute: GeneratorBoolAttribute{
+			input: GeneratorBoolAttribute{
 				BoolAttribute: schema.BoolAttribute{
 					Optional: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "bool_attribute": schema.BoolAttribute{
 Optional: true,
 },`,
 		},
 
 		"sensitive": {
-			boolAttribute: GeneratorBoolAttribute{
+			input: GeneratorBoolAttribute{
 				BoolAttribute: schema.BoolAttribute{
 					Sensitive: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "bool_attribute": schema.BoolAttribute{
 Sensitive: true,
 },`,
@@ -216,12 +351,12 @@ Sensitive: true,
 
 		// TODO: Do we need separate description and markdown description?
 		"description": {
-			boolAttribute: GeneratorBoolAttribute{
+			input: GeneratorBoolAttribute{
 				BoolAttribute: schema.BoolAttribute{
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "bool_attribute": schema.BoolAttribute{
 Description: "description",
 MarkdownDescription: "description",
@@ -229,19 +364,19 @@ MarkdownDescription: "description",
 		},
 
 		"deprecation-message": {
-			boolAttribute: GeneratorBoolAttribute{
+			input: GeneratorBoolAttribute{
 				BoolAttribute: schema.BoolAttribute{
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "bool_attribute": schema.BoolAttribute{
 DeprecationMessage: "deprecated",
 },`,
 		},
 
 		"validators": {
-			boolAttribute: GeneratorBoolAttribute{
+			input: GeneratorBoolAttribute{
 				Validators: specschema.BoolValidators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -255,7 +390,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "bool_attribute": schema.BoolAttribute{
 Validators: []validator.Bool{
 my_validator.Validate(),
@@ -271,13 +406,13 @@ my_other_validator.Validate(),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := testCase.boolAttribute.Schema("bool_attribute")
+			got, err := testCase.input.Schema("bool_attribute")
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})
@@ -301,6 +436,37 @@ func TestGeneratorBoolAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorBoolAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "BoolAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "bool_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorBoolAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "BoolAttribute",
+				ValueType: "BoolAttributeValue",
+				TfsdkName: "bool_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorBoolAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},

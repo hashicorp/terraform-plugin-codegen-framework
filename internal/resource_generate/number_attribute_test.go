@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorNumberAttribute_Schema(t *testing.T) {
@@ -23,6 +24,37 @@ func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorNumberAttribute{
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
+"number_attribute": schema.NumberAttribute{
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
+			},
+			expected: `
+"number_attribute": schema.NumberAttribute{
+CustomType: NumberAttributeType{},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					Type: "my_custom_type",
 				},
@@ -206,6 +238,37 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorNumberAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "NumberAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "number_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "NumberAttribute",
+				ValueType: "NumberAttributeValue",
+				TfsdkName: "number_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},

@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorInt64Attribute_Schema(t *testing.T) {
@@ -23,6 +24,37 @@ func TestGeneratorInt64Attribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorInt64Attribute{
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
+"int64_attribute": schema.Int64Attribute{
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorInt64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Int64Attribute",
+					},
+				},
+			},
+			expected: `
+"int64_attribute": schema.Int64Attribute{
+CustomType: Int64AttributeType{},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorInt64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Int64Attribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					Type: "my_custom_type",
 				},
@@ -218,6 +250,37 @@ func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorInt64Attribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "Int64Attribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "int64_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorInt64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Int64Attribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "Int64Attribute",
+				ValueType: "Int64AttributeValue",
+				TfsdkName: "int64_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorInt64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Int64Attribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},
