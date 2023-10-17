@@ -7,7 +7,7 @@ import (
 	_ "embed"
 )
 
-// Bool
+// Bool From/To
 
 //go:embed templates/bool_from.gotmpl
 var BoolFromTemplate string
