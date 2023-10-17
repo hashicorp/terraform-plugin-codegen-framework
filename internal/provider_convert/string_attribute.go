@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertStringAttribute(a *provider.StringAttribute) (provider_generate.GeneratorStringAttribute, error) {
@@ -26,7 +27,9 @@ func convertStringAttribute(a *provider.StringAttribute) (provider_generate.Gene
 			MarkdownDescription: description(a.Description),
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
-		CustomType: a.CustomType,
-		Validators: a.Validators,
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
 	}, nil
 }

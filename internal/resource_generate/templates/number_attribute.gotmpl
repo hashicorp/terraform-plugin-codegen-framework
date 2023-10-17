@@ -1,5 +1,8 @@
 
 "{{.Name}}": schema.NumberAttribute{
+{{- if .CustomType}}
+CustomType: {{.CustomType}},
+{{- end}}
 {{- template "common_attribute" .GeneratorNumberAttribute }}
 {{- if gt (len .GeneratorNumberAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Number{

@@ -1,5 +1,8 @@
 
 "{{.Name}}": schema.Float64Attribute{
+{{- if .CustomType}}
+CustomType: {{.CustomType}},
+{{- end}}
 {{- template "common_attribute" .GeneratorFloat64Attribute }}
 {{- if gt (len .GeneratorFloat64Attribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Float64{

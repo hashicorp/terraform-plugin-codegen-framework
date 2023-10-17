@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertInt64Attribute(a *resource.Int64Attribute) (resource_generate.GeneratorInt64Attribute, error) {
@@ -27,9 +28,11 @@ func convertInt64Attribute(a *resource.Int64Attribute) (resource_generate.Genera
 			MarkdownDescription: description(a.Description),
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
-		CustomType:    a.CustomType,
-		Default:       a.Default,
-		PlanModifiers: a.PlanModifiers,
-		Validators:    a.Validators,
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		Default:                a.Default,
+		PlanModifiers:          a.PlanModifiers,
+		Validators:             a.Validators,
 	}, nil
 }
