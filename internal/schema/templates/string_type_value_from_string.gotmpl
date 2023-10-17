@@ -1,0 +1,6 @@
+
+func (t {{.Name}}Type) ValueFromString(ctx context.Context, in basetypes.StringValue) (basetypes.StringValuable, diag.Diagnostics) {
+return {{.Name}}Value{
+StringValue: in,
+}, nil
+}

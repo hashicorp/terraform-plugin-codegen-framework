@@ -4,6 +4,7 @@
 package datasource_generate
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"text/template"
@@ -119,4 +120,50 @@ func (g GeneratorInt64Attribute) ModelField(name generatorschema.FrameworkIdenti
 	}
 
 	return field, nil
+}
+
+func (g GeneratorInt64Attribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	int64Type := generatorschema.NewCustomInt64Type(name)
+
+	b, err := int64Type.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	int64Value := generatorschema.NewCustomInt64Value(name)
+
+	b, err = int64Value.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorInt64Attribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	toFrom := generatorschema.NewToFromInt64(name, g.AssociatedExternalType)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

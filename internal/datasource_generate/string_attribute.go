@@ -4,6 +4,7 @@
 package datasource_generate
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"text/template"
@@ -119,4 +120,50 @@ func (g GeneratorStringAttribute) ModelField(name generatorschema.FrameworkIdent
 	}
 
 	return field, nil
+}
+
+func (g GeneratorStringAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	stringType := generatorschema.NewCustomStringType(name)
+
+	b, err := stringType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	stringValue := generatorschema.NewCustomStringValue(name)
+
+	b, err = stringValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorStringAttribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	toFrom := generatorschema.NewToFromString(name, g.AssociatedExternalType)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

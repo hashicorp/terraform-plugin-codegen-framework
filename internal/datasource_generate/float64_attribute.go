@@ -4,6 +4,7 @@
 package datasource_generate
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"text/template"
@@ -119,4 +120,50 @@ func (g GeneratorFloat64Attribute) ModelField(name generatorschema.FrameworkIden
 	}
 
 	return field, nil
+}
+
+func (g GeneratorFloat64Attribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	float64Type := generatorschema.NewCustomFloat64Type(name)
+
+	b, err := float64Type.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	float64Value := generatorschema.NewCustomFloat64Value(name)
+
+	b, err = float64Value.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorFloat64Attribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	toFrom := generatorschema.NewToFromFloat64(name, g.AssociatedExternalType)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

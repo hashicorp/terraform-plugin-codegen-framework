@@ -1,0 +1,14 @@
+
+func (v {{.Name}}Value) From{{.AssocExtType.ToPascalCase}}(ctx context.Context, apiObject {{.AssocExtType.Type}}) ({{.Name}}Value, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return {{.Name}}Value{
+types.NumberNull(),
+}, diags
+}
+
+return {{.Name}}Value{
+types.NumberValue(*apiObject),
+}, diags
+}
