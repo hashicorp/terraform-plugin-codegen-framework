@@ -1,0 +1,6 @@
+kind: ENHANCEMENTS
+body: Adds code generation for Bool, Float64, Int64, Number, and String attributes
+  that have an associated external type
+time: 2023-10-18T09:46:07.467187+01:00
+custom:
+  Issue: "59"
