@@ -311,6 +311,8 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 		return nil, nil
 	}
 
+	var buf bytes.Buffer
+
 	toFuncs := g.Attributes.ToFuncs()
 
 	fromFuncs := g.Attributes.FromFuncs()
@@ -323,5 +325,23 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 		return nil, err
 	}
 
-	return b, nil
+	buf.Write(b)
+
+	attributeKeys := g.Attributes.SortedKeys()
+
+	// Recursively call ToFromFunctions() for each attribute that implements
+	// ToFrom interface.
+	for _, k := range attributeKeys {
+		if c, ok := g.Attributes[k].(generatorschema.ToFrom); ok {
+			b, err := c.ToFromFunctions(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+		}
+	}
+
+	return buf.Bytes(), nil
 }

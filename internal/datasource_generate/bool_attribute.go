@@ -168,3 +168,45 @@ func (g GeneratorBoolAttribute) ToFromFunctions(name string) ([]byte, error) {
 
 	return b, nil
 }
+
+// AttrType returns a string representation of a basetypes.BoolTypable type.
+func (g GeneratorBoolAttribute) AttrType(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sType{}", name.ToPascalCase())
+	}
+
+	return "basetypes.BoolType{}"
+}
+
+// AttrValue returns a string representation of a basetypes.BoolValuable type.
+func (g GeneratorBoolAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sValue", name.ToPascalCase())
+	}
+
+	return "basetypes.BoolValue"
+}
+
+func (g GeneratorBoolAttribute) To() generatorschema.ToFromConversion {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}
+	}
+
+	return generatorschema.ToFromConversion{
+		Default: "ValueBoolPointer",
+	}
+}
+
+func (g GeneratorBoolAttribute) From() generatorschema.ToFromConversion {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}
+	}
+
+	return generatorschema.ToFromConversion{
+		Default: "BoolPointerValue",
+	}
+}

@@ -62,6 +62,11 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 	for _, k := range attributeKeys {
 		name := FrameworkIdentifier(k)
 
+		if a, ok := g[k].(AttrType); ok {
+			attrTypes[k] = a.AttrType(name)
+			continue
+		}
+
 		switch g[k].GeneratorSchemaType() {
 		case GeneratorBoolAttribute:
 			attrTypes[k] = "basetypes.BoolType{}"
@@ -135,6 +140,11 @@ func (g GeneratorAttributes) AttrValues() (map[string]string, error) {
 	attrValues := make(map[string]string, len(g))
 
 	for _, k := range attributeKeys {
+		if a, ok := g[k].(AttrValue); ok {
+			attrValues[k] = a.AttrValue(FrameworkIdentifier(k))
+			continue
+		}
+
 		switch g[k].GeneratorSchemaType() {
 		case GeneratorBoolAttribute:
 			attrValues[k] = "basetypes.BoolValue"
@@ -170,23 +180,14 @@ func (g GeneratorAttributes) AttrValues() (map[string]string, error) {
 
 // FromFuncs returns a mapping of attribute names to string representations of the
 // function that converts a Go value to a framework value.
-func (g GeneratorAttributes) FromFuncs() map[string]string {
+func (g GeneratorAttributes) FromFuncs() map[string]ToFromConversion {
 	attributeKeys := g.SortedKeys()
 
-	fromFuncs := make(map[string]string, len(g))
+	fromFuncs := make(map[string]ToFromConversion, len(g))
 
 	for _, k := range attributeKeys {
-		switch g[k].GeneratorSchemaType() {
-		case GeneratorBoolAttribute:
-			fromFuncs[k] = "BoolPointerValue"
-		case GeneratorFloat64Attribute:
-			fromFuncs[k] = "Float64PointerValue"
-		case GeneratorInt64Attribute:
-			fromFuncs[k] = "Int64PointerValue"
-		case GeneratorNumberAttribute:
-			fromFuncs[k] = "NumberValue"
-		case GeneratorStringAttribute:
-			fromFuncs[k] = "StringPointerValue"
+		if a, ok := g[k].(From); ok {
+			fromFuncs[k] = a.From()
 		}
 	}
 
@@ -224,23 +225,14 @@ func (g GeneratorAttributes) Schema() (string, error) {
 
 // ToFuncs returns a mapping of attribute names to string representations of the
 // function that converts a framework value to a Go value.
-func (g GeneratorAttributes) ToFuncs() map[string]string {
+func (g GeneratorAttributes) ToFuncs() map[string]ToFromConversion {
 	attributeKeys := g.SortedKeys()
 
-	toFuncs := make(map[string]string, len(g))
+	toFuncs := make(map[string]ToFromConversion, len(g))
 
 	for _, k := range attributeKeys {
-		switch g[k].GeneratorSchemaType() {
-		case GeneratorBoolAttribute:
-			toFuncs[k] = "ValueBoolPointer"
-		case GeneratorFloat64Attribute:
-			toFuncs[k] = "ValueFloat64Pointer"
-		case GeneratorInt64Attribute:
-			toFuncs[k] = "ValueInt64Pointer"
-		case GeneratorNumberAttribute:
-			toFuncs[k] = "ValueBigFloat"
-		case GeneratorStringAttribute:
-			toFuncs[k] = "ValueStringPointer"
+		if a, ok := g[k].(To); ok {
+			toFuncs[k] = a.To()
 		}
 	}
 
