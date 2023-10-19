@@ -1,0 +1,6 @@
+
+func (t {{.Name}}Type) ValueFromFloat64(ctx context.Context, in basetypes.Float64Value) (basetypes.Float64Valuable, diag.Diagnostics) {
+return {{.Name}}Value{
+Float64Value: in,
+}, nil
+}

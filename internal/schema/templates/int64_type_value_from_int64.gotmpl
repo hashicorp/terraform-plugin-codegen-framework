@@ -1,0 +1,6 @@
+
+func (t {{.Name}}Type) ValueFromInt64(ctx context.Context, in basetypes.Int64Value) (basetypes.Int64Valuable, diag.Diagnostics) {
+return {{.Name}}Value{
+Int64Value: in,
+}, nil
+}

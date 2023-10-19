@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorStringAttribute_Schema(t *testing.T) {
@@ -23,6 +24,37 @@ func TestGeneratorStringAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
+"string_attribute": schema.StringAttribute{
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorStringAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.StringAttribute",
+					},
+				},
+			},
+			expected: `
+"string_attribute": schema.StringAttribute{
+CustomType: StringAttributeType{},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorStringAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.StringAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					Type: "my_custom_type",
 				},
@@ -218,6 +250,37 @@ func TestGeneratorStringAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "StringAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "string_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorStringAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.StringAttribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "StringAttribute",
+				ValueType: "StringAttributeValue",
+				TfsdkName: "string_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorStringAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.StringAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},

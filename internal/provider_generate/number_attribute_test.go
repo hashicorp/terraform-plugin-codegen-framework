@@ -11,15 +11,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		input             GeneratorNumberAttribute
-		expectedAttribute string
-		expectedError     error
+		input         GeneratorNumberAttribute
+		expected      string
+		expectedError error
 	}{
 		"custom-type": {
 			input: GeneratorNumberAttribute{
@@ -27,7 +28,38 @@ func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
+"number_attribute": schema.NumberAttribute{
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
+			},
+			expected: `
+"number_attribute": schema.NumberAttribute{
+CustomType: NumberAttributeType{},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
 "number_attribute": schema.NumberAttribute{
 CustomType: my_custom_type,
 },`,
@@ -39,7 +71,7 @@ CustomType: my_custom_type,
 					Required: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "number_attribute": schema.NumberAttribute{
 Required: true,
 },`,
@@ -51,7 +83,7 @@ Required: true,
 					Optional: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "number_attribute": schema.NumberAttribute{
 Optional: true,
 },`,
@@ -63,7 +95,7 @@ Optional: true,
 					Sensitive: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "number_attribute": schema.NumberAttribute{
 Sensitive: true,
 },`,
@@ -76,7 +108,7 @@ Sensitive: true,
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "number_attribute": schema.NumberAttribute{
 Description: "description",
 MarkdownDescription: "description",
@@ -89,7 +121,7 @@ MarkdownDescription: "description",
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "number_attribute": schema.NumberAttribute{
 DeprecationMessage: "deprecated",
 },`,
@@ -110,7 +142,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "number_attribute": schema.NumberAttribute{
 Validators: []validator.Number{
 my_validator.Validate(),
@@ -132,7 +164,7 @@ my_other_validator.Validate(),
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})
@@ -156,6 +188,37 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorNumberAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "NumberAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "number_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "NumberAttribute",
+				ValueType: "NumberAttributeValue",
+				TfsdkName: "number_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},

@@ -1,0 +1,26 @@
+{{define "common_attribute"}}
+
+{{- if .Required}}
+Required: {{.Required}},
+{{- end}}
+
+{{- if .Optional}}
+Optional: {{.Optional}},
+{{- end}}
+
+{{- if .Computed}}
+Computed: {{.Computed}},
+{{- end}}
+
+{{- if .Sensitive }}
+Sensitive: {{.Sensitive}},
+{{- end}}
+
+{{- if .Description }}
+Description: {{ .Description | quote }},
+MarkdownDescription: {{.Description | quote }},
+{{- end}}
+
+{{- if .DeprecationMessage }}
+DeprecationMessage: {{ .DeprecationMessage | quote }},{{- end}}
+{{- end}}

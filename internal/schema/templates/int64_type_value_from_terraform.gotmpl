@@ -1,0 +1,22 @@
+
+func (t {{.Name}}Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+attrValue, err := t.Int64Type.ValueFromTerraform(ctx, in)
+
+if err != nil {
+return nil, err
+}
+
+boolValue, ok := attrValue.(basetypes.Int64Value)
+
+if !ok {
+return nil, fmt.Errorf("unexpected value type of %T", attrValue)
+}
+
+boolValuable, diags := t.ValueFromInt64(ctx, boolValue)
+
+if diags.HasError() {
+return nil, fmt.Errorf("unexpected error converting Int64Value to Int64Valuable: %v", diags)
+}
+
+return boolValuable, nil
+}

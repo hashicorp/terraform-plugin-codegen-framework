@@ -4,6 +4,8 @@
 package datasource_generate
 
 import (
+	"bytes"
+	"fmt"
 	"strings"
 	"text/template"
 
@@ -17,6 +19,7 @@ import (
 type GeneratorInt64Attribute struct {
 	schema.Int64Attribute
 
+	AssociatedExternalType *generatorschema.AssocExtType
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
@@ -37,6 +40,12 @@ func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
 		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
 		imports.Append(customValidatorImports)
 	}
+
+	if g.AssociatedExternalType != nil {
+		imports.Append(generatorschema.AssociatedExternalTypeImports())
+	}
+
+	imports.Append(g.AssociatedExternalType.Imports())
 
 	return imports
 }
@@ -61,6 +70,7 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                    string
+		CustomType              string
 		GeneratorInt64Attribute GeneratorInt64Attribute
 	}
 
@@ -69,12 +79,19 @@ func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier
 		GeneratorInt64Attribute: g,
 	}
 
-	t, err := template.New("int64_attribute").Parse(int64AttributeGoTemplate)
+	switch {
+	case g.CustomType != nil:
+		a.CustomType = g.CustomType.Type
+	case g.AssociatedExternalType != nil:
+		a.CustomType = fmt.Sprintf("%sType{}", name.ToPascalCase())
+	}
+
+	t, err := template.New("int64_attribute").Parse(int64AttributeTemplate)
 	if err != nil {
 		return "", err
 	}
 
-	if _, err = addCommonAttributeTemplate(t); err != nil {
+	if _, err = addAttributeTemplate(t); err != nil {
 		return "", err
 	}
 
@@ -95,9 +112,58 @@ func (g GeneratorInt64Attribute) ModelField(name generatorschema.FrameworkIdenti
 		ValueType: model.Int64ValueType,
 	}
 
-	if g.CustomType != nil {
+	switch {
+	case g.CustomType != nil:
 		field.ValueType = g.CustomType.ValueType
+	case g.AssociatedExternalType != nil:
+		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
 
 	return field, nil
+}
+
+func (g GeneratorInt64Attribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	int64Type := generatorschema.NewCustomInt64Type(name)
+
+	b, err := int64Type.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	int64Value := generatorschema.NewCustomInt64Value(name)
+
+	b, err = int64Value.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorInt64Attribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	toFrom := generatorschema.NewToFromInt64(name, g.AssociatedExternalType)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

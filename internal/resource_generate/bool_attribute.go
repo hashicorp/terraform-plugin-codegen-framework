@@ -4,6 +4,7 @@
 package resource_generate
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"text/template"
@@ -19,6 +20,7 @@ import (
 type GeneratorBoolAttribute struct {
 	schema.BoolAttribute
 
+	AssociatedExternalType *generatorschema.AssocExtType
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	CustomType    *specschema.CustomType
@@ -57,6 +59,12 @@ func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
 		imports.Append(customValidatorImports)
 	}
+
+	if g.AssociatedExternalType != nil {
+		imports.Append(generatorschema.AssociatedExternalTypeImports())
+	}
+
+	imports.Append(g.AssociatedExternalType.Imports())
 
 	return imports
 }
@@ -105,6 +113,7 @@ func boolDefault(d *specschema.BoolDefault) string {
 func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                   string
+		CustomType             string
 		Default                string
 		GeneratorBoolAttribute GeneratorBoolAttribute
 	}
@@ -115,12 +124,20 @@ func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier)
 		GeneratorBoolAttribute: g,
 	}
 
-	t, err := template.New("bool_attribute").Parse(boolAttributeGoTemplate)
+	switch {
+	case g.CustomType != nil:
+		a.CustomType = g.CustomType.Type
+	case g.AssociatedExternalType != nil:
+		a.CustomType = fmt.Sprintf("%sType{}", name.ToPascalCase())
+	}
+
+	t, err := template.New("bool_attribute").Parse(boolAttributeTemplate)
+
 	if err != nil {
 		return "", err
 	}
 
-	if _, err = addCommonAttributeTemplate(t); err != nil {
+	if _, err = addAttributeTemplate(t); err != nil {
 		return "", err
 	}
 
@@ -141,9 +158,58 @@ func (g GeneratorBoolAttribute) ModelField(name generatorschema.FrameworkIdentif
 		ValueType: model.BoolValueType,
 	}
 
-	if g.CustomType != nil {
+	switch {
+	case g.CustomType != nil:
 		field.ValueType = g.CustomType.ValueType
+	case g.AssociatedExternalType != nil:
+		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
 
 	return field, nil
+}
+
+func (g GeneratorBoolAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	boolType := generatorschema.NewCustomBoolType(name)
+
+	b, err := boolType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	boolValue := generatorschema.NewCustomBoolValue(name)
+
+	b, err = boolValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorBoolAttribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	toFrom := generatorschema.NewToFromBool(name, g.AssociatedExternalType)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

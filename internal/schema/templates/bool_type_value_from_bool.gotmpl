@@ -1,0 +1,6 @@
+
+func (t {{.Name}}Type) ValueFromBool(ctx context.Context, in basetypes.BoolValue) (basetypes.BoolValuable, diag.Diagnostics) {
+return {{.Name}}Value{
+BoolValue: in,
+}, nil
+}

@@ -11,15 +11,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorStringAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		input             GeneratorStringAttribute
-		expectedAttribute string
-		expectedError     error
+		input         GeneratorStringAttribute
+		expected      string
+		expectedError error
 	}{
 		"custom-type": {
 			input: GeneratorStringAttribute{
@@ -27,7 +28,38 @@ func TestGeneratorStringAttribute_Schema(t *testing.T) {
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
+"string_attribute": schema.StringAttribute{
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorStringAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.StringAttribute",
+					},
+				},
+			},
+			expected: `
+"string_attribute": schema.StringAttribute{
+CustomType: StringAttributeType{},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorStringAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.StringAttribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
 "string_attribute": schema.StringAttribute{
 CustomType: my_custom_type,
 },`,
@@ -39,7 +71,7 @@ CustomType: my_custom_type,
 					Required: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Required: true,
 },`,
@@ -51,7 +83,7 @@ Required: true,
 					Optional: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Optional: true,
 },`,
@@ -63,7 +95,7 @@ Optional: true,
 					Sensitive: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Sensitive: true,
 },`,
@@ -76,7 +108,7 @@ Sensitive: true,
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Description: "description",
 MarkdownDescription: "description",
@@ -89,7 +121,7 @@ MarkdownDescription: "description",
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 DeprecationMessage: "deprecated",
 },`,
@@ -110,7 +142,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "string_attribute": schema.StringAttribute{
 Validators: []validator.String{
 my_validator.Validate(),
@@ -132,7 +164,7 @@ my_other_validator.Validate(),
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})
@@ -156,6 +188,37 @@ func TestGeneratorStringAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorStringAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "StringAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "string_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorStringAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.StringAttribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "StringAttribute",
+				ValueType: "StringAttributeValue",
+				TfsdkName: "string_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorStringAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.StringAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},

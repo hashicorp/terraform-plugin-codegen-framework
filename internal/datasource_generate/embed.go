@@ -10,13 +10,13 @@ import (
 )
 
 //go:embed templates/bool_attribute.gotmpl
-var boolAttributeGoTemplate string
+var boolAttributeTemplate string
 
 //go:embed templates/float64_attribute.gotmpl
-var float64AttributeGoTemplate string
+var float64AttributeTemplate string
 
 //go:embed templates/int64_attribute.gotmpl
-var int64AttributeGoTemplate string
+var int64AttributeTemplate string
 
 //go:embed templates/list_attribute.gotmpl
 var listAttributeGoTemplate string
@@ -31,7 +31,7 @@ var mapAttributeGoTemplate string
 var mapNestedAttributeGoTemplate string
 
 //go:embed templates/number_attribute.gotmpl
-var numberAttributeGoTemplate string
+var numberAttributeTemplate string
 
 //go:embed templates/object_attribute.gotmpl
 var objectAttributeGoTemplate string
@@ -46,7 +46,7 @@ var setNestedAttributeGoTemplate string
 var singleNestedAttributeGoTemplate string
 
 //go:embed templates/string_attribute.gotmpl
-var stringAttributeGoTemplate string
+var stringAttributeTemplate string
 
 //go:embed templates/list_nested_block.gotmpl
 var listNestedBlockGoTemplate string
@@ -77,4 +77,15 @@ func addCommonBlockTemplate(t *template.Template) (*template.Template, error) {
 	}
 
 	return t.New("common_block").Funcs(commonTemplateFuncs).Parse(commonBlockGoTemplate)
+}
+
+//go:embed templates/attribute.gotmpl
+var attributeTemplate string
+
+func addAttributeTemplate(t *template.Template) (*template.Template, error) {
+	templateFuncs := template.FuncMap{
+		"quote": strconv.Quote,
+	}
+
+	return t.New("attribute").Funcs(templateFuncs).Parse(attributeTemplate)
 }

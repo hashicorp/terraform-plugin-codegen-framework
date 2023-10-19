@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertFloat64Attribute(a *resource.Float64Attribute) (resource_generate.GeneratorFloat64Attribute, error) {
@@ -27,9 +28,11 @@ func convertFloat64Attribute(a *resource.Float64Attribute) (resource_generate.Ge
 			MarkdownDescription: description(a.Description),
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
-		CustomType:    a.CustomType,
-		Default:       a.Default,
-		PlanModifiers: a.PlanModifiers,
-		Validators:    a.Validators,
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		Default:                a.Default,
+		PlanModifiers:          a.PlanModifiers,
+		Validators:             a.Validators,
 	}, nil
 }

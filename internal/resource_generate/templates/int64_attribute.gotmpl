@@ -1,5 +1,8 @@
 
 "{{.Name}}": schema.Int64Attribute{
+{{- if .CustomType}}
+CustomType: {{.CustomType}},
+{{- end}}
 {{- template "common_attribute" .GeneratorInt64Attribute }}
 {{- if gt (len .GeneratorInt64Attribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Int64{

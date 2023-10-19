@@ -11,15 +11,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorFloat64Attribute_Schema(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		input             GeneratorFloat64Attribute
-		expectedAttribute string
-		expectedError     error
+		input         GeneratorFloat64Attribute
+		expected      string
+		expectedError error
 	}{
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
@@ -27,7 +28,38 @@ func TestGeneratorFloat64Attribute_Schema(t *testing.T) {
 					Type: "my_custom_type",
 				},
 			},
-			expectedAttribute: `
+			expected: `
+"float64_attribute": schema.Float64Attribute{
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorFloat64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Float64Attribute",
+					},
+				},
+			},
+			expected: `
+"float64_attribute": schema.Float64Attribute{
+CustomType: Float64AttributeType{},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorFloat64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Float64Attribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 CustomType: my_custom_type,
 },`,
@@ -39,7 +71,7 @@ CustomType: my_custom_type,
 					Required: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Required: true,
 },`,
@@ -51,7 +83,7 @@ Required: true,
 					Optional: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Optional: true,
 },`,
@@ -63,7 +95,7 @@ Optional: true,
 					Sensitive: true,
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Sensitive: true,
 },`,
@@ -76,7 +108,7 @@ Sensitive: true,
 					Description: "description",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Description: "description",
 MarkdownDescription: "description",
@@ -89,7 +121,7 @@ MarkdownDescription: "description",
 					DeprecationMessage: "deprecated",
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 DeprecationMessage: "deprecated",
 },`,
@@ -110,7 +142,7 @@ DeprecationMessage: "deprecated",
 					},
 				},
 			},
-			expectedAttribute: `
+			expected: `
 "float64_attribute": schema.Float64Attribute{
 Validators: []validator.Float64{
 my_validator.Validate(),
@@ -132,7 +164,7 @@ my_other_validator.Validate(),
 				t.Errorf("unexpected error: %s", diff)
 			}
 
-			if diff := cmp.Diff(got, testCase.expectedAttribute); diff != "" {
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})
@@ -156,6 +188,37 @@ func TestGeneratorFloat64Attribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "Float64Attribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "float64_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorFloat64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Float64Attribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "Float64Attribute",
+				ValueType: "Float64AttributeValue",
+				TfsdkName: "float64_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorFloat64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Float64Attribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},

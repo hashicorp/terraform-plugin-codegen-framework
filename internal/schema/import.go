@@ -311,3 +311,27 @@ func CustomValidatorImports(cv *specschema.CustomValidator) *Imports {
 
 	return imports
 }
+
+func AssociatedExternalTypeImports() *Imports {
+	imports := NewImports()
+
+	imports.Add([]code.Import{
+		{
+			Path: FmtImport,
+		},
+		{
+			Path: DiagImport,
+		},
+		{
+			Path: AttrImport,
+		},
+		{
+			Path: TfTypesImport,
+		},
+		{
+			Path: BaseTypesImport,
+		},
+	}...)
+
+	return imports
+}
