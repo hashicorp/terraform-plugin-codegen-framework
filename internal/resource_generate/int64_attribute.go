@@ -212,3 +212,45 @@ func (g GeneratorInt64Attribute) ToFromFunctions(name string) ([]byte, error) {
 
 	return b, nil
 }
+
+// AttrType returns a string representation of a basetypes.Int64Typable type.
+func (g GeneratorInt64Attribute) AttrType(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sType{}", name.ToPascalCase())
+	}
+
+	return "basetypes.Int64Type{}"
+}
+
+// AttrValue returns a string representation of a basetypes.Int64Valuable type.
+func (g GeneratorInt64Attribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sValue", name.ToPascalCase())
+	}
+
+	return "basetypes.Int64Value"
+}
+
+func (g GeneratorInt64Attribute) To() generatorschema.ToFromConversion {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}
+	}
+
+	return generatorschema.ToFromConversion{
+		Default: "ValueInt64Pointer",
+	}
+}
+
+func (g GeneratorInt64Attribute) From() generatorschema.ToFromConversion {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}
+	}
+
+	return generatorschema.ToFromConversion{
+		Default: "Int64PointerValue",
+	}
+}

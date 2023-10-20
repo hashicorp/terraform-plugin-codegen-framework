@@ -1,0 +1,6 @@
+kind: ENHANCEMENTS
+body: Adds usage of To/From methods for primitive attributes with an associated external
+  type into To/From methods of nested attributes and blocks
+time: 2023-10-19T14:49:38.39524+01:00
+custom:
+  Issue: "73"

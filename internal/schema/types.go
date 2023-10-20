@@ -38,6 +38,14 @@ type GeneratorAttribute interface {
 	Schema(FrameworkIdentifier) (string, error)
 }
 
+type AttrType interface {
+	AttrType(FrameworkIdentifier) string
+}
+
+type AttrValue interface {
+	AttrValue(FrameworkIdentifier) string
+}
+
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	GeneratorSchemaType() Type
@@ -58,6 +66,19 @@ type GeneratorBlockAssocExtType interface {
 
 type ToFrom interface {
 	ToFromFunctions(name string) ([]byte, error)
+}
+
+type ToFromConversion struct {
+	Default      string
+	AssocExtType *AssocExtType
+}
+
+type To interface {
+	To() ToFromConversion
+}
+
+type From interface {
+	From() ToFromConversion
 }
 
 type Type int64

@@ -5,10 +5,26 @@ var diags diag.Diagnostics
 if apiObject == nil {
 return New{{.Name}}ValueNull(), diags
 }
+{{- range $key, $value := .FromFuncs}}
+{{- if $value.AssocExtType}}
+
+{{$key.ToCamelCase}}Val, d := {{$key.ToPascalCase}}Value{}.From{{$value.AssocExtType.ToPascalCase}}(ctx, apiObject.{{$key.ToPascalCase}})
+
+diags.Append(d...)
+
+if diags.HasError() {
+return New{{$.Name}}ValueNull(), diags
+}
+{{- end}}
+{{- end}}
 
 return {{.Name}}Value{
-{{- range $key, $value := .FromFuncs }}
-{{$key.ToPascalCase}}: types.{{$value}}(apiObject.{{$key.ToPascalCase}}),
+{{- range $key, $value := .FromFuncs}}
+{{- if $value.AssocExtType}}
+{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
+{{- else if $value.Default}}
+{{$key.ToPascalCase}}: types.{{$value.Default}}(apiObject.{{$key.ToPascalCase}}),
+{{- end}}
 {{- end}}
 state: attr.ValueStateKnown,
 }, diags

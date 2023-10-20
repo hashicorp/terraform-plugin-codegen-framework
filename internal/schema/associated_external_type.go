@@ -5,6 +5,8 @@ package schema
 
 import (
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
@@ -98,4 +100,16 @@ func (a *AssocExtType) ToPascalCase() string {
 	}
 
 	return ucName
+}
+
+func (a *AssocExtType) ToCamelCase() string {
+	pascal := a.ToPascalCase()
+
+	// Grab first rune and lower case it
+	firstLetter, size := utf8.DecodeRuneInString(pascal)
+	if firstLetter == utf8.RuneError && size <= 1 {
+		return pascal
+	}
+
+	return string(unicode.ToLower(firstLetter)) + pascal[size:]
 }

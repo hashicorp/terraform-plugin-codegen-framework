@@ -167,3 +167,45 @@ func (g GeneratorNumberAttribute) ToFromFunctions(name string) ([]byte, error) {
 
 	return b, nil
 }
+
+// AttrType returns a string representation of a basetypes.NumberTypable type.
+func (g GeneratorNumberAttribute) AttrType(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sType{}", name.ToPascalCase())
+	}
+
+	return "basetypes.NumberType{}"
+}
+
+// AttrValue returns a string representation of a basetypes.NumberValuable type.
+func (g GeneratorNumberAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sValue", name.ToPascalCase())
+	}
+
+	return "basetypes.NumberValue"
+}
+
+func (g GeneratorNumberAttribute) To() generatorschema.ToFromConversion {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}
+	}
+
+	return generatorschema.ToFromConversion{
+		Default: "ValueBigFloat",
+	}
+}
+
+func (g GeneratorNumberAttribute) From() generatorschema.ToFromConversion {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}
+	}
+
+	return generatorschema.ToFromConversion{
+		Default: "NumberValue",
+	}
+}

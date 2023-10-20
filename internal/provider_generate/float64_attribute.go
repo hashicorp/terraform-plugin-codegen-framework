@@ -167,3 +167,45 @@ func (g GeneratorFloat64Attribute) ToFromFunctions(name string) ([]byte, error) 
 
 	return b, nil
 }
+
+// AttrType returns a string representation of a basetypes.Float64Typable type.
+func (g GeneratorFloat64Attribute) AttrType(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sType{}", name.ToPascalCase())
+	}
+
+	return "basetypes.Float64Type{}"
+}
+
+// AttrValue returns a string representation of a basetypes.Float64Valuable type.
+func (g GeneratorFloat64Attribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sValue", name.ToPascalCase())
+	}
+
+	return "basetypes.Float64Value"
+}
+
+func (g GeneratorFloat64Attribute) To() generatorschema.ToFromConversion {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}
+	}
+
+	return generatorschema.ToFromConversion{
+		Default: "ValueFloat64Pointer",
+	}
+}
+
+func (g GeneratorFloat64Attribute) From() generatorschema.ToFromConversion {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}
+	}
+
+	return generatorschema.ToFromConversion{
+		Default: "Float64PointerValue",
+	}
+}

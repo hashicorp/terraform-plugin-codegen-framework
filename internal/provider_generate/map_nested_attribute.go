@@ -209,6 +209,8 @@ func (g GeneratorMapNestedAttribute) ToFromFunctions(name string) ([]byte, error
 		return nil, nil
 	}
 
+	var buf bytes.Buffer
+
 	toFuncs := g.NestedObject.Attributes.ToFuncs()
 
 	fromFuncs := g.NestedObject.Attributes.FromFuncs()
@@ -221,5 +223,23 @@ func (g GeneratorMapNestedAttribute) ToFromFunctions(name string) ([]byte, error
 		return nil, err
 	}
 
-	return b, nil
+	buf.Write(b)
+
+	attributeKeys := g.NestedObject.Attributes.SortedKeys()
+
+	// Recursively call ToFromFunctions() for each attribute that implements
+	// ToFrom interface.
+	for _, k := range attributeKeys {
+		if c, ok := g.NestedObject.Attributes[k].(generatorschema.ToFrom); ok {
+			b, err := c.ToFromFunctions(k)
+
+			if err != nil {
+				return nil, err
+			}
+
+			buf.Write(b)
+		}
+	}
+
+	return buf.Bytes(), nil
 }

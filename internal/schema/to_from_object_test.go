@@ -17,22 +17,21 @@ func TestToFromObject_renderFrom(t *testing.T) {
 	testCases := map[string]struct {
 		name          string
 		assocExtType  *AssocExtType
-		fromFuncs     map[string]string
+		fromFuncs     map[string]ToFromConversion
 		expected      []byte
 		expectedError error
 	}{
 		"default": {
 			name: "Example",
 			assocExtType: &AssocExtType{
-				&schema.AssociatedExternalType{
-					Import: &code.Import{
-						Path: "example.com/apisdk",
-					},
+				AssociatedExternalType: &schema.AssociatedExternalType{
 					Type: "*apisdk.Type",
 				},
 			},
-			fromFuncs: map[string]string{
-				"bool_attribute": "BoolPointerValue",
+			fromFuncs: map[string]ToFromConversion{
+				"bool_attribute": {
+					Default: "BoolPointerValue",
+				},
 			},
 			expected: []byte(`
 func (v ExampleValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ExampleValue, diag.Diagnostics) {
@@ -44,6 +43,45 @@ return NewExampleValueNull(), diags
 
 return ExampleValue{
 BoolAttribute: types.BoolPointerValue(apiObject.BoolAttribute),
+state: attr.ValueStateKnown,
+}, diags
+}
+`),
+		},
+		"nested-assoc-ext-type": {
+			name: "Example",
+			assocExtType: &AssocExtType{
+				AssociatedExternalType: &schema.AssociatedExternalType{
+					Type: "*apisdk.Type",
+				},
+			},
+			fromFuncs: map[string]ToFromConversion{
+				"bool_attribute": {
+					AssocExtType: &AssocExtType{
+						AssociatedExternalType: &schema.AssociatedExternalType{
+							Type: "*api.BoolAttribute",
+						},
+					},
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ExampleValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return NewExampleValueNull(), diags
+}
+
+boolAttributeVal, d := BoolAttributeValue{}.FromApiBoolAttribute(ctx, apiObject.BoolAttribute)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return NewExampleValueNull(), diags
+}
+
+return ExampleValue{
+BoolAttribute: boolAttributeVal,
 state: attr.ValueStateKnown,
 }, diags
 }
@@ -78,7 +116,7 @@ func TestToFromObject_renderTo(t *testing.T) {
 	testCases := map[string]struct {
 		name          string
 		assocExtType  *AssocExtType
-		toFuncs       map[string]string
+		toFuncs       map[string]ToFromConversion
 		expected      []byte
 		expectedError error
 	}{
@@ -92,8 +130,10 @@ func TestToFromObject_renderTo(t *testing.T) {
 					Type: "*apisdk.Type",
 				},
 			},
-			toFuncs: map[string]string{
-				"bool_attribute": "ValueBoolPointer",
+			toFuncs: map[string]ToFromConversion{
+				"bool_attribute": {
+					Default: "ValueBoolPointer",
+				},
 			},
 			expected: []byte(`func (v ExampleValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 var diags diag.Diagnostics
@@ -113,6 +153,54 @@ return nil, diags
 
 return &apisdk.Type{
 BoolAttribute: v.BoolAttribute.ValueBoolPointer(),
+}, diags
+}`),
+		},
+		"nested-assoc-ext-type": {
+			name: "Example",
+			assocExtType: &AssocExtType{
+				&schema.AssociatedExternalType{
+					Import: &code.Import{
+						Path: "example.com/apisdk",
+					},
+					Type: "*apisdk.Type",
+				},
+			},
+			toFuncs: map[string]ToFromConversion{
+				"bool_attribute": {
+					AssocExtType: &AssocExtType{
+						AssociatedExternalType: &schema.AssociatedExternalType{
+							Type: "*api.BoolAttribute",
+						},
+					},
+				},
+			},
+			expected: []byte(`func (v ExampleValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if v.IsNull() {
+return nil, diags
+}
+
+if v.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue Value Is Unknown",
+` + "`" + `"ExampleValue" is unknown.` + "`" + `,
+))
+
+return nil, diags
+}
+
+apiBoolAttribute, d := v.BoolAttribute.ToApiBoolAttribute(ctx)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+return &apisdk.Type{
+BoolAttribute: apiBoolAttribute,
 }, diags
 }`),
 		},
