@@ -4,6 +4,8 @@
 package datasource_generate
 
 import (
+	"bytes"
+	"fmt"
 	"strings"
 	"text/template"
 
@@ -17,6 +19,7 @@ import (
 type GeneratorListAttribute struct {
 	schema.ListAttribute
 
+	AssociatedExternalType *generatorschema.AssocExtType
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	CustomType  *specschema.CustomType
@@ -45,6 +48,12 @@ func (g GeneratorListAttribute) Imports() *generatorschema.Imports {
 		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
 		imports.Append(customValidatorImports)
 	}
+
+	if g.AssociatedExternalType != nil {
+		imports.Append(generatorschema.AssociatedExternalTypeImports())
+	}
+
+	imports.Append(g.AssociatedExternalType.Imports())
 
 	return imports
 }
@@ -103,6 +112,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	type attribute struct {
 		Name                   string
+		CustomType             string
 		ElementType            string
 		GeneratorListAttribute GeneratorListAttribute
 	}
@@ -113,12 +123,19 @@ func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier)
 		GeneratorListAttribute: g,
 	}
 
-	t, err := template.New("list_attribute").Parse(listAttributeGoTemplate)
+	switch {
+	case g.CustomType != nil:
+		a.CustomType = g.CustomType.Type
+	case g.AssociatedExternalType != nil:
+		a.CustomType = fmt.Sprintf("%sType{\ntypes.ListType{\nElemType: %s,\n},\n}", name.ToPascalCase(), generatorschema.GetElementType(g.ElementType))
+	}
+
+	t, err := template.New("list_attribute").Parse(listAttributeTemplate)
 	if err != nil {
 		return "", err
 	}
 
-	if _, err = addCommonAttributeTemplate(t); err != nil {
+	if _, err = addAttributeTemplate(t); err != nil {
 		return "", err
 	}
 
@@ -139,9 +156,64 @@ func (g GeneratorListAttribute) ModelField(name generatorschema.FrameworkIdentif
 		ValueType: model.ListValueType,
 	}
 
-	if g.CustomType != nil {
+	switch {
+	case g.CustomType != nil:
 		field.ValueType = g.CustomType.ValueType
+	case g.AssociatedExternalType != nil:
+		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
 
 	return field, nil
+}
+
+func (g GeneratorListAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	listType := generatorschema.NewCustomListType(name)
+
+	b, err := listType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	elemType := generatorschema.GetElementType(g.ElementType)
+
+	listValue := generatorschema.NewCustomListValue(name, elemType)
+
+	b, err = listValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorListAttribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	elementTypeType := generatorschema.GetElementType(g.ElementType)
+	elementTypeValue := generatorschema.GetElementValueType(g.ElementType)
+	elementFrom := generatorschema.GetElementFromFunc(g.ElementType)
+
+	toFrom := generatorschema.NewToFromList(name, g.AssociatedExternalType, elementTypeType, elementTypeValue, elementFrom)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

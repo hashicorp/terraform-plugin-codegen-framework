@@ -19,7 +19,7 @@ var float64AttributeTemplate string
 var int64AttributeTemplate string
 
 //go:embed templates/list_attribute.gotmpl
-var listAttributeGoTemplate string
+var listAttributeTemplate string
 
 //go:embed templates/list_nested_attribute.gotmpl
 var listNestedAttributeGoTemplate string

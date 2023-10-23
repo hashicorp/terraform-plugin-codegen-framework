@@ -142,6 +142,51 @@ var Int64ValueValueTemplate string
 //go:embed templates/int64_value_valuable.gotmpl
 var Int64ValueValuableTemplate string
 
+// List From/To
+
+//go:embed templates/list_from.gotmpl
+var ListFromTemplate string
+
+//go:embed templates/list_to.gotmpl
+var ListToTemplate string
+
+// List Type
+
+//go:embed templates/list_type_equal.gotmpl
+var ListTypeEqualTemplate string
+
+//go:embed templates/list_type_string.gotmpl
+var ListTypeStringTemplate string
+
+//go:embed templates/list_type_type.gotmpl
+var ListTypeTypeTemplate string
+
+//go:embed templates/list_type_typable.gotmpl
+var ListTypeTypableTemplate string
+
+//go:embed templates/list_type_value_from_list.gotmpl
+var ListTypeValueFromListTemplate string
+
+//go:embed templates/list_type_value_from_terraform.gotmpl
+var ListTypeValueFromTerraformTemplate string
+
+//go:embed templates/list_type_value_type.gotmpl
+var ListTypeValueTypeTemplate string
+
+// List Value
+
+//go:embed templates/list_value_equal.gotmpl
+var ListValueEqualTemplate string
+
+//go:embed templates/list_value_type.gotmpl
+var ListValueTypeTemplate string
+
+//go:embed templates/list_value_value.gotmpl
+var ListValueValueTemplate string
+
+//go:embed templates/list_value_valuable.gotmpl
+var ListValueValuableTemplate string
+
 // Number From/To
 
 //go:embed templates/number_from.gotmpl

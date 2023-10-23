@@ -601,7 +601,6 @@ ElementType: types.StringType,
 			},
 			expected: `
 "list_attribute": schema.ListAttribute{
-ElementType: types.StringType,
 CustomType: my_custom_type,
 },`,
 		},
