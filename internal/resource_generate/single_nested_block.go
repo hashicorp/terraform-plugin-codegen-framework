@@ -209,7 +209,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 		attributesBlocksAttrValues[k] = v
 	}
 
-	objectType := generatorschema.NewCustomObjectType(name, attributesBlocksAttrValues)
+	objectType := generatorschema.NewCustomNestedObjectType(name, attributesBlocksAttrValues)
 
 	b, err := objectType.Render()
 
@@ -263,7 +263,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 		attributesBlocksAttrTypes[k] = v
 	}
 
-	objectValue := generatorschema.NewCustomObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues)
+	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues)
 
 	b, err = objectValue.Render()
 
@@ -317,7 +317,7 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 
 	fromFuncs := g.Attributes.FromFuncs()
 
-	toFrom := generatorschema.NewToFromObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := generatorschema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 

@@ -8,25 +8,25 @@ import (
 	"text/template"
 )
 
-type CustomObjectType struct {
+type CustomNestedObjectType struct {
 	Name       FrameworkIdentifier
 	AttrValues map[FrameworkIdentifier]string
 	templates  map[string]string
 }
 
-func NewCustomObjectType(name string, attrValues map[string]string) CustomObjectType {
+func NewCustomNestedObjectType(name string, attrValues map[string]string) CustomNestedObjectType {
 	t := map[string]string{
-		"equal":              ObjectTypeEqualTemplate,
-		"string":             ObjectTypeStringTemplate,
-		"typable":            ObjectTypeTypableTemplate,
-		"type":               ObjectTypeTypeTemplate,
-		"value":              ObjectTypeValueTemplate,
-		"valueFromObject":    ObjectTypeValueFromObjectTemplate,
-		"valueFromTerraform": ObjectTypeValueFromTerraformTemplate,
-		"valueMust":          ObjectTypeValueMustTemplate,
-		"valueNull":          ObjectTypeValueNullTemplate,
-		"valueType":          ObjectTypeValueTypeTemplate,
-		"valueUnknown":       ObjectTypeValueUnknownTemplate,
+		"equal":              NestedObjectTypeEqualTemplate,
+		"string":             NestedObjectTypeStringTemplate,
+		"typable":            NestedObjectTypeTypableTemplate,
+		"type":               NestedObjectTypeTypeTemplate,
+		"value":              NestedObjectTypeValueTemplate,
+		"valueFromObject":    NestedObjectTypeValueFromObjectTemplate,
+		"valueFromTerraform": NestedObjectTypeValueFromTerraformTemplate,
+		"valueMust":          NestedObjectTypeValueMustTemplate,
+		"valueNull":          NestedObjectTypeValueNullTemplate,
+		"valueType":          NestedObjectTypeValueTypeTemplate,
+		"valueUnknown":       NestedObjectTypeValueUnknownTemplate,
 	}
 
 	a := make(map[FrameworkIdentifier]string, len(attrValues))
@@ -35,14 +35,14 @@ func NewCustomObjectType(name string, attrValues map[string]string) CustomObject
 		a[FrameworkIdentifier(k)] = v
 	}
 
-	return CustomObjectType{
+	return CustomNestedObjectType{
 		Name:       FrameworkIdentifier(name),
 		AttrValues: a,
 		templates:  t,
 	}
 }
 
-func (c CustomObjectType) Render() ([]byte, error) {
+func (c CustomNestedObjectType) Render() ([]byte, error) {
 	var buf bytes.Buffer
 
 	renderFuncs := []func() ([]byte, error){
@@ -74,7 +74,7 @@ func (c CustomObjectType) Render() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderEqual() ([]byte, error) {
+func (c CustomNestedObjectType) renderEqual() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["equal"])
@@ -96,7 +96,7 @@ func (c CustomObjectType) renderEqual() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderString() ([]byte, error) {
+func (c CustomNestedObjectType) renderString() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["string"])
@@ -118,7 +118,7 @@ func (c CustomObjectType) renderString() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderTypable() ([]byte, error) {
+func (c CustomNestedObjectType) renderTypable() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["typable"])
@@ -140,7 +140,7 @@ func (c CustomObjectType) renderTypable() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderType() ([]byte, error) {
+func (c CustomNestedObjectType) renderType() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["type"])
@@ -162,7 +162,7 @@ func (c CustomObjectType) renderType() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderValue() ([]byte, error) {
+func (c CustomNestedObjectType) renderValue() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["value"])
@@ -186,7 +186,7 @@ func (c CustomObjectType) renderValue() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderValueFromObject() ([]byte, error) {
+func (c CustomNestedObjectType) renderValueFromObject() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["valueFromObject"])
@@ -210,7 +210,7 @@ func (c CustomObjectType) renderValueFromObject() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderValueFromTerraform() ([]byte, error) {
+func (c CustomNestedObjectType) renderValueFromTerraform() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["valueFromTerraform"])
@@ -232,7 +232,7 @@ func (c CustomObjectType) renderValueFromTerraform() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderValueMust() ([]byte, error) {
+func (c CustomNestedObjectType) renderValueMust() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["valueMust"])
@@ -254,7 +254,7 @@ func (c CustomObjectType) renderValueMust() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderValueNull() ([]byte, error) {
+func (c CustomNestedObjectType) renderValueNull() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["valueNull"])
@@ -276,7 +276,7 @@ func (c CustomObjectType) renderValueNull() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderValueType() ([]byte, error) {
+func (c CustomNestedObjectType) renderValueType() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["valueType"])
@@ -298,7 +298,7 @@ func (c CustomObjectType) renderValueType() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectType) renderValueUnknown() ([]byte, error) {
+func (c CustomNestedObjectType) renderValueUnknown() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["valueUnknown"])
@@ -320,7 +320,7 @@ func (c CustomObjectType) renderValueUnknown() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-type CustomObjectValue struct {
+type CustomNestedObjectValue struct {
 	Name           FrameworkIdentifier
 	AttributeTypes map[FrameworkIdentifier]string
 	AttrTypes      map[FrameworkIdentifier]string
@@ -328,18 +328,18 @@ type CustomObjectValue struct {
 	templates      map[string]string
 }
 
-func NewCustomObjectValue(name string, attributeTypes, attrTypes, attrValues map[string]string) CustomObjectValue {
+func NewCustomNestedObjectValue(name string, attributeTypes, attrTypes, attrValues map[string]string) CustomNestedObjectValue {
 	t := map[string]string{
-		"attributeTypes":   ObjectValueAttributeTypesTemplate,
-		"equal":            ObjectValueEqualTemplate,
-		"isNull":           ObjectValueIsNullTemplate,
-		"isUnknown":        ObjectValueIsUnknownTemplate,
-		"string":           ObjectValueStringTemplate,
-		"toObjectValue":    ObjectValueToObjectValueTemplate,
-		"toTerraformValue": ObjectValueToTerraformValueTemplate,
-		"type":             ObjectValueTypeTemplate,
-		"valuable":         ObjectValueValuableTemplate,
-		"value":            ObjectValueValueTemplate,
+		"attributeTypes":   NestedObjectValueAttributeTypesTemplate,
+		"equal":            NestedObjectValueEqualTemplate,
+		"isNull":           NestedObjectValueIsNullTemplate,
+		"isUnknown":        NestedObjectValueIsUnknownTemplate,
+		"string":           NestedObjectValueStringTemplate,
+		"toObjectValue":    NestedObjectValueToObjectValueTemplate,
+		"toTerraformValue": NestedObjectValueToTerraformValueTemplate,
+		"type":             NestedObjectValueTypeTemplate,
+		"valuable":         NestedObjectValueValuableTemplate,
+		"value":            NestedObjectValueValueTemplate,
 	}
 
 	attribTypes := make(map[FrameworkIdentifier]string, len(attributeTypes))
@@ -360,7 +360,7 @@ func NewCustomObjectValue(name string, attributeTypes, attrTypes, attrValues map
 		attrVals[FrameworkIdentifier(k)] = v
 	}
 
-	return CustomObjectValue{
+	return CustomNestedObjectValue{
 		Name:           FrameworkIdentifier(name),
 		AttributeTypes: attribTypes,
 		AttrTypes:      attrTyps,
@@ -369,7 +369,7 @@ func NewCustomObjectValue(name string, attributeTypes, attrTypes, attrValues map
 	}
 }
 
-func (c CustomObjectValue) Render() ([]byte, error) {
+func (c CustomNestedObjectValue) Render() ([]byte, error) {
 	var buf bytes.Buffer
 
 	renderFuncs := []func() ([]byte, error){
@@ -400,7 +400,7 @@ func (c CustomObjectValue) Render() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderAttributeTypes() ([]byte, error) {
+func (c CustomNestedObjectValue) renderAttributeTypes() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["attributeTypes"])
@@ -424,7 +424,7 @@ func (c CustomObjectValue) renderAttributeTypes() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderEqual() ([]byte, error) {
+func (c CustomNestedObjectValue) renderEqual() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["equal"])
@@ -448,7 +448,7 @@ func (c CustomObjectValue) renderEqual() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderIsNull() ([]byte, error) {
+func (c CustomNestedObjectValue) renderIsNull() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["isNull"])
@@ -470,7 +470,7 @@ func (c CustomObjectValue) renderIsNull() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderIsUnknown() ([]byte, error) {
+func (c CustomNestedObjectValue) renderIsUnknown() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["isUnknown"])
@@ -492,7 +492,7 @@ func (c CustomObjectValue) renderIsUnknown() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderString() ([]byte, error) {
+func (c CustomNestedObjectValue) renderString() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["string"])
@@ -514,7 +514,7 @@ func (c CustomObjectValue) renderString() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderToObjectValue() ([]byte, error) {
+func (c CustomNestedObjectValue) renderToObjectValue() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["toObjectValue"])
@@ -540,7 +540,7 @@ func (c CustomObjectValue) renderToObjectValue() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderToTerraformValue() ([]byte, error) {
+func (c CustomNestedObjectValue) renderToTerraformValue() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["toTerraformValue"])
@@ -564,7 +564,7 @@ func (c CustomObjectValue) renderToTerraformValue() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderType() ([]byte, error) {
+func (c CustomNestedObjectValue) renderType() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["type"])
@@ -586,7 +586,7 @@ func (c CustomObjectValue) renderType() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderValuable() ([]byte, error) {
+func (c CustomNestedObjectValue) renderValuable() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["valuable"])
@@ -608,7 +608,7 @@ func (c CustomObjectValue) renderValuable() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (c CustomObjectValue) renderValue() ([]byte, error) {
+func (c CustomNestedObjectValue) renderValue() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(c.templates["value"])

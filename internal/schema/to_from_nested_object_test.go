@@ -95,7 +95,7 @@ state: attr.ValueStateKnown,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, nil, testCase.fromFuncs)
+			toFromObject := NewToFromNestedObject(testCase.name, testCase.assocExtType, nil, testCase.fromFuncs)
 
 			got, err := toFromObject.renderFrom()
 
@@ -212,7 +212,7 @@ BoolAttribute: apiBoolAttribute,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, testCase.toFuncs, nil)
+			toFromObject := NewToFromNestedObject(testCase.name, testCase.assocExtType, testCase.toFuncs, nil)
 
 			got, err := toFromObject.renderTo()
 

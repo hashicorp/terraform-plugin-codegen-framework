@@ -178,7 +178,7 @@ func (g GeneratorMapNestedAttribute) CustomTypeAndValue(name string) ([]byte, er
 		return nil, err
 	}
 
-	objectType := generatorschema.NewCustomObjectType(name, attributeAttrValues)
+	objectType := generatorschema.NewCustomNestedObjectType(name, attributeAttrValues)
 
 	b, err := objectType.Render()
 
@@ -200,7 +200,7 @@ func (g GeneratorMapNestedAttribute) CustomTypeAndValue(name string) ([]byte, er
 		return nil, err
 	}
 
-	objectValue := generatorschema.NewCustomObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues)
+	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues)
 
 	b, err = objectValue.Render()
 
@@ -240,7 +240,7 @@ func (g GeneratorMapNestedAttribute) ToFromFunctions(name string) ([]byte, error
 
 	fromFuncs := g.NestedObject.Attributes.FromFuncs()
 
-	toFrom := generatorschema.NewToFromObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := generatorschema.NewToFromNestedObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 

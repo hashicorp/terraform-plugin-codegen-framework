@@ -8,7 +8,7 @@ import (
 	"text/template"
 )
 
-type ToFromObject struct {
+type ToFromNestedObject struct {
 	Name         FrameworkIdentifier
 	AssocExtType *AssocExtType
 	ToFuncs      map[FrameworkIdentifier]ToFromConversion
@@ -16,10 +16,10 @@ type ToFromObject struct {
 	templates    map[string]string
 }
 
-func NewToFromObject(name string, assocExtType *AssocExtType, toFuncs, fromFuncs map[string]ToFromConversion) ToFromObject {
+func NewToFromNestedObject(name string, assocExtType *AssocExtType, toFuncs, fromFuncs map[string]ToFromConversion) ToFromNestedObject {
 	t := map[string]string{
-		"from": ObjectFromTemplate,
-		"to":   ObjectToTemplate,
+		"from": NestedObjectFromTemplate,
+		"to":   NestedObjectToTemplate,
 	}
 
 	tf := make(map[FrameworkIdentifier]ToFromConversion, len(toFuncs))
@@ -34,7 +34,7 @@ func NewToFromObject(name string, assocExtType *AssocExtType, toFuncs, fromFuncs
 		ff[FrameworkIdentifier(k)] = v
 	}
 
-	return ToFromObject{
+	return ToFromNestedObject{
 		Name:         FrameworkIdentifier(name),
 		AssocExtType: assocExtType,
 		FromFuncs:    ff,
@@ -43,7 +43,7 @@ func NewToFromObject(name string, assocExtType *AssocExtType, toFuncs, fromFuncs
 	}
 }
 
-func (o ToFromObject) Render() ([]byte, error) {
+func (o ToFromNestedObject) Render() ([]byte, error) {
 	var buf bytes.Buffer
 
 	renderFuncs := []func() ([]byte, error){
@@ -66,7 +66,7 @@ func (o ToFromObject) Render() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (o ToFromObject) renderTo() ([]byte, error) {
+func (o ToFromNestedObject) renderTo() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(o.templates["to"])
@@ -92,7 +92,7 @@ func (o ToFromObject) renderTo() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (o ToFromObject) renderFrom() ([]byte, error) {
+func (o ToFromNestedObject) renderFrom() ([]byte, error) {
 	var buf bytes.Buffer
 
 	t, err := template.New("").Parse(o.templates["from"])

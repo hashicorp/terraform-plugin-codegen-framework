@@ -37,7 +37,7 @@ return t.ObjectType.Equal(other.ObjectType)
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderEqual()
 
@@ -75,7 +75,7 @@ return "ExampleType"
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderString()
 
@@ -110,7 +110,7 @@ func TestCustomObjectType_renderTypable(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderTypable()
 
@@ -147,7 +147,7 @@ basetypes.ObjectType
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderType()
 
@@ -266,7 +266,7 @@ state: attr.ValueStateKnown,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, testCase.attrValues)
+			customObjectType := NewCustomNestedObjectType(testCase.name, testCase.attrValues)
 
 			got, err := customObjectType.renderValue()
 
@@ -339,7 +339,7 @@ state: attr.ValueStateKnown,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, testCase.attrValues)
+			customObjectType := NewCustomNestedObjectType(testCase.name, testCase.attrValues)
 
 			got, err := customObjectType.renderValueFromObject()
 
@@ -413,7 +413,7 @@ return NewExampleValueMust(t.AttrTypes, attributes), nil
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderValueFromTerraform()
 
@@ -468,7 +468,7 @@ return object
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderValueMust()
 
@@ -508,7 +508,7 @@ state: attr.ValueStateNull,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderValueNull()
 
@@ -546,7 +546,7 @@ return ExampleValue{}
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderValueType()
 
@@ -586,7 +586,7 @@ state: attr.ValueStateUnknown,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomNestedObjectType(testCase.name, nil)
 
 			got, err := customObjectType.renderValueUnknown()
 
@@ -630,7 +630,7 @@ return map[string]attr.Type{
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil)
 
 			got, err := customObjectValue.renderAttributeTypes()
 
@@ -692,7 +692,7 @@ return true
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, testCase.attrValues)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, testCase.attrValues)
 
 			got, err := customObjectValue.renderEqual()
 
@@ -730,7 +730,7 @@ return v.state == attr.ValueStateNull
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
 
 			got, err := customObjectValue.renderIsNull()
 
@@ -768,7 +768,7 @@ return v.state == attr.ValueStateUnknown
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
 
 			got, err := customObjectValue.renderIsUnknown()
 
@@ -806,7 +806,7 @@ return "ExampleValue"
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
 
 			got, err := customObjectValue.renderString()
 
@@ -860,7 +860,7 @@ return objVal, diags
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil)
 
 			got, err := customObjectValue.renderToObjectValue()
 
@@ -937,7 +937,7 @@ panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil)
 
 			got, err := customObjectValue.renderToTerraformValue()
 
@@ -979,7 +979,7 @@ AttrTypes: v.AttributeTypes(ctx),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
 
 			got, err := customObjectValue.renderType()
 
@@ -1014,7 +1014,7 @@ func TestCustomObjectValue_renderValuable(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
 
 			got, err := customObjectValue.renderValuable()
 
@@ -1051,7 +1051,7 @@ state attr.ValueState
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
 
 			got, err := customObjectValue.renderValue()
 
