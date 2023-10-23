@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 )
 
-func TestToFromList_renderFrom(t *testing.T) {
+func TestToFromMap_renderFrom(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -42,27 +42,27 @@ var diags diag.Diagnostics
 
 if apiObject == nil {
 return ExampleValue{
-types.ListNull(types.BoolType),
+types.MapNull(types.BoolType),
 }, diags
 }
 
-var elems []types.Bool
+elems := make(map[string]types.Bool)
 
-for _, e := range *apiObject {
-elems = append(elems, types.BoolPointerValue(e))
+for k, e := range *apiObject {
+elems[k] = types.BoolPointerValue(e)
 }
 
-l, d := basetypes.NewListValueFrom(ctx, types.BoolType, elems)
+l, d := basetypes.NewMapValueFrom(ctx, types.BoolType, elems)
 
 diags.Append(d...)
 
 if diags.HasError() {
-return ListAttributeValue{
-types.ListNull(types.BoolType),
+return MapAttributeValue{
+types.MapNull(types.BoolType),
 }, diags
 }
 
-return ListAttributeValue{
+return MapAttributeValue{
 l,
 }, diags
 }
@@ -76,9 +76,9 @@ l,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			toFromList := NewToFromList(testCase.name, testCase.assocExtType, testCase.elemTypeType, testCase.elemTypeValue, testCase.elemFrom)
+			toFromMap := NewToFromMap(testCase.name, testCase.assocExtType, testCase.elemTypeType, testCase.elemTypeValue, testCase.elemFrom)
 
-			got, err := toFromList.renderFrom()
+			got, err := toFromMap.renderFrom()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -91,7 +91,7 @@ l,
 	}
 }
 
-func TestToFromList_renderTo(t *testing.T) {
+func TestToFromMap_renderTo(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -153,9 +153,9 @@ return &apisdkType, diags
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			toFromList := NewToFromList(testCase.name, testCase.assocExtType, testCase.elemTypeType, testCase.elemTypeValue, testCase.elemFrom)
+			toFromMap := NewToFromMap(testCase.name, testCase.assocExtType, testCase.elemTypeType, testCase.elemTypeValue, testCase.elemFrom)
 
-			got, err := toFromList.renderTo()
+			got, err := toFromMap.renderTo()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)

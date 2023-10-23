@@ -8,7 +8,7 @@ types.SetNull({{.ElementTypeType}}),
 }, diags
 }
 
- var elems []{{.ElementTypeValue}}
+var elems []{{.ElementTypeValue}}
 
 for _, e := range *apiObject {
 elems = append(elems, {{.ElementFrom}}(e))

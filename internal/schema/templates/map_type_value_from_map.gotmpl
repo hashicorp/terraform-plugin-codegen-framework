@@ -1,0 +1,6 @@
+
+func (t {{.Name}}Type) ValueFromMap(ctx context.Context, in basetypes.MapValue) (basetypes.MapValuable, diag.Diagnostics) {
+return {{.Name}}Value{
+MapValue: in,
+}, nil
+}

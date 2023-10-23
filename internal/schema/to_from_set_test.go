@@ -46,7 +46,7 @@ types.SetNull(types.BoolType),
 }, diags
 }
 
- var elems []types.Bool
+var elems []types.Bool
 
 for _, e := range *apiObject {
 elems = append(elems, types.BoolPointerValue(e))

@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertMapAttribute(a *datasource.MapAttribute) (datasource_generate.GeneratorMapAttribute, error) {
@@ -28,8 +29,9 @@ func convertMapAttribute(a *datasource.MapAttribute) (datasource_generate.Genera
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		CustomType:  a.CustomType,
-		ElementType: a.ElementType,
-		Validators:  a.Validators,
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		ElementType:            a.ElementType,
+		Validators:             a.Validators,
 	}, nil
 }

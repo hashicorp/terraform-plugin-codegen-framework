@@ -187,6 +187,51 @@ var ListValueValueTemplate string
 //go:embed templates/list_value_valuable.gotmpl
 var ListValueValuableTemplate string
 
+// Map From/To
+
+//go:embed templates/map_from.gotmpl
+var MapFromTemplate string
+
+//go:embed templates/map_to.gotmpl
+var MapToTemplate string
+
+// Map Type
+
+//go:embed templates/map_type_equal.gotmpl
+var MapTypeEqualTemplate string
+
+//go:embed templates/map_type_string.gotmpl
+var MapTypeStringTemplate string
+
+//go:embed templates/map_type_type.gotmpl
+var MapTypeTypeTemplate string
+
+//go:embed templates/map_type_typable.gotmpl
+var MapTypeTypableTemplate string
+
+//go:embed templates/map_type_value_from_map.gotmpl
+var MapTypeValueFromMapTemplate string
+
+//go:embed templates/map_type_value_from_terraform.gotmpl
+var MapTypeValueFromTerraformTemplate string
+
+//go:embed templates/map_type_value_type.gotmpl
+var MapTypeValueTypeTemplate string
+
+// Map Value
+
+//go:embed templates/map_value_equal.gotmpl
+var MapValueEqualTemplate string
+
+//go:embed templates/map_value_type.gotmpl
+var MapValueTypeTemplate string
+
+//go:embed templates/map_value_value.gotmpl
+var MapValueValueTemplate string
+
+//go:embed templates/map_value_valuable.gotmpl
+var MapValueValuableTemplate string
+
 // Number From/To
 
 //go:embed templates/number_from.gotmpl

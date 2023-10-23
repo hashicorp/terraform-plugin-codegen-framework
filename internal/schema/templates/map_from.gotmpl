@@ -4,27 +4,27 @@ var diags diag.Diagnostics
 
 if apiObject == nil {
 return {{.Name}}Value{
-types.ListNull({{.ElementTypeType}}),
+types.MapNull({{.ElementTypeType}}),
 }, diags
 }
 
-var elems []{{.ElementTypeValue}}
+elems := make(map[string]{{.ElementTypeValue}})
 
-for _, e := range *apiObject {
-elems = append(elems, {{.ElementFrom}}(e))
+for k, e := range *apiObject {
+elems[k] = {{.ElementFrom}}(e)
 }
 
-l, d := basetypes.NewListValueFrom(ctx, {{.ElementTypeType}}, elems)
+l, d := basetypes.NewMapValueFrom(ctx, {{.ElementTypeType}}, elems)
 
 diags.Append(d...)
 
 if diags.HasError() {
-return ListAttributeValue{
-types.ListNull({{.ElementTypeType}}),
+return MapAttributeValue{
+types.MapNull({{.ElementTypeType}}),
 }, diags
 }
 
-return ListAttributeValue{
+return MapAttributeValue{
 l,
 }, diags
 }

@@ -25,7 +25,7 @@ var listAttributeTemplate string
 var listNestedAttributeGoTemplate string
 
 //go:embed templates/map_attribute.gotmpl
-var mapAttributeGoTemplate string
+var mapAttributeTemplate string
 
 //go:embed templates/map_nested_attribute.gotmpl
 var mapNestedAttributeGoTemplate string
