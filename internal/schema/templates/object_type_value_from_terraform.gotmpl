@@ -1,0 +1,22 @@
+
+func (t {{.Name}}Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+attrValue, err := t.ObjectType.ValueFromTerraform(ctx, in)
+
+if err != nil {
+return nil, err
+}
+
+objectValue, ok := attrValue.(basetypes.ObjectValue)
+
+if !ok {
+return nil, fmt.Errorf("unexpected value type of %T", attrValue)
+}
+
+objectValuable, diags := t.ValueFromObject(ctx, objectValue)
+
+if diags.HasError() {
+return nil, fmt.Errorf("unexpected error converting ObjectValue to ObjectValuable: %v", diags)
+}
+
+return objectValuable, nil
+}

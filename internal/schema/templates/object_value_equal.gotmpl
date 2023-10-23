@@ -1,0 +1,10 @@
+
+func (v {{.Name}}Value) Equal(o attr.Value) bool {
+other, ok := o.({{.Name}}Value)
+
+if !ok {
+return false
+}
+
+return v.ObjectValue.Equal(other.ObjectValue)
+}

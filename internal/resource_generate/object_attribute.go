@@ -4,6 +4,7 @@
 package resource_generate
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"text/template"
@@ -167,4 +168,54 @@ func (g GeneratorObjectAttribute) ModelField(name generatorschema.FrameworkIdent
 	}
 
 	return field, nil
+}
+
+func (g GeneratorObjectAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	objectType := generatorschema.NewCustomObjectType(name)
+
+	b, err := objectType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	attrTypes := generatorschema.GetAttrTypes(g.AttrTypes())
+
+	objectValue := generatorschema.NewCustomObjectValue(name, attrTypes)
+
+	b, err = objectValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorObjectAttribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	attrTypesFromFuncs := generatorschema.GetAttrTypesFromFuncs(g.AttributeTypes)
+
+	toFrom := generatorschema.NewToFromObject(name, g.AssociatedExternalType, attrTypesFromFuncs)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

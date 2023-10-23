@@ -9,7 +9,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestCustomObjectType_renderEqual(t *testing.T) {
+func TestCustomNestedObjectType_renderEqual(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -52,7 +52,7 @@ return t.ObjectType.Equal(other.ObjectType)
 	}
 }
 
-func TestCustomObjectType_renderString(t *testing.T) {
+func TestCustomNestedObjectType_renderString(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -90,7 +90,7 @@ return "ExampleType"
 	}
 }
 
-func TestCustomObjectType_renderTypable(t *testing.T) {
+func TestCustomNestedObjectType_renderTypable(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -125,7 +125,7 @@ func TestCustomObjectType_renderTypable(t *testing.T) {
 	}
 }
 
-func TestCustomObjectType_renderType(t *testing.T) {
+func TestCustomNestedObjectType_renderType(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -162,7 +162,7 @@ basetypes.ObjectType
 	}
 }
 
-func TestCustomObjectType_renderValue(t *testing.T) {
+func TestCustomNestedObjectType_renderValue(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -281,7 +281,7 @@ state: attr.ValueStateKnown,
 	}
 }
 
-func TestCustomObjectType_renderValueFromObject(t *testing.T) {
+func TestCustomNestedObjectType_renderValueFromObject(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -354,7 +354,7 @@ state: attr.ValueStateKnown,
 	}
 }
 
-func TestCustomObjectType_renderValueFromTerraform(t *testing.T) {
+func TestCustomNestedObjectType_renderValueFromTerraform(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -428,7 +428,7 @@ return NewExampleValueMust(t.AttrTypes, attributes), nil
 	}
 }
 
-func TestCustomObjectType_renderValueMust(t *testing.T) {
+func TestCustomNestedObjectType_renderValueMust(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -483,7 +483,7 @@ return object
 	}
 }
 
-func TestCustomObjectType_renderValueNull(t *testing.T) {
+func TestCustomNestedObjectType_renderValueNull(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -523,7 +523,7 @@ state: attr.ValueStateNull,
 	}
 }
 
-func TestCustomObjectType_renderValueType(t *testing.T) {
+func TestCustomNestedObjectType_renderValueType(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -561,7 +561,7 @@ return ExampleValue{}
 	}
 }
 
-func TestCustomObjectType_renderValueUnknown(t *testing.T) {
+func TestCustomNestedObjectType_renderValueUnknown(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -601,7 +601,7 @@ state: attr.ValueStateUnknown,
 	}
 }
 
-func TestCustomObjectValue_renderAttributeTypes(t *testing.T) {
+func TestCustomNestedObjectValue_renderAttributeTypes(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -645,7 +645,7 @@ return map[string]attr.Type{
 	}
 }
 
-func TestCustomObjectValue_renderEqual(t *testing.T) {
+func TestCustomNestedObjectValue_renderEqual(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -707,7 +707,7 @@ return true
 	}
 }
 
-func TestCustomObjectValue_renderIsNull(t *testing.T) {
+func TestCustomNestedObjectValue_renderIsNull(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -745,7 +745,7 @@ return v.state == attr.ValueStateNull
 	}
 }
 
-func TestCustomObjectValue_renderIsUnknown(t *testing.T) {
+func TestCustomNestedObjectValue_renderIsUnknown(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -783,7 +783,7 @@ return v.state == attr.ValueStateUnknown
 	}
 }
 
-func TestCustomObjectValue_renderString(t *testing.T) {
+func TestCustomNestedObjectValue_renderString(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -821,7 +821,7 @@ return "ExampleValue"
 	}
 }
 
-func TestCustomObjectValue_renderToObjectValue(t *testing.T) {
+func TestCustomNestedObjectValue_renderToObjectValue(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -875,7 +875,7 @@ return objVal, diags
 	}
 }
 
-func TestCustomObjectValue_renderToTerraformValue(t *testing.T) {
+func TestCustomNestedObjectValue_renderToTerraformValue(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -952,7 +952,7 @@ panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
 	}
 }
 
-func TestCustomObjectValue_renderType(t *testing.T) {
+func TestCustomNestedObjectValue_renderType(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -994,7 +994,7 @@ AttrTypes: v.AttributeTypes(ctx),
 	}
 }
 
-func TestCustomObjectValue_renderValuable(t *testing.T) {
+func TestCustomNestedObjectValue_renderValuable(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -1029,7 +1029,7 @@ func TestCustomObjectValue_renderValuable(t *testing.T) {
 	}
 }
 
-func TestCustomObjectValue_renderValue(t *testing.T) {
+func TestCustomNestedObjectValue_renderValue(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {

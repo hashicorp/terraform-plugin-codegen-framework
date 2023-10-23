@@ -1,0 +1,28 @@
+
+func (v {{.Name}}Value) From{{.AssocExtType.ToPascalCase}}(ctx context.Context, apiObject {{.AssocExtType.Type}}) ({{.Name}}Value, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return {{.Name}}Value{
+types.ObjectNull(v.AttributeTypes(ctx)),
+}, diags
+}
+
+o, d := basetypes.NewObjectValue(v.AttributeTypes(ctx), map[string]attr.Value{
+{{- range $key, $value := .AttrTypesFromFuncs}}
+"{{$key}}": {{$value}}(apiObject.{{$key.ToPascalCase}}),
+{{- end}}
+})
+
+diags.Append(d...)
+
+if diags.HasError() {
+return {{.Name}}Value{
+types.ObjectNull(v.AttributeTypes(ctx)),
+}, diags
+}
+
+return {{.Name}}Value{
+o,
+}, diags
+}

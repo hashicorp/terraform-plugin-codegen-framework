@@ -355,6 +355,54 @@ var NestedObjectValueValueTemplate string
 //go:embed templates/schema.gotmpl
 var SchemaGoTemplate string
 
+// Object From/To
+
+//go:embed templates/object_from.gotmpl
+var ObjectFromTemplate string
+
+//go:embed templates/object_to.gotmpl
+var ObjectToTemplate string
+
+// Object Type
+
+//go:embed templates/object_type_equal.gotmpl
+var ObjectTypeEqualTemplate string
+
+//go:embed templates/object_type_string.gotmpl
+var ObjectTypeStringTemplate string
+
+//go:embed templates/object_type_type.gotmpl
+var ObjectTypeTypeTemplate string
+
+//go:embed templates/object_type_typable.gotmpl
+var ObjectTypeTypableTemplate string
+
+//go:embed templates/object_type_value_from_object.gotmpl
+var ObjectTypeValueFromObjectTemplate string
+
+//go:embed templates/object_type_value_from_terraform.gotmpl
+var ObjectTypeValueFromTerraformTemplate string
+
+//go:embed templates/object_type_value_type.gotmpl
+var ObjectTypeValueTypeTemplate string
+
+// Object Value
+
+//go:embed templates/object_value_attribute_types.gotmpl
+var ObjectValueAttributeTypesTemplate string
+
+//go:embed templates/object_value_equal.gotmpl
+var ObjectValueEqualTemplate string
+
+//go:embed templates/object_value_type.gotmpl
+var ObjectValueTypeTemplate string
+
+//go:embed templates/object_value_value.gotmpl
+var ObjectValueValueTemplate string
+
+//go:embed templates/object_value_valuable.gotmpl
+var ObjectValueValuableTemplate string
+
 // Set From/To
 
 //go:embed templates/set_from.gotmpl

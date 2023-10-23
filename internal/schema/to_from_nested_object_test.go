@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 )
 
-func TestToFromObject_renderFrom(t *testing.T) {
+func TestToFromNestedObject_renderFrom(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -110,7 +110,7 @@ state: attr.ValueStateKnown,
 	}
 }
 
-func TestToFromObject_renderTo(t *testing.T) {
+func TestToFromNestedObject_renderTo(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
