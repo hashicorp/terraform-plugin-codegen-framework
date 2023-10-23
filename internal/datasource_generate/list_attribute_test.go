@@ -313,6 +313,110 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 				},
 			},
 		},
+		"associated-external-type": {
+			input: GeneratorListAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+			},
+		},
+		"associated-external-type-with-import": {
+			input: GeneratorListAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.ListAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+		"associated-external-type-with-custom-type": {
+			input: GeneratorListAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.ListAttribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/my_account/my_project/attribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
 	}
 
 	for name, testCase := range testCases {
@@ -597,6 +701,44 @@ ElementType: types.StringType,
 				},
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorListAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
+					},
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
+				},
+			},
+			expected: `
+"list_attribute": schema.ListAttribute{
+CustomType: ListAttributeType{
+types.ListType{
+ElemType: types.StringType,
+},
+},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorListAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
 				},
 			},
 			expected: `
@@ -951,6 +1093,37 @@ func TestGeneratorListAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorListAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "ListAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "list_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorListAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "ListAttribute",
+				ValueType: "ListAttributeValue",
+				TfsdkName: "list_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorListAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},
