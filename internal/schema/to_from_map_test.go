@@ -57,12 +57,12 @@ l, d := basetypes.NewMapValueFrom(ctx, types.BoolType, elems)
 diags.Append(d...)
 
 if diags.HasError() {
-return MapAttributeValue{
+return ExampleValue{
 types.MapNull(types.BoolType),
 }, diags
 }
 
-return MapAttributeValue{
+return ExampleValue{
 l,
 }, diags
 }

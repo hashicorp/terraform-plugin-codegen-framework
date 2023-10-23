@@ -57,12 +57,12 @@ l, d := basetypes.NewSetValueFrom(ctx, types.BoolType, elems)
 diags.Append(d...)
 
 if diags.HasError() {
-return SetAttributeValue{
+return ExampleValue{
 types.SetNull(types.BoolType),
 }, diags
 }
 
-return SetAttributeValue{
+return ExampleValue{
 l,
 }, diags
 }

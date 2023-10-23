@@ -19,12 +19,12 @@ l, d := basetypes.NewMapValueFrom(ctx, {{.ElementTypeType}}, elems)
 diags.Append(d...)
 
 if diags.HasError() {
-return MapAttributeValue{
+return {{.Name}}Value{
 types.MapNull({{.ElementTypeType}}),
 }, diags
 }
 
-return MapAttributeValue{
+return {{.Name}}Value{
 l,
 }, diags
 }

@@ -19,12 +19,12 @@ l, d := basetypes.NewListValueFrom(ctx, {{.ElementTypeType}}, elems)
 diags.Append(d...)
 
 if diags.HasError() {
-return ListAttributeValue{
+return {{.Name}}Value{
 types.ListNull({{.ElementTypeType}}),
 }, diags
 }
 
-return ListAttributeValue{
+return {{.Name}}Value{
 l,
 }, diags
 }

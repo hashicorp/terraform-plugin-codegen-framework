@@ -57,12 +57,12 @@ l, d := basetypes.NewListValueFrom(ctx, types.BoolType, elems)
 diags.Append(d...)
 
 if diags.HasError() {
-return ListAttributeValue{
+return ExampleValue{
 types.ListNull(types.BoolType),
 }, diags
 }
 
-return ListAttributeValue{
+return ExampleValue{
 l,
 }, diags
 }
