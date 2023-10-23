@@ -1,6 +1,10 @@
 
 "{{.Name}}": schema.SetAttribute{
+{{- if .CustomType}}
+CustomType: {{.CustomType}},
+{{- else}}
 ElementType: {{.ElementType}},
+{{- end}}
 {{- template "common_attribute" .GeneratorSetAttribute }}
 {{- if gt (len .GeneratorSetAttribute.Validators) 0 }}
 Validators: []validator.Set{

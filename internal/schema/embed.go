@@ -310,6 +310,51 @@ var ObjectValueValueTemplate string
 //go:embed templates/schema.gotmpl
 var SchemaGoTemplate string
 
+// Set From/To
+
+//go:embed templates/set_from.gotmpl
+var SetFromTemplate string
+
+//go:embed templates/set_to.gotmpl
+var SetToTemplate string
+
+// Set Type
+
+//go:embed templates/set_type_equal.gotmpl
+var SetTypeEqualTemplate string
+
+//go:embed templates/set_type_string.gotmpl
+var SetTypeStringTemplate string
+
+//go:embed templates/set_type_type.gotmpl
+var SetTypeTypeTemplate string
+
+//go:embed templates/set_type_typable.gotmpl
+var SetTypeTypableTemplate string
+
+//go:embed templates/set_type_value_from_set.gotmpl
+var SetTypeValueFromSetTemplate string
+
+//go:embed templates/set_type_value_from_terraform.gotmpl
+var SetTypeValueFromTerraformTemplate string
+
+//go:embed templates/set_type_value_type.gotmpl
+var SetTypeValueTypeTemplate string
+
+// Set Value
+
+//go:embed templates/set_value_equal.gotmpl
+var SetValueEqualTemplate string
+
+//go:embed templates/set_value_type.gotmpl
+var SetValueTypeTemplate string
+
+//go:embed templates/set_value_value.gotmpl
+var SetValueValueTemplate string
+
+//go:embed templates/set_value_valuable.gotmpl
+var SetValueValuableTemplate string
+
 // String From/To
 
 //go:embed templates/string_from.gotmpl

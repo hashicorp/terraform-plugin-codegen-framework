@@ -1,0 +1,6 @@
+
+func (t {{.Name}}Type) ValueFromSet(ctx context.Context, in basetypes.SetValue) (basetypes.SetValuable, diag.Diagnostics) {
+return {{.Name}}Value{
+SetValue: in,
+}, nil
+}

@@ -1,0 +1,30 @@
+
+func (v {{.Name}}Value) From{{.AssocExtType.ToPascalCase}}(ctx context.Context, apiObject {{.AssocExtType.Type}}) ({{.Name}}Value, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return {{.Name}}Value{
+types.SetNull({{.ElementTypeType}}),
+}, diags
+}
+
+ var elems []{{.ElementTypeValue}}
+
+for _, e := range *apiObject {
+elems = append(elems, {{.ElementFrom}}(e))
+}
+
+l, d := basetypes.NewSetValueFrom(ctx, {{.ElementTypeType}}, elems)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return SetAttributeValue{
+types.SetNull({{.ElementTypeType}}),
+}, diags
+}
+
+return SetAttributeValue{
+l,
+}, diags
+}

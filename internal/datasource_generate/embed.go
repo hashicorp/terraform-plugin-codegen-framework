@@ -37,7 +37,7 @@ var numberAttributeTemplate string
 var objectAttributeGoTemplate string
 
 //go:embed templates/set_attribute.gotmpl
-var setAttributeGoTemplate string
+var setAttributeTemplate string
 
 //go:embed templates/set_nested_attribute.gotmpl
 var setNestedAttributeGoTemplate string
