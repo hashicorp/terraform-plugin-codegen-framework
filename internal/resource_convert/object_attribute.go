@@ -10,27 +10,30 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func convertObjectAttribute(o *resource.ObjectAttribute) (resource_generate.GeneratorObjectAttribute, error) {
-	if o == nil {
+func convertObjectAttribute(a *resource.ObjectAttribute) (resource_generate.GeneratorObjectAttribute, error) {
+	if a == nil {
 		return resource_generate.GeneratorObjectAttribute{}, fmt.Errorf("*resource.ObjectAttribute is nil")
 	}
 
 	return resource_generate.GeneratorObjectAttribute{
 		ObjectAttribute: schema.ObjectAttribute{
-			Required:            isRequired(o.ComputedOptionalRequired),
-			Optional:            isOptional(o.ComputedOptionalRequired),
-			Computed:            isComputed(o.ComputedOptionalRequired),
-			Sensitive:           isSensitive(o.Sensitive),
-			Description:         description(o.Description),
-			MarkdownDescription: description(o.Description),
-			DeprecationMessage:  deprecationMessage(o.DeprecationMessage),
+			Required:            isRequired(a.ComputedOptionalRequired),
+			Optional:            isOptional(a.ComputedOptionalRequired),
+			Computed:            isComputed(a.ComputedOptionalRequired),
+			Sensitive:           isSensitive(a.Sensitive),
+			Description:         description(a.Description),
+			MarkdownDescription: description(a.Description),
+			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
-		AttributeTypes: o.AttributeTypes,
-		CustomType:     o.CustomType,
-		Default:        o.Default,
-		PlanModifiers:  o.PlanModifiers,
-		Validators:     o.Validators,
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AttributeTypes:         a.AttributeTypes,
+		CustomType:             a.CustomType,
+		Default:                a.Default,
+		PlanModifiers:          a.PlanModifiers,
+		Validators:             a.Validators,
 	}, nil
 }

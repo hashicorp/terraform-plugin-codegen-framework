@@ -10,26 +10,28 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func convertObjectAttribute(o *datasource.ObjectAttribute) (datasource_generate.GeneratorObjectAttribute, error) {
-	if o == nil {
+func convertObjectAttribute(a *datasource.ObjectAttribute) (datasource_generate.GeneratorObjectAttribute, error) {
+	if a == nil {
 		return datasource_generate.GeneratorObjectAttribute{}, fmt.Errorf("*datasource.ObjectAttribute is nil")
 	}
 
 	return datasource_generate.GeneratorObjectAttribute{
 		ObjectAttribute: schema.ObjectAttribute{
-			Required:            isRequired(o.ComputedOptionalRequired),
-			Optional:            isOptional(o.ComputedOptionalRequired),
-			Computed:            isComputed(o.ComputedOptionalRequired),
-			Sensitive:           isSensitive(o.Sensitive),
-			Description:         description(o.Description),
-			MarkdownDescription: description(o.Description),
-			DeprecationMessage:  deprecationMessage(o.DeprecationMessage),
+			Required:            isRequired(a.ComputedOptionalRequired),
+			Optional:            isOptional(a.ComputedOptionalRequired),
+			Computed:            isComputed(a.ComputedOptionalRequired),
+			Sensitive:           isSensitive(a.Sensitive),
+			Description:         description(a.Description),
+			MarkdownDescription: description(a.Description),
+			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		AttributeTypes: o.AttributeTypes,
-		CustomType:     o.CustomType,
-		Validators:     o.Validators,
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AttributeTypes:         a.AttributeTypes,
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
 	}, nil
 }

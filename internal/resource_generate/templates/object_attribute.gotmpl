@@ -1,8 +1,12 @@
 
 "{{.Name}}": schema.ObjectAttribute{
+{{- if .CustomType}}
+CustomType: {{.CustomType}},
+{{- else}}
 AttributeTypes: map[string]attr.Type{
 {{.AttributeTypes}}
 },
+{{- end}}
 {{- template "common_attribute" .GeneratorObjectAttribute }}
 {{- if gt (len .GeneratorObjectAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Object{

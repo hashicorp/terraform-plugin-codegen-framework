@@ -1,8 +1,12 @@
 
 "{{.Name}}": schema.ObjectAttribute{
+{{- if .CustomType}}
+CustomType: {{.CustomType}},
+{{- else}}
 AttributeTypes: map[string]attr.Type{
 {{.AttributeTypes}}
 },
+{{- end}}
 {{- template "common_attribute" .GeneratorObjectAttribute }}
 {{- if gt (len .GeneratorObjectAttribute.Validators) 0 }}
 Validators: []validator.Object{
