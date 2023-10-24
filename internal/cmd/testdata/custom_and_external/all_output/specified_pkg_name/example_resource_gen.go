@@ -260,7 +260,7 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 
 	attributes := in.Attributes()
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -270,15 +270,15 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 		return nil, diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -288,15 +288,15 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 		return nil, diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -306,15 +306,15 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 		return nil, diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -324,15 +324,15 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 		return nil, diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -342,12 +342,12 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context
 		return nil, diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -427,7 +427,7 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -437,15 +437,15 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -455,15 +455,15 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -473,15 +473,15 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -491,15 +491,15 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -509,12 +509,12 @@ func NewListNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type
 		return NewListNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -792,7 +792,7 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 
 	attributes := in.Attributes()
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -802,15 +802,15 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -820,15 +820,15 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -838,15 +838,15 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -856,15 +856,15 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -874,12 +874,12 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -959,7 +959,7 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -969,15 +969,15 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -987,15 +987,15 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1005,15 +1005,15 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1023,15 +1023,15 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1041,12 +1041,12 @@ func NewMapNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewMapNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -1324,7 +1324,7 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 
 	attributes := in.Attributes()
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1334,15 +1334,15 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1352,15 +1352,15 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1370,15 +1370,15 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1388,15 +1388,15 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1406,12 +1406,12 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Context,
 		return nil, diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -1491,7 +1491,7 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1501,15 +1501,15 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1519,15 +1519,15 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1537,15 +1537,15 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1555,15 +1555,15 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1573,12 +1573,12 @@ func NewSetNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Type,
 		return NewSetNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -1856,7 +1856,7 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 
 	attributes := in.Attributes()
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1866,15 +1866,15 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 		return nil, diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1884,15 +1884,15 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 		return nil, diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1902,15 +1902,15 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 		return nil, diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1920,15 +1920,15 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 		return nil, diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -1938,12 +1938,12 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromObject(ctx context.Conte
 		return nil, diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -2023,7 +2023,7 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2033,15 +2033,15 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2051,15 +2051,15 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2069,15 +2069,15 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2087,15 +2087,15 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2105,12 +2105,12 @@ func NewSingleNestedAttributeAssocExtTypeValue(attributeTypes map[string]attr.Ty
 		return NewSingleNestedAttributeAssocExtTypeValueUnknown(), diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -2388,7 +2388,7 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 
 	attributes := in.Attributes()
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2398,15 +2398,15 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 		return nil, diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2416,15 +2416,15 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 		return nil, diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2434,15 +2434,15 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 		return nil, diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2452,15 +2452,15 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 		return nil, diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2470,12 +2470,12 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in
 		return nil, diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -2555,7 +2555,7 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2565,15 +2565,15 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2583,15 +2583,15 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2601,15 +2601,15 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2619,15 +2619,15 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2637,12 +2637,12 @@ func NewListNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, at
 		return NewListNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -2920,7 +2920,7 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 
 	attributes := in.Attributes()
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2930,15 +2930,15 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 		return nil, diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2948,15 +2948,15 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 		return nil, diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2966,15 +2966,15 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 		return nil, diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -2984,15 +2984,15 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 		return nil, diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3002,12 +3002,12 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, in 
 		return nil, diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -3087,7 +3087,7 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3097,15 +3097,15 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3115,15 +3115,15 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3133,15 +3133,15 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3151,15 +3151,15 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3169,12 +3169,12 @@ func NewSetNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, att
 		return NewSetNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -3452,7 +3452,7 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 
 	attributes := in.Attributes()
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3462,15 +3462,15 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 		return nil, diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3480,15 +3480,15 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 		return nil, diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3498,15 +3498,15 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 		return nil, diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3516,15 +3516,15 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 		return nil, diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3534,12 +3534,12 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromObject(ctx context.Context, 
 		return nil, diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
@@ -3619,7 +3619,7 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttribute, ok := attributes["bool_attribute"]
+	boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3629,15 +3629,15 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+	boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttribute))
+			fmt.Sprintf(`bool_attribute expected to be basetypes.BoolValue, was: %T`, boolAttributeAttribute))
 	}
 
-	float64Attribute, ok := attributes["float64_attribute"]
+	float64AttributeAttribute, ok := attributes["float64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3647,15 +3647,15 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	float64AttributeVal, ok := float64Attribute.(basetypes.Float64Value)
+	float64AttributeVal, ok := float64AttributeAttribute.(basetypes.Float64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64Attribute))
+			fmt.Sprintf(`float64_attribute expected to be basetypes.Float64Value, was: %T`, float64AttributeAttribute))
 	}
 
-	int64Attribute, ok := attributes["int64_attribute"]
+	int64AttributeAttribute, ok := attributes["int64_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3665,15 +3665,15 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	int64AttributeVal, ok := int64Attribute.(basetypes.Int64Value)
+	int64AttributeVal, ok := int64AttributeAttribute.(basetypes.Int64Value)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64Attribute))
+			fmt.Sprintf(`int64_attribute expected to be basetypes.Int64Value, was: %T`, int64AttributeAttribute))
 	}
 
-	numberAttribute, ok := attributes["number_attribute"]
+	numberAttributeAttribute, ok := attributes["number_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3683,15 +3683,15 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	numberAttributeVal, ok := numberAttribute.(basetypes.NumberValue)
+	numberAttributeVal, ok := numberAttributeAttribute.(basetypes.NumberValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttribute))
+			fmt.Sprintf(`number_attribute expected to be basetypes.NumberValue, was: %T`, numberAttributeAttribute))
 	}
 
-	stringAttribute, ok := attributes["string_attribute"]
+	stringAttributeAttribute, ok := attributes["string_attribute"]
 
 	if !ok {
 		diags.AddError(
@@ -3701,12 +3701,12 @@ func NewSingleNestedBlockAssocExtTypeValue(attributeTypes map[string]attr.Type, 
 		return NewSingleNestedBlockAssocExtTypeValueUnknown(), diags
 	}
 
-	stringAttributeVal, ok := stringAttribute.(basetypes.StringValue)
+	stringAttributeVal, ok := stringAttributeAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttribute))
+			fmt.Sprintf(`string_attribute expected to be basetypes.StringValue, was: %T`, stringAttributeAttribute))
 	}
 
 	if diags.HasError() {
