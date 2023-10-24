@@ -20,7 +20,7 @@ diags.Append(d...)
 
 if diags.HasError() {
 return {{.Name}}Value{
-types.SetNull({{.ElementTypeType}}),
+types.SetUnknown({{.ElementTypeType}}),
 }, diags
 }
 

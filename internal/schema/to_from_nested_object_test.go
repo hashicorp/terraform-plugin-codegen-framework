@@ -77,7 +77,7 @@ boolAttributeVal, d := BoolAttributeValue{}.FromApiBoolAttribute(ctx, apiObject.
 diags.Append(d...)
 
 if diags.HasError() {
-return NewExampleValueNull(), diags
+return NewExampleValueUnknown(), diags
 }
 
 return ExampleValue{

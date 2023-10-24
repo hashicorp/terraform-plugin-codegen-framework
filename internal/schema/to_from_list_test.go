@@ -58,7 +58,7 @@ diags.Append(d...)
 
 if diags.HasError() {
 return ExampleValue{
-types.ListNull(types.BoolType),
+types.ListUnknown(types.BoolType),
 }, diags
 }
 

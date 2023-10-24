@@ -60,7 +60,7 @@ diags.Append(d...)
 
 if diags.HasError() {
 return ExampleValue{
-types.ObjectNull(v.AttributeTypes(ctx)),
+types.ObjectUnknown(v.AttributeTypes(ctx)),
 }, diags
 }
 
