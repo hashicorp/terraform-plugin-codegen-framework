@@ -229,7 +229,7 @@ return NewExampleValueUnknown(), diags
 }
 
 
-boolAttribute, ok := attributes["bool_attribute"]
+boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 if !ok {
 diags.AddError(
@@ -239,12 +239,12 @@ diags.AddError(
 return NewExampleValueUnknown(), diags
 }
 
-boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 if !ok {
 diags.AddError(
 "Attribute Wrong Type",
-fmt.Sprintf(` + "`bool_attribute expected to be basetypes.BoolValue, was: %T`" + `, boolAttribute))
+fmt.Sprintf(` + "`bool_attribute expected to be basetypes.BoolValue, was: %T`" + `, boolAttributeAttribute))
 }
 
 
@@ -302,7 +302,7 @@ var diags diag.Diagnostics
 attributes := in.Attributes()
 
 
-boolAttribute, ok := attributes["bool_attribute"]
+boolAttributeAttribute, ok := attributes["bool_attribute"]
 
 if !ok {
 diags.AddError(
@@ -312,12 +312,12 @@ diags.AddError(
 return nil, diags
 }
 
-boolAttributeVal, ok := boolAttribute.(basetypes.BoolValue)
+boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
 
 if !ok {
 diags.AddError(
 "Attribute Wrong Type",
-fmt.Sprintf(` + "`bool_attribute expected to be basetypes.BoolValue, was: %T`" + `, boolAttribute))
+fmt.Sprintf(` + "`bool_attribute expected to be basetypes.BoolValue, was: %T`" + `, boolAttributeAttribute))
 }
 
 

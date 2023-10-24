@@ -51,7 +51,7 @@ return New{{.Name}}ValueUnknown(), diags
 }
 
 {{range $key, $value := .AttrValues }}
-{{$key.ToCamelCase}}, ok := attributes["{{$key}}"]
+{{$key.ToCamelCase}}Attribute, ok := attributes["{{$key}}"]
 
 if !ok {
 diags.AddError(
@@ -61,12 +61,12 @@ diags.AddError(
 return New{{$.Name}}ValueUnknown(), diags
 }
 
-{{$key.ToCamelCase}}Val, ok := {{$key.ToCamelCase}}.({{$value}})
+{{$key.ToCamelCase}}Val, ok := {{$key.ToCamelCase}}Attribute.({{$value}})
 
 if !ok {
 diags.AddError(
 "Attribute Wrong Type",
-fmt.Sprintf(`{{$key}} expected to be {{$value}}, was: %T`, {{$key.ToCamelCase}}))
+fmt.Sprintf(`{{$key}} expected to be {{$value}}, was: %T`, {{$key.ToCamelCase}}Attribute))
 }
 {{end}}
 
