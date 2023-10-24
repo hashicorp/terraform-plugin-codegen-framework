@@ -86,12 +86,12 @@ func GetElementValueType(e specschema.ElementType) string {
 		if e.List.CustomType != nil {
 			return e.List.CustomType.ValueType
 		}
-		return "types.ListType"
+		return "types.List"
 	case e.Map != nil:
 		if e.Map.CustomType != nil {
 			return e.Map.CustomType.ValueType
 		}
-		return "types.MapType"
+		return "types.Map"
 	case e.Number != nil:
 		if e.Number.CustomType != nil {
 			return e.Number.CustomType.ValueType
@@ -101,12 +101,12 @@ func GetElementValueType(e specschema.ElementType) string {
 		if e.Object.CustomType != nil {
 			return e.Object.CustomType.ValueType
 		}
-		return "types.ObjectType"
+		return "types.Object"
 	case e.Set != nil:
 		if e.Set.CustomType != nil {
 			return e.Set.CustomType.ValueType
 		}
-		return "types.SetType"
+		return "types.Set"
 	case e.String != nil:
 		if e.String.CustomType != nil {
 			return e.String.CustomType.ValueType
