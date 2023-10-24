@@ -1,0 +1,5 @@
+kind: BUG FIXES
+body: Allow Go reserved keywords to be used as attribute names in nested attributes
+time: 2023-10-24T09:52:31.764359+01:00
+custom:
+  Issue: "77"
