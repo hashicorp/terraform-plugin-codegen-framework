@@ -14,14 +14,28 @@ diags.Append(diag.NewErrorDiagnostic(
 return nil, diags
 }
 
-var {{.AssocExtType.ToCamelCase}} {{.AssocExtType.TypeReference}}
+attributes := v.Attributes()
 
-d := v.As(ctx, &{{.AssocExtType.ToCamelCase}}, basetypes.ObjectAsOptions{})
+{{- range $key, $value := .AttrTypesToFuncs}}
 
-diags.Append(d...)
+{{$key}}Attribute, ok := attributes["{{$key}}"].({{$value.AttrValue}})
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"{{$.Name}}Value {{$key}} is unexpected type",
+fmt.Sprintf(`"{{$.Name}}Value" {{$key}} is type of %T".`, attributes["{{$key}}"]),
+))
+}
+{{- end}}
 
 if diags.HasError() {
 return nil, diags
+}
+
+{{.AssocExtType.ToCamelCase}} := {{.AssocExtType.TypeReference}} {
+{{- range $key, $value := .AttrTypesToFuncs}}
+{{$key.ToPascalCase}}: {{$key}}Attribute.{{$value.ToFunc}}(),
+{{- end}}
 }
 
 return &{{.AssocExtType.ToCamelCase}}, diags

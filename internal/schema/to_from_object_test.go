@@ -78,7 +78,7 @@ o,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, testCase.attrTypesFromFuncs)
+			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, nil, testCase.attrTypesFromFuncs)
 
 			got, err := toFromObject.renderFrom()
 
@@ -99,6 +99,7 @@ func TestToFromObject_renderTo(t *testing.T) {
 	testCases := map[string]struct {
 		name               string
 		assocExtType       *AssocExtType
+		attrTypesToFuncs   map[string]AttrTypesToFuncs
 		attrTypesFromFuncs map[string]string
 		expected           []byte
 		expectedError      error
@@ -113,12 +114,28 @@ func TestToFromObject_renderTo(t *testing.T) {
 					Type: "*apisdk.Type",
 				},
 			},
-			attrTypesFromFuncs: map[string]string{
-				"bool":    "types.BoolPointerValue",
-				"float64": "types.Float64PointerValue",
-				"int64":   "types.Int64PointerValue",
-				"number":  "types.NumberValue",
-				"string":  "types.StringPointerValue",
+			attrTypesToFuncs: map[string]AttrTypesToFuncs{
+				"bool": {
+					AttrValue: "types.Bool",
+					ToFunc:    "ValueBoolPointer",
+				},
+				"float64": {
+					AttrValue: "types.Float64",
+					ToFunc:    "ValueFloat64Pointer",
+				},
+				"int64": {
+					AttrValue: "types.Int64",
+					ToFunc:    "ValueInt64Pointer",
+				},
+
+				"number": {
+					AttrValue: "types.Number",
+					ToFunc:    "ValueBigFloat",
+				},
+				"string": {
+					AttrValue: "types.String",
+					ToFunc:    "ValueStringPointer",
+				},
 			},
 			expected: []byte(`func (v ExampleValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
 var diags diag.Diagnostics
@@ -136,14 +153,63 @@ diags.Append(diag.NewErrorDiagnostic(
 return nil, diags
 }
 
-var apisdkType apisdk.Type
+attributes := v.Attributes()
 
-d := v.As(ctx, &apisdkType, basetypes.ObjectAsOptions{})
+boolAttribute, ok := attributes["bool"].(types.Bool)
 
-diags.Append(d...)
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue bool is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" bool is type of %T".` + "`" + `, attributes["bool"]),
+))
+}
+
+float64Attribute, ok := attributes["float64"].(types.Float64)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue float64 is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" float64 is type of %T".` + "`" + `, attributes["float64"]),
+))
+}
+
+int64Attribute, ok := attributes["int64"].(types.Int64)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue int64 is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" int64 is type of %T".` + "`" + `, attributes["int64"]),
+))
+}
+
+numberAttribute, ok := attributes["number"].(types.Number)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue number is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" number is type of %T".` + "`" + `, attributes["number"]),
+))
+}
+
+stringAttribute, ok := attributes["string"].(types.String)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue string is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" string is type of %T".` + "`" + `, attributes["string"]),
+))
+}
 
 if diags.HasError() {
 return nil, diags
+}
+
+apisdkType := apisdk.Type {
+Bool: boolAttribute.ValueBoolPointer(),
+Float64: float64Attribute.ValueFloat64Pointer(),
+Int64: int64Attribute.ValueInt64Pointer(),
+Number: numberAttribute.ValueBigFloat(),
+String: stringAttribute.ValueStringPointer(),
 }
 
 return &apisdkType, diags
@@ -157,7 +223,7 @@ return &apisdkType, diags
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, testCase.attrTypesFromFuncs)
+			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, testCase.attrTypesToFuncs, nil)
 
 			got, err := toFromObject.renderTo()
 

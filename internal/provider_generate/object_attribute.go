@@ -174,9 +174,11 @@ func (g GeneratorObjectAttribute) ToFromFunctions(name string) ([]byte, error) {
 		return nil, nil
 	}
 
+	attrTypesToFuncs := generatorschema.GetAttrTypesToFuncs(g.AttributeTypes)
+
 	attrTypesFromFuncs := generatorschema.GetAttrTypesFromFuncs(g.AttributeTypes)
 
-	toFrom := generatorschema.NewToFromObject(name, g.AssociatedExternalType, attrTypesFromFuncs)
+	toFrom := generatorschema.NewToFromObject(name, g.AssociatedExternalType, attrTypesToFuncs, attrTypesFromFuncs)
 
 	b, err := toFrom.Render()
 
