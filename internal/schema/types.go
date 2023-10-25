@@ -39,7 +39,7 @@ type GeneratorAttribute interface {
 }
 
 type AttrType interface {
-	AttrType(FrameworkIdentifier) string
+	AttrType(FrameworkIdentifier) (string, error)
 }
 
 type AttrValue interface {

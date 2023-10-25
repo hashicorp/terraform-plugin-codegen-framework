@@ -169,12 +169,12 @@ func (g GeneratorStringAttribute) ToFromFunctions(name string) ([]byte, error) {
 }
 
 // AttrType returns a string representation of a basetypes.StringTypable type.
-func (g GeneratorStringAttribute) AttrType(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorStringAttribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
-		return fmt.Sprintf("%sType{}", name.ToPascalCase())
+		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
 
-	return "basetypes.StringType{}"
+	return "basetypes.StringType{}", nil
 }
 
 // AttrValue returns a string representation of a basetypes.StringValuable type.

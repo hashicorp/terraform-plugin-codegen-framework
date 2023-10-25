@@ -214,12 +214,12 @@ func (g GeneratorInt64Attribute) ToFromFunctions(name string) ([]byte, error) {
 }
 
 // AttrType returns a string representation of a basetypes.Int64Typable type.
-func (g GeneratorInt64Attribute) AttrType(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorInt64Attribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
-		return fmt.Sprintf("%sType{}", name.ToPascalCase())
+		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
 
-	return "basetypes.Int64Type{}"
+	return "basetypes.Int64Type{}", nil
 }
 
 // AttrValue returns a string representation of a basetypes.Int64Valuable type.

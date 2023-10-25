@@ -63,7 +63,14 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 		name := FrameworkIdentifier(k)
 
 		if a, ok := g[k].(AttrType); ok {
-			attrTypes[k] = a.AttrType(name)
+			attrType, err := a.AttrType(name)
+
+			if err != nil {
+				return nil, err
+			}
+
+			attrTypes[k] = attrType
+
 			continue
 		}
 
