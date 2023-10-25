@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func convertListAttribute(a *provider.ListAttribute) (provider_generate.GeneratorListAttribute, error) {
@@ -27,8 +28,9 @@ func convertListAttribute(a *provider.ListAttribute) (provider_generate.Generato
 			DeprecationMessage:  deprecationMessage(a.DeprecationMessage),
 		},
 
-		CustomType:  a.CustomType,
-		ElementType: a.ElementType,
-		Validators:  a.Validators,
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		ElementType:            a.ElementType,
+		Validators:             a.Validators,
 	}, nil
 }

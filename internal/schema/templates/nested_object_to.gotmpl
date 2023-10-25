@@ -1,0 +1,38 @@
+func (v {{.Name}}Value) To{{.AssocExtType.ToPascalCase}}(ctx context.Context) ({{.AssocExtType.Type}}, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if v.IsNull() {
+return nil, diags
+}
+
+if v.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"{{.Name}}Value Value Is Unknown",
+`"{{.Name}}Value" is unknown.`,
+))
+
+return nil, diags
+}
+{{- range $key, $value := .ToFuncs}}
+{{- if $value.AssocExtType}}
+
+{{$value.AssocExtType.ToCamelCase}}, d := v.{{$key.ToPascalCase}}.To{{$value.AssocExtType.ToPascalCase}}(ctx)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return nil, diags
+}
+{{- end}}
+{{- end}}
+
+return &{{.AssocExtType.TypeReference}}{
+{{- range $key, $value := .ToFuncs}}
+{{- if $value.AssocExtType}}
+{{$key.ToPascalCase}}: {{$value.AssocExtType.ToCamelCase}},
+{{- else if $value.Default}}
+{{$key.ToPascalCase}}: v.{{$key.ToPascalCase}}.{{$value.Default}}(),
+{{- end}}
+{{- end}}
+}, diags
+}

@@ -62,3 +62,77 @@ func GetElementType(e specschema.ElementType) string {
 
 	return ""
 }
+
+// GetElementValueType generates the strings for use within templates for specifying the value types
+// to use with collection (i.e., list, map and set) element types.
+func GetElementValueType(e specschema.ElementType) string {
+	switch {
+	case e.Bool != nil:
+		if e.Bool.CustomType != nil {
+			return e.Bool.CustomType.ValueType
+		}
+		return "types.Bool"
+	case e.Float64 != nil:
+		if e.Float64.CustomType != nil {
+			return e.Float64.CustomType.ValueType
+		}
+		return "types.Float64"
+	case e.Int64 != nil:
+		if e.Int64.CustomType != nil {
+			return e.Int64.CustomType.ValueType
+		}
+		return "types.Int64"
+	case e.List != nil:
+		if e.List.CustomType != nil {
+			return e.List.CustomType.ValueType
+		}
+		return "types.List"
+	case e.Map != nil:
+		if e.Map.CustomType != nil {
+			return e.Map.CustomType.ValueType
+		}
+		return "types.Map"
+	case e.Number != nil:
+		if e.Number.CustomType != nil {
+			return e.Number.CustomType.ValueType
+		}
+		return "types.Number"
+	case e.Object != nil:
+		if e.Object.CustomType != nil {
+			return e.Object.CustomType.ValueType
+		}
+		return "types.Object"
+	case e.Set != nil:
+		if e.Set.CustomType != nil {
+			return e.Set.CustomType.ValueType
+		}
+		return "types.Set"
+	case e.String != nil:
+		if e.String.CustomType != nil {
+			return e.String.CustomType.ValueType
+		}
+		return "types.String"
+	}
+
+	return ""
+}
+
+// GetElementFromFunc returns a string representation of the function that is used
+// for converting from an API Go type to a framework type.
+// TODO: Handle custom type, and types other than primitives.
+func GetElementFromFunc(e specschema.ElementType) string {
+	switch {
+	case e.Bool != nil:
+		return "types.BoolPointerValue"
+	case e.Float64 != nil:
+		return "types.Float64PointerValue"
+	case e.Int64 != nil:
+		return "types.Int64PointerValue"
+	case e.Number != nil:
+		return "types.NumberValue"
+	case e.String != nil:
+		return "types.StringPointerValue"
+	}
+
+	return ""
+}

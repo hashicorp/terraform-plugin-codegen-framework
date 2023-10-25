@@ -142,6 +142,96 @@ var Int64ValueValueTemplate string
 //go:embed templates/int64_value_valuable.gotmpl
 var Int64ValueValuableTemplate string
 
+// List From/To
+
+//go:embed templates/list_from.gotmpl
+var ListFromTemplate string
+
+//go:embed templates/list_to.gotmpl
+var ListToTemplate string
+
+// List Type
+
+//go:embed templates/list_type_equal.gotmpl
+var ListTypeEqualTemplate string
+
+//go:embed templates/list_type_string.gotmpl
+var ListTypeStringTemplate string
+
+//go:embed templates/list_type_type.gotmpl
+var ListTypeTypeTemplate string
+
+//go:embed templates/list_type_typable.gotmpl
+var ListTypeTypableTemplate string
+
+//go:embed templates/list_type_value_from_list.gotmpl
+var ListTypeValueFromListTemplate string
+
+//go:embed templates/list_type_value_from_terraform.gotmpl
+var ListTypeValueFromTerraformTemplate string
+
+//go:embed templates/list_type_value_type.gotmpl
+var ListTypeValueTypeTemplate string
+
+// List Value
+
+//go:embed templates/list_value_equal.gotmpl
+var ListValueEqualTemplate string
+
+//go:embed templates/list_value_type.gotmpl
+var ListValueTypeTemplate string
+
+//go:embed templates/list_value_value.gotmpl
+var ListValueValueTemplate string
+
+//go:embed templates/list_value_valuable.gotmpl
+var ListValueValuableTemplate string
+
+// Map From/To
+
+//go:embed templates/map_from.gotmpl
+var MapFromTemplate string
+
+//go:embed templates/map_to.gotmpl
+var MapToTemplate string
+
+// Map Type
+
+//go:embed templates/map_type_equal.gotmpl
+var MapTypeEqualTemplate string
+
+//go:embed templates/map_type_string.gotmpl
+var MapTypeStringTemplate string
+
+//go:embed templates/map_type_type.gotmpl
+var MapTypeTypeTemplate string
+
+//go:embed templates/map_type_typable.gotmpl
+var MapTypeTypableTemplate string
+
+//go:embed templates/map_type_value_from_map.gotmpl
+var MapTypeValueFromMapTemplate string
+
+//go:embed templates/map_type_value_from_terraform.gotmpl
+var MapTypeValueFromTerraformTemplate string
+
+//go:embed templates/map_type_value_type.gotmpl
+var MapTypeValueTypeTemplate string
+
+// Map Value
+
+//go:embed templates/map_value_equal.gotmpl
+var MapValueEqualTemplate string
+
+//go:embed templates/map_value_type.gotmpl
+var MapValueTypeTemplate string
+
+//go:embed templates/map_value_value.gotmpl
+var MapValueValueTemplate string
+
+//go:embed templates/map_value_valuable.gotmpl
+var MapValueValuableTemplate string
+
 // Number From/To
 
 //go:embed templates/number_from.gotmpl
@@ -187,6 +277,84 @@ var NumberValueValueTemplate string
 //go:embed templates/number_value_valuable.gotmpl
 var NumberValueValuableTemplate string
 
+// NestedObject From/To
+
+//go:embed templates/nested_object_from.gotmpl
+var NestedObjectFromTemplate string
+
+//go:embed templates/nested_object_to.gotmpl
+var NestedObjectToTemplate string
+
+// NestedObject Type
+
+//go:embed templates/nested_object_type_equal.gotmpl
+var NestedObjectTypeEqualTemplate string
+
+//go:embed templates/nested_object_type_string.gotmpl
+var NestedObjectTypeStringTemplate string
+
+//go:embed templates/nested_object_type_typable.gotmpl
+var NestedObjectTypeTypableTemplate string
+
+//go:embed templates/nested_object_type_type.gotmpl
+var NestedObjectTypeTypeTemplate string
+
+//go:embed templates/nested_object_type_value.gotmpl
+var NestedObjectTypeValueTemplate string
+
+//go:embed templates/nested_object_type_value_from_object.gotmpl
+var NestedObjectTypeValueFromObjectTemplate string
+
+//go:embed templates/nested_object_type_value_from_terraform.gotmpl
+var NestedObjectTypeValueFromTerraformTemplate string
+
+//go:embed templates/nested_object_type_value_must.gotmpl
+var NestedObjectTypeValueMustTemplate string
+
+//go:embed templates/nested_object_type_value_null.gotmpl
+var NestedObjectTypeValueNullTemplate string
+
+//go:embed templates/nested_object_type_value_type.gotmpl
+var NestedObjectTypeValueTypeTemplate string
+
+//go:embed templates/nested_object_type_value_unknown.gotmpl
+var NestedObjectTypeValueUnknownTemplate string
+
+// NestedObject Value
+
+//go:embed templates/nested_object_value_attribute_types.gotmpl
+var NestedObjectValueAttributeTypesTemplate string
+
+//go:embed templates/nested_object_value_equal.gotmpl
+var NestedObjectValueEqualTemplate string
+
+//go:embed templates/nested_object_value_is_null.gotmpl
+var NestedObjectValueIsNullTemplate string
+
+//go:embed templates/nested_object_value_is_unknown.gotmpl
+var NestedObjectValueIsUnknownTemplate string
+
+//go:embed templates/nested_object_value_string.gotmpl
+var NestedObjectValueStringTemplate string
+
+//go:embed templates/nested_object_value_to_object_value.gotmpl
+var NestedObjectValueToObjectValueTemplate string
+
+//go:embed templates/nested_object_value_to_terraform_value.gotmpl
+var NestedObjectValueToTerraformValueTemplate string
+
+//go:embed templates/nested_object_value_type.gotmpl
+var NestedObjectValueTypeTemplate string
+
+//go:embed templates/nested_object_value_valuable.gotmpl
+var NestedObjectValueValuableTemplate string
+
+//go:embed templates/nested_object_value_value.gotmpl
+var NestedObjectValueValueTemplate string
+
+//go:embed templates/schema.gotmpl
+var SchemaGoTemplate string
+
 // Object From/To
 
 //go:embed templates/object_from.gotmpl
@@ -203,14 +371,11 @@ var ObjectTypeEqualTemplate string
 //go:embed templates/object_type_string.gotmpl
 var ObjectTypeStringTemplate string
 
-//go:embed templates/object_type_typable.gotmpl
-var ObjectTypeTypableTemplate string
-
 //go:embed templates/object_type_type.gotmpl
 var ObjectTypeTypeTemplate string
 
-//go:embed templates/object_type_value.gotmpl
-var ObjectTypeValueTemplate string
+//go:embed templates/object_type_typable.gotmpl
+var ObjectTypeTypableTemplate string
 
 //go:embed templates/object_type_value_from_object.gotmpl
 var ObjectTypeValueFromObjectTemplate string
@@ -218,17 +383,8 @@ var ObjectTypeValueFromObjectTemplate string
 //go:embed templates/object_type_value_from_terraform.gotmpl
 var ObjectTypeValueFromTerraformTemplate string
 
-//go:embed templates/object_type_value_must.gotmpl
-var ObjectTypeValueMustTemplate string
-
-//go:embed templates/object_type_value_null.gotmpl
-var ObjectTypeValueNullTemplate string
-
 //go:embed templates/object_type_value_type.gotmpl
 var ObjectTypeValueTypeTemplate string
-
-//go:embed templates/object_type_value_unknown.gotmpl
-var ObjectTypeValueUnknownTemplate string
 
 // Object Value
 
@@ -238,32 +394,59 @@ var ObjectValueAttributeTypesTemplate string
 //go:embed templates/object_value_equal.gotmpl
 var ObjectValueEqualTemplate string
 
-//go:embed templates/object_value_is_null.gotmpl
-var ObjectValueIsNullTemplate string
-
-//go:embed templates/object_value_is_unknown.gotmpl
-var ObjectValueIsUnknownTemplate string
-
-//go:embed templates/object_value_string.gotmpl
-var ObjectValueStringTemplate string
-
-//go:embed templates/object_value_to_object_value.gotmpl
-var ObjectValueToObjectValueTemplate string
-
-//go:embed templates/object_value_to_terraform_value.gotmpl
-var ObjectValueToTerraformValueTemplate string
-
 //go:embed templates/object_value_type.gotmpl
 var ObjectValueTypeTemplate string
-
-//go:embed templates/object_value_valuable.gotmpl
-var ObjectValueValuableTemplate string
 
 //go:embed templates/object_value_value.gotmpl
 var ObjectValueValueTemplate string
 
-//go:embed templates/schema.gotmpl
-var SchemaGoTemplate string
+//go:embed templates/object_value_valuable.gotmpl
+var ObjectValueValuableTemplate string
+
+// Set From/To
+
+//go:embed templates/set_from.gotmpl
+var SetFromTemplate string
+
+//go:embed templates/set_to.gotmpl
+var SetToTemplate string
+
+// Set Type
+
+//go:embed templates/set_type_equal.gotmpl
+var SetTypeEqualTemplate string
+
+//go:embed templates/set_type_string.gotmpl
+var SetTypeStringTemplate string
+
+//go:embed templates/set_type_type.gotmpl
+var SetTypeTypeTemplate string
+
+//go:embed templates/set_type_typable.gotmpl
+var SetTypeTypableTemplate string
+
+//go:embed templates/set_type_value_from_set.gotmpl
+var SetTypeValueFromSetTemplate string
+
+//go:embed templates/set_type_value_from_terraform.gotmpl
+var SetTypeValueFromTerraformTemplate string
+
+//go:embed templates/set_type_value_type.gotmpl
+var SetTypeValueTypeTemplate string
+
+// Set Value
+
+//go:embed templates/set_value_equal.gotmpl
+var SetValueEqualTemplate string
+
+//go:embed templates/set_value_type.gotmpl
+var SetValueTypeTemplate string
+
+//go:embed templates/set_value_value.gotmpl
+var SetValueValueTemplate string
+
+//go:embed templates/set_value_valuable.gotmpl
+var SetValueValuableTemplate string
 
 // String From/To
 

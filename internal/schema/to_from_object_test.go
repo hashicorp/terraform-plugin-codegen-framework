@@ -15,74 +15,57 @@ func TestToFromObject_renderFrom(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		name          string
-		assocExtType  *AssocExtType
-		fromFuncs     map[string]ToFromConversion
-		expected      []byte
-		expectedError error
+		name               string
+		assocExtType       *AssocExtType
+		attrTypesFromFuncs map[string]string
+		expected           []byte
+		expectedError      error
 	}{
 		"default": {
 			name: "Example",
 			assocExtType: &AssocExtType{
-				AssociatedExternalType: &schema.AssociatedExternalType{
+				&schema.AssociatedExternalType{
+					Import: &code.Import{
+						Path: "example.com/apisdk",
+					},
 					Type: "*apisdk.Type",
 				},
 			},
-			fromFuncs: map[string]ToFromConversion{
-				"bool_attribute": {
-					Default: "BoolPointerValue",
-				},
+			attrTypesFromFuncs: map[string]string{
+				"bool":    "types.BoolPointerValue",
+				"float64": "types.Float64PointerValue",
+				"int64":   "types.Int64PointerValue",
+				"number":  "types.NumberValue",
+				"string":  "types.StringPointerValue",
 			},
 			expected: []byte(`
 func (v ExampleValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ExampleValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
 if apiObject == nil {
-return NewExampleValueNull(), diags
-}
-
 return ExampleValue{
-BoolAttribute: types.BoolPointerValue(apiObject.BoolAttribute),
-state: attr.ValueStateKnown,
+types.ObjectNull(v.AttributeTypes(ctx)),
 }, diags
 }
-`),
-		},
-		"nested-assoc-ext-type": {
-			name: "Example",
-			assocExtType: &AssocExtType{
-				AssociatedExternalType: &schema.AssociatedExternalType{
-					Type: "*apisdk.Type",
-				},
-			},
-			fromFuncs: map[string]ToFromConversion{
-				"bool_attribute": {
-					AssocExtType: &AssocExtType{
-						AssociatedExternalType: &schema.AssociatedExternalType{
-							Type: "*api.BoolAttribute",
-						},
-					},
-				},
-			},
-			expected: []byte(`
-func (v ExampleValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ExampleValue, diag.Diagnostics) {
-var diags diag.Diagnostics
 
-if apiObject == nil {
-return NewExampleValueNull(), diags
-}
-
-boolAttributeVal, d := BoolAttributeValue{}.FromApiBoolAttribute(ctx, apiObject.BoolAttribute)
+o, d := basetypes.NewObjectValue(v.AttributeTypes(ctx), map[string]attr.Value{
+"bool": types.BoolPointerValue(apiObject.Bool),
+"float64": types.Float64PointerValue(apiObject.Float64),
+"int64": types.Int64PointerValue(apiObject.Int64),
+"number": types.NumberValue(apiObject.Number),
+"string": types.StringPointerValue(apiObject.String),
+})
 
 diags.Append(d...)
 
 if diags.HasError() {
-return NewExampleValueNull(), diags
+return ExampleValue{
+types.ObjectUnknown(v.AttributeTypes(ctx)),
+}, diags
 }
 
 return ExampleValue{
-BoolAttribute: boolAttributeVal,
-state: attr.ValueStateKnown,
+o,
 }, diags
 }
 `),
@@ -95,7 +78,7 @@ state: attr.ValueStateKnown,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, nil, testCase.fromFuncs)
+			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, nil, testCase.attrTypesFromFuncs)
 
 			got, err := toFromObject.renderFrom()
 
@@ -114,11 +97,12 @@ func TestToFromObject_renderTo(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		name          string
-		assocExtType  *AssocExtType
-		toFuncs       map[string]ToFromConversion
-		expected      []byte
-		expectedError error
+		name               string
+		assocExtType       *AssocExtType
+		attrTypesToFuncs   map[string]AttrTypesToFuncs
+		attrTypesFromFuncs map[string]string
+		expected           []byte
+		expectedError      error
 	}{
 		"default": {
 			name: "Example",
@@ -130,9 +114,27 @@ func TestToFromObject_renderTo(t *testing.T) {
 					Type: "*apisdk.Type",
 				},
 			},
-			toFuncs: map[string]ToFromConversion{
-				"bool_attribute": {
-					Default: "ValueBoolPointer",
+			attrTypesToFuncs: map[string]AttrTypesToFuncs{
+				"bool": {
+					AttrValue: "types.Bool",
+					ToFunc:    "ValueBoolPointer",
+				},
+				"float64": {
+					AttrValue: "types.Float64",
+					ToFunc:    "ValueFloat64Pointer",
+				},
+				"int64": {
+					AttrValue: "types.Int64",
+					ToFunc:    "ValueInt64Pointer",
+				},
+
+				"number": {
+					AttrValue: "types.Number",
+					ToFunc:    "ValueBigFloat",
+				},
+				"string": {
+					AttrValue: "types.String",
+					ToFunc:    "ValueStringPointer",
 				},
 			},
 			expected: []byte(`func (v ExampleValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
@@ -151,57 +153,66 @@ diags.Append(diag.NewErrorDiagnostic(
 return nil, diags
 }
 
-return &apisdk.Type{
-BoolAttribute: v.BoolAttribute.ValueBoolPointer(),
-}, diags
-}`),
-		},
-		"nested-assoc-ext-type": {
-			name: "Example",
-			assocExtType: &AssocExtType{
-				&schema.AssociatedExternalType{
-					Import: &code.Import{
-						Path: "example.com/apisdk",
-					},
-					Type: "*apisdk.Type",
-				},
-			},
-			toFuncs: map[string]ToFromConversion{
-				"bool_attribute": {
-					AssocExtType: &AssocExtType{
-						AssociatedExternalType: &schema.AssociatedExternalType{
-							Type: "*api.BoolAttribute",
-						},
-					},
-				},
-			},
-			expected: []byte(`func (v ExampleValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
-var diags diag.Diagnostics
+attributes := v.Attributes()
 
-if v.IsNull() {
-return nil, diags
-}
+boolAttribute, ok := attributes["bool"].(types.Bool)
 
-if v.IsUnknown() {
+if !ok {
 diags.Append(diag.NewErrorDiagnostic(
-"ExampleValue Value Is Unknown",
-` + "`" + `"ExampleValue" is unknown.` + "`" + `,
+"ExampleValue bool is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" bool is type of %T".` + "`" + `, attributes["bool"]),
 ))
-
-return nil, diags
 }
 
-apiBoolAttribute, d := v.BoolAttribute.ToApiBoolAttribute(ctx)
+float64Attribute, ok := attributes["float64"].(types.Float64)
 
-diags.Append(d...)
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue float64 is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" float64 is type of %T".` + "`" + `, attributes["float64"]),
+))
+}
+
+int64Attribute, ok := attributes["int64"].(types.Int64)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue int64 is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" int64 is type of %T".` + "`" + `, attributes["int64"]),
+))
+}
+
+numberAttribute, ok := attributes["number"].(types.Number)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue number is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" number is type of %T".` + "`" + `, attributes["number"]),
+))
+}
+
+stringAttribute, ok := attributes["string"].(types.String)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue string is unexpected type",
+fmt.Sprintf(` + "`" + `"ExampleValue" string is type of %T".` + "`" + `, attributes["string"]),
+))
+}
 
 if diags.HasError() {
 return nil, diags
 }
 
-return &apisdk.Type{
-BoolAttribute: apiBoolAttribute,
-}, diags
+apisdkType := apisdk.Type {
+Bool: boolAttribute.ValueBoolPointer(),
+Float64: float64Attribute.ValueFloat64Pointer(),
+Int64: int64Attribute.ValueInt64Pointer(),
+Number: numberAttribute.ValueBigFloat(),
+String: stringAttribute.ValueStringPointer(),
+}
+
+return &apisdkType, diags
 }`),
 		},
 	}
@@ -212,7 +223,7 @@ BoolAttribute: apiBoolAttribute,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, testCase.toFuncs, nil)
+			toFromObject := NewToFromObject(testCase.name, testCase.assocExtType, testCase.attrTypesToFuncs, nil)
 
 			got, err := toFromObject.renderTo()
 

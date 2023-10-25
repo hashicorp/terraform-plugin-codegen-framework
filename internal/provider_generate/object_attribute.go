@@ -4,6 +4,8 @@
 package provider_generate
 
 import (
+	"bytes"
+	"fmt"
 	"strings"
 	"text/template"
 
@@ -17,6 +19,7 @@ import (
 type GeneratorObjectAttribute struct {
 	schema.ObjectAttribute
 
+	AssociatedExternalType *generatorschema.AssocExtType
 	// The "specschema" types are used instead of the types within the attribute
 	// because support for extracting custom import information is required.
 	AttributeTypes specschema.ObjectAttributeTypes
@@ -45,6 +48,12 @@ func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
 		imports.Append(customValidatorImports)
 	}
+
+	if g.AssociatedExternalType != nil {
+		imports.Append(generatorschema.AssociatedExternalTypeImports())
+	}
+
+	imports.Append(g.AssociatedExternalType.Imports())
 
 	return imports
 }
@@ -75,6 +84,7 @@ func (g GeneratorObjectAttribute) Schema(name generatorschema.FrameworkIdentifie
 	type attribute struct {
 		Name                     string
 		AttributeTypes           string
+		CustomType               string
 		GeneratorObjectAttribute GeneratorObjectAttribute
 	}
 
@@ -84,16 +94,19 @@ func (g GeneratorObjectAttribute) Schema(name generatorschema.FrameworkIdentifie
 		GeneratorObjectAttribute: g,
 	}
 
-	funcMap := template.FuncMap{
-		"getAttrTypes": generatorschema.GetAttrTypes,
+	switch {
+	case g.CustomType != nil:
+		a.CustomType = g.CustomType.Type
+	case g.AssociatedExternalType != nil:
+		a.CustomType = fmt.Sprintf("%sType{\ntypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n},\n}", name.ToPascalCase(), name.ToPascalCase())
 	}
 
-	t, err := template.New("object_attribute").Funcs(funcMap).Parse(objectAttributeGoTemplate)
+	t, err := template.New("object_attribute").Parse(objectAttributeTemplate)
 	if err != nil {
 		return "", err
 	}
 
-	if _, err = addCommonAttributeTemplate(t); err != nil {
+	if _, err = addAttributeTemplate(t); err != nil {
 		return "", err
 	}
 
@@ -114,9 +127,64 @@ func (g GeneratorObjectAttribute) ModelField(name generatorschema.FrameworkIdent
 		ValueType: model.ObjectValueType,
 	}
 
-	if g.CustomType != nil {
+	switch {
+	case g.CustomType != nil:
 		field.ValueType = g.CustomType.ValueType
+	case g.AssociatedExternalType != nil:
+		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
 
 	return field, nil
+}
+
+func (g GeneratorObjectAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+
+	objectType := generatorschema.NewCustomObjectType(name)
+
+	b, err := objectType.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	attrTypes := generatorschema.GetAttrTypes(g.AttrTypes())
+
+	objectValue := generatorschema.NewCustomObjectValue(name, attrTypes)
+
+	b, err = objectValue.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	buf.Write(b)
+
+	return buf.Bytes(), nil
+}
+
+func (g GeneratorObjectAttribute) ToFromFunctions(name string) ([]byte, error) {
+	if g.AssociatedExternalType == nil {
+		return nil, nil
+	}
+
+	attrTypesToFuncs := generatorschema.GetAttrTypesToFuncs(g.AttributeTypes)
+
+	attrTypesFromFuncs := generatorschema.GetAttrTypesFromFuncs(g.AttributeTypes)
+
+	toFrom := generatorschema.NewToFromObject(name, g.AssociatedExternalType, attrTypesToFuncs, attrTypesFromFuncs)
+
+	b, err := toFrom.Render()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorMapAttribute_Schema(t *testing.T) {
@@ -284,7 +285,44 @@ ElementType: types.StringType,
 			},
 			expected: `
 "map_attribute": schema.MapAttribute{
-ElementType: types.StringType,
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorMapAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.MapAttribute",
+					},
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
+CustomType: MapAttributeType{
+types.MapType{
+ElemType: types.StringType,
+},
+},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorMapAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.MapAttribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
+"map_attribute": schema.MapAttribute{
 CustomType: my_custom_type,
 },`,
 		},
@@ -680,6 +718,37 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorMapAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "MapAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "map_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorMapAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "MapAttribute",
+				ValueType: "MapAttributeValue",
+				TfsdkName: "map_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorMapAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},

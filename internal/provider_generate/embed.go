@@ -19,13 +19,13 @@ var float64AttributeTemplate string
 var int64AttributeTemplate string
 
 //go:embed templates/list_attribute.gotmpl
-var listAttributeGoTemplate string
+var listAttributeTemplate string
 
 //go:embed templates/list_nested_attribute.gotmpl
 var listNestedAttributeGoTemplate string
 
 //go:embed templates/map_attribute.gotmpl
-var mapAttributeGoTemplate string
+var mapAttributeTemplate string
 
 //go:embed templates/map_nested_attribute.gotmpl
 var mapNestedAttributeGoTemplate string
@@ -34,10 +34,10 @@ var mapNestedAttributeGoTemplate string
 var numberAttributeTemplate string
 
 //go:embed templates/object_attribute.gotmpl
-var objectAttributeGoTemplate string
+var objectAttributeTemplate string
 
 //go:embed templates/set_attribute.gotmpl
-var setAttributeGoTemplate string
+var setAttributeTemplate string
 
 //go:embed templates/set_nested_attribute.gotmpl
 var setNestedAttributeGoTemplate string

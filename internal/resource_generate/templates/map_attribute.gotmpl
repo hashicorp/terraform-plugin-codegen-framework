@@ -1,6 +1,10 @@
 
 "{{.Name}}": schema.MapAttribute{
+{{- if .CustomType}}
+CustomType: {{.CustomType}},
+{{- else}}
 ElementType: {{.ElementType}},
+{{- end}}
 {{- template "common_attribute" .GeneratorMapAttribute }}
 {{- if gt (len .GeneratorMapAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.Map{

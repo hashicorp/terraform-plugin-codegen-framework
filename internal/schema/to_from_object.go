@@ -9,37 +9,37 @@ import (
 )
 
 type ToFromObject struct {
-	Name         FrameworkIdentifier
-	AssocExtType *AssocExtType
-	ToFuncs      map[FrameworkIdentifier]ToFromConversion
-	FromFuncs    map[FrameworkIdentifier]ToFromConversion
-	templates    map[string]string
+	Name               FrameworkIdentifier
+	AssocExtType       *AssocExtType
+	AttrTypesToFuncs   map[FrameworkIdentifier]AttrTypesToFuncs
+	AttrTypesFromFuncs map[FrameworkIdentifier]string
+	templates          map[string]string
 }
 
-func NewToFromObject(name string, assocExtType *AssocExtType, toFuncs, fromFuncs map[string]ToFromConversion) ToFromObject {
+func NewToFromObject(name string, assocExtType *AssocExtType, attrTypesToFuncs map[string]AttrTypesToFuncs, attrTypesFromFuncs map[string]string) ToFromObject {
 	t := map[string]string{
 		"from": ObjectFromTemplate,
 		"to":   ObjectToTemplate,
 	}
 
-	tf := make(map[FrameworkIdentifier]ToFromConversion, len(toFuncs))
+	attf := make(map[FrameworkIdentifier]AttrTypesToFuncs, len(attrTypesToFuncs))
 
-	for k, v := range toFuncs {
-		tf[FrameworkIdentifier(k)] = v
+	for k, v := range attrTypesToFuncs {
+		attf[FrameworkIdentifier(k)] = v
 	}
 
-	ff := make(map[FrameworkIdentifier]ToFromConversion, len(fromFuncs))
+	atff := make(map[FrameworkIdentifier]string, len(attrTypesFromFuncs))
 
-	for k, v := range fromFuncs {
-		ff[FrameworkIdentifier(k)] = v
+	for k, v := range attrTypesFromFuncs {
+		atff[FrameworkIdentifier(k)] = v
 	}
 
 	return ToFromObject{
-		Name:         FrameworkIdentifier(name),
-		AssocExtType: assocExtType,
-		FromFuncs:    ff,
-		ToFuncs:      tf,
-		templates:    t,
+		Name:               FrameworkIdentifier(name),
+		AssocExtType:       assocExtType,
+		AttrTypesToFuncs:   attf,
+		AttrTypesFromFuncs: atff,
+		templates:          t,
 	}
 }
 
@@ -76,13 +76,13 @@ func (o ToFromObject) renderTo() ([]byte, error) {
 	}
 
 	err = t.Execute(&buf, struct {
-		Name         string
-		AssocExtType *AssocExtType
-		ToFuncs      map[FrameworkIdentifier]ToFromConversion
+		Name             string
+		AssocExtType     *AssocExtType
+		AttrTypesToFuncs map[FrameworkIdentifier]AttrTypesToFuncs
 	}{
-		Name:         o.Name.ToPascalCase(),
-		AssocExtType: o.AssocExtType,
-		ToFuncs:      o.ToFuncs,
+		Name:             o.Name.ToPascalCase(),
+		AssocExtType:     o.AssocExtType,
+		AttrTypesToFuncs: o.AttrTypesToFuncs,
 	})
 
 	if err != nil {
@@ -102,13 +102,13 @@ func (o ToFromObject) renderFrom() ([]byte, error) {
 	}
 
 	err = t.Execute(&buf, struct {
-		Name         string
-		AssocExtType *AssocExtType
-		FromFuncs    map[FrameworkIdentifier]ToFromConversion
+		Name               string
+		AssocExtType       *AssocExtType
+		AttrTypesFromFuncs map[FrameworkIdentifier]string
 	}{
-		Name:         o.Name.ToPascalCase(),
-		AssocExtType: o.AssocExtType,
-		FromFuncs:    o.FromFuncs,
+		Name:               o.Name.ToPascalCase(),
+		AssocExtType:       o.AssocExtType,
+		AttrTypesFromFuncs: o.AttrTypesFromFuncs,
 	})
 
 	if err != nil {

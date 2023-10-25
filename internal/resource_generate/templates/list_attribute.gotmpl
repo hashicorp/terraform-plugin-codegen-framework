@@ -1,7 +1,10 @@
 
 "{{.Name}}": schema.ListAttribute{
+{{- if .CustomType}}
+CustomType: {{.CustomType}},
+{{- else}}
 ElementType: {{.ElementType}},
-{{- template "common_attribute" .GeneratorListAttribute }}
+{{- end}}{{- template "common_attribute" .GeneratorListAttribute }}
 {{- if gt (len .GeneratorListAttribute.PlanModifiers) 0 }}
 PlanModifiers: []planmodifier.List{
 {{- range $planmodifier := .GeneratorListAttribute.PlanModifiers}}

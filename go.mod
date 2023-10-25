@@ -4,8 +4,9 @@ go 1.20
 
 require (
 	github.com/google/go-cmp v0.6.0
-	github.com/hashicorp/terraform-plugin-codegen-spec v0.1.1-0.20231019064449-867ccf6fb279
+	github.com/hashicorp/terraform-plugin-codegen-spec v0.1.1-0.20231024091233-c659ac8a54fc
 	github.com/hashicorp/terraform-plugin-framework v1.4.0
+	github.com/hashicorp/terraform-plugin-go v0.19.0
 	github.com/mattn/go-colorable v0.1.12
 	github.com/mitchellh/cli v1.1.5
 )
@@ -21,7 +22,6 @@ require (
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-hclog v1.5.0 // indirect
 	github.com/hashicorp/go-multierror v1.0.0 // indirect
-	github.com/hashicorp/terraform-plugin-go v0.19.0 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.9.0 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect

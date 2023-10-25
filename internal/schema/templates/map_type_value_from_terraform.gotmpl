@@ -1,0 +1,22 @@
+
+func (t {{.Name}}Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+attrValue, err := t.MapType.ValueFromTerraform(ctx, in)
+
+if err != nil {
+return nil, err
+}
+
+mapValue, ok := attrValue.(basetypes.MapValue)
+
+if !ok {
+return nil, fmt.Errorf("unexpected value type of %T", attrValue)
+}
+
+mapValuable, diags := t.ValueFromMap(ctx, mapValue)
+
+if diags.HasError() {
+return nil, fmt.Errorf("unexpected error converting MapValue to MapValuable: %v", diags)
+}
+
+return mapValuable, nil
+}

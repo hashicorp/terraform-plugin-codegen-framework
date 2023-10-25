@@ -13,26 +13,30 @@ diags.Append(diag.NewErrorDiagnostic(
 
 return nil, diags
 }
-{{- range $key, $value := .ToFuncs}}
-{{- if $value.AssocExtType}}
 
-{{$value.AssocExtType.ToCamelCase}}, d := v.{{$key.ToPascalCase}}.To{{$value.AssocExtType.ToPascalCase}}(ctx)
+attributes := v.Attributes()
 
-diags.Append(d...)
+{{- range $key, $value := .AttrTypesToFuncs}}
+
+{{$key}}Attribute, ok := attributes["{{$key}}"].({{$value.AttrValue}})
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"{{$.Name}}Value {{$key}} is unexpected type",
+fmt.Sprintf(`"{{$.Name}}Value" {{$key}} is type of %T".`, attributes["{{$key}}"]),
+))
+}
+{{- end}}
 
 if diags.HasError() {
 return nil, diags
 }
-{{- end}}
-{{- end}}
 
-return &{{.AssocExtType.TypeReference}}{
-{{- range $key, $value := .ToFuncs}}
-{{- if $value.AssocExtType}}
-{{$key.ToPascalCase}}: {{$value.AssocExtType.ToCamelCase}},
-{{- else if $value.Default}}
-{{$key.ToPascalCase}}: v.{{$key.ToPascalCase}}.{{$value.Default}}(),
+{{.AssocExtType.ToCamelCase}} := {{.AssocExtType.TypeReference}} {
+{{- range $key, $value := .AttrTypesToFuncs}}
+{{$key.ToPascalCase}}: {{$key}}Attribute.{{$value.ToFunc}}(),
 {{- end}}
-{{- end}}
-}, diags
+}
+
+return &{{.AssocExtType.ToCamelCase}}, diags
 }

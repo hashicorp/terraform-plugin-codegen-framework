@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorSetAttribute_Schema(t *testing.T) {
@@ -284,7 +285,44 @@ ElementType: types.StringType,
 			},
 			expected: `
 "set_attribute": schema.SetAttribute{
-ElementType: types.StringType,
+CustomType: my_custom_type,
+},`,
+		},
+
+		"associated-external-type": {
+			input: GeneratorSetAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
+					},
+				},
+				ElementType: specschema.ElementType{
+					String: &specschema.StringType{},
+				},
+			},
+			expected: `
+"set_attribute": schema.SetAttribute{
+CustomType: SetAttributeType{
+types.SetType{
+ElemType: types.StringType,
+},
+},
+},`,
+		},
+
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorSetAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
+					},
+				},
+				CustomType: &specschema.CustomType{
+					Type: "my_custom_type",
+				},
+			},
+			expected: `
+"set_attribute": schema.SetAttribute{
 CustomType: my_custom_type,
 },`,
 		},
@@ -634,6 +672,37 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorSetAttribute{
+				CustomType: &specschema.CustomType{
+					ValueType: "my_custom_value_type",
+				},
+			},
+			expected: model.Field{
+				Name:      "SetAttribute",
+				ValueType: "my_custom_value_type",
+				TfsdkName: "set_attribute",
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorSetAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
+			},
+			expected: model.Field{
+				Name:      "SetAttribute",
+				ValueType: "SetAttributeValue",
+				TfsdkName: "set_attribute",
+			},
+		},
+		"custom-type-overriding-associated-external-type": {
+			input: GeneratorSetAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.BoolAttribute",
+					},
+				},
 				CustomType: &specschema.CustomType{
 					ValueType: "my_custom_value_type",
 				},

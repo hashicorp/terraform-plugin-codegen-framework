@@ -84,3 +84,71 @@ func GetAttrTypes(attrTypes specschema.ObjectAttributeTypes) string {
 
 	return aTypes.String()
 }
+
+type AttrTypesToFuncs struct {
+	AttrValue string
+	ToFunc    string
+}
+
+// GetAttrTypesToFuncs returns string representations of the function that is used
+// for converting to an API Go type from a framework type.
+// TODO: Handle custom type, and types other than primitives.
+func GetAttrTypesToFuncs(a specschema.ObjectAttributeTypes) map[string]AttrTypesToFuncs {
+	attrTypesFuncs := make(map[string]AttrTypesToFuncs, len(a))
+
+	for _, v := range a {
+		switch {
+		case v.Bool != nil:
+			attrTypesFuncs[v.Name] = AttrTypesToFuncs{
+				AttrValue: "types.Bool",
+				ToFunc:    "ValueBoolPointer",
+			}
+		case v.Float64 != nil:
+			attrTypesFuncs[v.Name] = AttrTypesToFuncs{
+				AttrValue: "types.Float64",
+				ToFunc:    "ValueFloat64Pointer",
+			}
+		case v.Int64 != nil:
+			attrTypesFuncs[v.Name] = AttrTypesToFuncs{
+				AttrValue: "types.Int64",
+				ToFunc:    "ValueInt64Pointer",
+			}
+		case v.Number != nil:
+			attrTypesFuncs[v.Name] = AttrTypesToFuncs{
+				AttrValue: "types.Number",
+				ToFunc:    "ValueBigFloat",
+			}
+		case v.String != nil:
+			attrTypesFuncs[v.Name] = AttrTypesToFuncs{
+				AttrValue: "types.String",
+				ToFunc:    "ValueStringPointer",
+			}
+		}
+	}
+
+	return attrTypesFuncs
+}
+
+// GetAttrTypesFromFuncs returns string representations of the function that is used
+// for converting from an API Go type to a framework type.
+// TODO: Handle custom type, and types other than primitives.
+func GetAttrTypesFromFuncs(a specschema.ObjectAttributeTypes) map[string]string {
+	attrTypesFuncs := make(map[string]string, len(a))
+
+	for _, v := range a {
+		switch {
+		case v.Bool != nil:
+			attrTypesFuncs[v.Name] = "types.BoolPointerValue"
+		case v.Float64 != nil:
+			attrTypesFuncs[v.Name] = "types.Float64PointerValue"
+		case v.Int64 != nil:
+			attrTypesFuncs[v.Name] = "types.Int64PointerValue"
+		case v.Number != nil:
+			attrTypesFuncs[v.Name] = "types.NumberValue"
+		case v.String != nil:
+			attrTypesFuncs[v.Name] = "types.StringPointerValue"
+		}
+	}
+
+	return attrTypesFuncs
+}

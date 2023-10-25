@@ -1,40 +1,22 @@
 
 func (t {{.Name}}Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
-if in.Type() == nil {
-return New{{.Name}}ValueNull(), nil
-}
-
-if !in.Type().Equal(t.TerraformType(ctx)) {
-return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
-}
-
-if !in.IsKnown() {
-return New{{.Name}}ValueUnknown(), nil
-}
-
-if in.IsNull() {
-return New{{.Name}}ValueNull(), nil
-}
-
-attributes := map[string]attr.Value{}
-
-val := map[string]tftypes.Value{}
-
-err := in.As(&val)
+attrValue, err := t.ObjectType.ValueFromTerraform(ctx, in)
 
 if err != nil {
 return nil, err
 }
 
-for k, v := range val {
-a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+objectValue, ok := attrValue.(basetypes.ObjectValue)
 
-if err != nil {
-return nil, err
+if !ok {
+return nil, fmt.Errorf("unexpected value type of %T", attrValue)
 }
 
-attributes[k] = a
+objectValuable, diags := t.ValueFromObject(ctx, objectValue)
+
+if diags.HasError() {
+return nil, fmt.Errorf("unexpected error converting ObjectValue to ObjectValuable: %v", diags)
 }
 
-return New{{.Name}}ValueMust(t.AttrTypes, attributes), nil
+return objectValuable, nil
 }

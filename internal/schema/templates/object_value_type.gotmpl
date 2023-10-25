@@ -1,7 +1,7 @@
 
 func (v {{.Name}}Value) Type(ctx context.Context) attr.Type {
 return {{.Name}}Type{
-basetypes.ObjectType{
+ObjectType: basetypes.ObjectType{
 AttrTypes: v.AttributeTypes(ctx),
 },
 }

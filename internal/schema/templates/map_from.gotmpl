@@ -1,0 +1,30 @@
+
+func (v {{.Name}}Value) From{{.AssocExtType.ToPascalCase}}(ctx context.Context, apiObject {{.AssocExtType.Type}}) ({{.Name}}Value, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return {{.Name}}Value{
+types.MapNull({{.ElementTypeType}}),
+}, diags
+}
+
+elems := make(map[string]{{.ElementTypeValue}})
+
+for k, e := range *apiObject {
+elems[k] = {{.ElementFrom}}(e)
+}
+
+l, d := basetypes.NewMapValueFrom(ctx, {{.ElementTypeType}}, elems)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return {{.Name}}Value{
+types.MapUnknown({{.ElementTypeType}}),
+}, diags
+}
+
+return {{.Name}}Value{
+l,
+}, diags
+}

@@ -37,7 +37,7 @@ return t.ObjectType.Equal(other.ObjectType)
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomObjectType(testCase.name)
 
 			got, err := customObjectType.renderEqual()
 
@@ -75,7 +75,7 @@ return "ExampleType"
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomObjectType(testCase.name)
 
 			got, err := customObjectType.renderString()
 
@@ -110,7 +110,7 @@ func TestCustomObjectType_renderTypable(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomObjectType(testCase.name)
 
 			got, err := customObjectType.renderTypable()
 
@@ -147,128 +147,9 @@ basetypes.ObjectType
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomObjectType(testCase.name)
 
 			got, err := customObjectType.renderType()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectType_renderValue(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		attrValues    map[string]string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			attrValues: map[string]string{
-				"bool_attribute": "basetypes.BoolValue",
-			},
-			expected: []byte(`
-func NewExampleValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (ExampleValue, diag.Diagnostics) {
-var diags diag.Diagnostics
-
-// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
-ctx := context.Background()
-
-for name, attributeType := range attributeTypes {
-attribute, ok := attributes[name]
-
-if !ok {
-diags.AddError(
-"Missing ExampleValue Attribute Value",
-"While creating a ExampleValue value, a missing attribute value was detected. "+
-"A ExampleValue must contain values for all attributes, even if null or unknown. "+
-"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
-fmt.Sprintf("ExampleValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
-)
-
-continue
-}
-
-if !attributeType.Equal(attribute.Type(ctx)) {
-diags.AddError(
-"Invalid ExampleValue Attribute Type",
-"While creating a ExampleValue value, an invalid attribute value was detected. "+
-"A ExampleValue must use a matching attribute type for the value. "+
-"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
-fmt.Sprintf("ExampleValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
-fmt.Sprintf("ExampleValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
-)
-}
-}
-
-for name := range attributes {
-_, ok := attributeTypes[name]
-
-if !ok {
-diags.AddError(
-"Extra ExampleValue Attribute Value",
-"While creating a ExampleValue value, an extra attribute value was detected. "+
-"A ExampleValue must not contain values beyond the expected attribute types. "+
-"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
-fmt.Sprintf("Extra ExampleValue Attribute Name: %s", name),
-)
-}
-}
-
-if diags.HasError() {
-return NewExampleValueUnknown(), diags
-}
-
-
-boolAttributeAttribute, ok := attributes["bool_attribute"]
-
-if !ok {
-diags.AddError(
-"Attribute Missing",
-` + "`bool_attribute is missing from object`" + `)
-
-return NewExampleValueUnknown(), diags
-}
-
-boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
-
-if !ok {
-diags.AddError(
-"Attribute Wrong Type",
-fmt.Sprintf(` + "`bool_attribute expected to be basetypes.BoolValue, was: %T`" + `, boolAttributeAttribute))
-}
-
-
-if diags.HasError() {
-return NewExampleValueUnknown(), diags
-}
-
-return ExampleValue{
-BoolAttribute: boolAttributeVal,
-state: attr.ValueStateKnown,
-}, diags
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectType := NewCustomObjectType(testCase.name, testCase.attrValues)
-
-			got, err := customObjectType.renderValue()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -293,42 +174,13 @@ func TestCustomObjectType_renderValueFromObject(t *testing.T) {
 		"default": {
 			name: "Example",
 			attrValues: map[string]string{
-				"bool_attribute": "basetypes.BoolValue",
+				"bool_attribute": "basetypes.ObjectValue",
 			},
 			expected: []byte(`
 func (t ExampleType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
-var diags diag.Diagnostics
-
-attributes := in.Attributes()
-
-
-boolAttributeAttribute, ok := attributes["bool_attribute"]
-
-if !ok {
-diags.AddError(
-"Attribute Missing",
-` + "`bool_attribute is missing from object`" + `)
-
-return nil, diags
-}
-
-boolAttributeVal, ok := boolAttributeAttribute.(basetypes.BoolValue)
-
-if !ok {
-diags.AddError(
-"Attribute Wrong Type",
-fmt.Sprintf(` + "`bool_attribute expected to be basetypes.BoolValue, was: %T`" + `, boolAttributeAttribute))
-}
-
-
-if diags.HasError() {
-return nil, diags
-}
-
 return ExampleValue{
-BoolAttribute: boolAttributeVal,
-state: attr.ValueStateKnown,
-}, diags
+ObjectValue: in,
+}, nil
 }`),
 		},
 	}
@@ -339,7 +191,7 @@ state: attr.ValueStateKnown,
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, testCase.attrValues)
+			customObjectType := NewCustomObjectType(testCase.name)
 
 			got, err := customObjectType.renderValueFromObject()
 
@@ -366,98 +218,25 @@ func TestCustomObjectType_renderValueFromTerraform(t *testing.T) {
 			name: "Example",
 			expected: []byte(`
 func (t ExampleType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
-if in.Type() == nil {
-return NewExampleValueNull(), nil
-}
-
-if !in.Type().Equal(t.TerraformType(ctx)) {
-return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
-}
-
-if !in.IsKnown() {
-return NewExampleValueUnknown(), nil
-}
-
-if in.IsNull() {
-return NewExampleValueNull(), nil
-}
-
-attributes := map[string]attr.Value{}
-
-val := map[string]tftypes.Value{}
-
-err := in.As(&val)
+attrValue, err := t.ObjectType.ValueFromTerraform(ctx, in)
 
 if err != nil {
 return nil, err
 }
 
-for k, v := range val {
-a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+objectValue, ok := attrValue.(basetypes.ObjectValue)
 
-if err != nil {
-return nil, err
+if !ok {
+return nil, fmt.Errorf("unexpected value type of %T", attrValue)
 }
 
-attributes[k] = a
-}
-
-return NewExampleValueMust(t.AttrTypes, attributes), nil
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectType := NewCustomObjectType(testCase.name, nil)
-
-			got, err := customObjectType.renderValueFromTerraform()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectType_renderValueMust(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			expected: []byte(`
-func NewExampleValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) ExampleValue {
-object, diags := NewExampleValue(attributeTypes, attributes)
+objectValuable, diags := t.ValueFromObject(ctx, objectValue)
 
 if diags.HasError() {
-// This could potentially be added to the diag package.
-diagsStrings := make([]string, 0, len(diags))
-
-for _, diagnostic := range diags {
-diagsStrings = append(diagsStrings, fmt.Sprintf(
-"%s | %s | %s",
-diagnostic.Severity(),
-diagnostic.Summary(),
-diagnostic.Detail()))
+return nil, fmt.Errorf("unexpected error converting ObjectValue to ObjectValuable: %v", diags)
 }
 
-panic("NewExampleValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
-}
-
-return object
+return objectValuable, nil
 }`),
 		},
 	}
@@ -468,49 +247,9 @@ return object
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomObjectType(testCase.name)
 
-			got, err := customObjectType.renderValueMust()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectType_renderValueNull(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			expected: []byte(`
-func NewExampleValueNull() ExampleValue {
-return ExampleValue{
-state: attr.ValueStateNull,
-}
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectType := NewCustomObjectType(testCase.name, nil)
-
-			got, err := customObjectType.renderValueNull()
+			got, err := customObjectType.renderValueFromTerraform()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -546,93 +285,9 @@ return ExampleValue{}
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectType := NewCustomObjectType(testCase.name, nil)
+			customObjectType := NewCustomObjectType(testCase.name)
 
 			got, err := customObjectType.renderValueType()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectType_renderValueUnknown(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			expected: []byte(`
-func NewExampleValueUnknown() ExampleValue {
-return ExampleValue{
-state: attr.ValueStateUnknown,
-}
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectType := NewCustomObjectType(testCase.name, nil)
-
-			got, err := customObjectType.renderValueUnknown()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectValue_renderAttributeTypes(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		attrTypes     map[string]string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			attrTypes: map[string]string{
-				"bool_attribute": "basetypes.BoolType{}",
-			},
-			expected: []byte(`
-func (v ExampleValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
-return map[string]attr.Type{
-"bool_attribute": basetypes.BoolType{},
-}
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, testCase.attrTypes, nil)
-
-			got, err := customObjectValue.renderAttributeTypes()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -650,15 +305,13 @@ func TestCustomObjectValue_renderEqual(t *testing.T) {
 
 	testCases := map[string]struct {
 		name          string
-		attrValues    map[string]string
+		elementType   string
 		expected      []byte
 		expectedError error
 	}{
 		"default": {
-			name: "Example",
-			attrValues: map[string]string{
-				"bool_attribute": "basetypes.BoolValue",
-			},
+			name:        "Example",
+			elementType: "types.BoolType",
 			expected: []byte(`
 func (v ExampleValue) Equal(o attr.Value) bool {
 other, ok := o.(ExampleValue)
@@ -667,21 +320,7 @@ if !ok {
 return false
 }
 
-if v.state != other.state {
-return false
-}
-
-if v.state != attr.ValueStateKnown {
-return true
-}
-
-
-if !v.BoolAttribute.Equal(other.BoolAttribute) {
-return false
-}
-
-
-return true
+return v.ObjectValue.Equal(other.ObjectValue)
 }`),
 		},
 	}
@@ -692,254 +331,9 @@ return true
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, testCase.attrValues)
+			customObjectValue := NewCustomObjectValue(testCase.name, testCase.elementType)
 
 			got, err := customObjectValue.renderEqual()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectValue_renderIsNull(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			expected: []byte(`
-func (v ExampleValue) IsNull() bool {
-return v.state == attr.ValueStateNull
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
-
-			got, err := customObjectValue.renderIsNull()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectValue_renderIsUnknown(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			expected: []byte(`
-func (v ExampleValue) IsUnknown() bool {
-return v.state == attr.ValueStateUnknown
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
-
-			got, err := customObjectValue.renderIsUnknown()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectValue_renderString(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			expected: []byte(`
-func (v ExampleValue) String() string {
-return "ExampleValue"
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
-
-			got, err := customObjectValue.renderString()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectValue_renderToObjectValue(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name           string
-		attributeTypes map[string]string
-		attrTypes      map[string]string
-		expected       []byte
-		expectedError  error
-	}{
-		"default": {
-			name: "Example",
-			attributeTypes: map[string]string{
-				"bool_attribute": "Bool",
-			},
-			attrTypes: map[string]string{
-				"bool_attribute": "basetypes.BoolType{}",
-			},
-			expected: []byte(`
-func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
-"bool_attribute": basetypes.BoolType{},
-},
-map[string]attr.Value{
-"bool_attribute": v.BoolAttribute,
-})
-
-return objVal, diags
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectValue := NewCustomObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil)
-
-			got, err := customObjectValue.renderToObjectValue()
-
-			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
-				t.Errorf("unexpected error: %s", diff)
-			}
-
-			if diff := cmp.Diff(got, testCase.expected); diff != "" {
-				t.Errorf("unexpected difference: %s", diff)
-			}
-		})
-	}
-}
-
-func TestCustomObjectValue_renderToTerraformValue(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		name          string
-		attrTypes     map[string]string
-		expected      []byte
-		expectedError error
-	}{
-		"default": {
-			name: "Example",
-			attrTypes: map[string]string{
-				"bool_attribute": "basetypes.BoolType{}",
-			},
-			expected: []byte(`func (v ExampleValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
-attrTypes := make(map[string]tftypes.Type, 1)
-
-var val tftypes.Value
-var err error
-
-
-attrTypes["bool_attribute"] = basetypes.BoolType{}.TerraformType(ctx)
-
-objectType := tftypes.Object{AttributeTypes: attrTypes}
-
-switch v.state {
-case attr.ValueStateKnown:
-vals := make(map[string]tftypes.Value, 1)
-
-
-val, err = v.BoolAttribute.ToTerraformValue(ctx)
-
-if err != nil {
-return tftypes.NewValue(objectType, tftypes.UnknownValue), err
-}
-
-vals["bool_attribute"] = val
-
-
-
-if err := tftypes.ValidateValue(objectType, vals); err != nil {
-return tftypes.NewValue(objectType, tftypes.UnknownValue), err
-}
-
-return tftypes.NewValue(objectType, vals), nil
-case attr.ValueStateNull:
-return tftypes.NewValue(objectType, nil), nil
-case attr.ValueStateUnknown:
-return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
-default:
-panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
-}
-}`),
-		},
-	}
-
-	for name, testCase := range testCases {
-		name, testCase := name, testCase
-
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, testCase.attrTypes, nil)
-
-			got, err := customObjectValue.renderToTerraformValue()
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -957,15 +351,17 @@ func TestCustomObjectValue_renderType(t *testing.T) {
 
 	testCases := map[string]struct {
 		name          string
+		elementType   string
 		expected      []byte
 		expectedError error
 	}{
 		"default": {
-			name: "Example",
+			name:        "Example",
+			elementType: "types.BoolType",
 			expected: []byte(`
 func (v ExampleValue) Type(ctx context.Context) attr.Type {
 return ExampleType{
-basetypes.ObjectType{
+ObjectType: basetypes.ObjectType{
 AttrTypes: v.AttributeTypes(ctx),
 },
 }
@@ -979,7 +375,7 @@ AttrTypes: v.AttributeTypes(ctx),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomObjectValue(testCase.name, testCase.elementType)
 
 			got, err := customObjectValue.renderType()
 
@@ -999,12 +395,14 @@ func TestCustomObjectValue_renderValuable(t *testing.T) {
 
 	testCases := map[string]struct {
 		name          string
+		elementType   string
 		expected      []byte
 		expectedError error
 	}{
 		"default": {
-			name:     "Example",
-			expected: []byte(`var _ basetypes.ObjectValuable = ExampleValue{}`),
+			name:        "Example",
+			elementType: "types.BoolType",
+			expected:    []byte(`var _ basetypes.ObjectValuable = ExampleValue{}`),
 		},
 	}
 
@@ -1014,7 +412,7 @@ func TestCustomObjectValue_renderValuable(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomObjectValue(testCase.name, testCase.elementType)
 
 			got, err := customObjectValue.renderValuable()
 
@@ -1034,13 +432,15 @@ func TestCustomObjectValue_renderValue(t *testing.T) {
 
 	testCases := map[string]struct {
 		name          string
+		elementType   string
 		expected      []byte
 		expectedError error
 	}{
 		"default": {
-			name: "Example",
+			name:        "Example",
+			elementType: "types.BoolType",
 			expected: []byte(`type ExampleValue struct {
-state attr.ValueState
+basetypes.ObjectValue
 }`),
 		},
 	}
@@ -1051,7 +451,7 @@ state attr.ValueState
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomObjectValue(testCase.name, testCase.elementType)
 
 			got, err := customObjectValue.renderValue()
 
@@ -1065,11 +465,3 @@ state attr.ValueState
 		})
 	}
 }
-
-var equateErrorMessage = cmp.Comparer(func(x, y error) bool {
-	if x == nil || y == nil {
-		return x == nil && y == nil
-	}
-
-	return x.Error() == y.Error()
-})

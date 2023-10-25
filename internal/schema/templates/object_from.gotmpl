@@ -3,29 +3,26 @@ func (v {{.Name}}Value) From{{.AssocExtType.ToPascalCase}}(ctx context.Context, 
 var diags diag.Diagnostics
 
 if apiObject == nil {
-return New{{.Name}}ValueNull(), diags
+return {{.Name}}Value{
+types.ObjectNull(v.AttributeTypes(ctx)),
+}, diags
 }
-{{- range $key, $value := .FromFuncs}}
-{{- if $value.AssocExtType}}
 
-{{$key.ToCamelCase}}Val, d := {{$key.ToPascalCase}}Value{}.From{{$value.AssocExtType.ToPascalCase}}(ctx, apiObject.{{$key.ToPascalCase}})
+o, d := basetypes.NewObjectValue(v.AttributeTypes(ctx), map[string]attr.Value{
+{{- range $key, $value := .AttrTypesFromFuncs}}
+"{{$key}}": {{$value}}(apiObject.{{$key.ToPascalCase}}),
+{{- end}}
+})
 
 diags.Append(d...)
 
 if diags.HasError() {
-return New{{$.Name}}ValueNull(), diags
+return {{.Name}}Value{
+types.ObjectUnknown(v.AttributeTypes(ctx)),
+}, diags
 }
-{{- end}}
-{{- end}}
 
 return {{.Name}}Value{
-{{- range $key, $value := .FromFuncs}}
-{{- if $value.AssocExtType}}
-{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
-{{- else if $value.Default}}
-{{$key.ToPascalCase}}: types.{{$value.Default}}(apiObject.{{$key.ToPascalCase}}),
-{{- end}}
-{{- end}}
-state: attr.ValueStateKnown,
+o,
 }, diags
 }

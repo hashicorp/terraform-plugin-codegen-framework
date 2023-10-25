@@ -1,0 +1,22 @@
+
+func (t {{.Name}}Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+attrValue, err := t.ListType.ValueFromTerraform(ctx, in)
+
+if err != nil {
+return nil, err
+}
+
+listValue, ok := attrValue.(basetypes.ListValue)
+
+if !ok {
+return nil, fmt.Errorf("unexpected value type of %T", attrValue)
+}
+
+listValuable, diags := t.ValueFromList(ctx, listValue)
+
+if diags.HasError() {
+return nil, fmt.Errorf("unexpected error converting ListValue to ListValuable: %v", diags)
+}
+
+return listValuable, nil
+}

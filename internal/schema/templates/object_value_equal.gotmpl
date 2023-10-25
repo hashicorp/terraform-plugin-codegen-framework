@@ -6,25 +6,5 @@ if !ok {
 return false
 }
 
-if v.state != other.state {
-return false
-}
-
-if v.state != attr.ValueStateKnown {
-return true
-}
-
-{{range $key, $value := .AttrValues }}
-{{- if eq $value "baseTypes.BoolValue" "baseTypes.Float64Value" "baseTypes.Int64Value" "baseTypes.NumberValue" "baseTypes.StringValue"}}
-if v.{{$key.ToPascalCase}} != other.{{$key.ToPascalCase}} {
-return false
-}
-{{- else}}
-if !v.{{$key.ToPascalCase}}.Equal(other.{{$key.ToPascalCase}}) {
-return false
-}
-{{- end}}
-{{end}}
-
-return true
+return v.ObjectValue.Equal(other.ObjectValue)
 }

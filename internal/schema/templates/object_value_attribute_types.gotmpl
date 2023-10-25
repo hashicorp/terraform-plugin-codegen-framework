@@ -1,8 +1,6 @@
 
 func (v {{.Name}}Value) AttributeTypes(ctx context.Context) map[string]attr.Type {
 return map[string]attr.Type{
-{{- range $key, $value := .AttrTypes }}
-"{{$key}}": {{$value}},
-{{- end}}
+{{.AttrTypes }}
 }
 }
