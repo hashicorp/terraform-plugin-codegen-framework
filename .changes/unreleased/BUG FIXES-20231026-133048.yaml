@@ -1,0 +1,5 @@
+kind: BUG FIXES
+body: Fix nested attribute name and generated custom value method name conflicts
+time: 2023-10-26T13:30:48.63762+01:00
+custom:
+  Issue: "81"
