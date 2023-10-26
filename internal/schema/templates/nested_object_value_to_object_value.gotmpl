@@ -8,17 +8,17 @@ func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValu
 {{- else if eq $value "SetNested"}}
 {{- $typesType := "Set"}}
 {{- end}}
-{{$key.ToCamelCase}} := types.{{$typesType}}ValueMust(
+{{$key.ToPrefixCamelCase $.Name}} := types.{{$typesType}}ValueMust(
 {{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
 AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 },
 },
-v.{{$key.ToPascalCase}}.Elements(),
+v.{{$key.ToPrefixPascalCase $.Name}}.Elements(),
 )
 
-if v.{{$key.ToPascalCase}}.IsNull() {
-{{$key.ToCamelCase}} = types.{{$typesType}}Null(
+if v.{{$key.ToPrefixPascalCase $.Name}}.IsNull() {
+{{$key.ToPrefixCamelCase $.Name}} = types.{{$typesType}}Null(
 {{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
 AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
@@ -27,8 +27,8 @@ AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 )
 }
 
-if v.{{$key.ToPascalCase}}.IsUnknown() {
-{{$key.ToCamelCase}} = types.{{$typesType}}Unknown(
+if v.{{$key.ToPrefixPascalCase $.Name}}.IsUnknown() {
+{{$key.ToPrefixCamelCase $.Name}} = types.{{$typesType}}Unknown(
 {{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
 AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
@@ -68,9 +68,9 @@ map[string]attr.Type{
 map[string]attr.Value{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested" "SingleNested"}}
-"{{$key}}": {{$key.ToCamelCase}},
+"{{$key}}": {{$key.ToPrefixCamelCase $.Name}},
 {{- else}}
-"{{$key}}": v.{{$key.ToPascalCase}},
+"{{$key}}": v.{{$key.ToPrefixPascalCase $.Name}},
 {{- end}}
 {{- end}}
 })
