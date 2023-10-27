@@ -187,26 +187,26 @@ func (g GeneratorBoolAttribute) AttrValue(name generatorschema.FrameworkIdentifi
 	return "basetypes.BoolValue"
 }
 
-func (g GeneratorBoolAttribute) To() generatorschema.ToFromConversion {
+func (g GeneratorBoolAttribute) To() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "ValueBoolPointer",
-	}
+	}, nil
 }
 
-func (g GeneratorBoolAttribute) From() generatorschema.ToFromConversion {
+func (g GeneratorBoolAttribute) From() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "BoolPointerValue",
-	}
+	}, nil
 }

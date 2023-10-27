@@ -232,26 +232,26 @@ func (g GeneratorFloat64Attribute) AttrValue(name generatorschema.FrameworkIdent
 	return "basetypes.Float64Value"
 }
 
-func (g GeneratorFloat64Attribute) To() generatorschema.ToFromConversion {
+func (g GeneratorFloat64Attribute) To() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "ValueFloat64Pointer",
-	}
+	}, nil
 }
 
-func (g GeneratorFloat64Attribute) From() generatorschema.ToFromConversion {
+func (g GeneratorFloat64Attribute) From() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "Float64PointerValue",
-	}
+	}, nil
 }

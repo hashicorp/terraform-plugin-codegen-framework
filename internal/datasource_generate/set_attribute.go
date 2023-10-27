@@ -242,6 +242,47 @@ func (g GeneratorSetAttribute) AttrValue(name generatorschema.FrameworkIdentifie
 	return "basetypes.SetValue"
 }
 
+func (g GeneratorSetAttribute) To() (generatorschema.ToFromConversion, error) {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}, nil
+	}
+
+	elementGoType, err := generatorschema.ElementTypeGoType(g.ElementType)
+
+	if err != nil {
+		return generatorschema.ToFromConversion{}, err
+	}
+
+	return generatorschema.ToFromConversion{
+		CollectionType: generatorschema.CollectionFields{
+			GoType: fmt.Sprintf("[]%s", elementGoType),
+		},
+	}, nil
+}
+
+func (g GeneratorSetAttribute) From() (generatorschema.ToFromConversion, error) {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}, nil
+	}
+
+	elementType, err := generatorschema.ElementTypeString(g.ElementType)
+
+	if err != nil {
+		return generatorschema.ToFromConversion{}, err
+	}
+
+	return generatorschema.ToFromConversion{
+		CollectionType: generatorschema.CollectionFields{
+			ElementType:   elementType,
+			TypeValueFrom: "types.SetValueFrom",
+		},
+	}, nil
+}
+
 // CollectionType returns string representations of the element type (e.g., types.BoolType),
 // and type value function (e.g., types.SetValue) if there is no associated external type.
 func (g GeneratorSetAttribute) CollectionType() (map[string]string, error) {

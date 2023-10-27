@@ -948,7 +948,7 @@ func (t ListNestedAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Cont
 		attributes[k] = a
 	}
 
-	return NewListNestedAttributeAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedAttributeAssocExtTypeValueMust(ListNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
@@ -1330,7 +1330,7 @@ func (t ListNestedAttributeOneType) ValueFromTerraform(ctx context.Context, in t
 		attributes[k] = a
 	}
 
-	return NewListNestedAttributeOneValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedAttributeOneValueMust(ListNestedAttributeOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedAttributeOneType) ValueType(ctx context.Context) attr.Value {
@@ -1644,7 +1644,7 @@ func (t ListNestedAttributeThreeType) ValueFromTerraform(ctx context.Context, in
 		attributes[k] = a
 	}
 
-	return NewListNestedAttributeThreeValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedAttributeThreeValueMust(ListNestedAttributeThreeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedAttributeThreeType) ValueType(ctx context.Context) attr.Value {
@@ -1993,7 +1993,7 @@ func (t ListNestedAttributeThreeListNestedAttributeOneType) ValueFromTerraform(c
 		attributes[k] = a
 	}
 
-	return NewListNestedAttributeThreeListNestedAttributeOneValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedAttributeThreeListNestedAttributeOneValueMust(ListNestedAttributeThreeListNestedAttributeOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedAttributeThreeListNestedAttributeOneType) ValueType(ctx context.Context) attr.Value {
@@ -2325,7 +2325,7 @@ func (t ListNestedAttributeTwoType) ValueFromTerraform(ctx context.Context, in t
 		attributes[k] = a
 	}
 
-	return NewListNestedAttributeTwoValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedAttributeTwoValueMust(ListNestedAttributeTwoValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedAttributeTwoType) ValueType(ctx context.Context) attr.Value {
@@ -2674,7 +2674,7 @@ func (t ListNestedAttributeTwoListNestedAttributeOneType) ValueFromTerraform(ctx
 		attributes[k] = a
 	}
 
-	return NewListNestedAttributeTwoListNestedAttributeOneValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedAttributeTwoListNestedAttributeOneValueMust(ListNestedAttributeTwoListNestedAttributeOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedAttributeTwoListNestedAttributeOneType) ValueType(ctx context.Context) attr.Value {
@@ -3140,7 +3140,7 @@ func (t MapNestedAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Conte
 		attributes[k] = a
 	}
 
-	return NewMapNestedAttributeAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+	return NewMapNestedAttributeAssocExtTypeValueMust(MapNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t MapNestedAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
@@ -3674,7 +3674,7 @@ func (t SetNestedAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Conte
 		attributes[k] = a
 	}
 
-	return NewSetNestedAttributeAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+	return NewSetNestedAttributeAssocExtTypeValueMust(SetNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SetNestedAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
@@ -4208,7 +4208,7 @@ func (t SingleNestedAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Co
 		attributes[k] = a
 	}
 
-	return NewSingleNestedAttributeAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedAttributeAssocExtTypeValueMust(SingleNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
@@ -4590,7 +4590,7 @@ func (t SingleNestedAttributeOneType) ValueFromTerraform(ctx context.Context, in
 		attributes[k] = a
 	}
 
-	return NewSingleNestedAttributeOneValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedAttributeOneValueMust(SingleNestedAttributeOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedAttributeOneType) ValueType(ctx context.Context) attr.Value {
@@ -4904,7 +4904,7 @@ func (t SingleNestedAttributeThreeType) ValueFromTerraform(ctx context.Context, 
 		attributes[k] = a
 	}
 
-	return NewSingleNestedAttributeThreeValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedAttributeThreeValueMust(SingleNestedAttributeThreeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedAttributeThreeType) ValueType(ctx context.Context) attr.Value {
@@ -5245,7 +5245,7 @@ func (t SingleNestedAttributeThreeSingleNestedAttributeOneType) ValueFromTerrafo
 		attributes[k] = a
 	}
 
-	return NewSingleNestedAttributeThreeSingleNestedAttributeOneValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedAttributeThreeSingleNestedAttributeOneValueMust(SingleNestedAttributeThreeSingleNestedAttributeOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedAttributeThreeSingleNestedAttributeOneType) ValueType(ctx context.Context) attr.Value {
@@ -5577,7 +5577,7 @@ func (t SingleNestedAttributeTwoType) ValueFromTerraform(ctx context.Context, in
 		attributes[k] = a
 	}
 
-	return NewSingleNestedAttributeTwoValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedAttributeTwoValueMust(SingleNestedAttributeTwoValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedAttributeTwoType) ValueType(ctx context.Context) attr.Value {
@@ -5918,7 +5918,7 @@ func (t SingleNestedAttributeTwoSingleNestedAttributeOneType) ValueFromTerraform
 		attributes[k] = a
 	}
 
-	return NewSingleNestedAttributeTwoSingleNestedAttributeOneValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedAttributeTwoSingleNestedAttributeOneValueMust(SingleNestedAttributeTwoSingleNestedAttributeOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedAttributeTwoSingleNestedAttributeOneType) ValueType(ctx context.Context) attr.Value {
@@ -6384,7 +6384,7 @@ func (t ListNestedBlockAssocExtTypeType) ValueFromTerraform(ctx context.Context,
 		attributes[k] = a
 	}
 
-	return NewListNestedBlockAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedBlockAssocExtTypeValueMust(ListNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedBlockAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
@@ -6766,7 +6766,7 @@ func (t ListNestedBlockOneType) ValueFromTerraform(ctx context.Context, in tftyp
 		attributes[k] = a
 	}
 
-	return NewListNestedBlockOneValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedBlockOneValueMust(ListNestedBlockOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedBlockOneType) ValueType(ctx context.Context) attr.Value {
@@ -7118,7 +7118,7 @@ func (t ListNestedBlockThreeType) ValueFromTerraform(ctx context.Context, in tft
 		attributes[k] = a
 	}
 
-	return NewListNestedBlockThreeValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedBlockThreeValueMust(ListNestedBlockThreeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedBlockThreeType) ValueType(ctx context.Context) attr.Value {
@@ -7496,7 +7496,7 @@ func (t ListNestedBlockThreeListNestedBlockOneType) ValueFromTerraform(ctx conte
 		attributes[k] = a
 	}
 
-	return NewListNestedBlockThreeListNestedBlockOneValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedBlockThreeListNestedBlockOneValueMust(ListNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedBlockThreeListNestedBlockOneType) ValueType(ctx context.Context) attr.Value {
@@ -7828,7 +7828,7 @@ func (t ListNestedBlockTwoType) ValueFromTerraform(ctx context.Context, in tftyp
 		attributes[k] = a
 	}
 
-	return NewListNestedBlockTwoValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedBlockTwoValueMust(ListNestedBlockTwoValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedBlockTwoType) ValueType(ctx context.Context) attr.Value {
@@ -8177,7 +8177,7 @@ func (t ListNestedBlockTwoListNestedBlockOneType) ValueFromTerraform(ctx context
 		attributes[k] = a
 	}
 
-	return NewListNestedBlockTwoListNestedBlockOneValueMust(t.AttrTypes, attributes), nil
+	return NewListNestedBlockTwoListNestedBlockOneValueMust(ListNestedBlockTwoListNestedBlockOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t ListNestedBlockTwoListNestedBlockOneType) ValueType(ctx context.Context) attr.Value {
@@ -8643,7 +8643,7 @@ func (t SetNestedBlockAssocExtTypeType) ValueFromTerraform(ctx context.Context, 
 		attributes[k] = a
 	}
 
-	return NewSetNestedBlockAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+	return NewSetNestedBlockAssocExtTypeValueMust(SetNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SetNestedBlockAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
@@ -9177,7 +9177,7 @@ func (t SingleNestedBlockAssocExtTypeType) ValueFromTerraform(ctx context.Contex
 		attributes[k] = a
 	}
 
-	return NewSingleNestedBlockAssocExtTypeValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedBlockAssocExtTypeValueMust(SingleNestedBlockAssocExtTypeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedBlockAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
@@ -9559,7 +9559,7 @@ func (t SingleNestedBlockOneType) ValueFromTerraform(ctx context.Context, in tft
 		attributes[k] = a
 	}
 
-	return NewSingleNestedBlockOneValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedBlockOneValueMust(SingleNestedBlockOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedBlockOneType) ValueType(ctx context.Context) attr.Value {
@@ -9911,7 +9911,7 @@ func (t SingleNestedBlockThreeType) ValueFromTerraform(ctx context.Context, in t
 		attributes[k] = a
 	}
 
-	return NewSingleNestedBlockThreeValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedBlockThreeValueMust(SingleNestedBlockThreeValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedBlockThreeType) ValueType(ctx context.Context) attr.Value {
@@ -10289,7 +10289,7 @@ func (t SingleNestedBlockThreeListNestedBlockOneType) ValueFromTerraform(ctx con
 		attributes[k] = a
 	}
 
-	return NewSingleNestedBlockThreeListNestedBlockOneValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedBlockThreeListNestedBlockOneValueMust(SingleNestedBlockThreeListNestedBlockOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedBlockThreeListNestedBlockOneType) ValueType(ctx context.Context) attr.Value {
@@ -10621,7 +10621,7 @@ func (t SingleNestedBlockTwoType) ValueFromTerraform(ctx context.Context, in tft
 		attributes[k] = a
 	}
 
-	return NewSingleNestedBlockTwoValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedBlockTwoValueMust(SingleNestedBlockTwoValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedBlockTwoType) ValueType(ctx context.Context) attr.Value {
@@ -10962,7 +10962,7 @@ func (t SingleNestedBlockTwoSingleNestedBlockOneType) ValueFromTerraform(ctx con
 		attributes[k] = a
 	}
 
-	return NewSingleNestedBlockTwoSingleNestedBlockOneValueMust(t.AttrTypes, attributes), nil
+	return NewSingleNestedBlockTwoSingleNestedBlockOneValueMust(SingleNestedBlockTwoSingleNestedBlockOneValue{}.AttributeTypes(ctx), attributes), nil
 }
 
 func (t SingleNestedBlockTwoSingleNestedBlockOneType) ValueType(ctx context.Context) attr.Value {

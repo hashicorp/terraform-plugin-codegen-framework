@@ -231,26 +231,26 @@ func (g GeneratorInt64Attribute) AttrValue(name generatorschema.FrameworkIdentif
 	return "basetypes.Int64Value"
 }
 
-func (g GeneratorInt64Attribute) To() generatorschema.ToFromConversion {
+func (g GeneratorInt64Attribute) To() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "ValueInt64Pointer",
-	}
+	}, nil
 }
 
-func (g GeneratorInt64Attribute) From() generatorschema.ToFromConversion {
+func (g GeneratorInt64Attribute) From() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "Int64PointerValue",
-	}
+	}, nil
 }

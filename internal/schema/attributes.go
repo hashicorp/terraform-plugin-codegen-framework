@@ -169,7 +169,7 @@ func (g GeneratorAttributes) FromFuncs() map[string]ToFromConversion {
 
 	for _, k := range attributeKeys {
 		if a, ok := g[k].(From); ok {
-			fromFuncs[k] = a.From()
+			fromFuncs[k], _ = a.From()
 		}
 	}
 
@@ -214,7 +214,7 @@ func (g GeneratorAttributes) ToFuncs() map[string]ToFromConversion {
 
 	for _, k := range attributeKeys {
 		if a, ok := g[k].(To); ok {
-			toFuncs[k] = a.To()
+			toFuncs[k], _ = a.To()
 		}
 	}
 

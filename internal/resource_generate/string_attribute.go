@@ -231,26 +231,26 @@ func (g GeneratorStringAttribute) AttrValue(name generatorschema.FrameworkIdenti
 	return "basetypes.StringValue"
 }
 
-func (g GeneratorStringAttribute) To() generatorschema.ToFromConversion {
+func (g GeneratorStringAttribute) To() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "ValueStringPointer",
-	}
+	}, nil
 }
 
-func (g GeneratorStringAttribute) From() generatorschema.ToFromConversion {
+func (g GeneratorStringAttribute) From() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "StringPointerValue",
-	}
+	}, nil
 }

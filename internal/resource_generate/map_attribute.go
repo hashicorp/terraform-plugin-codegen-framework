@@ -276,6 +276,47 @@ func (g GeneratorMapAttribute) AttrValue(name generatorschema.FrameworkIdentifie
 	return "basetypes.MapValue"
 }
 
+func (g GeneratorMapAttribute) To() (generatorschema.ToFromConversion, error) {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}, nil
+	}
+
+	elementGoType, err := generatorschema.ElementTypeGoType(g.ElementType)
+
+	if err != nil {
+		return generatorschema.ToFromConversion{}, err
+	}
+
+	return generatorschema.ToFromConversion{
+		CollectionType: generatorschema.CollectionFields{
+			GoType: fmt.Sprintf("map[string]%s", elementGoType),
+		},
+	}, nil
+}
+
+func (g GeneratorMapAttribute) From() (generatorschema.ToFromConversion, error) {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}, nil
+	}
+
+	elementType, err := generatorschema.ElementTypeString(g.ElementType)
+
+	if err != nil {
+		return generatorschema.ToFromConversion{}, err
+	}
+
+	return generatorschema.ToFromConversion{
+		CollectionType: generatorschema.CollectionFields{
+			ElementType:   elementType,
+			TypeValueFrom: "types.MapValueFrom",
+		},
+	}, nil
+}
+
 // CollectionType returns string representations of the element type (e.g., types.BoolType),
 // and type value function (e.g., types.MapValue) if there is no associated external type.
 func (g GeneratorMapAttribute) CollectionType() (map[string]string, error) {

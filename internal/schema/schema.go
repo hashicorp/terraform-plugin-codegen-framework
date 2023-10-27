@@ -353,6 +353,27 @@ func ElementTypeString(elementType specschema.ElementType) (string, error) {
 	return "", errors.New("no matching element type found")
 }
 
+// ElementTypeGoType defaults to the defined pointer types on the basis of the
+// supplied elementType.
+// TODO: Provide a mechanism to allow mapping to be configured. For instance elementType.Float64 => float32
+// TODO: Implement for list, map, object, and set.
+func ElementTypeGoType(elementType specschema.ElementType) (string, error) {
+	switch {
+	case elementType.Bool != nil:
+		return "*bool", nil
+	case elementType.Float64 != nil:
+		return "*float64", nil
+	case elementType.Int64 != nil:
+		return "*int64", nil
+	case elementType.Number != nil:
+		return "*big.Float", nil
+	case elementType.String != nil:
+		return "*string", nil
+	}
+
+	return "", errors.New("no matching element type found")
+}
+
 func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) {
 	var attrTypesStr []string
 

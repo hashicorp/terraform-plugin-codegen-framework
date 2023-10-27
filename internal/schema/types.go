@@ -73,16 +73,23 @@ type ToFrom interface {
 }
 
 type ToFromConversion struct {
-	Default      string
-	AssocExtType *AssocExtType
+	Default        string
+	AssocExtType   *AssocExtType
+	CollectionType CollectionFields
+}
+
+type CollectionFields struct {
+	ElementType   string
+	GoType        string
+	TypeValueFrom string
 }
 
 type To interface {
-	To() ToFromConversion
+	To() (ToFromConversion, error)
 }
 
 type From interface {
-	From() ToFromConversion
+	From() (ToFromConversion, error)
 }
 
 type Type int64

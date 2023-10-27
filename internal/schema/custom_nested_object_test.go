@@ -402,7 +402,7 @@ return nil, err
 attributes[k] = a
 }
 
-return NewExampleValueMust(t.AttrTypes, attributes), nil
+return NewExampleValueMust(ExampleValue{}.AttributeTypes(ctx), attributes), nil
 }`),
 		},
 	}

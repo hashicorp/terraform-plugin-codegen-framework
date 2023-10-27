@@ -220,26 +220,26 @@ func (g GeneratorNumberAttribute) AttrValue(name generatorschema.FrameworkIdenti
 	return "basetypes.NumberValue"
 }
 
-func (g GeneratorNumberAttribute) To() generatorschema.ToFromConversion {
+func (g GeneratorNumberAttribute) To() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "ValueBigFloat",
-	}
+	}, nil
 }
 
-func (g GeneratorNumberAttribute) From() generatorschema.ToFromConversion {
+func (g GeneratorNumberAttribute) From() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "NumberValue",
-	}
+	}, nil
 }

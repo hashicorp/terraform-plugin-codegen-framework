@@ -23,6 +23,17 @@ diags.Append(d...)
 if diags.HasError() {
 return nil, diags
 }
+{{- else if $value.CollectionType.GoType}}
+
+var {{$key.ToCamelCase}}Field {{$value.CollectionType.GoType}}
+
+d := v.{{$key.ToPascalCase}}.ElementsAs(ctx, &{{$key.ToCamelCase}}Field, false)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return nil, diags
+}
 {{- end}}
 {{- end}}
 
@@ -32,6 +43,8 @@ return &{{.AssocExtType.TypeReference}}{
 {{$key.ToPascalCase}}: {{$value.AssocExtType.ToCamelCase}},
 {{- else if $value.Default}}
 {{$key.ToPascalCase}}: v.{{$key.ToPascalCase}}.{{$value.Default}}(),
+{{- else if $value.CollectionType}}
+{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Field,
 {{- end}}
 {{- end}}
 }, diags
