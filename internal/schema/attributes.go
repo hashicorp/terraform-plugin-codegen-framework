@@ -75,38 +75,10 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 		}
 
 		switch g[k].GeneratorSchemaType() {
-		case GeneratorBoolAttribute:
-			attrTypes[k] = "basetypes.BoolType{}"
-		case GeneratorFloat64Attribute:
-			attrTypes[k] = "basetypes.Float64Type{}"
-		case GeneratorInt64Attribute:
-			attrTypes[k] = "basetypes.Int64Type{}"
-		case GeneratorListAttribute:
-			if e, ok := g[k].(Elements); ok {
-				elemType, err := ElementTypeString(e.ElemType())
-				if err != nil {
-					return nil, err
-				}
-				attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %s,\n}", elemType)
-			} else {
-				return nil, fmt.Errorf("%s attribute is a ListType but does not implement Elements interface", k)
-			}
 		case GeneratorListNestedAttribute:
 			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
-		case GeneratorMapAttribute:
-			if e, ok := g[k].(Elements); ok {
-				elemType, err := ElementTypeString(e.ElemType())
-				if err != nil {
-					return nil, err
-				}
-				attrTypes[k] = fmt.Sprintf("basetypes.MapType{\nElemType: %s,\n}", elemType)
-			} else {
-				return nil, fmt.Errorf("%s attribute is a MapType but does not implement Elements interface", k)
-			}
 		case GeneratorMapNestedAttribute:
 			attrTypes[k] = fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
-		case GeneratorNumberAttribute:
-			attrTypes[k] = "basetypes.NumberType{}"
 		case GeneratorObjectAttribute:
 			if o, ok := g[k].(Attrs); ok {
 				aTypes, err := AttrTypesString(o.AttrTypes())
@@ -117,22 +89,10 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 			} else {
 				return nil, fmt.Errorf("%s attribute is an ObjectType but does not implement Attrs interface", k)
 			}
-		case GeneratorSetAttribute:
-			if e, ok := g[k].(Elements); ok {
-				elemType, err := ElementTypeString(e.ElemType())
-				if err != nil {
-					return nil, err
-				}
-				attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %s,\n}", elemType)
-			} else {
-				return nil, fmt.Errorf("%s attribute is a SetType but does not implement Elements interface", k)
-			}
 		case GeneratorSetNestedAttribute:
 			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorSingleNestedAttribute:
 			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", name.ToPascalCase())
-		case GeneratorStringAttribute:
-			attrTypes[k] = "basetypes.StringType{}"
 		}
 	}
 
@@ -153,32 +113,16 @@ func (g GeneratorAttributes) AttrValues() (map[string]string, error) {
 		}
 
 		switch g[k].GeneratorSchemaType() {
-		case GeneratorBoolAttribute:
-			attrValues[k] = "basetypes.BoolValue"
-		case GeneratorFloat64Attribute:
-			attrValues[k] = "basetypes.Float64Value"
-		case GeneratorInt64Attribute:
-			attrValues[k] = "basetypes.Int64Value"
-		case GeneratorListAttribute:
-			attrValues[k] = "basetypes.ListValue"
 		case GeneratorListNestedAttribute:
 			attrValues[k] = "basetypes.ListValue"
-		case GeneratorMapAttribute:
-			attrValues[k] = "basetypes.MapValue"
 		case GeneratorMapNestedAttribute:
 			attrValues[k] = "basetypes.MapValue"
-		case GeneratorNumberAttribute:
-			attrValues[k] = "basetypes.NumberValue"
 		case GeneratorObjectAttribute:
 			attrValues[k] = "basetypes.ObjectValue"
-		case GeneratorSetAttribute:
-			attrValues[k] = "basetypes.SetValue"
 		case GeneratorSetNestedAttribute:
 			attrValues[k] = "basetypes.SetValue"
 		case GeneratorSingleNestedAttribute:
 			attrValues[k] = "basetypes.ObjectValue"
-		case GeneratorStringAttribute:
-			attrValues[k] = "basetypes.StringValue"
 		}
 	}
 
