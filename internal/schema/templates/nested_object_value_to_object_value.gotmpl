@@ -59,6 +59,26 @@ v.{{$key.ToPascalCase}}.Attributes(),
 }
 {{end}}
 {{- end}}
+var diags diag.Diagnostics
+
+{{- range $key, $value := .CollectionTypes }}
+{{- $collectionVal := index $.CollectionTypes $key}}
+{{- if $collectionVal.ElementType}}
+
+{{$key.ToCamelCase}}Val, d := {{$collectionVal.TypeValueFunc}}({{$collectionVal.ElementType}}, v.{{$key.ToPascalCase}}.Elements())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+{{- range $attrTypeKey, $attrTypeValue := $.AttrTypes}}
+"{{$attrTypeKey}}": {{$attrTypeValue}},
+{{- end}}
+}), diags
+}
+{{- end}}
+{{- end}}
+
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
 {{- range $key, $value := .AttributeTypes }}
@@ -69,8 +89,13 @@ map[string]attr.Value{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested" "SingleNested"}}
 "{{$key}}": {{$key.ToCamelCase}},
+{{- else if index $.CollectionTypes $key}} // This is always true
+{{- $collectionVal := index $.CollectionTypes $key}}
+{{- if $collectionVal.ElementType}}
+"{{$key}}": {{$key.ToCamelCase}}Val,
 {{- else}}
 "{{$key}}": v.{{$key.ToPascalCase}},
+{{- end}}
 {{- end}}
 {{- end}}
 })
