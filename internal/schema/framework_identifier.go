@@ -48,14 +48,14 @@ func (identifier FrameworkIdentifier) ToCamelCase() string {
 // Example:
 //   - equal(something) -> somethingEqual
 //   - type(something) -> somethingType
-func (identifier FrameworkIdentifier) ToPrefixCamelCase(name string) string {
+func (identifier FrameworkIdentifier) ToPrefixCamelCase(prefix string) string {
 	pascalCase := identifier.ToPascalCase()
 
 	methodNames := identifier.methodNames()
 
 	for _, v := range methodNames {
 		if pascalCase == v {
-			return FrameworkIdentifier(name + pascalCase).ToCamelCase()
+			return FrameworkIdentifier(prefix + pascalCase).ToCamelCase()
 		}
 	}
 
@@ -77,14 +77,14 @@ func (identifier FrameworkIdentifier) ToPascalCase() string {
 // Example:
 //   - equal(something) -> SomethingEqual
 //   - type(something) -> SomethingType
-func (identifier FrameworkIdentifier) ToPrefixPascalCase(name string) string {
+func (identifier FrameworkIdentifier) ToPrefixPascalCase(prefix string) string {
 	pascalCase := identifier.ToPascalCase()
 
 	methodNames := identifier.methodNames()
 
 	for _, v := range methodNames {
 		if pascalCase == v {
-			return FrameworkIdentifier(name).ToPascalCase() + pascalCase
+			return FrameworkIdentifier(prefix).ToPascalCase() + pascalCase
 		}
 	}
 

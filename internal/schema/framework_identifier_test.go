@@ -136,35 +136,35 @@ func TestFrameworkIdentifier_ToPrefixCamelCase(t *testing.T) {
 		},
 		"attribute_types": {
 			identifier: "attribute_types",
-			want:       "nameAttributeTypes",
+			want:       "prefixAttributeTypes",
 		},
 		"equal": {
 			identifier: "Equal",
-			want:       "nameEqual",
+			want:       "prefixEqual",
 		},
 		"is_null": {
 			identifier: "is_null",
-			want:       "nameIsNull",
+			want:       "prefixIsNull",
 		},
 		"is_unknown": {
 			identifier: "is_unknown",
-			want:       "nameIsUnknown",
+			want:       "prefixIsUnknown",
 		},
 		"string": {
 			identifier: "string",
-			want:       "nameString",
+			want:       "prefixString",
 		},
 		"to_object_value": {
 			identifier: "to_object_value",
-			want:       "nameToObjectValue",
+			want:       "prefixToObjectValue",
 		},
 		"to_terraform_value": {
 			identifier: "to_terraform_value",
-			want:       "nameToTerraformValue",
+			want:       "prefixToTerraformValue",
 		},
 		"type": {
 			identifier: "type",
-			want:       "nameType",
+			want:       "prefixType",
 		},
 	}
 	for name, testCase := range testCases {
@@ -172,7 +172,7 @@ func TestFrameworkIdentifier_ToPrefixCamelCase(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := testCase.identifier.ToPrefixCamelCase("name")
+			got := testCase.identifier.ToPrefixCamelCase("prefix")
 			if got != testCase.want {
 				t.Fatalf("expected ToCamelCase() to return %s, got %s", testCase.want, got)
 			}
@@ -250,35 +250,35 @@ func TestFrameworkIdentifier_ToPrefixPascalCase(t *testing.T) {
 		},
 		"attribute_types": {
 			identifier: "attribute_types",
-			want:       "NameAttributeTypes",
+			want:       "PrefixAttributeTypes",
 		},
 		"equal": {
 			identifier: "Equal",
-			want:       "NameEqual",
+			want:       "PrefixEqual",
 		},
 		"is_null": {
 			identifier: "is_null",
-			want:       "NameIsNull",
+			want:       "PrefixIsNull",
 		},
 		"is_unknown": {
 			identifier: "is_unknown",
-			want:       "NameIsUnknown",
+			want:       "PrefixIsUnknown",
 		},
 		"string": {
 			identifier: "string",
-			want:       "NameString",
+			want:       "PrefixString",
 		},
 		"to_object_value": {
 			identifier: "to_object_value",
-			want:       "NameToObjectValue",
+			want:       "PrefixToObjectValue",
 		},
 		"to_terraform_value": {
 			identifier: "to_terraform_value",
-			want:       "NameToTerraformValue",
+			want:       "PrefixToTerraformValue",
 		},
 		"type": {
 			identifier: "type",
-			want:       "NameType",
+			want:       "PrefixType",
 		},
 	}
 	for name, testCase := range testCases {
@@ -286,7 +286,7 @@ func TestFrameworkIdentifier_ToPrefixPascalCase(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := testCase.identifier.ToPrefixPascalCase("name")
+			got := testCase.identifier.ToPrefixPascalCase("prefix")
 			if got != testCase.want {
 				t.Fatalf("expected ToPascalCase() to return %s, got %s", testCase.want, got)
 			}
