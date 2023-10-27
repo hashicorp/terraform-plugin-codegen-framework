@@ -62,10 +62,8 @@ v.{{$key.ToPascalCase}}.Attributes(),
 var diags diag.Diagnostics
 
 {{- range $key, $value := .CollectionTypes }}
-{{- $collectionVal := index $.CollectionTypes $key}}
-{{- if $collectionVal.ElementType}}
 
-{{$key.ToCamelCase}}Val, d := {{$collectionVal.TypeValueFunc}}({{$collectionVal.ElementType}}, v.{{$key.ToPascalCase}}.Elements())
+{{$key.ToCamelCase}}Val, d := {{$value.TypeValueFunc}}({{$value.ElementType}}, v.{{$key.ToPascalCase}}.Elements())
 
 diags.Append(d...)
 
@@ -76,7 +74,6 @@ return types.ObjectUnknown(map[string]attr.Type{
 {{- end}}
 }), diags
 }
-{{- end}}
 {{- end}}
 
 objVal, diags := types.ObjectValue(
@@ -89,13 +86,10 @@ map[string]attr.Value{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested" "SingleNested"}}
 "{{$key}}": {{$key.ToCamelCase}},
-{{- else if index $.CollectionTypes $key}} // This is always true
-{{- $collectionVal := index $.CollectionTypes $key}}
-{{- if $collectionVal.ElementType}}
+{{- else if index $.CollectionTypes $key}}
 "{{$key}}": {{$key.ToCamelCase}}Val,
 {{- else}}
 "{{$key}}": v.{{$key.ToPascalCase}},
-{{- end}}
 {{- end}}
 {{- end}}
 })

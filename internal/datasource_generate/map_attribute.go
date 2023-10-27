@@ -217,3 +217,22 @@ func (g GeneratorMapAttribute) ToFromFunctions(name string) ([]byte, error) {
 
 	return b, nil
 }
+
+// CollectionType returns string representations of the element type (e.g., types.BoolType),
+// and type value function (e.g., types.MapValue) if there is no associated external type.
+func (g GeneratorMapAttribute) CollectionType() (map[string]string, error) {
+	if g.AssociatedExternalType != nil {
+		return nil, nil
+	}
+
+	elementType, err := generatorschema.ElementTypeString(g.ElemType())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return map[string]string{
+		"ElementType":   elementType,
+		"TypeValueFunc": "types.MapValue",
+	}, nil
+}

@@ -200,7 +200,13 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 		return nil, err
 	}
 
-	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues)
+	attributeCollectionTypes, err := g.NestedObject.Attributes.CollectionTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues, attributeCollectionTypes)
 
 	b, err = objectValue.Render()
 

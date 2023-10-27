@@ -46,6 +46,10 @@ type AttrValue interface {
 	AttrValue(FrameworkIdentifier) string
 }
 
+type CollectionType interface {
+	CollectionType() (map[string]string, error)
+}
+
 type GeneratorBlock interface {
 	Equal(GeneratorBlock) bool
 	GeneratorSchemaType() Type

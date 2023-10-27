@@ -185,6 +185,37 @@ func (g GeneratorAttributes) AttrValues() (map[string]string, error) {
 	return attrValues, nil
 }
 
+// CollectionTypes returns a mapping of attribute names to string representations of the
+// element type (e.g., types.BoolType), and type value function (e.g., types.ListValue)
+// for collection types that do not have an associated external type.
+func (g GeneratorAttributes) CollectionTypes() (map[string]map[string]string, error) {
+	attributeKeys := g.SortedKeys()
+
+	collectionTypes := make(map[string]map[string]string, len(g))
+
+	for _, k := range attributeKeys {
+		c, ok := g[k].(CollectionType)
+
+		if !ok {
+			continue
+		}
+
+		collectionType, err := c.CollectionType()
+
+		if err != nil {
+			return nil, err
+		}
+
+		if collectionType == nil {
+			continue
+		}
+
+		collectionTypes[k] = collectionType
+	}
+
+	return collectionTypes, nil
+}
+
 // FromFuncs returns a mapping of attribute names to string representations of the
 // function that converts a Go value to a framework value.
 func (g GeneratorAttributes) FromFuncs() map[string]ToFromConversion {
