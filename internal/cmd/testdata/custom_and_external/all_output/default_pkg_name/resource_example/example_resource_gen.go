@@ -692,6 +692,8 @@ func (v ListNestedAttributeAssocExtTypeValue) String() string {
 }
 
 func (v ListNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -1224,6 +1226,8 @@ func (v MapNestedAttributeAssocExtTypeValue) String() string {
 }
 
 func (v MapNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -1756,6 +1760,8 @@ func (v SetNestedAttributeAssocExtTypeValue) String() string {
 }
 
 func (v SetNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -2288,6 +2294,8 @@ func (v SingleNestedAttributeAssocExtTypeValue) String() string {
 }
 
 func (v SingleNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -2820,6 +2828,8 @@ func (v ListNestedBlockAssocExtTypeValue) String() string {
 }
 
 func (v ListNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -3352,6 +3362,8 @@ func (v SetNestedBlockAssocExtTypeValue) String() string {
 }
 
 func (v SetNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -3884,6 +3896,8 @@ func (v SingleNestedBlockAssocExtTypeValue) String() string {
 }
 
 func (v SingleNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},

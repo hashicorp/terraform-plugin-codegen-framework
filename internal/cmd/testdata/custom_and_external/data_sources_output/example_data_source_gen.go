@@ -1051,6 +1051,8 @@ func (v ListNestedAttributeAssocExtTypeValue) String() string {
 }
 
 func (v ListNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -1391,6 +1393,8 @@ func (v ListNestedAttributeOneValue) String() string {
 }
 
 func (v ListNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute": basetypes.BoolType{},
@@ -1705,6 +1709,8 @@ func (v ListNestedAttributeThreeValue) String() string {
 }
 
 func (v ListNestedAttributeThreeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	listNestedAttributeThreeListNestedAttributeOne := types.ListValueMust(
 		ListNestedAttributeThreeListNestedAttributeOneType{
 			basetypes.ObjectType{
@@ -2052,6 +2058,20 @@ func (v ListNestedAttributeThreeListNestedAttributeOneValue) String() string {
 }
 
 func (v ListNestedAttributeThreeListNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	listAttributeVal, d := types.ListValue(types.StringType, v.ListAttribute.Elements())
+
+	diags.Append(d...)
+
+	if d.HasError() {
+		return types.ObjectUnknown(map[string]attr.Type{
+			"list_attribute": basetypes.ListType{
+				ElemType: types.StringType,
+			},
+		}), diags
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"list_attribute": basetypes.ListType{
@@ -2059,7 +2079,7 @@ func (v ListNestedAttributeThreeListNestedAttributeOneValue) ToObjectValue(ctx c
 			},
 		},
 		map[string]attr.Value{
-			"list_attribute": v.ListAttribute,
+			"list_attribute": listAttributeVal,
 		})
 
 	return objVal, diags
@@ -2370,6 +2390,8 @@ func (v ListNestedAttributeTwoValue) String() string {
 }
 
 func (v ListNestedAttributeTwoValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	listNestedAttributeTwoListNestedAttributeOne := types.ListValueMust(
 		ListNestedAttributeTwoListNestedAttributeOneType{
 			basetypes.ObjectType{
@@ -2715,6 +2737,8 @@ func (v ListNestedAttributeTwoListNestedAttributeOneValue) String() string {
 }
 
 func (v ListNestedAttributeTwoListNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute": basetypes.BoolType{},
@@ -3219,6 +3243,8 @@ func (v MapNestedAttributeAssocExtTypeValue) String() string {
 }
 
 func (v MapNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -3751,6 +3777,8 @@ func (v SetNestedAttributeAssocExtTypeValue) String() string {
 }
 
 func (v SetNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -4283,6 +4311,8 @@ func (v SingleNestedAttributeAssocExtTypeValue) String() string {
 }
 
 func (v SingleNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -4623,6 +4653,8 @@ func (v SingleNestedAttributeOneValue) String() string {
 }
 
 func (v SingleNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute": basetypes.BoolType{},
@@ -4937,6 +4969,8 @@ func (v SingleNestedAttributeThreeValue) String() string {
 }
 
 func (v SingleNestedAttributeThreeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var singleNestedAttributeThreeSingleNestedAttributeOne basetypes.ObjectValue
 
 	if v.SingleNestedAttributeThreeSingleNestedAttributeOne.IsNull() {
@@ -5276,6 +5310,20 @@ func (v SingleNestedAttributeThreeSingleNestedAttributeOneValue) String() string
 }
 
 func (v SingleNestedAttributeThreeSingleNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	listAttributeVal, d := types.ListValue(types.StringType, v.ListAttribute.Elements())
+
+	diags.Append(d...)
+
+	if d.HasError() {
+		return types.ObjectUnknown(map[string]attr.Type{
+			"list_attribute": basetypes.ListType{
+				ElemType: types.StringType,
+			},
+		}), diags
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"list_attribute": basetypes.ListType{
@@ -5283,7 +5331,7 @@ func (v SingleNestedAttributeThreeSingleNestedAttributeOneValue) ToObjectValue(c
 			},
 		},
 		map[string]attr.Value{
-			"list_attribute": v.ListAttribute,
+			"list_attribute": listAttributeVal,
 		})
 
 	return objVal, diags
@@ -5594,6 +5642,8 @@ func (v SingleNestedAttributeTwoValue) String() string {
 }
 
 func (v SingleNestedAttributeTwoValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var singleNestedAttributeTwoSingleNestedAttributeOne basetypes.ObjectValue
 
 	if v.SingleNestedAttributeTwoSingleNestedAttributeOne.IsNull() {
@@ -5931,6 +5981,8 @@ func (v SingleNestedAttributeTwoSingleNestedAttributeOneValue) String() string {
 }
 
 func (v SingleNestedAttributeTwoSingleNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute": basetypes.BoolType{},
@@ -6435,6 +6487,8 @@ func (v ListNestedBlockAssocExtTypeValue) String() string {
 }
 
 func (v ListNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -6775,6 +6829,8 @@ func (v ListNestedBlockOneValue) String() string {
 }
 
 func (v ListNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute": basetypes.BoolType{},
@@ -7141,6 +7197,8 @@ func (v ListNestedBlockThreeValue) String() string {
 }
 
 func (v ListNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	listNestedBlockThreeListNestedBlockOne := types.ListValueMust(
 		ListNestedBlockThreeListNestedBlockOneType{
 			basetypes.ObjectType{
@@ -7503,6 +7561,20 @@ func (v ListNestedBlockThreeListNestedBlockOneValue) String() string {
 }
 
 func (v ListNestedBlockThreeListNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	listAttributeVal, d := types.ListValue(types.StringType, v.ListAttribute.Elements())
+
+	diags.Append(d...)
+
+	if d.HasError() {
+		return types.ObjectUnknown(map[string]attr.Type{
+			"list_attribute": basetypes.ListType{
+				ElemType: types.StringType,
+			},
+		}), diags
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"list_attribute": basetypes.ListType{
@@ -7510,7 +7582,7 @@ func (v ListNestedBlockThreeListNestedBlockOneValue) ToObjectValue(ctx context.C
 			},
 		},
 		map[string]attr.Value{
-			"list_attribute": v.ListAttribute,
+			"list_attribute": listAttributeVal,
 		})
 
 	return objVal, diags
@@ -7821,6 +7893,8 @@ func (v ListNestedBlockTwoValue) String() string {
 }
 
 func (v ListNestedBlockTwoValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	listNestedBlockTwoListNestedBlockOne := types.ListValueMust(
 		ListNestedBlockTwoListNestedBlockOneType{
 			basetypes.ObjectType{
@@ -8166,6 +8240,8 @@ func (v ListNestedBlockTwoListNestedBlockOneValue) String() string {
 }
 
 func (v ListNestedBlockTwoListNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute": basetypes.BoolType{},
@@ -8670,6 +8746,8 @@ func (v SetNestedBlockAssocExtTypeValue) String() string {
 }
 
 func (v SetNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -9202,6 +9280,8 @@ func (v SingleNestedBlockAssocExtTypeValue) String() string {
 }
 
 func (v SingleNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute":    basetypes.BoolType{},
@@ -9542,6 +9622,8 @@ func (v SingleNestedBlockOneValue) String() string {
 }
 
 func (v SingleNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute": basetypes.BoolType{},
@@ -9908,6 +9990,8 @@ func (v SingleNestedBlockThreeValue) String() string {
 }
 
 func (v SingleNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	singleNestedBlockThreeListNestedBlockOne := types.ListValueMust(
 		SingleNestedBlockThreeListNestedBlockOneType{
 			basetypes.ObjectType{
@@ -10270,6 +10354,20 @@ func (v SingleNestedBlockThreeListNestedBlockOneValue) String() string {
 }
 
 func (v SingleNestedBlockThreeListNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	listAttributeVal, d := types.ListValue(types.StringType, v.ListAttribute.Elements())
+
+	diags.Append(d...)
+
+	if d.HasError() {
+		return types.ObjectUnknown(map[string]attr.Type{
+			"list_attribute": basetypes.ListType{
+				ElemType: types.StringType,
+			},
+		}), diags
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"list_attribute": basetypes.ListType{
@@ -10277,7 +10375,7 @@ func (v SingleNestedBlockThreeListNestedBlockOneValue) ToObjectValue(ctx context
 			},
 		},
 		map[string]attr.Value{
-			"list_attribute": v.ListAttribute,
+			"list_attribute": listAttributeVal,
 		})
 
 	return objVal, diags
@@ -10588,6 +10686,8 @@ func (v SingleNestedBlockTwoValue) String() string {
 }
 
 func (v SingleNestedBlockTwoValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var singleNestedBlockTwoSingleNestedBlockOne basetypes.ObjectValue
 
 	if v.SingleNestedBlockTwoSingleNestedBlockOne.IsNull() {
@@ -10925,6 +11025,8 @@ func (v SingleNestedBlockTwoSingleNestedBlockOneValue) String() string {
 }
 
 func (v SingleNestedBlockTwoSingleNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"bool_attribute": basetypes.BoolType{},

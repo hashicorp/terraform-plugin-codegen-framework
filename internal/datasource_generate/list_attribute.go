@@ -218,6 +218,30 @@ func (g GeneratorListAttribute) ToFromFunctions(name string) ([]byte, error) {
 	return b, nil
 }
 
+// AttrType returns a string representation of a basetypes.ListTypable type.
+func (g GeneratorListAttribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
+	}
+
+	elemType, err := generatorschema.ElementTypeString(g.ElemType())
+
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("basetypes.ListType{\nElemType: %s,\n}", elemType), nil
+}
+
+// AttrValue returns a string representation of a basetypes.ListValuable type.
+func (g GeneratorListAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sValue", name.ToPascalCase())
+	}
+
+	return "basetypes.ListValue"
+}
+
 // CollectionType returns string representations of the element type (e.g., types.BoolType),
 // and type value function (e.g., types.ListValue) if there is no associated external type.
 func (g GeneratorListAttribute) CollectionType() (map[string]string, error) {
