@@ -87,6 +87,44 @@ state: attr.ValueStateKnown,
 }
 `),
 		},
+		"collection-type": {
+			name: "Example",
+			assocExtType: &AssocExtType{
+				AssociatedExternalType: &schema.AssociatedExternalType{
+					Type: "*apisdk.Type",
+				},
+			},
+			fromFuncs: map[string]ToFromConversion{
+				"bool_attribute": {
+					CollectionType: CollectionFields{
+						ElementType:   "types.BoolType",
+						TypeValueFrom: "types.ListValueFrom",
+					},
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ExampleValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return NewExampleValueNull(), diags
+}
+
+boolAttributeVal, d := types.ListValueFrom(ctx, types.BoolType, apiObject.BoolAttribute)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return NewExampleValueUnknown(), diags
+}
+
+return ExampleValue{
+BoolAttribute: boolAttributeVal,
+state: attr.ValueStateKnown,
+}, diags
+}
+`),
+		},
 	}
 
 	for name, testCase := range testCases {
@@ -201,6 +239,54 @@ return nil, diags
 
 return &apisdk.Type{
 BoolAttribute: apiBoolAttribute,
+}, diags
+}`),
+		},
+		"collection-type": {
+			name: "Example",
+			assocExtType: &AssocExtType{
+				&schema.AssociatedExternalType{
+					Import: &code.Import{
+						Path: "example.com/apisdk",
+					},
+					Type: "*apisdk.Type",
+				},
+			},
+			toFuncs: map[string]ToFromConversion{
+				"bool_attribute": {
+					CollectionType: CollectionFields{
+						GoType: "[]*bool",
+					},
+				},
+			},
+			expected: []byte(`func (v ExampleValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if v.IsNull() {
+return nil, diags
+}
+
+if v.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue Value Is Unknown",
+` + "`" + `"ExampleValue" is unknown.` + "`" + `,
+))
+
+return nil, diags
+}
+
+var boolAttributeField []*bool
+
+d := v.BoolAttribute.ElementsAs(ctx, &boolAttributeField, false)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+return &apisdk.Type{
+BoolAttribute: boolAttributeField,
 }, diags
 }`),
 		},

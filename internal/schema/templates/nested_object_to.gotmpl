@@ -43,7 +43,7 @@ return &{{.AssocExtType.TypeReference}}{
 {{$key.ToPascalCase}}: {{$value.AssocExtType.ToCamelCase}},
 {{- else if $value.Default}}
 {{$key.ToPascalCase}}: v.{{$key.ToPascalCase}}.{{$value.Default}}(),
-{{- else if $value.CollectionType}}
+{{- else if $value.CollectionType.GoType}}
 {{$key.ToPascalCase}}: {{$key.ToCamelCase}}Field,
 {{- end}}
 {{- end}}

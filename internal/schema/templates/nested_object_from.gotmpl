@@ -16,6 +16,7 @@ if diags.HasError() {
 return New{{$.Name}}ValueUnknown(), diags
 }
 {{- else if $value.CollectionType.ElementType}}
+
 {{$key.ToCamelCase}}Val, d := {{$value.CollectionType.TypeValueFrom}}(ctx, {{$value.CollectionType.ElementType}}, apiObject.{{$key.ToPascalCase}})
 
 diags.Append(d...)

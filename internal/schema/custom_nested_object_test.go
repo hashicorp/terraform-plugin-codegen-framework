@@ -825,11 +825,12 @@ func TestCustomNestedObjectValue_renderToObjectValue(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		name           string
-		attributeTypes map[string]string
-		attrTypes      map[string]string
-		expected       []byte
-		expectedError  error
+		name            string
+		attributeTypes  map[string]string
+		attrTypes       map[string]string
+		collectionTypes map[string]map[string]string
+		expected        []byte
+		expectedError   error
 	}{
 		"default": {
 			name: "Example",
@@ -854,6 +855,49 @@ map[string]attr.Value{
 return objVal, diags
 }`),
 		},
+		"collection-type": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"list_attribute": "List",
+			},
+			attrTypes: map[string]string{
+				"list_attribute": "basetypes.ListType{\nElemType: types.BoolType,\n}",
+			},
+			collectionTypes: map[string]map[string]string{
+				"list_attribute": {
+					"ElementType":   "types.BoolType",
+					"TypeValueFunc": "types.ListValue",
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+listAttributeVal, d := types.ListValue(types.BoolType, v.ListAttribute.Elements())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"list_attribute": basetypes.ListType{
+ElemType: types.BoolType,
+},
+}), diags
+}
+
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+"list_attribute": basetypes.ListType{
+ElemType: types.BoolType,
+},
+},
+map[string]attr.Value{
+"list_attribute": listAttributeVal,
+})
+
+return objVal, diags
+}`),
+		},
 	}
 
 	for name, testCase := range testCases {
@@ -862,7 +906,7 @@ return objVal, diags
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil, testCase.collectionTypes)
 
 			got, err := customObjectValue.renderToObjectValue()
 
