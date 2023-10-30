@@ -216,14 +216,14 @@ func (g GeneratorMapAttribute) ToFromFunctions(name string) ([]byte, error) {
 
 // AttrType returns a string representation of a basetypes.MapTypable type.
 func (g GeneratorMapAttribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
-	if g.AssociatedExternalType != nil {
-		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
-	}
-
 	elemType, err := generatorschema.ElementTypeString(g.ElemType())
 
 	if err != nil {
 		return "", err
+	}
+
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sType{\nbasetypes.MapType{\nElemType: %s,\n}}", name.ToPascalCase(), elemType), nil
 	}
 
 	return fmt.Sprintf("basetypes.MapType{\nElemType: %s,\n}", elemType), nil
