@@ -418,3 +418,72 @@ func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 
 	return strings.Join(attrTypesStr, ",\n"), nil
 }
+
+func ObjectFieldTo(o specschema.ObjectAttributeType) (ObjectField, error) {
+	switch {
+	case o.Bool != nil:
+		return ObjectField{
+			GoType: "*bool",
+			Type:   "types.Bool",
+			ToFunc: "ValueBoolPointer",
+		}, nil
+	case o.Float64 != nil:
+		return ObjectField{
+			GoType: "*float64",
+			Type:   "types.Float64",
+			ToFunc: "ValueFloat64Pointer",
+		}, nil
+	case o.Int64 != nil:
+		return ObjectField{
+			GoType: "*int64",
+			Type:   "types.Int64",
+			ToFunc: "ValueInt64Pointer",
+		}, nil
+	case o.Number != nil:
+		return ObjectField{
+			GoType: "*big.Float",
+			Type:   "types.Number",
+			ToFunc: "ValueBigFloat",
+		}, nil
+	case o.String != nil:
+		return ObjectField{
+			GoType: "*string",
+			Type:   "types.String",
+			ToFunc: "ValueStringPointer",
+		}, nil
+	}
+
+	return ObjectField{}, errors.New("no matching object attribute type found")
+}
+
+func ObjectFieldFrom(o specschema.ObjectAttributeType) (ObjectField, error) {
+	switch {
+	case o.Bool != nil:
+		return ObjectField{
+			Type:     "types.BoolType",
+			FromFunc: "BoolPointerValue",
+		}, nil
+	case o.Float64 != nil:
+		return ObjectField{
+			Type:     "types.Float64Type",
+			FromFunc: "Float64PointerValue",
+		}, nil
+	case o.Int64 != nil:
+		return ObjectField{
+			Type:     "types.Int64Type",
+			FromFunc: "Int64PointerValue",
+		}, nil
+	case o.Number != nil:
+		return ObjectField{
+			Type:     "types.NumberType",
+			FromFunc: "NumberValue",
+		}, nil
+	case o.String != nil:
+		return ObjectField{
+			Type:     "types.StringType",
+			FromFunc: "StringPointerValue",
+		}, nil
+	}
+
+	return ObjectField{}, errors.New("no matching object attribute type found")
+}

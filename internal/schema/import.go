@@ -14,6 +14,7 @@ const (
 	ContextImport      = "context"
 	DiagImport         = "github.com/hashicorp/terraform-plugin-framework/diag"
 	FmtImport          = "fmt"
+	MathBigImport      = "math/big"
 	PlanModifierImport = "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	StringsImport      = "strings"
 	TfTypesImport      = "github.com/hashicorp/terraform-plugin-go/tftypes"
@@ -203,6 +204,9 @@ func GetAttrTypesImports(customType *specschema.CustomType, attrTypes specschema
 			})
 			imports.Add(code.Import{
 				Path: TypesImport,
+			})
+			imports.Add(code.Import{
+				Path: MathBigImport,
 			})
 		case v.Object != nil:
 			imports.Add(GetAttrTypesImports(v.Object.CustomType, v.Object.AttributeTypes).All()...)

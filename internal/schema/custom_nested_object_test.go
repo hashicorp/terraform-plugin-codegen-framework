@@ -898,6 +898,43 @@ map[string]attr.Value{
 return objVal, diags
 }`),
 		},
+		"object-type": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"object_attribute": "Object",
+			},
+			attrTypes: map[string]string{
+				"object_attribute": "basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"bool\": types.BoolType,\n\"float64\": types.Float64Type,\n\"int64\": types.Int64Type,\n\"number\": types.NumberType,\n\"string\": types.StringType,\n},\n}",
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+objectAttributeVal, d := types.ObjectValue(v.ObjectAttribute.AttributeTypes(ctx), v.ObjectAttribute.Attributes())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"object_attribute": basetypes.ObjectType{
+AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+},
+}), diags
+}
+
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+"object_attribute": basetypes.ObjectType{
+AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+},
+},
+map[string]attr.Value{
+"object_attribute": objectAttributeVal,
+})
+
+return objVal, diags
+}`),
+		},
 	}
 
 	for name, testCase := range testCases {

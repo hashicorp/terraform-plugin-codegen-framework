@@ -34,6 +34,23 @@ diags.Append(d...)
 if diags.HasError() {
 return nil, diags
 }
+{{- else if $value.ObjectType}}
+
+attributes := v.{{$key.ToPascalCase}}.Attributes()
+
+{{- range $objectTypeKey, $objectTypeVal := $value.ObjectType}}
+
+{{$key.ToCamelCase}}Field{{$objectTypeKey.ToPascalCase}}, ok := attributes["{{$objectTypeKey}}"].({{$objectTypeVal.Type}})
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"{{$key.ToPascalCase}} Field {{$objectTypeKey}} Is Wrong Type",
+fmt.Sprintf(`{{$key.ToPascalCase}} field {{$objectTypeKey}} expected to be {{$objectTypeVal.Type}}, was: %T`, attributes["bool"]),
+))
+
+return nil, diags
+}
+{{- end}}
 {{- end}}
 {{- end}}
 
@@ -45,6 +62,16 @@ return &{{.AssocExtType.TypeReference}}{
 {{$key.ToPascalCase}}: v.{{$key.ToPascalCase}}.{{$value.Default}}(),
 {{- else if $value.CollectionType.GoType}}
 {{$key.ToPascalCase}}: {{$key.ToCamelCase}}Field,
+{{- else if $value.ObjectType}}
+{{$key.ToPascalCase}}: struct {
+{{- range $objectTypeKey, $objectTypeVal := $value.ObjectType}}
+{{$objectTypeKey.ToPascalCase}} {{$objectTypeVal.GoType}}
+{{- end}}
+}{
+{{- range $objectTypeKey, $objectTypeVal := $value.ObjectType}}
+{{$objectTypeKey.ToPascalCase}}: {{$key.ToCamelCase}}Field{{$objectTypeKey.ToPascalCase}}.{{$objectTypeVal.ToFunc}}(),
+{{- end}}
+},
 {{- end}}
 {{- end}}
 }, diags

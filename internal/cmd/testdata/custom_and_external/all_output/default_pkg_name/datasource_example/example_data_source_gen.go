@@ -7228,20 +7228,33 @@ func (v ListNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetypes
 		)
 	}
 
+	objectAttributeVal, d := types.ObjectValue(v.ObjectAttribute.AttributeTypes(ctx), v.ObjectAttribute.Attributes())
+
+	diags.Append(d...)
+
+	if d.HasError() {
+		return types.ObjectUnknown(map[string]attr.Type{
+			"list_nested_block_three_list_nested_block_one": basetypes.ObjectType{
+				AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+			},
+			"object_attribute": basetypes.ObjectType{
+				AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+			},
+		}), diags
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"list_nested_block_three_list_nested_block_one": basetypes.ListType{
 				ElemType: ListNestedBlockThreeListNestedBlockOneValue{}.Type(ctx),
 			},
 			"object_attribute": basetypes.ObjectType{
-				AttrTypes: map[string]attr.Type{
-					"string_attribute_type": types.StringType,
-				},
+				AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
 			},
 		},
 		map[string]attr.Value{
 			"list_nested_block_three_list_nested_block_one": listNestedBlockThreeListNestedBlockOne,
-			"object_attribute": v.ObjectAttribute,
+			"object_attribute": objectAttributeVal,
 		})
 
 	return objVal, diags
@@ -10021,19 +10034,32 @@ func (v SingleNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetyp
 		)
 	}
 
+	objectAttributeVal, d := types.ObjectValue(v.ObjectAttribute.AttributeTypes(ctx), v.ObjectAttribute.Attributes())
+
+	diags.Append(d...)
+
+	if d.HasError() {
+		return types.ObjectUnknown(map[string]attr.Type{
+			"object_attribute": basetypes.ObjectType{
+				AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+			},
+			"single_nested_block_three_list_nested_block_one": basetypes.ObjectType{
+				AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+			},
+		}), diags
+	}
+
 	objVal, diags := types.ObjectValue(
 		map[string]attr.Type{
 			"object_attribute": basetypes.ObjectType{
-				AttrTypes: map[string]attr.Type{
-					"string_attribute_type": types.StringType,
-				},
+				AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
 			},
 			"single_nested_block_three_list_nested_block_one": basetypes.ListType{
 				ElemType: SingleNestedBlockThreeListNestedBlockOneValue{}.Type(ctx),
 			},
 		},
 		map[string]attr.Value{
-			"object_attribute": v.ObjectAttribute,
+			"object_attribute": objectAttributeVal,
 			"single_nested_block_three_list_nested_block_one": singleNestedBlockThreeListNestedBlockOne,
 		})
 

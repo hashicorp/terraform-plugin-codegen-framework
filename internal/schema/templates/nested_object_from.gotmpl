@@ -24,6 +24,24 @@ diags.Append(d...)
 if diags.HasError() {
 return New{{$.Name}}ValueUnknown(), diags
 }
+{{- else if $value.ObjectType}}
+
+{{$key.ToCamelCase}}Val, d := basetypes.NewObjectValue(
+map[string]attr.Type{
+{{- range $objectTypeKey, $objectTypeVal := $value.ObjectType}}
+"{{$objectTypeKey}}": {{$objectTypeVal.Type}},
+{{- end}}
+}, map[string]attr.Value{
+{{- range $objectTypeKey, $objectTypeVal := $value.ObjectType}}
+"{{$objectTypeKey}}": types.{{$objectTypeVal.FromFunc}}(apiObject.{{$key.ToPascalCase}}.{{$objectTypeKey.ToPascalCase}}),
+{{- end}}
+})
+
+diags.Append(d...)
+
+if diags.HasError() {
+return New{{$.Name}}ValueUnknown(), diags
+}
 {{- end}}
 {{- end}}
 
@@ -34,6 +52,8 @@ return {{.Name}}Value{
 {{- else if $value.Default}}
 {{$key.ToPascalCase}}: types.{{$value.Default}}(apiObject.{{$key.ToPascalCase}}),
 {{- else if $value.CollectionType.ElementType}}
+{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
+{{- else if $value.ObjectType}}
 {{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
 {{- end}}
 {{- end}}
