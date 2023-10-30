@@ -79,16 +79,6 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorMapNestedAttribute:
 			attrTypes[k] = fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
-		case GeneratorObjectAttribute:
-			if o, ok := g[k].(Attrs); ok {
-				aTypes, err := AttrTypesString(o.AttrTypes())
-				if err != nil {
-					return nil, err
-				}
-				attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", aTypes)
-			} else {
-				return nil, fmt.Errorf("%s attribute is an ObjectType but does not implement Attrs interface", k)
-			}
 		case GeneratorSetNestedAttribute:
 			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorSingleNestedAttribute:
@@ -117,8 +107,6 @@ func (g GeneratorAttributes) AttrValues() (map[string]string, error) {
 			attrValues[k] = "basetypes.ListValue"
 		case GeneratorMapNestedAttribute:
 			attrValues[k] = "basetypes.MapValue"
-		case GeneratorObjectAttribute:
-			attrValues[k] = "basetypes.ObjectValue"
 		case GeneratorSetNestedAttribute:
 			attrValues[k] = "basetypes.SetValue"
 		case GeneratorSingleNestedAttribute:
