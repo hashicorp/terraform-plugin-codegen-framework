@@ -319,7 +319,11 @@ func (g GeneratorListNestedBlock) ToFromFunctions(name string) ([]byte, error) {
 		return nil, err
 	}
 
-	fromFuncs := g.NestedObject.Attributes.FromFuncs()
+	fromFuncs, err := g.NestedObject.Attributes.FromFuncs()
+
+	if err != nil {
+		return nil, err
+	}
 
 	toFrom := generatorschema.NewToFromNestedObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
 

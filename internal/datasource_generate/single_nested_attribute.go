@@ -226,7 +226,7 @@ func (g GeneratorSingleNestedAttribute) ToFromFunctions(name string) ([]byte, er
 		return nil, err
 	}
 
-	fromFuncs := g.Attributes.FromFuncs()
+	fromFuncs, _ := g.Attributes.FromFuncs()
 
 	toFrom := generatorschema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
 

@@ -316,7 +316,7 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 		return nil, err
 	}
 
-	fromFuncs := g.Attributes.FromFuncs()
+	fromFuncs, _ := g.Attributes.FromFuncs()
 
 	toFrom := generatorschema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
 
