@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package logging
 
 import (
@@ -5,7 +8,9 @@ import (
 	"strings"
 )
 
-const path = "path"
+type pathstring string
+
+const path pathstring = "path"
 
 type Path []string
 
