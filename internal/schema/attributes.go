@@ -4,6 +4,7 @@
 package schema
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -194,19 +195,32 @@ func (g GeneratorAttributes) Schema() (string, error) {
 }
 
 // ToFuncs returns a mapping of attribute names to string representations of the
-// function that converts a framework value to a Go value.
-func (g GeneratorAttributes) ToFuncs() map[string]ToFromConversion {
+// function that converts a framework value to a Go value. If an UnimplementedError
+// is encountered, it is logged and execution continues.
+func (g GeneratorAttributes) ToFuncs() (map[string]ToFromConversion, error) {
 	attributeKeys := g.SortedKeys()
 
 	toFuncs := make(map[string]ToFromConversion, len(g))
 
 	for _, k := range attributeKeys {
 		if a, ok := g[k].(To); ok {
-			toFuncs[k], _ = a.To()
+			v, err := a.To()
+
+			var unimplError *UnimplementedError
+
+			if errors.As(err, &unimplError) {
+				err = unimplError.NestedUnimplementedError(k)
+			}
+
+			if err != nil {
+				return nil, err
+			}
+
+			toFuncs[k] = v
 		}
 	}
 
-	return toFuncs
+	return toFuncs, nil
 }
 
 func (g GeneratorAttributes) SortedKeys() []string {

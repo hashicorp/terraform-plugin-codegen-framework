@@ -240,7 +240,11 @@ func (g GeneratorSingleNestedAttribute) ToFromFunctions(name string) ([]byte, er
 
 	var buf bytes.Buffer
 
-	toFuncs := g.Attributes.ToFuncs()
+	toFuncs, err := g.Attributes.ToFuncs()
+
+	if err != nil {
+		return nil, err
+	}
 
 	fromFuncs := g.Attributes.FromFuncs()
 

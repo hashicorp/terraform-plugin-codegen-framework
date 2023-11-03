@@ -311,7 +311,11 @@ func (g GeneratorSetNestedBlock) ToFromFunctions(name string) ([]byte, error) {
 
 	var buf bytes.Buffer
 
-	toFuncs := g.NestedObject.Attributes.ToFuncs()
+	toFuncs, err := g.NestedObject.Attributes.ToFuncs()
+
+	if err != nil {
+		return nil, err
+	}
 
 	fromFuncs := g.NestedObject.Attributes.FromFuncs()
 

@@ -320,7 +320,11 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 
 	var buf bytes.Buffer
 
-	toFuncs := g.Attributes.ToFuncs()
+	toFuncs, err := g.Attributes.ToFuncs()
+
+	if err != nil {
+		return nil, err
+	}
 
 	fromFuncs := g.Attributes.FromFuncs()
 

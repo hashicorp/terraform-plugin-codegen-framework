@@ -5,14 +5,17 @@ package schema
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
@@ -266,7 +269,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 // ToFromFunctions generates code for converting to an associated
 // external type from a framework type, and from an associated
 // external type to a framework type.
-func (g GeneratorSchema) ToFromFunctions() ([]byte, error) {
+func (g GeneratorSchema) ToFromFunctions(ctx context.Context, logger *slog.Logger) ([]byte, error) {
 	var buf bytes.Buffer
 
 	attributeKeys := g.Attributes.SortedKeys()
@@ -279,7 +282,11 @@ func (g GeneratorSchema) ToFromFunctions() ([]byte, error) {
 		if t, ok := g.Attributes[k].(ToFrom); ok {
 			b, err := t.ToFromFunctions(k)
 
-			if err != nil {
+			var unimplErr *UnimplementedError
+
+			if errors.As(err, &unimplErr) {
+				logger.Error("error generating to/from methods", "path", fmt.Sprintf("%s.%s.%s", logging.GetPathFromContext(ctx), k, unimplErr.Path()), "err", err)
+			} else if err != nil {
 				return nil, err
 			}
 
@@ -365,8 +372,16 @@ func ElementTypeGoType(elementType specschema.ElementType) (string, error) {
 		return "*float64", nil
 	case elementType.Int64 != nil:
 		return "*int64", nil
+	case elementType.List != nil:
+		return "", NewUnimplementedError(errors.New("list element type is not yet implemented"))
+	case elementType.Map != nil:
+		return "", NewUnimplementedError(errors.New("map element type is not yet implemented"))
 	case elementType.Number != nil:
 		return "*big.Float", nil
+	case elementType.Object != nil:
+		return "", NewUnimplementedError(errors.New("object element type is not yet implemented"))
+	case elementType.Set != nil:
+		return "", NewUnimplementedError(errors.New("set element type is not yet implemented"))
 	case elementType.String != nil:
 		return "*string", nil
 	}
