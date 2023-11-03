@@ -5,6 +5,7 @@ package datasource_generate
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"text/template"
 
@@ -256,4 +257,12 @@ func (g GeneratorListNestedAttribute) ToFromFunctions(name string) ([]byte, erro
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (g GeneratorListNestedAttribute) To() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
+}
+
+func (g GeneratorListNestedAttribute) From() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
 }

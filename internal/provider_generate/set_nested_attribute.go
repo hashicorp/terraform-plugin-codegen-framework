@@ -5,6 +5,7 @@ package provider_generate
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"text/template"
 
@@ -256,4 +257,12 @@ func (g GeneratorSetNestedAttribute) ToFromFunctions(name string) ([]byte, error
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (g GeneratorSetNestedAttribute) To() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("set nested type is not yet implemented"))
+}
+
+func (g GeneratorSetNestedAttribute) From() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("set nested type is not yet implemented"))
 }

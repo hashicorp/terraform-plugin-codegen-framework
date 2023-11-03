@@ -5,6 +5,7 @@ package provider_generate
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"text/template"
 
@@ -335,4 +336,12 @@ func (g GeneratorListNestedBlock) ToFromFunctions(name string) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (g GeneratorListNestedBlock) To() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
+}
+
+func (g GeneratorListNestedBlock) From() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
 }

@@ -5,6 +5,7 @@ package datasource_generate
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"text/template"
 
@@ -256,4 +257,12 @@ func (g GeneratorMapNestedAttribute) ToFromFunctions(name string) ([]byte, error
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (g GeneratorMapNestedAttribute) To() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("map nested type is not yet implemented"))
+}
+
+func (g GeneratorMapNestedAttribute) From() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("map nested type is not yet implemented"))
 }

@@ -5,6 +5,7 @@ package datasource_generate
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"text/template"
 
@@ -255,4 +256,12 @@ func (g GeneratorSingleNestedAttribute) ToFromFunctions(name string) ([]byte, er
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (g GeneratorSingleNestedAttribute) To() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
+}
+
+func (g GeneratorSingleNestedAttribute) From() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
 }
