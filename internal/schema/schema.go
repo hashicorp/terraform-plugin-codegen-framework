@@ -454,12 +454,20 @@ func ObjectFieldTo(o specschema.ObjectAttributeType) (ObjectField, error) {
 			Type:   "types.Int64",
 			ToFunc: "ValueInt64Pointer",
 		}, nil
+	case o.List != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("list attribute type is not yet implemented"))
+	case o.Map != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("map attribute type is not yet implemented"))
 	case o.Number != nil:
 		return ObjectField{
 			GoType: "*big.Float",
 			Type:   "types.Number",
 			ToFunc: "ValueBigFloat",
 		}, nil
+	case o.Object != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("object attribute type is not yet implemented"))
+	case o.Set != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("set attribute type is not yet implemented"))
 	case o.String != nil:
 		return ObjectField{
 			GoType: "*string",
@@ -488,11 +496,19 @@ func ObjectFieldFrom(o specschema.ObjectAttributeType) (ObjectField, error) {
 			Type:     "types.Int64Type",
 			FromFunc: "Int64PointerValue",
 		}, nil
+	case o.List != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("list attribute type is not yet implemented"))
+	case o.Map != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("map attribute type is not yet implemented"))
 	case o.Number != nil:
 		return ObjectField{
 			Type:     "types.NumberType",
 			FromFunc: "NumberValue",
 		}, nil
+	case o.Object != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("object attribute type is not yet implemented"))
+	case o.Set != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("set attribute type is not yet implemented"))
 	case o.String != nil:
 		return ObjectField{
 			Type:     "types.StringType",
