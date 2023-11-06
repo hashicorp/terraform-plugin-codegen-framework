@@ -9,6 +9,7 @@ var diags diag.Diagnostics
 {{- else if eq $value "SetNested"}}
 {{- $typesType := "Set"}}
 {{- end}}
+
 {{$key.ToPrefixCamelCase $.Name}} := types.{{$typesType}}ValueMust(
 {{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
