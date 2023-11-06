@@ -258,93 +258,6 @@ state: attr.ValueStateKnown,
 }, diags
 }`),
 		},
-		"attribute-name-same-as-generated-method-name": {
-			name: "Example",
-			attrValues: map[string]string{
-				"type": "basetypes.BoolValue",
-			},
-			expected: []byte(`
-func NewExampleValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (ExampleValue, diag.Diagnostics) {
-var diags diag.Diagnostics
-
-// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
-ctx := context.Background()
-
-for name, attributeType := range attributeTypes {
-attribute, ok := attributes[name]
-
-if !ok {
-diags.AddError(
-"Missing ExampleValue Attribute Value",
-"While creating a ExampleValue value, a missing attribute value was detected. "+
-"A ExampleValue must contain values for all attributes, even if null or unknown. "+
-"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
-fmt.Sprintf("ExampleValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
-)
-
-continue
-}
-
-if !attributeType.Equal(attribute.Type(ctx)) {
-diags.AddError(
-"Invalid ExampleValue Attribute Type",
-"While creating a ExampleValue value, an invalid attribute value was detected. "+
-"A ExampleValue must use a matching attribute type for the value. "+
-"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
-fmt.Sprintf("ExampleValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
-fmt.Sprintf("ExampleValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
-)
-}
-}
-
-for name := range attributes {
-_, ok := attributeTypes[name]
-
-if !ok {
-diags.AddError(
-"Extra ExampleValue Attribute Value",
-"While creating a ExampleValue value, an extra attribute value was detected. "+
-"A ExampleValue must not contain values beyond the expected attribute types. "+
-"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
-fmt.Sprintf("Extra ExampleValue Attribute Name: %s", name),
-)
-}
-}
-
-if diags.HasError() {
-return NewExampleValueUnknown(), diags
-}
-
-
-typeAttribute, ok := attributes["type"]
-
-if !ok {
-diags.AddError(
-"Attribute Missing",
-` + "`type is missing from object`" + `)
-
-return NewExampleValueUnknown(), diags
-}
-
-typeVal, ok := typeAttribute.(basetypes.BoolValue)
-
-if !ok {
-diags.AddError(
-"Attribute Wrong Type",
-fmt.Sprintf(` + "`type expected to be basetypes.BoolValue, was: %T`" + `, typeAttribute))
-}
-
-
-if diags.HasError() {
-return NewExampleValueUnknown(), diags
-}
-
-return ExampleValue{
-ExampleType: typeVal,
-state: attr.ValueStateKnown,
-}, diags
-}`),
-		},
 	}
 
 	for name, testCase := range testCases {
@@ -414,47 +327,6 @@ return nil, diags
 
 return ExampleValue{
 BoolAttribute: boolAttributeVal,
-state: attr.ValueStateKnown,
-}, diags
-}`),
-		},
-		"attribute-name-same-as-generated-method-name": {
-			name: "Example",
-			attrValues: map[string]string{
-				"type": "basetypes.BoolValue",
-			},
-			expected: []byte(`
-func (t ExampleType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
-var diags diag.Diagnostics
-
-attributes := in.Attributes()
-
-
-typeAttribute, ok := attributes["type"]
-
-if !ok {
-diags.AddError(
-"Attribute Missing",
-` + "`type is missing from object`" + `)
-
-return nil, diags
-}
-
-typeVal, ok := typeAttribute.(basetypes.BoolValue)
-
-if !ok {
-diags.AddError(
-"Attribute Wrong Type",
-fmt.Sprintf(` + "`type expected to be basetypes.BoolValue, was: %T`" + `, typeAttribute))
-}
-
-
-if diags.HasError() {
-return nil, diags
-}
-
-return ExampleValue{
-ExampleType: typeVal,
 state: attr.ValueStateKnown,
 }, diags
 }`),
@@ -530,7 +402,7 @@ return nil, err
 attributes[k] = a
 }
 
-return NewExampleValueMust(t.AttrTypes, attributes), nil
+return NewExampleValueMust(ExampleValue{}.AttributeTypes(ctx), attributes), nil
 }`),
 		},
 	}
@@ -758,7 +630,7 @@ return map[string]attr.Type{
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil, nil)
 
 			got, err := customObjectValue.renderAttributeTypes()
 
@@ -812,36 +684,6 @@ return false
 return true
 }`),
 		},
-		"attribute-name-same-as-generated-method-name": {
-			name: "Example",
-			attrValues: map[string]string{
-				"type": "basetypes.ListValue",
-			},
-			expected: []byte(`
-func (v ExampleValue) Equal(o attr.Value) bool {
-other, ok := o.(ExampleValue)
-
-if !ok {
-return false
-}
-
-if v.state != other.state {
-return false
-}
-
-if v.state != attr.ValueStateKnown {
-return true
-}
-
-
-if !v.ExampleType.Equal(other.ExampleType) {
-return false
-}
-
-
-return true
-}`),
-		},
 	}
 
 	for name, testCase := range testCases {
@@ -850,7 +692,7 @@ return true
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, testCase.attrValues)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, testCase.attrValues, nil)
 
 			got, err := customObjectValue.renderEqual()
 
@@ -888,7 +730,7 @@ return v.state == attr.ValueStateNull
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderIsNull()
 
@@ -926,7 +768,7 @@ return v.state == attr.ValueStateUnknown
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderIsUnknown()
 
@@ -964,7 +806,7 @@ return "ExampleValue"
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderString()
 
@@ -983,13 +825,14 @@ func TestCustomNestedObjectValue_renderToObjectValue(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		name           string
-		attributeTypes map[string]string
-		attrTypes      map[string]string
-		expected       []byte
-		expectedError  error
+		name            string
+		attributeTypes  map[string]string
+		attrTypes       map[string]string
+		collectionTypes map[string]map[string]string
+		expected        []byte
+		expectedError   error
 	}{
-		"non-nested": {
+		"default": {
 			name: "Example",
 			attributeTypes: map[string]string{
 				"bool_attribute": "Bool",
@@ -999,6 +842,8 @@ func TestCustomNestedObjectValue_renderToObjectValue(t *testing.T) {
 			},
 			expected: []byte(`
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
 "bool_attribute": basetypes.BoolType{},
@@ -1010,122 +855,81 @@ map[string]attr.Value{
 return objVal, diags
 }`),
 		},
-		"nested": {
+		"collection-type": {
 			name: "Example",
 			attributeTypes: map[string]string{
-				"list_nested_attribute": "ListNested",
+				"list_attribute": "List",
 			},
 			attrTypes: map[string]string{
-				"list_nested_attribute": "basetypes.ListType{}",
+				"list_attribute": "basetypes.ListType{\nElemType: types.BoolType,\n}",
+			},
+			collectionTypes: map[string]map[string]string{
+				"list_attribute": {
+					"ElementType":   "types.BoolType",
+					"TypeValueFunc": "types.ListValue",
+				},
 			},
 			expected: []byte(`
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
-listNestedAttribute := types.ListValueMust(
-ListNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-v.ListNestedAttribute.Elements(),
-)
+var diags diag.Diagnostics
 
-if v.ListNestedAttribute.IsNull() {
-listNestedAttribute = types.ListNull(
-ListNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-)
-}
+listAttributeVal, d := types.ListValue(types.BoolType, v.ListAttribute.Elements())
 
-if v.ListNestedAttribute.IsUnknown() {
-listNestedAttribute = types.ListUnknown(
-ListNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"list_attribute": basetypes.ListType{
+ElemType: types.BoolType,
 },
-},
-)
+}), diags
 }
 
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
-"list_nested_attribute": basetypes.ListType{},
+"list_attribute": basetypes.ListType{
+ElemType: types.BoolType,
+},
 },
 map[string]attr.Value{
-"list_nested_attribute": listNestedAttribute,
+"list_attribute": listAttributeVal,
 })
 
 return objVal, diags
 }`),
 		},
-		"non-nested-attribute-name-same-as-generated-method-name": {
+		"object-type": {
 			name: "Example",
 			attributeTypes: map[string]string{
-				"type": "Bool",
+				"object_attribute": "Object",
 			},
 			attrTypes: map[string]string{
-				"type": "basetypes.BoolType{}",
+				"object_attribute": "basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"bool\": types.BoolType,\n\"float64\": types.Float64Type,\n\"int64\": types.Int64Type,\n\"number\": types.NumberType,\n\"string\": types.StringType,\n},\n}",
 			},
 			expected: []byte(`
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
-"type": basetypes.BoolType{},
-},
-map[string]attr.Value{
-"type": v.ExampleType,
-})
+var diags diag.Diagnostics
 
-return objVal, diags
-}`),
-		},
-		"nested-attribute-name-same-as-generated-method-name": {
-			name: "Example",
-			attributeTypes: map[string]string{
-				"type": "ListNested",
-			},
-			attrTypes: map[string]string{
-				"type": "basetypes.ListType{}",
-			},
-			expected: []byte(`
-func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
-exampleType := types.ListValueMust(
-TypeType{
-basetypes.ObjectType{
-AttrTypes: TypeValue{}.AttributeTypes(ctx),
-},
-},
-v.ExampleType.Elements(),
-)
+objectAttributeVal, d := types.ObjectValue(v.ObjectAttribute.AttributeTypes(ctx), v.ObjectAttribute.Attributes())
 
-if v.ExampleType.IsNull() {
-exampleType = types.ListNull(
-TypeType{
-basetypes.ObjectType{
-AttrTypes: TypeValue{}.AttributeTypes(ctx),
-},
-},
-)
-}
+diags.Append(d...)
 
-if v.ExampleType.IsUnknown() {
-exampleType = types.ListUnknown(
-TypeType{
-basetypes.ObjectType{
-AttrTypes: TypeValue{}.AttributeTypes(ctx),
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"object_attribute": basetypes.ObjectType{
+AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
 },
-},
-)
+}), diags
 }
 
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
-"type": basetypes.ListType{},
+"object_attribute": basetypes.ObjectType{
+AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+},
 },
 map[string]attr.Value{
-"type": exampleType,
+"object_attribute": objectAttributeVal,
 })
 
 return objVal, diags
@@ -1139,7 +943,7 @@ return objVal, diags
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil, testCase.collectionTypes)
 
 			got, err := customObjectValue.renderToObjectValue()
 
@@ -1208,51 +1012,6 @@ panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
 }
 }`),
 		},
-		"attribute-name-same-as-generated-method-name": {
-			name: "Example",
-			attrTypes: map[string]string{
-				"type": "basetypes.BoolType{}",
-			},
-			expected: []byte(`func (v ExampleValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
-attrTypes := make(map[string]tftypes.Type, 1)
-
-var val tftypes.Value
-var err error
-
-
-attrTypes["type"] = basetypes.BoolType{}.TerraformType(ctx)
-
-objectType := tftypes.Object{AttributeTypes: attrTypes}
-
-switch v.state {
-case attr.ValueStateKnown:
-vals := make(map[string]tftypes.Value, 1)
-
-
-val, err = v.ExampleType.ToTerraformValue(ctx)
-
-if err != nil {
-return tftypes.NewValue(objectType, tftypes.UnknownValue), err
-}
-
-vals["type"] = val
-
-
-
-if err := tftypes.ValidateValue(objectType, vals); err != nil {
-return tftypes.NewValue(objectType, tftypes.UnknownValue), err
-}
-
-return tftypes.NewValue(objectType, vals), nil
-case attr.ValueStateNull:
-return tftypes.NewValue(objectType, nil), nil
-case attr.ValueStateUnknown:
-return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
-default:
-panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
-}
-}`),
-		},
 	}
 
 	for name, testCase := range testCases {
@@ -1261,7 +1020,7 @@ panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil, nil)
 
 			got, err := customObjectValue.renderToTerraformValue()
 
@@ -1303,7 +1062,7 @@ AttrTypes: v.AttributeTypes(ctx),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderType()
 
@@ -1338,7 +1097,7 @@ func TestCustomNestedObjectValue_renderValuable(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderValuable()
 
@@ -1358,27 +1117,12 @@ func TestCustomNestedObjectValue_renderValue(t *testing.T) {
 
 	testCases := map[string]struct {
 		name          string
-		attrValues    map[string]string
 		expected      []byte
 		expectedError error
 	}{
 		"default": {
 			name: "Example",
-			attrValues: map[string]string{
-				"bool_attribute": "basetypes.BoolValue",
-			},
 			expected: []byte(`type ExampleValue struct {
-BoolAttribute basetypes.BoolValue ` + "`" + `tfsdk:"bool_attribute"` + "`" + `
-state attr.ValueState
-}`),
-		},
-		"attribute-name-same-as-generated-method-name": {
-			name: "Example",
-			attrValues: map[string]string{
-				"type": "basetypes.BoolValue",
-			},
-			expected: []byte(`type ExampleValue struct {
-ExampleType basetypes.BoolValue ` + "`" + `tfsdk:"type"` + "`" + `
 state attr.ValueState
 }`),
 		},
@@ -1390,7 +1134,7 @@ state attr.ValueState
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, testCase.attrValues)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderValue()
 

@@ -188,3 +188,75 @@ func (g GeneratorObjectAttribute) ToFromFunctions(name string) ([]byte, error) {
 
 	return b, nil
 }
+
+// AttrType returns a string representation of a basetypes.ObjectTypable type.
+func (g GeneratorObjectAttribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sType{\nbasetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}}", name.ToPascalCase(), name.ToPascalCase()), nil
+	}
+
+	aTypes, err := generatorschema.AttrTypesString(g.AttrTypes())
+
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n},\n}", aTypes), nil
+}
+
+// AttrValue returns a string representation of a basetypes.ListValuable type.
+func (g GeneratorObjectAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+	if g.AssociatedExternalType != nil {
+		return fmt.Sprintf("%sValue", name.ToPascalCase())
+	}
+
+	return "basetypes.ObjectValue"
+}
+
+func (g GeneratorObjectAttribute) To() (generatorschema.ToFromConversion, error) {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}, nil
+	}
+
+	objectFields := make(map[generatorschema.FrameworkIdentifier]generatorschema.ObjectField, len(g.AttributeTypes))
+
+	for _, v := range g.AttributeTypes {
+		objField, err := generatorschema.ObjectFieldTo(v)
+
+		if err != nil {
+			return generatorschema.ToFromConversion{}, err
+		}
+
+		objectFields[generatorschema.FrameworkIdentifier(v.Name)] = objField
+	}
+
+	return generatorschema.ToFromConversion{
+		ObjectType: objectFields,
+	}, nil
+}
+
+func (g GeneratorObjectAttribute) From() (generatorschema.ToFromConversion, error) {
+	if g.AssociatedExternalType != nil {
+		return generatorschema.ToFromConversion{
+			AssocExtType: g.AssociatedExternalType,
+		}, nil
+	}
+
+	objectFields := make(map[generatorschema.FrameworkIdentifier]generatorschema.ObjectField, len(g.AttributeTypes))
+
+	for _, v := range g.AttributeTypes {
+		objField, err := generatorschema.ObjectFieldFrom(v)
+
+		if err != nil {
+			return generatorschema.ToFromConversion{}, err
+		}
+
+		objectFields[generatorschema.FrameworkIdentifier(v.Name)] = objField
+	}
+
+	return generatorschema.ToFromConversion{
+		ObjectType: objectFields,
+	}, nil
+}

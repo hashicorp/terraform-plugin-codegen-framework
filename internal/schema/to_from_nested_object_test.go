@@ -87,6 +87,113 @@ state: attr.ValueStateKnown,
 }
 `),
 		},
+		"collection-type": {
+			name: "Example",
+			assocExtType: &AssocExtType{
+				AssociatedExternalType: &schema.AssociatedExternalType{
+					Type: "*apisdk.Type",
+				},
+			},
+			fromFuncs: map[string]ToFromConversion{
+				"bool_attribute": {
+					CollectionType: CollectionFields{
+						ElementType:   "types.BoolType",
+						TypeValueFrom: "types.ListValueFrom",
+					},
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ExampleValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return NewExampleValueNull(), diags
+}
+
+boolAttributeVal, d := types.ListValueFrom(ctx, types.BoolType, apiObject.BoolAttribute)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return NewExampleValueUnknown(), diags
+}
+
+return ExampleValue{
+BoolAttribute: boolAttributeVal,
+state: attr.ValueStateKnown,
+}, diags
+}
+`),
+		},
+		"object-type": {
+			name: "Example",
+			assocExtType: &AssocExtType{
+				AssociatedExternalType: &schema.AssociatedExternalType{
+					Type: "*apisdk.Type",
+				},
+			},
+			fromFuncs: map[string]ToFromConversion{
+				"object_attribute": {
+					ObjectType: map[FrameworkIdentifier]ObjectField{
+						FrameworkIdentifier("bool"): {
+							Type:     "types.BoolType",
+							FromFunc: "BoolPointerValue",
+						},
+						FrameworkIdentifier("float64"): {
+							Type:     "types.Float64Type",
+							FromFunc: "Float64PointerValue",
+						},
+						FrameworkIdentifier("int64"): {
+							Type:     "types.Int64Type",
+							FromFunc: "Int64PointerValue",
+						},
+						FrameworkIdentifier("number"): {
+							Type:     "types.NumberType",
+							FromFunc: "NumberValue",
+						},
+						FrameworkIdentifier("string"): {
+							Type:     "types.StringType",
+							FromFunc: "StringPointerValue",
+						},
+					},
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) FromApisdkType(ctx context.Context, apiObject *apisdk.Type) (ExampleValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if apiObject == nil {
+return NewExampleValueNull(), diags
+}
+
+objectAttributeVal, d := basetypes.NewObjectValue(
+map[string]attr.Type{
+"bool": types.BoolType,
+"float64": types.Float64Type,
+"int64": types.Int64Type,
+"number": types.NumberType,
+"string": types.StringType,
+}, map[string]attr.Value{
+"bool": types.BoolPointerValue(apiObject.ObjectAttribute.Bool),
+"float64": types.Float64PointerValue(apiObject.ObjectAttribute.Float64),
+"int64": types.Int64PointerValue(apiObject.ObjectAttribute.Int64),
+"number": types.NumberValue(apiObject.ObjectAttribute.Number),
+"string": types.StringPointerValue(apiObject.ObjectAttribute.String),
+})
+
+diags.Append(d...)
+
+if diags.HasError() {
+return NewExampleValueUnknown(), diags
+}
+
+return ExampleValue{
+ObjectAttribute: objectAttributeVal,
+state: attr.ValueStateKnown,
+}, diags
+}
+`),
+		},
 	}
 
 	for name, testCase := range testCases {
@@ -201,6 +308,185 @@ return nil, diags
 
 return &apisdk.Type{
 BoolAttribute: apiBoolAttribute,
+}, diags
+}`),
+		},
+		"collection-type": {
+			name: "Example",
+			assocExtType: &AssocExtType{
+				&schema.AssociatedExternalType{
+					Import: &code.Import{
+						Path: "example.com/apisdk",
+					},
+					Type: "*apisdk.Type",
+				},
+			},
+			toFuncs: map[string]ToFromConversion{
+				"bool_attribute": {
+					CollectionType: CollectionFields{
+						GoType: "[]*bool",
+					},
+				},
+			},
+			expected: []byte(`func (v ExampleValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if v.IsNull() {
+return nil, diags
+}
+
+if v.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue Value Is Unknown",
+` + "`" + `"ExampleValue" is unknown.` + "`" + `,
+))
+
+return nil, diags
+}
+
+var boolAttributeField []*bool
+
+d := v.BoolAttribute.ElementsAs(ctx, &boolAttributeField, false)
+
+diags.Append(d...)
+
+if diags.HasError() {
+return nil, diags
+}
+
+return &apisdk.Type{
+BoolAttribute: boolAttributeField,
+}, diags
+}`),
+		},
+		"object-type": {
+			name: "Example",
+			assocExtType: &AssocExtType{
+				&schema.AssociatedExternalType{
+					Import: &code.Import{
+						Path: "example.com/apisdk",
+					},
+					Type: "*apisdk.Type",
+				},
+			},
+			toFuncs: map[string]ToFromConversion{
+				"object_attribute": {
+					ObjectType: map[FrameworkIdentifier]ObjectField{
+						FrameworkIdentifier("bool"): {
+							GoType: "*bool",
+							Type:   "types.Bool",
+							ToFunc: "ValueBoolPointer",
+						},
+						FrameworkIdentifier("float64"): {
+							GoType: "*float64",
+							Type:   "types.Float64",
+							ToFunc: "ValueFloat64Pointer",
+						},
+						FrameworkIdentifier("int64"): {
+							GoType: "*int64",
+							Type:   "types.Int64",
+							ToFunc: "ValueInt64Pointer",
+						},
+						FrameworkIdentifier("number"): {
+							GoType: "*big.Float",
+							Type:   "types.Number",
+							ToFunc: "ValueBigFloat",
+						},
+						FrameworkIdentifier("string"): {
+							GoType: "*string",
+							Type:   "types.String",
+							ToFunc: "ValueStringPointer",
+						},
+					},
+				},
+			},
+			expected: []byte(`func (v ExampleValue) ToApisdkType(ctx context.Context) (*apisdk.Type, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+if v.IsNull() {
+return nil, diags
+}
+
+if v.IsUnknown() {
+diags.Append(diag.NewErrorDiagnostic(
+"ExampleValue Value Is Unknown",
+` + "`" + `"ExampleValue" is unknown.` + "`" + `,
+))
+
+return nil, diags
+}
+
+attributes := v.ObjectAttribute.Attributes()
+
+objectAttributeFieldBool, ok := attributes["bool"].(types.Bool)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ObjectAttribute Field bool Is Wrong Type",
+fmt.Sprintf(` + "`" + `ObjectAttribute field bool expected to be types.Bool, was: %T` + "`" + `, attributes["bool"]),
+))
+
+return nil, diags
+}
+
+objectAttributeFieldFloat64, ok := attributes["float64"].(types.Float64)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ObjectAttribute Field float64 Is Wrong Type",
+fmt.Sprintf(` + "`" + `ObjectAttribute field float64 expected to be types.Float64, was: %T` + "`" + `, attributes["bool"]),
+))
+
+return nil, diags
+}
+
+objectAttributeFieldInt64, ok := attributes["int64"].(types.Int64)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ObjectAttribute Field int64 Is Wrong Type",
+fmt.Sprintf(` + "`" + `ObjectAttribute field int64 expected to be types.Int64, was: %T` + "`" + `, attributes["bool"]),
+))
+
+return nil, diags
+}
+
+objectAttributeFieldNumber, ok := attributes["number"].(types.Number)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ObjectAttribute Field number Is Wrong Type",
+fmt.Sprintf(` + "`" + `ObjectAttribute field number expected to be types.Number, was: %T` + "`" + `, attributes["bool"]),
+))
+
+return nil, diags
+}
+
+objectAttributeFieldString, ok := attributes["string"].(types.String)
+
+if !ok {
+diags.Append(diag.NewErrorDiagnostic(
+"ObjectAttribute Field string Is Wrong Type",
+fmt.Sprintf(` + "`" + `ObjectAttribute field string expected to be types.String, was: %T` + "`" + `, attributes["bool"]),
+))
+
+return nil, diags
+}
+
+return &apisdk.Type{
+ObjectAttribute: struct {
+Bool *bool
+Float64 *float64
+Int64 *int64
+Number *big.Float
+String *string
+}{
+Bool: objectAttributeFieldBool.ValueBoolPointer(),
+Float64: objectAttributeFieldFloat64.ValueFloat64Pointer(),
+Int64: objectAttributeFieldInt64.ValueInt64Pointer(),
+Number: objectAttributeFieldNumber.ValueBigFloat(),
+String: objectAttributeFieldString.ValueStringPointer(),
+},
 }, diags
 }`),
 		},

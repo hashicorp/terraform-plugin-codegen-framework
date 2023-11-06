@@ -39,11 +39,15 @@ type GeneratorAttribute interface {
 }
 
 type AttrType interface {
-	AttrType(FrameworkIdentifier) string
+	AttrType(FrameworkIdentifier) (string, error)
 }
 
 type AttrValue interface {
 	AttrValue(FrameworkIdentifier) string
+}
+
+type CollectionType interface {
+	CollectionType() (map[string]string, error)
 }
 
 type GeneratorBlock interface {
@@ -69,16 +73,31 @@ type ToFrom interface {
 }
 
 type ToFromConversion struct {
-	Default      string
-	AssocExtType *AssocExtType
+	Default        string
+	AssocExtType   *AssocExtType
+	CollectionType CollectionFields
+	ObjectType     map[FrameworkIdentifier]ObjectField
+}
+
+type CollectionFields struct {
+	ElementType   string
+	GoType        string
+	TypeValueFrom string
+}
+
+type ObjectField struct {
+	FromFunc string
+	GoType   string
+	Type     string
+	ToFunc   string
 }
 
 type To interface {
-	To() ToFromConversion
+	To() (ToFromConversion, error)
 }
 
 type From interface {
-	From() ToFromConversion
+	From() (ToFromConversion, error)
 }
 
 type Type int64

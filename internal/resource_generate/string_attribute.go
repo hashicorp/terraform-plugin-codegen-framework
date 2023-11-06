@@ -214,12 +214,12 @@ func (g GeneratorStringAttribute) ToFromFunctions(name string) ([]byte, error) {
 }
 
 // AttrType returns a string representation of a basetypes.StringTypable type.
-func (g GeneratorStringAttribute) AttrType(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorStringAttribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
-		return fmt.Sprintf("%sType{}", name.ToPascalCase())
+		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
 
-	return "basetypes.StringType{}"
+	return "basetypes.StringType{}", nil
 }
 
 // AttrValue returns a string representation of a basetypes.StringValuable type.
@@ -231,26 +231,26 @@ func (g GeneratorStringAttribute) AttrValue(name generatorschema.FrameworkIdenti
 	return "basetypes.StringValue"
 }
 
-func (g GeneratorStringAttribute) To() generatorschema.ToFromConversion {
+func (g GeneratorStringAttribute) To() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "ValueStringPointer",
-	}
+	}, nil
 }
 
-func (g GeneratorStringAttribute) From() generatorschema.ToFromConversion {
+func (g GeneratorStringAttribute) From() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "StringPointerValue",
-	}
+	}, nil
 }
