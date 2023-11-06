@@ -353,6 +353,27 @@ func ElementTypeString(elementType specschema.ElementType) (string, error) {
 	return "", errors.New("no matching element type found")
 }
 
+// ElementTypeGoType defaults to the defined pointer types on the basis of the
+// supplied elementType.
+// TODO: Provide a mechanism to allow mapping to be configured. For instance elementType.Float64 => float32
+// TODO: Implement for list, map, object, and set.
+func ElementTypeGoType(elementType specschema.ElementType) (string, error) {
+	switch {
+	case elementType.Bool != nil:
+		return "*bool", nil
+	case elementType.Float64 != nil:
+		return "*float64", nil
+	case elementType.Int64 != nil:
+		return "*int64", nil
+	case elementType.Number != nil:
+		return "*big.Float", nil
+	case elementType.String != nil:
+		return "*string", nil
+	}
+
+	return "", errors.New("no matching element type found")
+}
+
 func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) {
 	var attrTypesStr []string
 
@@ -396,4 +417,73 @@ func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 	}
 
 	return strings.Join(attrTypesStr, ",\n"), nil
+}
+
+func ObjectFieldTo(o specschema.ObjectAttributeType) (ObjectField, error) {
+	switch {
+	case o.Bool != nil:
+		return ObjectField{
+			GoType: "*bool",
+			Type:   "types.Bool",
+			ToFunc: "ValueBoolPointer",
+		}, nil
+	case o.Float64 != nil:
+		return ObjectField{
+			GoType: "*float64",
+			Type:   "types.Float64",
+			ToFunc: "ValueFloat64Pointer",
+		}, nil
+	case o.Int64 != nil:
+		return ObjectField{
+			GoType: "*int64",
+			Type:   "types.Int64",
+			ToFunc: "ValueInt64Pointer",
+		}, nil
+	case o.Number != nil:
+		return ObjectField{
+			GoType: "*big.Float",
+			Type:   "types.Number",
+			ToFunc: "ValueBigFloat",
+		}, nil
+	case o.String != nil:
+		return ObjectField{
+			GoType: "*string",
+			Type:   "types.String",
+			ToFunc: "ValueStringPointer",
+		}, nil
+	}
+
+	return ObjectField{}, errors.New("no matching object attribute type found")
+}
+
+func ObjectFieldFrom(o specschema.ObjectAttributeType) (ObjectField, error) {
+	switch {
+	case o.Bool != nil:
+		return ObjectField{
+			Type:     "types.BoolType",
+			FromFunc: "BoolPointerValue",
+		}, nil
+	case o.Float64 != nil:
+		return ObjectField{
+			Type:     "types.Float64Type",
+			FromFunc: "Float64PointerValue",
+		}, nil
+	case o.Int64 != nil:
+		return ObjectField{
+			Type:     "types.Int64Type",
+			FromFunc: "Int64PointerValue",
+		}, nil
+	case o.Number != nil:
+		return ObjectField{
+			Type:     "types.NumberType",
+			FromFunc: "NumberValue",
+		}, nil
+	case o.String != nil:
+		return ObjectField{
+			Type:     "types.StringType",
+			FromFunc: "StringPointerValue",
+		}, nil
+	}
+
+	return ObjectField{}, errors.New("no matching object attribute type found")
 }

@@ -321,14 +321,15 @@ func (c CustomNestedObjectType) renderValueUnknown() ([]byte, error) {
 }
 
 type CustomNestedObjectValue struct {
-	Name           FrameworkIdentifier
-	AttributeTypes map[FrameworkIdentifier]string
-	AttrTypes      map[FrameworkIdentifier]string
-	AttrValues     map[FrameworkIdentifier]string
-	templates      map[string]string
+	Name            FrameworkIdentifier
+	AttributeTypes  map[FrameworkIdentifier]string
+	AttrTypes       map[FrameworkIdentifier]string
+	AttrValues      map[FrameworkIdentifier]string
+	CollectionTypes map[FrameworkIdentifier]map[string]string
+	templates       map[string]string
 }
 
-func NewCustomNestedObjectValue(name string, attributeTypes, attrTypes, attrValues map[string]string) CustomNestedObjectValue {
+func NewCustomNestedObjectValue(name string, attributeTypes, attrTypes, attrValues map[string]string, collectionTypes map[string]map[string]string) CustomNestedObjectValue {
 	t := map[string]string{
 		"attributeTypes":   NestedObjectValueAttributeTypesTemplate,
 		"equal":            NestedObjectValueEqualTemplate,
@@ -360,12 +361,19 @@ func NewCustomNestedObjectValue(name string, attributeTypes, attrTypes, attrValu
 		attrVals[FrameworkIdentifier(k)] = v
 	}
 
+	collectionTyps := make(map[FrameworkIdentifier]map[string]string, len(collectionTypes))
+
+	for k, v := range collectionTypes {
+		collectionTyps[FrameworkIdentifier(k)] = v
+	}
+
 	return CustomNestedObjectValue{
-		Name:           FrameworkIdentifier(name),
-		AttributeTypes: attribTypes,
-		AttrTypes:      attrTyps,
-		AttrValues:     attrVals,
-		templates:      t,
+		Name:            FrameworkIdentifier(name),
+		AttributeTypes:  attribTypes,
+		AttrTypes:       attrTyps,
+		AttrValues:      attrVals,
+		CollectionTypes: collectionTyps,
+		templates:       t,
 	}
 }
 
@@ -524,13 +532,15 @@ func (c CustomNestedObjectValue) renderToObjectValue() ([]byte, error) {
 	}
 
 	err = t.Execute(&buf, struct {
-		Name           string
-		AttributeTypes map[FrameworkIdentifier]string
-		AttrTypes      map[FrameworkIdentifier]string
+		Name            string
+		AttributeTypes  map[FrameworkIdentifier]string
+		AttrTypes       map[FrameworkIdentifier]string
+		CollectionTypes map[FrameworkIdentifier]map[string]string
 	}{
-		Name:           c.Name.ToPascalCase(),
-		AttributeTypes: c.AttributeTypes,
-		AttrTypes:      c.AttrTypes,
+		Name:            c.Name.ToPascalCase(),
+		AttributeTypes:  c.AttributeTypes,
+		AttrTypes:       c.AttrTypes,
+		CollectionTypes: c.CollectionTypes,
 	})
 
 	if err != nil {

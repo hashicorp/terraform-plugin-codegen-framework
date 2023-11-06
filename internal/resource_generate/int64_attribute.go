@@ -214,12 +214,12 @@ func (g GeneratorInt64Attribute) ToFromFunctions(name string) ([]byte, error) {
 }
 
 // AttrType returns a string representation of a basetypes.Int64Typable type.
-func (g GeneratorInt64Attribute) AttrType(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorInt64Attribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
-		return fmt.Sprintf("%sType{}", name.ToPascalCase())
+		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
 
-	return "basetypes.Int64Type{}"
+	return "basetypes.Int64Type{}", nil
 }
 
 // AttrValue returns a string representation of a basetypes.Int64Valuable type.
@@ -231,26 +231,26 @@ func (g GeneratorInt64Attribute) AttrValue(name generatorschema.FrameworkIdentif
 	return "basetypes.Int64Value"
 }
 
-func (g GeneratorInt64Attribute) To() generatorschema.ToFromConversion {
+func (g GeneratorInt64Attribute) To() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "ValueInt64Pointer",
-	}
+	}, nil
 }
 
-func (g GeneratorInt64Attribute) From() generatorschema.ToFromConversion {
+func (g GeneratorInt64Attribute) From() (generatorschema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
 		return generatorschema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
-		}
+		}, nil
 	}
 
 	return generatorschema.ToFromConversion{
 		Default: "Int64PointerValue",
-	}
+	}, nil
 }

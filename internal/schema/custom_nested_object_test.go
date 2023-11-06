@@ -402,7 +402,7 @@ return nil, err
 attributes[k] = a
 }
 
-return NewExampleValueMust(t.AttrTypes, attributes), nil
+return NewExampleValueMust(ExampleValue{}.AttributeTypes(ctx), attributes), nil
 }`),
 		},
 	}
@@ -630,7 +630,7 @@ return map[string]attr.Type{
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil, nil)
 
 			got, err := customObjectValue.renderAttributeTypes()
 
@@ -692,7 +692,7 @@ return true
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, testCase.attrValues)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, testCase.attrValues, nil)
 
 			got, err := customObjectValue.renderEqual()
 
@@ -730,7 +730,7 @@ return v.state == attr.ValueStateNull
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderIsNull()
 
@@ -768,7 +768,7 @@ return v.state == attr.ValueStateUnknown
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderIsUnknown()
 
@@ -806,7 +806,7 @@ return "ExampleValue"
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderString()
 
@@ -825,11 +825,12 @@ func TestCustomNestedObjectValue_renderToObjectValue(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		name           string
-		attributeTypes map[string]string
-		attrTypes      map[string]string
-		expected       []byte
-		expectedError  error
+		name            string
+		attributeTypes  map[string]string
+		attrTypes       map[string]string
+		collectionTypes map[string]map[string]string
+		expected        []byte
+		expectedError   error
 	}{
 		"default": {
 			name: "Example",
@@ -841,12 +842,94 @@ func TestCustomNestedObjectValue_renderToObjectValue(t *testing.T) {
 			},
 			expected: []byte(`
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
 "bool_attribute": basetypes.BoolType{},
 },
 map[string]attr.Value{
 "bool_attribute": v.BoolAttribute,
+})
+
+return objVal, diags
+}`),
+		},
+		"collection-type": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"list_attribute": "List",
+			},
+			attrTypes: map[string]string{
+				"list_attribute": "basetypes.ListType{\nElemType: types.BoolType,\n}",
+			},
+			collectionTypes: map[string]map[string]string{
+				"list_attribute": {
+					"ElementType":   "types.BoolType",
+					"TypeValueFunc": "types.ListValue",
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+listAttributeVal, d := types.ListValue(types.BoolType, v.ListAttribute.Elements())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"list_attribute": basetypes.ListType{
+ElemType: types.BoolType,
+},
+}), diags
+}
+
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+"list_attribute": basetypes.ListType{
+ElemType: types.BoolType,
+},
+},
+map[string]attr.Value{
+"list_attribute": listAttributeVal,
+})
+
+return objVal, diags
+}`),
+		},
+		"object-type": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"object_attribute": "Object",
+			},
+			attrTypes: map[string]string{
+				"object_attribute": "basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"bool\": types.BoolType,\n\"float64\": types.Float64Type,\n\"int64\": types.Int64Type,\n\"number\": types.NumberType,\n\"string\": types.StringType,\n},\n}",
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+objectAttributeVal, d := types.ObjectValue(v.ObjectAttribute.AttributeTypes(ctx), v.ObjectAttribute.Attributes())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"object_attribute": basetypes.ObjectType{
+AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+},
+}), diags
+}
+
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+"object_attribute": basetypes.ObjectType{
+AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+},
+},
+map[string]attr.Value{
+"object_attribute": objectAttributeVal,
 })
 
 return objVal, diags
@@ -860,7 +943,7 @@ return objVal, diags
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, testCase.attributeTypes, testCase.attrTypes, nil, testCase.collectionTypes)
 
 			got, err := customObjectValue.renderToObjectValue()
 
@@ -937,7 +1020,7 @@ panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, testCase.attrTypes, nil, nil)
 
 			got, err := customObjectValue.renderToTerraformValue()
 
@@ -979,7 +1062,7 @@ AttrTypes: v.AttributeTypes(ctx),
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderType()
 
@@ -1014,7 +1097,7 @@ func TestCustomNestedObjectValue_renderValuable(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderValuable()
 
@@ -1051,7 +1134,7 @@ state attr.ValueState
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil)
+			customObjectValue := NewCustomNestedObjectValue(testCase.name, nil, nil, nil, nil)
 
 			got, err := customObjectValue.renderValue()
 

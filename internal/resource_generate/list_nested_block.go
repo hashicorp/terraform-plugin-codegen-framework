@@ -254,7 +254,14 @@ func (g GeneratorListNestedBlock) CustomTypeAndValue(name string) ([]byte, error
 		attributesBlocksAttrTypes[k] = v
 	}
 
-	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues)
+	// Only attributes need to be processed here as we're only concerned with List, Map, and Set.
+	attributeCollectionTypes, err := g.NestedObject.Attributes.CollectionTypes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues, attributeCollectionTypes)
 
 	b, err = objectValue.Render()
 

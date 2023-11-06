@@ -1,5 +1,6 @@
 
 func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested"}}
 {{- $typesType := "List"}}
@@ -8,6 +9,7 @@ func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValu
 {{- else if eq $value "SetNested"}}
 {{- $typesType := "Set"}}
 {{- end}}
+
 {{$key.ToCamelCase}} := types.{{$typesType}}ValueMust(
 {{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
@@ -37,6 +39,7 @@ AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 )
 }
 {{else if eq $value "SingleNested"}}
+
 var {{$key.ToCamelCase}} basetypes.ObjectValue
 
 if v.{{$key.ToPascalCase}}.IsNull() {
@@ -59,16 +62,64 @@ v.{{$key.ToPascalCase}}.Attributes(),
 }
 {{end}}
 {{- end}}
+{{- range $key, $value := .CollectionTypes }}
+
+{{$key.ToCamelCase}}Val, d := {{$value.TypeValueFunc}}({{$value.ElementType}}, v.{{$key.ToPascalCase}}.Elements())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+{{- range $attrTypeKey, $attrTypeValue := $.AttrTypes}}
+"{{$attrTypeKey}}": {{$attrTypeValue}},
+{{- end}}
+}), diags
+}
+{{- end}}
+
+{{- range $key, $value := .AttributeTypes }}
+{{- if eq $value "Object"}}
+
+{{$key.ToCamelCase}}Val, d := types.ObjectValue(v.{{$key.ToPascalCase}}.AttributeTypes(ctx), v.{{$key.ToPascalCase}}.Attributes())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+{{- range $attrTypeKey, $attrTypeValue := $.AttrTypes}}
+{{- if eq $value "Object"}}
+"{{$attrTypeKey}}": basetypes.ObjectType{
+AttrTypes: v.{{$key.ToPascalCase}}.AttributeTypes(ctx),
+},
+{{- else}}
+"{{$attrTypeKey}}": {{$attrTypeValue}},
+{{- end}}
+{{- end}}
+}), diags
+}
+{{- end}}
+{{- end}}
+
 objVal, diags := types.ObjectValue(
 map[string]attr.Type{
 {{- range $key, $value := .AttributeTypes }}
+{{- if eq $value "Object"}}
+"{{$key}}": basetypes.ObjectType{
+AttrTypes: v.{{$key.ToPascalCase}}.AttributeTypes(ctx),
+},
+{{- else}}
 "{{$key}}": {{index $.AttrTypes $key}},
+{{- end}}
 {{- end}}
 },
 map[string]attr.Value{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested" "SingleNested"}}
 "{{$key}}": {{$key.ToCamelCase}},
+{{- else if index $.CollectionTypes $key}}
+"{{$key}}": {{$key.ToCamelCase}}Val,
+{{- else if eq $value "Object"}}
+"{{$key}}": {{$key.ToCamelCase}}Val,
 {{- else}}
 "{{$key}}": v.{{$key.ToPascalCase}},
 {{- end}}

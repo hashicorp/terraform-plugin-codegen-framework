@@ -36,5 +36,5 @@ return nil, err
 attributes[k] = a
 }
 
-return New{{.Name}}ValueMust(t.AttrTypes, attributes), nil
+return New{{.Name}}ValueMust({{.Name}}Value{}.AttributeTypes(ctx), attributes), nil
 }
