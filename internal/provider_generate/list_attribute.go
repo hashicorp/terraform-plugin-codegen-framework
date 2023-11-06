@@ -201,7 +201,12 @@ func (g GeneratorListAttribute) ToFromFunctions(name string) ([]byte, error) {
 
 	elementTypeType := generatorschema.GetElementType(g.ElementType)
 	elementTypeValue := generatorschema.GetElementValueType(g.ElementType)
-	elementFrom := generatorschema.GetElementFromFunc(g.ElementType)
+
+	elementFrom, err := generatorschema.GetElementFromFunc(g.ElementType)
+
+	if err != nil {
+		return nil, err
+	}
 
 	toFrom := generatorschema.NewToFromList(name, g.AssociatedExternalType, elementTypeType, elementTypeValue, elementFrom)
 
