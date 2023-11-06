@@ -308,7 +308,11 @@ func (g GeneratorSchema) ToFromFunctions(ctx context.Context, logger *slog.Logge
 		if t, ok := g.Blocks[k].(ToFrom); ok {
 			b, err := t.ToFromFunctions(k)
 
-			if err != nil {
+			var unimplErr *UnimplementedError
+
+			if errors.As(err, &unimplErr) {
+				logger.Error("error generating to/from methods", "path", fmt.Sprintf("%s.%s.%s", logging.GetPathFromContext(ctx), k, unimplErr.Path()), "err", err)
+			} else if err != nil {
 				return nil, err
 			}
 
