@@ -1185,6 +1185,49 @@ map[string]attr.Value{
 return objVal, diags
 }`),
 		},
+		"collection-type-attribute-name-same-as-generated-method-name": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"type": "List",
+			},
+			attrTypes: map[string]string{
+				"type": "basetypes.ListType{\nElemType: types.BoolType,\n}",
+			},
+			collectionTypes: map[string]map[string]string{
+				"type": {
+					"ElementType":   "types.BoolType",
+					"TypeValueFunc": "types.ListValue",
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+typeVal, d := types.ListValue(types.BoolType, v.ExampleType.Elements())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"type": basetypes.ListType{
+ElemType: types.BoolType,
+},
+}), diags
+}
+
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+"type": basetypes.ListType{
+ElemType: types.BoolType,
+},
+},
+map[string]attr.Value{
+"type": typeVal,
+})
+
+return objVal, diags
+}`),
+		},
 		"object-type": {
 			name: "Example",
 			attributeTypes: map[string]string{
@@ -1217,6 +1260,43 @@ AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
 },
 map[string]attr.Value{
 "object_attribute": objectAttributeVal,
+})
+
+return objVal, diags
+}`),
+		},
+		"object-type-attribute-name-same-as-generated-method-name": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"type": "Object",
+			},
+			attrTypes: map[string]string{
+				"type": "basetypes.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"bool\": types.BoolType,\n\"float64\": types.Float64Type,\n\"int64\": types.Int64Type,\n\"number\": types.NumberType,\n\"string\": types.StringType,\n},\n}",
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+typeVal, d := types.ObjectValue(v.ExampleType.AttributeTypes(ctx), v.ExampleType.Attributes())
+
+diags.Append(d...)
+
+if d.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"type": basetypes.ObjectType{
+AttrTypes: v.ExampleType.AttributeTypes(ctx),
+},
+}), diags
+}
+
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+"type": basetypes.ObjectType{
+AttrTypes: v.ExampleType.AttributeTypes(ctx),
+},
+},
+map[string]attr.Value{
+"type": typeVal,
 })
 
 return objVal, diags

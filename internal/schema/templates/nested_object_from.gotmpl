@@ -48,13 +48,13 @@ return New{{$.Name}}ValueUnknown(), diags
 return {{.Name}}Value{
 {{- range $key, $value := .FromFuncs}}
 {{- if $value.AssocExtType}}
-{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
+{{$key.ToPrefixPascalCase $.Name}}: {{$key.ToCamelCase}}Val,
 {{- else if $value.Default}}
-{{$key.ToPascalCase}}: types.{{$value.Default}}(apiObject.{{$key.ToPascalCase}}),
+{{$key.ToPrefixPascalCase $.Name}}: types.{{$value.Default}}(apiObject.{{$key.ToPascalCase}}),
 {{- else if $value.CollectionType.ElementType}}
-{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
+{{$key.ToPrefixPascalCase $.Name}}: {{$key.ToCamelCase}}Val,
 {{- else if $value.ObjectType}}
-{{$key.ToPascalCase}}: {{$key.ToCamelCase}}Val,
+{{$key.ToPrefixPascalCase $.Name}}: {{$key.ToCamelCase}}Val,
 {{- end}}
 {{- end}}
 state: attr.ValueStateKnown,
