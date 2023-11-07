@@ -216,9 +216,17 @@ func (g GeneratorObjectAttribute) ToFromFunctions(name string) ([]byte, error) {
 		return nil, nil
 	}
 
-	attrTypesToFuncs := generatorschema.GetAttrTypesToFuncs(g.AttributeTypes)
+	attrTypesToFuncs, err := generatorschema.GetAttrTypesToFuncs(g.AttributeTypes)
 
-	attrTypesFromFuncs := generatorschema.GetAttrTypesFromFuncs(g.AttributeTypes)
+	if err != nil {
+		return nil, err
+	}
+
+	attrTypesFromFuncs, err := generatorschema.GetAttrTypesFromFuncs(g.AttributeTypes)
+
+	if err != nil {
+		return nil, err
+	}
 
 	toFrom := generatorschema.NewToFromObject(name, g.AssociatedExternalType, attrTypesToFuncs, attrTypesFromFuncs)
 

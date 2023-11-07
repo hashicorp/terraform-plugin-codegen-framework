@@ -5,6 +5,7 @@ package resource_generate
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"text/template"
 
@@ -320,9 +321,13 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 
 	var buf bytes.Buffer
 
-	toFuncs := g.Attributes.ToFuncs()
+	toFuncs, err := g.Attributes.ToFuncs()
 
-	fromFuncs := g.Attributes.FromFuncs()
+	if err != nil {
+		return nil, err
+	}
+
+	fromFuncs, _ := g.Attributes.FromFuncs()
 
 	toFrom := generatorschema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
 
@@ -351,4 +356,12 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (g GeneratorSingleNestedBlock) To() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
+}
+
+func (g GeneratorSingleNestedBlock) From() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
 }

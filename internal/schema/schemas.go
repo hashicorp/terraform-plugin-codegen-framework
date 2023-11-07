@@ -5,8 +5,12 @@ package schema
 
 import (
 	"bytes"
+	"context"
 	"fmt"
+	"log/slog"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 )
 
 // TODO: Field(s) could be added to handle end-user supplying their own templates to allow overriding.
@@ -82,11 +86,13 @@ func (g GeneratorSchemas) CustomTypeValue() (map[string][]byte, error) {
 	return customTypeValueBytes, nil
 }
 
-func (g GeneratorSchemas) ToFromFunctions() (map[string][]byte, error) {
+func (g GeneratorSchemas) ToFromFunctions(ctx context.Context, logger *slog.Logger) (map[string][]byte, error) {
 	modelsExpandFlattenBytes := make(map[string][]byte, len(g.schemas))
 
 	for name, s := range g.schemas {
-		b, err := s.ToFromFunctions()
+		ctxWithPath := logging.SetPathInContext(ctx, name)
+
+		b, err := s.ToFromFunctions(ctxWithPath, logger)
 		if err != nil {
 			return nil, err
 		}

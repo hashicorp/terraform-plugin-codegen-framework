@@ -5,14 +5,17 @@ package schema
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 )
 
@@ -266,7 +269,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 // ToFromFunctions generates code for converting to an associated
 // external type from a framework type, and from an associated
 // external type to a framework type.
-func (g GeneratorSchema) ToFromFunctions() ([]byte, error) {
+func (g GeneratorSchema) ToFromFunctions(ctx context.Context, logger *slog.Logger) ([]byte, error) {
 	var buf bytes.Buffer
 
 	attributeKeys := g.Attributes.SortedKeys()
@@ -279,7 +282,11 @@ func (g GeneratorSchema) ToFromFunctions() ([]byte, error) {
 		if t, ok := g.Attributes[k].(ToFrom); ok {
 			b, err := t.ToFromFunctions(k)
 
-			if err != nil {
+			var unimplErr *UnimplementedError
+
+			if errors.As(err, &unimplErr) {
+				logger.Error("error generating to/from methods", "path", fmt.Sprintf("%s.%s.%s", logging.GetPathFromContext(ctx), k, unimplErr.Path()), "err", err)
+			} else if err != nil {
 				return nil, err
 			}
 
@@ -301,7 +308,11 @@ func (g GeneratorSchema) ToFromFunctions() ([]byte, error) {
 		if t, ok := g.Blocks[k].(ToFrom); ok {
 			b, err := t.ToFromFunctions(k)
 
-			if err != nil {
+			var unimplErr *UnimplementedError
+
+			if errors.As(err, &unimplErr) {
+				logger.Error("error generating to/from methods", "path", fmt.Sprintf("%s.%s.%s", logging.GetPathFromContext(ctx), k, unimplErr.Path()), "err", err)
+			} else if err != nil {
 				return nil, err
 			}
 
@@ -365,8 +376,16 @@ func ElementTypeGoType(elementType specschema.ElementType) (string, error) {
 		return "*float64", nil
 	case elementType.Int64 != nil:
 		return "*int64", nil
+	case elementType.List != nil:
+		return "", NewUnimplementedError(errors.New("list element type is not yet implemented"))
+	case elementType.Map != nil:
+		return "", NewUnimplementedError(errors.New("map element type is not yet implemented"))
 	case elementType.Number != nil:
 		return "*big.Float", nil
+	case elementType.Object != nil:
+		return "", NewUnimplementedError(errors.New("object element type is not yet implemented"))
+	case elementType.Set != nil:
+		return "", NewUnimplementedError(errors.New("set element type is not yet implemented"))
 	case elementType.String != nil:
 		return "*string", nil
 	}
@@ -439,12 +458,20 @@ func ObjectFieldTo(o specschema.ObjectAttributeType) (ObjectField, error) {
 			Type:   "types.Int64",
 			ToFunc: "ValueInt64Pointer",
 		}, nil
+	case o.List != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("list attribute type is not yet implemented"))
+	case o.Map != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("map attribute type is not yet implemented"))
 	case o.Number != nil:
 		return ObjectField{
 			GoType: "*big.Float",
 			Type:   "types.Number",
 			ToFunc: "ValueBigFloat",
 		}, nil
+	case o.Object != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("object attribute type is not yet implemented"))
+	case o.Set != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("set attribute type is not yet implemented"))
 	case o.String != nil:
 		return ObjectField{
 			GoType: "*string",
@@ -473,11 +500,19 @@ func ObjectFieldFrom(o specschema.ObjectAttributeType) (ObjectField, error) {
 			Type:     "types.Int64Type",
 			FromFunc: "Int64PointerValue",
 		}, nil
+	case o.List != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("list attribute type is not yet implemented"))
+	case o.Map != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("map attribute type is not yet implemented"))
 	case o.Number != nil:
 		return ObjectField{
 			Type:     "types.NumberType",
 			FromFunc: "NumberValue",
 		}, nil
+	case o.Object != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("object attribute type is not yet implemented"))
+	case o.Set != nil:
+		return ObjectField{}, NewUnimplementedError(errors.New("set attribute type is not yet implemented"))
 	case o.String != nil:
 		return ObjectField{
 			Type:     "types.StringType",

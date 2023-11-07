@@ -8,6 +8,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"log/slog"
+	"os"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
@@ -16,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
@@ -82,6 +85,10 @@ func (a *GenerateDataSourcesCommand) Synopsis() string {
 func (cmd *GenerateDataSourcesCommand) Run(args []string) int {
 	ctx := context.Background()
 
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelWarn,
+	}))
+
 	fs := cmd.Flags()
 	err := fs.Parse(args)
 	if err != nil {
@@ -89,7 +96,7 @@ func (cmd *GenerateDataSourcesCommand) Run(args []string) int {
 		return 1
 	}
 
-	err = cmd.runInternal(ctx)
+	err = cmd.runInternal(ctx, logger)
 	if err != nil {
 		cmd.UI.Error(fmt.Sprintf("Error executing command: %s\n", err))
 		return 1
@@ -98,7 +105,7 @@ func (cmd *GenerateDataSourcesCommand) Run(args []string) int {
 	return 0
 }
 
-func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context) error {
+func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *slog.Logger) error {
 	// read input file
 	src, err := input.Read(cmd.flagIRInputPath)
 	if err != nil {
@@ -117,7 +124,7 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateDataSourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource")
+	err = generateDataSourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource", logger)
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
 	}
@@ -125,7 +132,9 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context) error {
 	return nil
 }
 
-func generateDataSourceCode(spec spec.Specification, outputPath, packageName, generatorType string) error {
+func generateDataSourceCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+	ctxWithPath := logging.SetPathInContext(ctx, "data_source")
+
 	// convert IR to framework schema
 	c := datasource_convert.NewConverter(spec)
 	s, err := c.ToGeneratorDataSourceSchema()
@@ -153,7 +162,7 @@ func generateDataSourceCode(spec spec.Specification, outputPath, packageName, ge
 	}
 
 	// generate "expand" and "flatten" code
-	toFromFunctions, err := g.ToFromFunctions()
+	toFromFunctions, err := g.ToFromFunctions(ctxWithPath, logger)
 	if err != nil {
 		log.Fatal(err)
 	}
