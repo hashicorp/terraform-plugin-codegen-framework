@@ -4,6 +4,7 @@
 package schema
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -93,7 +94,7 @@ type AttrTypesToFuncs struct {
 // GetAttrTypesToFuncs returns string representations of the function that is used
 // for converting to an API Go type from a framework type.
 // TODO: Handle custom type, and types other than primitives.
-func GetAttrTypesToFuncs(a specschema.ObjectAttributeTypes) map[string]AttrTypesToFuncs {
+func GetAttrTypesToFuncs(a specschema.ObjectAttributeTypes) (map[string]AttrTypesToFuncs, error) {
 	attrTypesFuncs := make(map[string]AttrTypesToFuncs, len(a))
 
 	for _, v := range a {
@@ -113,11 +114,20 @@ func GetAttrTypesToFuncs(a specschema.ObjectAttributeTypes) map[string]AttrTypes
 				AttrValue: "types.Int64",
 				ToFunc:    "ValueInt64Pointer",
 			}
+		case v.List != nil:
+			return nil, NewUnimplementedError(errors.New("list attribute type is not yet implemented"))
+		case v.Map != nil:
+			return nil, NewUnimplementedError(errors.New("map attribute type is not yet implemented"))
+
 		case v.Number != nil:
 			attrTypesFuncs[v.Name] = AttrTypesToFuncs{
 				AttrValue: "types.Number",
 				ToFunc:    "ValueBigFloat",
 			}
+		case v.Object != nil:
+			return nil, NewUnimplementedError(errors.New("object attribute type is not yet implemented"))
+		case v.Set != nil:
+			return nil, NewUnimplementedError(errors.New("set attribute type is not yet implemented"))
 		case v.String != nil:
 			attrTypesFuncs[v.Name] = AttrTypesToFuncs{
 				AttrValue: "types.String",
@@ -126,13 +136,13 @@ func GetAttrTypesToFuncs(a specschema.ObjectAttributeTypes) map[string]AttrTypes
 		}
 	}
 
-	return attrTypesFuncs
+	return attrTypesFuncs, nil
 }
 
 // GetAttrTypesFromFuncs returns string representations of the function that is used
 // for converting from an API Go type to a framework type.
 // TODO: Handle custom type, and types other than primitives.
-func GetAttrTypesFromFuncs(a specschema.ObjectAttributeTypes) map[string]string {
+func GetAttrTypesFromFuncs(a specschema.ObjectAttributeTypes) (map[string]string, error) {
 	attrTypesFuncs := make(map[string]string, len(a))
 
 	for _, v := range a {
@@ -143,12 +153,20 @@ func GetAttrTypesFromFuncs(a specschema.ObjectAttributeTypes) map[string]string 
 			attrTypesFuncs[v.Name] = "types.Float64PointerValue"
 		case v.Int64 != nil:
 			attrTypesFuncs[v.Name] = "types.Int64PointerValue"
+		case v.List != nil:
+			return nil, NewUnimplementedError(errors.New("list attribute type is not yet implemented"))
+		case v.Map != nil:
+			return nil, NewUnimplementedError(errors.New("map attribute type is not yet implemented"))
 		case v.Number != nil:
 			attrTypesFuncs[v.Name] = "types.NumberValue"
+		case v.Object != nil:
+			return nil, NewUnimplementedError(errors.New("object attribute type is not yet implemented"))
+		case v.Set != nil:
+			return nil, NewUnimplementedError(errors.New("set attribute type is not yet implemented"))
 		case v.String != nil:
 			attrTypesFuncs[v.Name] = "types.StringPointerValue"
 		}
 	}
 
-	return attrTypesFuncs
+	return attrTypesFuncs, nil
 }

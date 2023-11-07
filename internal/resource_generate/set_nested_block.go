@@ -5,6 +5,7 @@ package resource_generate
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"text/template"
 
@@ -311,9 +312,17 @@ func (g GeneratorSetNestedBlock) ToFromFunctions(name string) ([]byte, error) {
 
 	var buf bytes.Buffer
 
-	toFuncs := g.NestedObject.Attributes.ToFuncs()
+	toFuncs, err := g.NestedObject.Attributes.ToFuncs()
 
-	fromFuncs := g.NestedObject.Attributes.FromFuncs()
+	if err != nil {
+		return nil, err
+	}
+
+	fromFuncs, err := g.NestedObject.Attributes.FromFuncs()
+
+	if err != nil {
+		return nil, err
+	}
 
 	toFrom := generatorschema.NewToFromNestedObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
 
@@ -342,4 +351,12 @@ func (g GeneratorSetNestedBlock) ToFromFunctions(name string) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (g GeneratorSetNestedBlock) To() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("set nested type is not yet implemented"))
+}
+
+func (g GeneratorSetNestedBlock) From() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("set nested type is not yet implemented"))
 }

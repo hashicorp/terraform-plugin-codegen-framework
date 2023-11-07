@@ -8,6 +8,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"log/slog"
+	"os"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
@@ -15,6 +17,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -82,6 +85,10 @@ func (a *GenerateResourcesCommand) Synopsis() string {
 func (cmd *GenerateResourcesCommand) Run(args []string) int {
 	ctx := context.Background()
 
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelWarn,
+	}))
+
 	fs := cmd.Flags()
 	err := fs.Parse(args)
 	if err != nil {
@@ -89,7 +96,7 @@ func (cmd *GenerateResourcesCommand) Run(args []string) int {
 		return 1
 	}
 
-	err = cmd.runInternal(ctx)
+	err = cmd.runInternal(ctx, logger)
 	if err != nil {
 		cmd.UI.Error(fmt.Sprintf("Error executing command: %s\n", err))
 		return 1
@@ -98,7 +105,7 @@ func (cmd *GenerateResourcesCommand) Run(args []string) int {
 	return 0
 }
 
-func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context) error {
+func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context, logger *slog.Logger) error {
 	// read input file
 	src, err := input.Read(cmd.flagIRInputPath)
 	if err != nil {
@@ -117,7 +124,7 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateResourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName, "Resource")
+	err = generateResourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Resource", logger)
 	if err != nil {
 		return fmt.Errorf("error generating resource code: %w", err)
 	}
@@ -125,7 +132,9 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context) error {
 	return nil
 }
 
-func generateResourceCode(spec spec.Specification, outputPath, packageName, generatorType string) error {
+func generateResourceCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+	ctx = logging.SetPathInContext(ctx, "resource")
+
 	// convert IR to framework schema
 	c := resource_convert.NewConverter(spec)
 	s, err := c.ToGeneratorResourceSchema()
@@ -153,7 +162,7 @@ func generateResourceCode(spec spec.Specification, outputPath, packageName, gene
 	}
 
 	// generate "expand" and "flatten" code
-	toFromFunctions, err := g.ToFromFunctions()
+	toFromFunctions, err := g.ToFromFunctions(ctx, logger)
 	if err != nil {
 		log.Fatal(err)
 	}

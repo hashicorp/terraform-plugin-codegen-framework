@@ -5,6 +5,7 @@ package provider_generate
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"text/template"
 
@@ -217,9 +218,17 @@ func (g GeneratorListNestedAttribute) ToFromFunctions(name string) ([]byte, erro
 
 	var buf bytes.Buffer
 
-	toFuncs := g.NestedObject.Attributes.ToFuncs()
+	toFuncs, err := g.NestedObject.Attributes.ToFuncs()
 
-	fromFuncs := g.NestedObject.Attributes.FromFuncs()
+	if err != nil {
+		return nil, err
+	}
+
+	fromFuncs, err := g.NestedObject.Attributes.FromFuncs()
+
+	if err != nil {
+		return nil, err
+	}
 
 	toFrom := generatorschema.NewToFromNestedObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
 
@@ -248,4 +257,12 @@ func (g GeneratorListNestedAttribute) ToFromFunctions(name string) ([]byte, erro
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (g GeneratorListNestedAttribute) To() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
+}
+
+func (g GeneratorListNestedAttribute) From() (generatorschema.ToFromConversion, error) {
+	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
 }

@@ -7,6 +7,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log/slog"
+	"os"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
@@ -70,30 +72,34 @@ func (cmd *GenerateAllCommand) Help() string {
 	return strBuilder.String()
 }
 
-func (a *GenerateAllCommand) Synopsis() string {
+func (cmd *GenerateAllCommand) Synopsis() string {
 	return "Generate code for provider, resources, and data sources from an Intermediate Representation (IR) JSON file."
 }
 
 func (cmd *GenerateAllCommand) Run(args []string) int {
 	ctx := context.Background()
 
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelWarn,
+	}))
+
 	fs := cmd.Flags()
 	err := fs.Parse(args)
 	if err != nil {
-		cmd.UI.Error(fmt.Sprintf("error parsing command flags: %s", err))
+		logger.Error("error parsing command flags", "err", err)
 		return 1
 	}
 
-	err = cmd.runInternal(ctx)
+	err = cmd.runInternal(ctx, logger)
 	if err != nil {
-		cmd.UI.Error(fmt.Sprintf("Error executing command: %s\n", err))
+		logger.Error("error executing command", "err", err)
 		return 1
 	}
 
 	return 0
 }
 
-func (cmd *GenerateAllCommand) runInternal(ctx context.Context) error {
+func (cmd *GenerateAllCommand) runInternal(ctx context.Context, logger *slog.Logger) error {
 	// read input file
 	src, err := input.Read(cmd.flagIRInputPath)
 	if err != nil {
@@ -112,15 +118,17 @@ func (cmd *GenerateAllCommand) runInternal(ctx context.Context) error {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateDataSourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource")
+	err = generateDataSourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource", logger)
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
 	}
-	err = generateResourceCode(spec, cmd.flagOutputPath, cmd.flagPackageName, "Resource")
+
+	err = generateResourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Resource", logger)
 	if err != nil {
 		return fmt.Errorf("error generating resource code: %w", err)
 	}
-	err = generateProviderCode(spec, cmd.flagOutputPath, cmd.flagPackageName, "Provider")
+
+	err = generateProviderCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Provider", logger)
 	if err != nil {
 		return fmt.Errorf("error generating provider code: %w", err)
 	}

@@ -4,6 +4,7 @@
 package schema
 
 import (
+	"errors"
 	"fmt"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
@@ -120,19 +121,27 @@ func GetElementValueType(e specschema.ElementType) string {
 // GetElementFromFunc returns a string representation of the function that is used
 // for converting from an API Go type to a framework type.
 // TODO: Handle custom type, and types other than primitives.
-func GetElementFromFunc(e specschema.ElementType) string {
+func GetElementFromFunc(e specschema.ElementType) (string, error) {
 	switch {
 	case e.Bool != nil:
-		return "types.BoolPointerValue"
+		return "types.BoolPointerValue", nil
 	case e.Float64 != nil:
-		return "types.Float64PointerValue"
+		return "types.Float64PointerValue", nil
 	case e.Int64 != nil:
-		return "types.Int64PointerValue"
+		return "types.Int64PointerValue", nil
+	case e.List != nil:
+		return "", NewUnimplementedError(errors.New("list element type is not yet implemented"))
+	case e.Map != nil:
+		return "", NewUnimplementedError(errors.New("map element type is not yet implemented"))
 	case e.Number != nil:
-		return "types.NumberValue"
+		return "types.NumberValue", nil
+	case e.Object != nil:
+		return "", NewUnimplementedError(errors.New("object element type is not yet implemented"))
+	case e.Set != nil:
+		return "", NewUnimplementedError(errors.New("set element type is not yet implemented"))
 	case e.String != nil:
-		return "types.StringPointerValue"
+		return "types.StringPointerValue", nil
 	}
 
-	return ""
+	return "", nil
 }
