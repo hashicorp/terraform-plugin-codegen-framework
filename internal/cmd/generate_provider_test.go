@@ -21,6 +21,10 @@ func TestGenerateProviderCommand(t *testing.T) {
 			irInputPath:   "testdata/custom_and_external/ir.json",
 			goldenFileDir: "testdata/custom_and_external/provider_output",
 		},
+		"provider_no_attributes": {
+			irInputPath:   "testdata/provider_no_attributes/ir.json",
+			goldenFileDir: "testdata/provider_no_attributes/provider_output",
+		},
 	}
 	for name, testCase := range testCases {
 		name, testCase := name, testCase
