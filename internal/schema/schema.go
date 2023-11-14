@@ -27,16 +27,16 @@ type GeneratorSchema struct {
 func (g GeneratorSchema) Imports() (string, error) {
 	imports := NewImports()
 
+	imports.Add(
+		code.Import{
+			Path: ContextImport,
+		},
+	)
+
 	for _, a := range g.Attributes {
 		if a == nil {
 			continue
 		}
-
-		imports.Add([]code.Import{
-			{
-				Path: ContextImport,
-			},
-		}...)
 
 		if _, ok := a.(Attributes); ok {
 			imports.Add([]code.Import{
