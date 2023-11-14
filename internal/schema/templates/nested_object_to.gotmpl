@@ -13,10 +13,11 @@ diags.Append(diag.NewErrorDiagnostic(
 
 return nil, diags
 }
+
 {{- range $key, $value := .ToFuncs}}
 {{- if $value.AssocExtType}}
 
-{{$value.AssocExtType.ToCamelCase}}, d := v.{{$key.ToPascalCase}}.To{{$value.AssocExtType.ToPascalCase}}(ctx)
+{{$value.AssocExtType.ToCamelCase}}, d := v.{{$key.ToPrefixPascalCase $.Name}}.To{{$value.AssocExtType.ToPascalCase}}(ctx)
 
 diags.Append(d...)
 
@@ -27,7 +28,7 @@ return nil, diags
 
 var {{$key.ToCamelCase}}Field {{$value.CollectionType.GoType}}
 
-d := v.{{$key.ToPascalCase}}.ElementsAs(ctx, &{{$key.ToCamelCase}}Field, false)
+d := v.{{$key.ToPrefixPascalCase $.Name}}.ElementsAs(ctx, &{{$key.ToCamelCase}}Field, false)
 
 diags.Append(d...)
 
@@ -36,7 +37,7 @@ return nil, diags
 }
 {{- else if $value.ObjectType}}
 
-attributes := v.{{$key.ToPascalCase}}.Attributes()
+attributes := v.{{$key.ToPrefixPascalCase $.Name}}.Attributes()
 
 {{- range $objectTypeKey, $objectTypeVal := $value.ObjectType}}
 
@@ -44,8 +45,8 @@ attributes := v.{{$key.ToPascalCase}}.Attributes()
 
 if !ok {
 diags.Append(diag.NewErrorDiagnostic(
-"{{$key.ToPascalCase}} Field {{$objectTypeKey}} Is Wrong Type",
-fmt.Sprintf(`{{$key.ToPascalCase}} field {{$objectTypeKey}} expected to be {{$objectTypeVal.Type}}, was: %T`, attributes["bool"]),
+"{{$key.ToPrefixPascalCase $.Name}} Field {{$objectTypeKey}} Is Wrong Type",
+fmt.Sprintf(`{{$key.ToPrefixPascalCase $.Name}} field {{$objectTypeKey}} expected to be {{$objectTypeVal.Type}}, was: %T`, attributes["bool"]),
 ))
 
 return nil, diags
@@ -59,7 +60,7 @@ return &{{.AssocExtType.TypeReference}}{
 {{- if $value.AssocExtType}}
 {{$key.ToPascalCase}}: {{$value.AssocExtType.ToCamelCase}},
 {{- else if $value.Default}}
-{{$key.ToPascalCase}}: v.{{$key.ToPascalCase}}.{{$value.Default}}(),
+{{$key.ToPascalCase}}: v.{{$key.ToPrefixPascalCase $.Name}}.{{$value.Default}}(),
 {{- else if $value.CollectionType.GoType}}
 {{$key.ToPascalCase}}: {{$key.ToCamelCase}}Field,
 {{- else if $value.ObjectType}}

@@ -10,17 +10,17 @@ var diags diag.Diagnostics
 {{- $typesType := "Set"}}
 {{- end}}
 
-{{$key.ToCamelCase}} := types.{{$typesType}}ValueMust(
+{{$key.ToPrefixCamelCase $.Name}} := types.{{$typesType}}ValueMust(
 {{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
 AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 },
 },
-v.{{$key.ToPascalCase}}.Elements(),
+v.{{$key.ToPrefixPascalCase $.Name}}.Elements(),
 )
 
-if v.{{$key.ToPascalCase}}.IsNull() {
-{{$key.ToCamelCase}} = types.{{$typesType}}Null(
+if v.{{$key.ToPrefixPascalCase $.Name}}.IsNull() {
+{{$key.ToPrefixCamelCase $.Name}} = types.{{$typesType}}Null(
 {{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
 AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
@@ -29,8 +29,8 @@ AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 )
 }
 
-if v.{{$key.ToPascalCase}}.IsUnknown() {
-{{$key.ToCamelCase}} = types.{{$typesType}}Unknown(
+if v.{{$key.ToPrefixPascalCase $.Name}}.IsUnknown() {
+{{$key.ToPrefixCamelCase $.Name}} = types.{{$typesType}}Unknown(
 {{$key.ToPascalCase}}Type{
 basetypes.ObjectType{
 AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
@@ -64,7 +64,7 @@ v.{{$key.ToPascalCase}}.Attributes(),
 {{- end}}
 {{- range $key, $value := .CollectionTypes }}
 
-{{$key.ToCamelCase}}Val, d := {{$value.TypeValueFunc}}({{$value.ElementType}}, v.{{$key.ToPascalCase}}.Elements())
+{{$key.ToCamelCase}}Val, d := {{$value.TypeValueFunc}}({{$value.ElementType}}, v.{{$key.ToPrefixPascalCase $.Name}}.Elements())
 
 diags.Append(d...)
 
@@ -80,7 +80,7 @@ return types.ObjectUnknown(map[string]attr.Type{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "Object"}}
 
-{{$key.ToCamelCase}}Val, d := types.ObjectValue(v.{{$key.ToPascalCase}}.AttributeTypes(ctx), v.{{$key.ToPascalCase}}.Attributes())
+{{$key.ToCamelCase}}Val, d := types.ObjectValue(v.{{$key.ToPrefixPascalCase $.Name}}.AttributeTypes(ctx), v.{{$key.ToPrefixPascalCase $.Name}}.Attributes())
 
 diags.Append(d...)
 
@@ -89,7 +89,7 @@ return types.ObjectUnknown(map[string]attr.Type{
 {{- range $attrTypeKey, $attrTypeValue := $.AttrTypes}}
 {{- if eq $value "Object"}}
 "{{$attrTypeKey}}": basetypes.ObjectType{
-AttrTypes: v.{{$key.ToPascalCase}}.AttributeTypes(ctx),
+AttrTypes: v.{{$key.ToPrefixPascalCase $.Name}}.AttributeTypes(ctx),
 },
 {{- else}}
 "{{$attrTypeKey}}": {{$attrTypeValue}},
@@ -105,7 +105,7 @@ map[string]attr.Type{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "Object"}}
 "{{$key}}": basetypes.ObjectType{
-AttrTypes: v.{{$key.ToPascalCase}}.AttributeTypes(ctx),
+AttrTypes: v.{{$key.ToPrefixPascalCase $.Name}}.AttributeTypes(ctx),
 },
 {{- else}}
 "{{$key}}": {{index $.AttrTypes $key}},
@@ -115,13 +115,13 @@ AttrTypes: v.{{$key.ToPascalCase}}.AttributeTypes(ctx),
 map[string]attr.Value{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested" "SingleNested"}}
-"{{$key}}": {{$key.ToCamelCase}},
+"{{$key}}": {{$key.ToPrefixCamelCase $.Name}},
 {{- else if index $.CollectionTypes $key}}
 "{{$key}}": {{$key.ToCamelCase}}Val,
 {{- else if eq $value "Object"}}
 "{{$key}}": {{$key.ToCamelCase}}Val,
 {{- else}}
-"{{$key}}": v.{{$key.ToPascalCase}},
+"{{$key}}": v.{{$key.ToPrefixPascalCase $.Name}},
 {{- end}}
 {{- end}}
 })

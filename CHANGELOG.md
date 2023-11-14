@@ -1,3 +1,13 @@
+## 0.3.0 (November 14, 2023)
+
+ENHANCEMENTS:
+
+* Adds code generation for List, Map, Object, and Set attributes that have an associated external type ([#75](https://github.com/hashicorp/terraform-plugin-codegen-framework/issues/75))
+
+BUG FIXES:
+
+* Fix nested attribute name and generated custom value method name conflicts ([#81](https://github.com/hashicorp/terraform-plugin-codegen-framework/issues/81))
+
 ## 0.2.0 (October 24, 2023)
 
 ENHANCEMENTS:
