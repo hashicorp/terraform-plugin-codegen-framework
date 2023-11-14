@@ -29,11 +29,12 @@ func (g GeneratorSchemas) Schemas(packageName, generatorType string) (map[string
 
 	for k, s := range g.schemas {
 
-		if packageName == "" {
-			packageName = fmt.Sprintf("%s_%s", strings.ToLower(generatorType), k)
+		pkgName := packageName
+		if pkgName == "" {
+			pkgName = fmt.Sprintf("%s_%s", strings.ToLower(generatorType), k)
 		}
 
-		b, err := s.Schema(k, packageName, generatorType)
+		b, err := s.Schema(k, pkgName, generatorType)
 
 		if err != nil {
 			return nil, err
