@@ -15,15 +15,9 @@ return true
 }
 
 {{range $key, $value := .AttrValues }}
-{{- if eq $value "baseTypes.BoolValue" "baseTypes.Float64Value" "baseTypes.Int64Value" "baseTypes.NumberValue" "baseTypes.StringValue"}}
-if v.{{$key.ToPascalCase}} != other.{{$key.ToPascalCase}} {
+if !v.{{$key.ToPrefixPascalCase $.Name}}.Equal(other.{{$key.ToPrefixPascalCase $.Name}}) {
 return false
 }
-{{- else}}
-if !v.{{$key.ToPascalCase}}.Equal(other.{{$key.ToPascalCase}}) {
-return false
-}
-{{- end}}
 {{end}}
 
 return true

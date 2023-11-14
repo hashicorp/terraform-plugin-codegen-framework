@@ -42,6 +42,26 @@ func (identifier FrameworkIdentifier) ToCamelCase() string {
 	return string(unicode.ToLower(firstLetter)) + pascal[size:]
 }
 
+// ToPrefixCamelCase will return a camel case formatted string of the identifier,
+// prefixed with a camel-cased version of the supplied name if the identifier is
+// a generated custom value method name.
+// Example:
+//   - equal(something) -> somethingEqual
+//   - type(something) -> somethingType
+func (identifier FrameworkIdentifier) ToPrefixCamelCase(prefix string) string {
+	pascalCase := identifier.ToPascalCase()
+
+	methodNames := identifier.methodNames()
+
+	for _, v := range methodNames {
+		if pascalCase == v {
+			return FrameworkIdentifier(prefix + pascalCase).ToCamelCase()
+		}
+	}
+
+	return FrameworkIdentifier(pascalCase).ToCamelCase()
+}
+
 // ToPascalCase will return a pascal case formatted string of the identifier.
 // Example:
 //   - example_resource_thing -> ExampleResourceThing
@@ -51,9 +71,44 @@ func (identifier FrameworkIdentifier) ToPascalCase() string {
 	})
 }
 
+// ToPrefixPascalCase will return a pascal case formatted string of the identifier,
+// prefixed with a pascal-cased version of the supplied name if the identifier is
+// a generated custom value method name.
+// Example:
+//   - equal(something) -> SomethingEqual
+//   - type(something) -> SomethingType
+func (identifier FrameworkIdentifier) ToPrefixPascalCase(prefix string) string {
+	pascalCase := identifier.ToPascalCase()
+
+	methodNames := identifier.methodNames()
+
+	for _, v := range methodNames {
+		if pascalCase == v {
+			return FrameworkIdentifier(prefix).ToPascalCase() + pascalCase
+		}
+	}
+
+	return pascalCase
+}
+
 // ToString returns the FrameworkIdentifier as a string without any formatting.
 // Example:
 //   - example_resource_thing -> example_resource_thing
 func (identifier FrameworkIdentifier) ToString() string {
 	return string(identifier)
+}
+
+// methodNames returns a slice containing generated method names for custom value
+// types.
+func (identifier FrameworkIdentifier) methodNames() []string {
+	return []string{
+		"AttributeTypes",
+		"Equal",
+		"IsNull",
+		"IsUnknown",
+		"String",
+		"ToObjectValue",
+		"ToTerraformValue",
+		"Type",
+	}
 }

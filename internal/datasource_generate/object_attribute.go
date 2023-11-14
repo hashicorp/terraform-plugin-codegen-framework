@@ -9,6 +9,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
@@ -54,6 +55,14 @@ func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 	}
 
 	imports.Append(g.AssociatedExternalType.Imports())
+
+	for _, v := range g.AttrTypes() {
+		if v.Number != nil && g.AssociatedExternalType == nil {
+			imports.Add(code.Import{
+				Path: generatorschema.MathBigImport,
+			})
+		}
+	}
 
 	return imports
 }
