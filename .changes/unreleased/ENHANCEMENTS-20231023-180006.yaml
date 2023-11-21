@@ -1,6 +1,0 @@
-kind: ENHANCEMENTS
-body: Adds code generation for List, Map, Object, and Set attributes that have an
-  associated external type
-time: 2023-10-23T18:00:06.752758+01:00
-custom:
-  Issue: "75"

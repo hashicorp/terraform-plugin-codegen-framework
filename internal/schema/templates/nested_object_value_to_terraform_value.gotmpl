@@ -18,7 +18,7 @@ case attr.ValueStateKnown:
 vals := make(map[string]tftypes.Value, {{len .AttrTypes}})
 
 {{range $key, $value := .AttrTypes }}
-val, err = v.{{$key.ToPascalCase}}.ToTerraformValue(ctx)
+val, err = v.{{$key.ToPrefixPascalCase $.Name}}.ToTerraformValue(ctx)
 
 if err != nil {
 return tftypes.NewValue(objectType, tftypes.UnknownValue), err

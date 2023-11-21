@@ -205,9 +205,6 @@ func GetAttrTypesImports(customType *specschema.CustomType, attrTypes specschema
 			imports.Add(code.Import{
 				Path: TypesImport,
 			})
-			imports.Add(code.Import{
-				Path: MathBigImport,
-			})
 		case v.Object != nil:
 			imports.Add(GetAttrTypesImports(v.Object.CustomType, v.Object.AttributeTypes).All()...)
 		case v.Set != nil:

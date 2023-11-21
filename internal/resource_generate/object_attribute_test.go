@@ -95,6 +95,29 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 			},
 		},
+		// verifies that math/big is imported when object has
+		// attribute type that is number type.
+		"object-with-attr-type-number": {
+			input: GeneratorObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name:   "number",
+						Number: &specschema.NumberType{},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+				{
+					Path: generatorschema.MathBigImport,
+				},
+			},
+		},
 		"object-with-attr-type-bool-with-import": {
 			input: GeneratorObjectAttribute{
 				AttributeTypes: specschema.ObjectAttributeTypes{
@@ -511,6 +534,43 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 				},
 				{
 					Path: "github.com/api",
+				},
+			},
+		},
+		// verifies that math/big is not imported when associated external type
+		// is specified.
+		"associated-external-type-with-number-attribute": {
+			input: GeneratorObjectAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.ObjectAttribute",
+					},
+				},
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name:   "number",
+						Number: &specschema.NumberType{},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
 				},
 			},
 		},
