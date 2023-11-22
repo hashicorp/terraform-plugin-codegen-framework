@@ -1,0 +1,5 @@
+kind: BUG FIXES
+body: 'schema: Prevent compilation errors due to the generation of unused variables'
+time: 2023-11-22T07:08:04.939979Z
+custom:
+  Issue: "93"
