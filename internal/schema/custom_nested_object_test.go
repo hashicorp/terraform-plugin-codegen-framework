@@ -459,6 +459,23 @@ state: attr.ValueStateKnown,
 }, diags
 }`),
 		},
+		"no-attributes": {
+			name: "Example",
+			expected: []byte(`
+func (t ExampleType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+
+
+if diags.HasError() {
+return nil, diags
+}
+
+return ExampleValue{
+state: attr.ValueStateKnown,
+}, diags
+}`),
+		},
 	}
 
 	for name, testCase := range testCases {
@@ -1407,6 +1424,35 @@ return tftypes.NewValue(objectType, tftypes.UnknownValue), err
 }
 
 vals["type"] = val
+
+
+
+if err := tftypes.ValidateValue(objectType, vals); err != nil {
+return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+}
+
+return tftypes.NewValue(objectType, vals), nil
+case attr.ValueStateNull:
+return tftypes.NewValue(objectType, nil), nil
+case attr.ValueStateUnknown:
+return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+default:
+panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+}
+}`),
+		},
+		"no-attributes": {
+			name: "Example",
+			expected: []byte(`func (v ExampleValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+attrTypes := make(map[string]tftypes.Type, 0)
+
+
+
+objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+switch v.state {
+case attr.ValueStateKnown:
+vals := make(map[string]tftypes.Value, 0)
 
 
 

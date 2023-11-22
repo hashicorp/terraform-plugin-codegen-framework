@@ -2,7 +2,10 @@
 func (t {{.Name}}Type) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
 var diags diag.Diagnostics
 
+{{- if .AttrValues}}
+
 attributes := in.Attributes()
+{{- end}}
 
 {{range $key, $value := .AttrValues }}
 {{$key.ToCamelCase}}Attribute, ok := attributes["{{$key}}"]
