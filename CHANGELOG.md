@@ -1,3 +1,9 @@
+## 0.3.1 (November 22, 2023)
+
+BUG FIXES:
+
+* schema: Prevent compilation errors due to the generation of unused variables ([#93](https://github.com/hashicorp/terraform-plugin-codegen-framework/issues/93))
+
 ## 0.3.0 (November 14, 2023)
 
 ENHANCEMENTS:
