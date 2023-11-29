@@ -12,9 +12,6 @@ on:
 permissions:
   contents: read
 
-env:
-  GOPRIVATE: github.com/hashicorp/terraform-plugin-codegen-spec
-
 jobs:
   golangci-lint:
     runs-on: ubuntu-latest
@@ -23,7 +20,6 @@ jobs:
       - uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
         with:
           go-version-file: 'go.mod'
-      - run: git config --global url.https://${{ secrets.TF_DEVEX_COMMIT_GITHUB_TOKEN }}@github.com/.insteadOf https://github.com/
       - run: go mod download
       - uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3.7.0
 
@@ -34,7 +30,6 @@ jobs:
       - uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
         with:
           go-version-file: 'go.mod'
-      - run: git config --global url.https://${{ secrets.TF_DEVEX_COMMIT_GITHUB_TOKEN }}@github.com/.insteadOf https://github.com/
       - run: go mod download
       - run: go test -coverprofile=coverage.out ./...
       - run: go tool cover -html=coverage.out -o coverage.html
