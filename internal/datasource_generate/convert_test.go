@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package datasource_convert
+package datasource_generate
 
 import (
 	"testing"
@@ -12,15 +12,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func pointer[T any](in T) *T {
-	return &in
-}
-
-func TestToGeneratorDataSourceSchema(t *testing.T) {
+func Test_NewSchemas(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -186,13 +181,13 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 			expectedSchema: map[string]generatorschema.GeneratorSchema{
 				"example": {
 					Attributes: generatorschema.GeneratorAttributes{
-						"bool_attribute": datasource_generate.GeneratorBoolAttribute{
+						"bool_attribute": GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional:  true,
 								Sensitive: true,
 							},
 						},
-						"list_attribute": datasource_generate.GeneratorListAttribute{
+						"list_attribute": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Computed: true,
 							},
@@ -204,7 +199,7 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 								},
 							},
 						},
-						"map_attribute": datasource_generate.GeneratorMapAttribute{
+						"map_attribute": GeneratorMapAttribute{
 							MapAttribute: schema.MapAttribute{
 								Computed: true,
 							},
@@ -216,7 +211,7 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 								},
 							},
 						},
-						"set_attribute": datasource_generate.GeneratorSetAttribute{
+						"set_attribute": GeneratorSetAttribute{
 							SetAttribute: schema.SetAttribute{
 								Computed: true,
 							},
@@ -228,15 +223,15 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 								},
 							},
 						},
-						"list_nested_attribute": datasource_generate.GeneratorListNestedAttribute{
-							NestedObject: datasource_generate.GeneratorNestedAttributeObject{
+						"list_nested_attribute": GeneratorListNestedAttribute{
+							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: generatorschema.GeneratorAttributes{
-									"nested_bool_attribute": datasource_generate.GeneratorBoolAttribute{
+									"nested_bool_attribute": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
 										},
 									},
-									"nested_list_attribute": datasource_generate.GeneratorListAttribute{
+									"nested_list_attribute": GeneratorListAttribute{
 										ListAttribute: schema.ListAttribute{
 											Computed: true,
 										},
@@ -250,7 +245,7 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 								Optional: true,
 							},
 						},
-						"object_attribute": datasource_generate.GeneratorObjectAttribute{
+						"object_attribute": GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
 							},
@@ -269,14 +264,14 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 								},
 							},
 						},
-						"single_nested_attribute": datasource_generate.GeneratorSingleNestedAttribute{
+						"single_nested_attribute": GeneratorSingleNestedAttribute{
 							Attributes: generatorschema.GeneratorAttributes{
-								"nested_bool_attribute": datasource_generate.GeneratorBoolAttribute{
+								"nested_bool_attribute": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
 									},
 								},
-								"nested_list_attribute": datasource_generate.GeneratorListAttribute{
+								"nested_list_attribute": GeneratorListAttribute{
 									ListAttribute: schema.ListAttribute{
 										Computed: true,
 									},
@@ -291,10 +286,10 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 						},
 					},
 					Blocks: generatorschema.GeneratorBlocks{
-						"list_nested_block": datasource_generate.GeneratorListNestedBlock{
-							NestedObject: datasource_generate.GeneratorNestedBlockObject{
+						"list_nested_block": GeneratorListNestedBlock{
+							NestedObject: GeneratorNestedBlockObject{
 								Attributes: generatorschema.GeneratorAttributes{
-									"nested_bool_attribute": datasource_generate.GeneratorBoolAttribute{
+									"nested_bool_attribute": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
 										},
@@ -302,9 +297,9 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 								},
 							},
 						},
-						"single_nested_block": datasource_generate.GeneratorSingleNestedBlock{
+						"single_nested_block": GeneratorSingleNestedBlock{
 							Attributes: generatorschema.GeneratorAttributes{
-								"nested_bool_attribute": datasource_generate.GeneratorBoolAttribute{
+								"nested_bool_attribute": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
 									},
@@ -323,9 +318,7 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			c := NewConverter(testCase.spec)
-
-			got, err := c.ToGeneratorDataSourceSchema()
+			got, err := NewSchemas(testCase.spec)
 
 			if err != nil {
 				t.Error(err)
@@ -337,11 +330,3 @@ func TestToGeneratorDataSourceSchema(t *testing.T) {
 		})
 	}
 }
-
-var equateErrorMessage = cmp.Comparer(func(x, y error) bool {
-	if x == nil || y == nil {
-		return x == nil && y == nil
-	}
-
-	return x.Error() == y.Error()
-})

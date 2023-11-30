@@ -6,12 +6,15 @@ package datasource_generate
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -24,6 +27,102 @@ type GeneratorSetNestedBlock struct {
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedBlockObject
 	Validators   specschema.SetValidators
+}
+
+func NewGeneratorSetNestedBlock(b *datasource.SetNestedBlock) (GeneratorSetNestedBlock, error) {
+	if b == nil {
+		return GeneratorSetNestedBlock{}, fmt.Errorf("*datasource.SetNestedBlock is nil")
+	}
+
+	attributes := make(generatorschema.GeneratorAttributes, len(b.NestedObject.Attributes))
+
+	for _, v := range b.NestedObject.Attributes {
+		var attribute generatorschema.GeneratorAttribute
+		var err error
+
+		switch {
+		case v.Bool != nil:
+			attribute, err = NewGeneratorBoolAttribute(v.Bool)
+		case v.Float64 != nil:
+			attribute, err = NewGeneratorFloat64Attribute(v.Float64)
+		case v.Int64 != nil:
+			attribute, err = NewGeneratorInt64Attribute(v.Int64)
+		case v.List != nil:
+			attribute, err = NewGeneratorListAttribute(v.List)
+		case v.ListNested != nil:
+			attribute, err = NewGeneratorListNestedAttribute(v.ListNested)
+		case v.Map != nil:
+			attribute, err = NewGeneratorMapAttribute(v.Map)
+		case v.MapNested != nil:
+			attribute, err = NewGeneratorMapNestedAttribute(v.MapNested)
+		case v.Number != nil:
+			attribute, err = NewGeneratorNumberAttribute(v.Number)
+		case v.Object != nil:
+			attribute, err = NewGeneratorObjectAttribute(v.Object)
+		case v.Set != nil:
+			attribute, err = NewGeneratorSetAttribute(v.Set)
+		case v.SetNested != nil:
+			attribute, err = NewGeneratorSetNestedAttribute(v.SetNested)
+		case v.SingleNested != nil:
+			attribute, err = NewGeneratorSingleNestedAttribute(v.SingleNested)
+		case v.String != nil:
+			attribute, err = NewGeneratorStringAttribute(v.String)
+		default:
+			return GeneratorSetNestedBlock{}, fmt.Errorf("attribute type is not defined: %+v", v)
+		}
+
+		if err != nil {
+			return GeneratorSetNestedBlock{}, err
+		}
+
+		attributes[v.Name] = attribute
+	}
+
+	blocks := make(generatorschema.GeneratorBlocks, len(b.NestedObject.Blocks))
+
+	for _, v := range b.NestedObject.Blocks {
+		var block generatorschema.GeneratorBlock
+		var err error
+
+		switch {
+		case v.ListNested != nil:
+			block, err = NewGeneratorListNestedBlock(v.ListNested)
+		case v.SetNested != nil:
+			block, err = NewGeneratorSetNestedBlock(v.SetNested)
+		case v.SingleNested != nil:
+			block, err = NewGeneratorSingleNestedBlock(v.SingleNested)
+		default:
+			return GeneratorSetNestedBlock{}, fmt.Errorf("block type is not defined: %+v", v)
+		}
+
+		if err != nil {
+			return GeneratorSetNestedBlock{}, err
+		}
+
+		blocks[v.Name] = block
+	}
+
+	d := convert.NewDescription(b.Description)
+
+	dm := convert.NewDeprecationMessage(b.DeprecationMessage)
+
+	return GeneratorSetNestedBlock{
+		SetNestedBlock: schema.SetNestedBlock{
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		CustomType: b.CustomType,
+		NestedObject: GeneratorNestedBlockObject{
+			AssociatedExternalType: generatorschema.NewAssocExtType(b.NestedObject.AssociatedExternalType),
+			Attributes:             attributes,
+			Blocks:                 blocks,
+			CustomType:             b.NestedObject.CustomType,
+			Validators:             b.NestedObject.Validators,
+		},
+		Validators: b.Validators,
+	}, nil
 }
 
 func (g GeneratorSetNestedBlock) AssocExtType() *generatorschema.AssocExtType {

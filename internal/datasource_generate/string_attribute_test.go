@@ -4,15 +4,173 @@
 package datasource_generate
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
+
+func TestGeneratorStringAttribute_New(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         *datasource.StringAttribute
+		expected      GeneratorStringAttribute
+		expectedError error
+	}{
+		"nil": {
+			expectedError: fmt.Errorf("*datasource.StringAttribute is nil"),
+		},
+		"computed": {
+			input: &datasource.StringAttribute{
+				ComputedOptionalRequired: "computed",
+			},
+			expected: GeneratorStringAttribute{
+				StringAttribute: schema.StringAttribute{
+					Computed: true,
+				},
+			},
+		},
+		"computed_optional": {
+			input: &datasource.StringAttribute{
+				ComputedOptionalRequired: "computed_optional",
+			},
+			expected: GeneratorStringAttribute{
+				StringAttribute: schema.StringAttribute{
+					Computed: true,
+					Optional: true,
+				},
+			},
+		},
+		"optional": {
+			input: &datasource.StringAttribute{
+				ComputedOptionalRequired: "optional",
+			},
+			expected: GeneratorStringAttribute{
+				StringAttribute: schema.StringAttribute{
+					Optional: true,
+				},
+			},
+		},
+		"required": {
+			input: &datasource.StringAttribute{
+				ComputedOptionalRequired: "required",
+			},
+			expected: GeneratorStringAttribute{
+				StringAttribute: schema.StringAttribute{
+					Required: true,
+				},
+			},
+		},
+		"custom_type": {
+			input: &datasource.StringAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				},
+			},
+			expected: GeneratorStringAttribute{
+				StringAttribute: schema.StringAttribute{},
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				},
+			},
+		},
+		"deprecation_message": {
+			input: &datasource.StringAttribute{
+				DeprecationMessage: pointer("deprecation message"),
+			},
+			expected: GeneratorStringAttribute{
+				StringAttribute: schema.StringAttribute{
+					DeprecationMessage: "deprecation message",
+				},
+			},
+		},
+		"description": {
+			input: &datasource.StringAttribute{
+				Description: pointer("description"),
+			},
+			expected: GeneratorStringAttribute{
+				StringAttribute: schema.StringAttribute{
+					Description:         "description",
+					MarkdownDescription: "description",
+				},
+			},
+		},
+		"sensitive": {
+			input: &datasource.StringAttribute{
+				Sensitive: pointer(true),
+			},
+			expected: GeneratorStringAttribute{
+				StringAttribute: schema.StringAttribute{
+					Sensitive: true,
+				},
+			},
+		},
+		"validators": {
+			input: &datasource.StringAttribute{
+				Validators: specschema.StringValidators{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
+							SchemaDefinition: "myvalidator.Validate()",
+						},
+					},
+				},
+			},
+			expected: GeneratorStringAttribute{
+				Validators: specschema.StringValidators{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
+							SchemaDefinition: "myvalidator.Validate()",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := NewGeneratorStringAttribute(testCase.input)
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
 
 func TestGeneratorStringAttribute_Schema(t *testing.T) {
 	t.Parallel()

@@ -10,9 +10,11 @@ import (
 	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -26,6 +28,37 @@ type GeneratorObjectAttribute struct {
 	AttributeTypes specschema.ObjectAttributeTypes
 	CustomType     *specschema.CustomType
 	Validators     specschema.ObjectValidators
+}
+
+func NewGeneratorObjectAttribute(a *datasource.ObjectAttribute) (GeneratorObjectAttribute, error) {
+	if a == nil {
+		return GeneratorObjectAttribute{}, fmt.Errorf("*datasource.ObjectAttribute is nil")
+	}
+
+	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	d := convert.NewDescription(a.Description)
+
+	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
+
+	return GeneratorObjectAttribute{
+		ObjectAttribute: schema.ObjectAttribute{
+			Required:            c.IsRequired(),
+			Optional:            c.IsOptional(),
+			Computed:            c.IsComputed(),
+			Sensitive:           s.IsSensitive(),
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AttributeTypes:         a.AttributeTypes,
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
+	}, nil
 }
 
 func (g GeneratorObjectAttribute) GeneratorSchemaType() generatorschema.Type {

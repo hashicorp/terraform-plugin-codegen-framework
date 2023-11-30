@@ -6,12 +6,15 @@ package datasource_generate
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -25,6 +28,81 @@ type GeneratorSingleNestedAttribute struct {
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
 	Validators specschema.ObjectValidators
+}
+
+func NewGeneratorSingleNestedAttribute(a *datasource.SingleNestedAttribute) (GeneratorSingleNestedAttribute, error) {
+	if a == nil {
+		return GeneratorSingleNestedAttribute{}, fmt.Errorf("*datasource.SingleNestedAttribute is nil")
+	}
+
+	attributes := make(generatorschema.GeneratorAttributes, len(a.Attributes))
+
+	for _, v := range a.Attributes {
+		var attribute generatorschema.GeneratorAttribute
+		var err error
+
+		switch {
+		case v.Bool != nil:
+			attribute, err = NewGeneratorBoolAttribute(v.Bool)
+		case v.Float64 != nil:
+			attribute, err = NewGeneratorFloat64Attribute(v.Float64)
+		case v.Int64 != nil:
+			attribute, err = NewGeneratorInt64Attribute(v.Int64)
+		case v.List != nil:
+			attribute, err = NewGeneratorListAttribute(v.List)
+		case v.ListNested != nil:
+			attribute, err = NewGeneratorListNestedAttribute(v.ListNested)
+		case v.Map != nil:
+			attribute, err = NewGeneratorMapAttribute(v.Map)
+		case v.MapNested != nil:
+			attribute, err = NewGeneratorMapNestedAttribute(v.MapNested)
+		case v.Number != nil:
+			attribute, err = NewGeneratorNumberAttribute(v.Number)
+		case v.Object != nil:
+			attribute, err = NewGeneratorObjectAttribute(v.Object)
+		case v.Set != nil:
+			attribute, err = NewGeneratorSetAttribute(v.Set)
+		case v.SetNested != nil:
+			attribute, err = NewGeneratorSetNestedAttribute(v.SetNested)
+		case v.SingleNested != nil:
+			attribute, err = NewGeneratorSingleNestedAttribute(v.SingleNested)
+		case v.String != nil:
+			attribute, err = NewGeneratorStringAttribute(v.String)
+		default:
+			return GeneratorSingleNestedAttribute{}, fmt.Errorf("attribute type not defined: %+v", v)
+		}
+
+		if err != nil {
+			return GeneratorSingleNestedAttribute{}, err
+		}
+
+		attributes[v.Name] = attribute
+	}
+
+	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	d := convert.NewDescription(a.Description)
+
+	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
+
+	return GeneratorSingleNestedAttribute{
+		SingleNestedAttribute: schema.SingleNestedAttribute{
+			Required:            c.IsRequired(),
+			Optional:            c.IsOptional(),
+			Computed:            c.IsComputed(),
+			Sensitive:           s.IsSensitive(),
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		Attributes:             attributes,
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
+	}, nil
 }
 
 func (g GeneratorSingleNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
