@@ -15,7 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/mitchellh/cli"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource_generate"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
@@ -136,7 +136,7 @@ func generateDataSourceCode(ctx context.Context, spec spec.Specification, output
 	ctxWithPath := logging.SetPathInContext(ctx, "data_source")
 
 	// convert IR to framework schema
-	s, err := datasource_generate.NewSchemas(spec)
+	s, err := datasource.NewSchemas(spec)
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
