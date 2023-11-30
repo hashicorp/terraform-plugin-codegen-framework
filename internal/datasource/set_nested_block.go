@@ -37,39 +37,7 @@ func NewGeneratorSetNestedBlock(b *datasource.SetNestedBlock) (GeneratorSetNeste
 	attributes := make(generatorschema.GeneratorAttributes, len(b.NestedObject.Attributes))
 
 	for _, v := range b.NestedObject.Attributes {
-		var attribute generatorschema.GeneratorAttribute
-		var err error
-
-		switch {
-		case v.Bool != nil:
-			attribute, err = NewGeneratorBoolAttribute(v.Bool)
-		case v.Float64 != nil:
-			attribute, err = NewGeneratorFloat64Attribute(v.Float64)
-		case v.Int64 != nil:
-			attribute, err = NewGeneratorInt64Attribute(v.Int64)
-		case v.List != nil:
-			attribute, err = NewGeneratorListAttribute(v.List)
-		case v.ListNested != nil:
-			attribute, err = NewGeneratorListNestedAttribute(v.ListNested)
-		case v.Map != nil:
-			attribute, err = NewGeneratorMapAttribute(v.Map)
-		case v.MapNested != nil:
-			attribute, err = NewGeneratorMapNestedAttribute(v.MapNested)
-		case v.Number != nil:
-			attribute, err = NewGeneratorNumberAttribute(v.Number)
-		case v.Object != nil:
-			attribute, err = NewGeneratorObjectAttribute(v.Object)
-		case v.Set != nil:
-			attribute, err = NewGeneratorSetAttribute(v.Set)
-		case v.SetNested != nil:
-			attribute, err = NewGeneratorSetNestedAttribute(v.SetNested)
-		case v.SingleNested != nil:
-			attribute, err = NewGeneratorSingleNestedAttribute(v.SingleNested)
-		case v.String != nil:
-			attribute, err = NewGeneratorStringAttribute(v.String)
-		default:
-			return GeneratorSetNestedBlock{}, fmt.Errorf("attribute type is not defined: %+v", v)
-		}
+		attribute, err := NewAttribute(v)
 
 		if err != nil {
 			return GeneratorSetNestedBlock{}, err
@@ -81,19 +49,7 @@ func NewGeneratorSetNestedBlock(b *datasource.SetNestedBlock) (GeneratorSetNeste
 	blocks := make(generatorschema.GeneratorBlocks, len(b.NestedObject.Blocks))
 
 	for _, v := range b.NestedObject.Blocks {
-		var block generatorschema.GeneratorBlock
-		var err error
-
-		switch {
-		case v.ListNested != nil:
-			block, err = NewGeneratorListNestedBlock(v.ListNested)
-		case v.SetNested != nil:
-			block, err = NewGeneratorSetNestedBlock(v.SetNested)
-		case v.SingleNested != nil:
-			block, err = NewGeneratorSingleNestedBlock(v.SingleNested)
-		default:
-			return GeneratorSetNestedBlock{}, fmt.Errorf("block type is not defined: %+v", v)
-		}
+		block, err := NewBlock(v)
 
 		if err != nil {
 			return GeneratorSetNestedBlock{}, err

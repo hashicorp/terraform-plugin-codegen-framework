@@ -38,7 +38,7 @@ func TestGeneratorSetNestedBlock_New(t *testing.T) {
 					},
 				},
 			},
-			expectedError: fmt.Errorf("attribute type is not defined: %+v", datasource.Attribute{
+			expectedError: fmt.Errorf("attribute type not defined: %+v", datasource.Attribute{
 				Name: "empty",
 			}),
 		},
@@ -230,7 +230,7 @@ func TestGeneratorSetNestedBlock_New(t *testing.T) {
 					},
 				},
 			},
-			expectedError: fmt.Errorf("block type is not defined: %+v", datasource.Block{
+			expectedError: fmt.Errorf("block type not defined: %+v", datasource.Block{
 				Name: "empty",
 			}),
 		},

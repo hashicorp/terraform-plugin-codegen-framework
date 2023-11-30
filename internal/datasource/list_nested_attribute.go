@@ -37,39 +37,7 @@ func NewGeneratorListNestedAttribute(a *datasource.ListNestedAttribute) (Generat
 	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
 
 	for _, v := range a.NestedObject.Attributes {
-		var attribute generatorschema.GeneratorAttribute
-		var err error
-
-		switch {
-		case v.Bool != nil:
-			attribute, err = NewGeneratorBoolAttribute(v.Bool)
-		case v.Float64 != nil:
-			attribute, err = NewGeneratorFloat64Attribute(v.Float64)
-		case v.Int64 != nil:
-			attribute, err = NewGeneratorInt64Attribute(v.Int64)
-		case v.List != nil:
-			attribute, err = NewGeneratorListAttribute(v.List)
-		case v.ListNested != nil:
-			attribute, err = NewGeneratorListNestedAttribute(v.ListNested)
-		case v.Map != nil:
-			attribute, err = NewGeneratorMapAttribute(v.Map)
-		case v.MapNested != nil:
-			attribute, err = NewGeneratorMapNestedAttribute(v.MapNested)
-		case v.Number != nil:
-			attribute, err = NewGeneratorNumberAttribute(v.Number)
-		case v.Object != nil:
-			attribute, err = NewGeneratorObjectAttribute(v.Object)
-		case v.Set != nil:
-			attribute, err = NewGeneratorSetAttribute(v.Set)
-		case v.SetNested != nil:
-			attribute, err = NewGeneratorSetNestedAttribute(v.SetNested)
-		case v.SingleNested != nil:
-			attribute, err = NewGeneratorSingleNestedAttribute(v.SingleNested)
-		case v.String != nil:
-			attribute, err = NewGeneratorStringAttribute(v.String)
-		default:
-			return GeneratorListNestedAttribute{}, fmt.Errorf("attribute type not defined: %+v", v)
-		}
+		attribute, err := NewAttribute(v)
 
 		if err != nil {
 			return GeneratorListNestedAttribute{}, err
