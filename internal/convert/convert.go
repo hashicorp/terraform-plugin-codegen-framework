@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package convert
 
 import specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
@@ -83,11 +86,7 @@ func (c OptionalRequired) IsRequired() bool {
 }
 
 func (c OptionalRequired) IsOptional() bool {
-	if c.optionalRequired == specschema.Optional {
-		return true
-	}
-
-	return false
+	return c.optionalRequired == specschema.Optional
 }
 
 type Sensitive struct {
