@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package provider_convert
+package provider_generate
 
 import (
 	"testing"
@@ -12,15 +12,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func pointer[T any](in T) *T {
-	return &in
-}
-
-func TestToGeneratorProviderSchema(t *testing.T) {
+func Test_NewSchemas(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -184,13 +179,13 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 			expectedSchema: map[string]generatorschema.GeneratorSchema{
 				"example": {
 					Attributes: generatorschema.GeneratorAttributes{
-						"bool_attribute": provider_generate.GeneratorBoolAttribute{
+						"bool_attribute": GeneratorBoolAttribute{
 							BoolAttribute: schema.BoolAttribute{
 								Optional:  true,
 								Sensitive: true,
 							},
 						},
-						"list_attribute": provider_generate.GeneratorListAttribute{
+						"list_attribute": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
 								Optional: true,
 							},
@@ -202,7 +197,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 								},
 							},
 						},
-						"map_attribute": provider_generate.GeneratorMapAttribute{
+						"map_attribute": GeneratorMapAttribute{
 							MapAttribute: schema.MapAttribute{
 								Optional: true,
 							},
@@ -214,7 +209,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 								},
 							},
 						},
-						"set_attribute": provider_generate.GeneratorSetAttribute{
+						"set_attribute": GeneratorSetAttribute{
 							SetAttribute: schema.SetAttribute{
 								Optional: true,
 							},
@@ -226,15 +221,15 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 								},
 							},
 						},
-						"list_nested_attribute": provider_generate.GeneratorListNestedAttribute{
-							NestedObject: provider_generate.GeneratorNestedAttributeObject{
+						"list_nested_attribute": GeneratorListNestedAttribute{
+							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: generatorschema.GeneratorAttributes{
-									"nested_bool_attribute": provider_generate.GeneratorBoolAttribute{
+									"nested_bool_attribute": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
 										},
 									},
-									"nested_list_attribute": provider_generate.GeneratorListAttribute{
+									"nested_list_attribute": GeneratorListAttribute{
 										ListAttribute: schema.ListAttribute{
 											Optional: true,
 										},
@@ -248,7 +243,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 								Optional: true,
 							},
 						},
-						"object_attribute": provider_generate.GeneratorObjectAttribute{
+						"object_attribute": GeneratorObjectAttribute{
 							ObjectAttribute: schema.ObjectAttribute{
 								Optional: true,
 							},
@@ -267,14 +262,14 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 								},
 							},
 						},
-						"single_nested_attribute": provider_generate.GeneratorSingleNestedAttribute{
+						"single_nested_attribute": GeneratorSingleNestedAttribute{
 							Attributes: generatorschema.GeneratorAttributes{
-								"nested_bool_attribute": provider_generate.GeneratorBoolAttribute{
+								"nested_bool_attribute": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
 									},
 								},
-								"nested_list_attribute": provider_generate.GeneratorListAttribute{
+								"nested_list_attribute": GeneratorListAttribute{
 									ListAttribute: schema.ListAttribute{
 										Optional: true,
 									},
@@ -289,10 +284,10 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 						},
 					},
 					Blocks: generatorschema.GeneratorBlocks{
-						"list_nested_block": provider_generate.GeneratorListNestedBlock{
-							NestedObject: provider_generate.GeneratorNestedBlockObject{
+						"list_nested_block": GeneratorListNestedBlock{
+							NestedObject: GeneratorNestedBlockObject{
 								Attributes: generatorschema.GeneratorAttributes{
-									"nested_bool_attribute": provider_generate.GeneratorBoolAttribute{
+									"nested_bool_attribute": GeneratorBoolAttribute{
 										BoolAttribute: schema.BoolAttribute{
 											Optional: true,
 										},
@@ -300,9 +295,9 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 								},
 							},
 						},
-						"single_nested_block": provider_generate.GeneratorSingleNestedBlock{
+						"single_nested_block": GeneratorSingleNestedBlock{
 							Attributes: generatorschema.GeneratorAttributes{
-								"nested_bool_attribute": provider_generate.GeneratorBoolAttribute{
+								"nested_bool_attribute": GeneratorBoolAttribute{
 									BoolAttribute: schema.BoolAttribute{
 										Optional: true,
 									},
@@ -321,9 +316,7 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			c := NewConverter(testCase.spec)
-
-			got, err := c.ToGeneratorProviderSchema()
+			got, err := NewSchemas(testCase.spec)
 
 			if err != nil {
 				t.Error(err)
@@ -335,11 +328,3 @@ func TestToGeneratorProviderSchema(t *testing.T) {
 		})
 	}
 }
-
-var equateErrorMessage = cmp.Comparer(func(x, y error) bool {
-	if x == nil || y == nil {
-		return x == nil && y == nil
-	}
-
-	return x.Error() == y.Error()
-})

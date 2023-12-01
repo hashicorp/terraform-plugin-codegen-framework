@@ -6,12 +6,15 @@ package provider_generate
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -26,6 +29,53 @@ type GeneratorSingleNestedBlock struct {
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
 	Validators specschema.ObjectValidators
+}
+
+func NewGeneratorSingleNestedBlock(b *provider.SingleNestedBlock) (GeneratorSingleNestedBlock, error) {
+	if b == nil {
+		return GeneratorSingleNestedBlock{}, fmt.Errorf("*provider.SingleNestedBlock is nil")
+	}
+
+	attributes := make(generatorschema.GeneratorAttributes, len(b.Attributes))
+
+	for _, v := range b.Attributes {
+		attribute, err := NewAttribute(v)
+
+		if err != nil {
+			return GeneratorSingleNestedBlock{}, err
+		}
+
+		attributes[v.Name] = attribute
+	}
+
+	blocks := make(generatorschema.GeneratorBlocks, len(b.Blocks))
+
+	for _, v := range b.Blocks {
+		block, err := NewBlock(v)
+
+		if err != nil {
+			return GeneratorSingleNestedBlock{}, err
+		}
+
+		blocks[v.Name] = block
+	}
+
+	d := convert.NewDescription(b.Description)
+
+	dm := convert.NewDeprecationMessage(b.DeprecationMessage)
+
+	return GeneratorSingleNestedBlock{
+		SingleNestedBlock: schema.SingleNestedBlock{
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+		AssociatedExternalType: generatorschema.NewAssocExtType(b.AssociatedExternalType),
+		Attributes:             attributes,
+		Blocks:                 blocks,
+		CustomType:             b.CustomType,
+		Validators:             b.Validators,
+	}, nil
 }
 
 func (g GeneratorSingleNestedBlock) AssocExtType() *generatorschema.AssocExtType {

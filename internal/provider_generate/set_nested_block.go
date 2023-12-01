@@ -6,12 +6,15 @@ package provider_generate
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -24,6 +27,58 @@ type GeneratorSetNestedBlock struct {
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedBlockObject
 	Validators   specschema.SetValidators
+}
+
+func NewGeneratorSetNestedBlock(b *provider.SetNestedBlock) (GeneratorSetNestedBlock, error) {
+	if b == nil {
+		return GeneratorSetNestedBlock{}, fmt.Errorf("*provider.SetNestedBlock is nil")
+	}
+
+	attributes := make(generatorschema.GeneratorAttributes, len(b.NestedObject.Attributes))
+
+	for _, v := range b.NestedObject.Attributes {
+		attribute, err := NewAttribute(v)
+
+		if err != nil {
+			return GeneratorSetNestedBlock{}, err
+		}
+
+		attributes[v.Name] = attribute
+	}
+
+	blocks := make(generatorschema.GeneratorBlocks, len(b.NestedObject.Blocks))
+
+	for _, v := range b.NestedObject.Blocks {
+		block, err := NewBlock(v)
+
+		if err != nil {
+			return GeneratorSetNestedBlock{}, err
+		}
+
+		blocks[v.Name] = block
+	}
+
+	d := convert.NewDescription(b.Description)
+
+	dm := convert.NewDeprecationMessage(b.DeprecationMessage)
+
+	return GeneratorSetNestedBlock{
+		SetNestedBlock: schema.SetNestedBlock{
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		CustomType: b.CustomType,
+		NestedObject: GeneratorNestedBlockObject{
+			AssociatedExternalType: generatorschema.NewAssocExtType(b.NestedObject.AssociatedExternalType),
+			Attributes:             attributes,
+			Blocks:                 blocks,
+			CustomType:             b.NestedObject.CustomType,
+			Validators:             b.NestedObject.Validators,
+		},
+		Validators: b.Validators,
+	}, nil
 }
 
 func (g GeneratorSetNestedBlock) AssocExtType() *generatorschema.AssocExtType {

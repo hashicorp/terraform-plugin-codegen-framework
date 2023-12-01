@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_convert"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider_generate"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
@@ -136,8 +136,7 @@ func generateProviderCode(ctx context.Context, spec spec.Specification, outputPa
 	ctx = logging.SetPathInContext(ctx, "provider")
 
 	// convert IR to framework schema
-	c := provider_convert.NewConverter(spec)
-	s, err := c.ToGeneratorProviderSchema()
+	s, err := provider_generate.NewSchemas(spec)
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}

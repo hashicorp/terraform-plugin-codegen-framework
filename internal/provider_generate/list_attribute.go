@@ -9,9 +9,11 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -25,6 +27,36 @@ type GeneratorListAttribute struct {
 	CustomType  *specschema.CustomType
 	ElementType specschema.ElementType
 	Validators  specschema.ListValidators
+}
+
+func NewGeneratorListAttribute(a *provider.ListAttribute) (GeneratorListAttribute, error) {
+	if a == nil {
+		return GeneratorListAttribute{}, fmt.Errorf("*provider.ListAttribute is nil")
+	}
+
+	c := convert.NewOptionalRequired(a.OptionalRequired)
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	d := convert.NewDescription(a.Description)
+
+	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
+
+	return GeneratorListAttribute{
+		ListAttribute: schema.ListAttribute{
+			Required:            c.IsRequired(),
+			Optional:            c.IsOptional(),
+			Sensitive:           s.IsSensitive(),
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		ElementType:            a.ElementType,
+		Validators:             a.Validators,
+	}, nil
 }
 
 func (g GeneratorListAttribute) GeneratorSchemaType() generatorschema.Type {

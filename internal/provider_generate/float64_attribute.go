@@ -9,9 +9,11 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -24,6 +26,35 @@ type GeneratorFloat64Attribute struct {
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
 	Validators specschema.Float64Validators
+}
+
+func NewGeneratorFloat64Attribute(a *provider.Float64Attribute) (GeneratorFloat64Attribute, error) {
+	if a == nil {
+		return GeneratorFloat64Attribute{}, fmt.Errorf("*provider.Float64Attribute is nil")
+	}
+
+	c := convert.NewOptionalRequired(a.OptionalRequired)
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	d := convert.NewDescription(a.Description)
+
+	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
+
+	return GeneratorFloat64Attribute{
+		Float64Attribute: schema.Float64Attribute{
+			Required:            c.IsRequired(),
+			Optional:            c.IsOptional(),
+			Sensitive:           s.IsSensitive(),
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
+	}, nil
 }
 
 func (g GeneratorFloat64Attribute) GeneratorSchemaType() generatorschema.Type {

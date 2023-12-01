@@ -4,16 +4,323 @@
 package provider_generate
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
+
+func TestGeneratorObjectAttribute_New(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         *provider.ObjectAttribute
+		expected      GeneratorObjectAttribute
+		expectedError error
+	}{
+		"nil": {
+			expectedError: fmt.Errorf("*provider.ObjectAttribute is nil"),
+		},
+		"attribute-type-bool": {
+			input: &provider.ObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_bool",
+						Bool: &specschema.BoolType{},
+					},
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_bool",
+						Bool: &specschema.BoolType{},
+					},
+				},
+			},
+		},
+		"attribute-type-string": {
+			input: &provider.ObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name:   "obj_string",
+						String: &specschema.StringType{},
+					},
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name:   "obj_string",
+						String: &specschema.StringType{},
+					},
+				},
+			},
+		},
+		"attribute-type-list-string": {
+			input: &provider.ObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_list_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_list_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
+						},
+					},
+				},
+			},
+		},
+		"attribute-type-map-string": {
+			input: &provider.ObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_map_string",
+						Map: &specschema.MapType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_map_string",
+						Map: &specschema.MapType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
+						},
+					},
+				},
+			},
+		},
+		"attribute-type-list-object-string": {
+			input: &provider.ObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_list_object_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								Object: &specschema.ObjectType{
+									AttributeTypes: specschema.ObjectAttributeTypes{
+										{
+											Name:   "obj_str",
+											String: &specschema.StringType{},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_list_object_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								Object: &specschema.ObjectType{
+									AttributeTypes: specschema.ObjectAttributeTypes{
+										{
+											Name:   "obj_str",
+											String: &specschema.StringType{},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"attribute-type-object-string": {
+			input: &provider.ObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name:   "obj_string",
+						String: &specschema.StringType{},
+					},
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name:   "obj_string",
+						String: &specschema.StringType{},
+					},
+				},
+			},
+		},
+		"attribute-type-object-list-string": {
+			input: &provider.ObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_list_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				AttributeTypes: specschema.ObjectAttributeTypes{
+					{
+						Name: "obj_list_string",
+						List: &specschema.ListType{
+							ElementType: specschema.ElementType{
+								String: &specschema.StringType{},
+							},
+						},
+					},
+				},
+			},
+		},
+		"optional": {
+			input: &provider.ObjectAttribute{
+				OptionalRequired: "optional",
+			},
+			expected: GeneratorObjectAttribute{
+				ObjectAttribute: schema.ObjectAttribute{
+					Optional: true,
+				},
+			},
+		},
+		"required": {
+			input: &provider.ObjectAttribute{
+				OptionalRequired: "required",
+			},
+			expected: GeneratorObjectAttribute{
+				ObjectAttribute: schema.ObjectAttribute{
+					Required: true,
+				},
+			},
+		},
+		"custom_type": {
+			input: &provider.ObjectAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				},
+			},
+		},
+		"deprecation_message": {
+			input: &provider.ObjectAttribute{
+				DeprecationMessage: pointer("deprecation message"),
+			},
+			expected: GeneratorObjectAttribute{
+				ObjectAttribute: schema.ObjectAttribute{
+					DeprecationMessage: "deprecation message",
+				},
+			},
+		},
+		"description": {
+			input: &provider.ObjectAttribute{
+				Description: pointer("description"),
+			},
+			expected: GeneratorObjectAttribute{
+				ObjectAttribute: schema.ObjectAttribute{
+					Description:         "description",
+					MarkdownDescription: "description",
+				},
+			},
+		},
+		"sensitive": {
+			input: &provider.ObjectAttribute{
+				Sensitive: pointer(true),
+			},
+			expected: GeneratorObjectAttribute{
+				ObjectAttribute: schema.ObjectAttribute{
+					Sensitive: true,
+				},
+			},
+		},
+		"validators": {
+			input: &provider.ObjectAttribute{
+				Validators: specschema.ObjectValidators{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
+							SchemaDefinition: "myvalidator.Validate()",
+						},
+					},
+				},
+			},
+			expected: GeneratorObjectAttribute{
+				Validators: specschema.ObjectValidators{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
+							SchemaDefinition: "myvalidator.Validate()",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := NewGeneratorObjectAttribute(testCase.input)
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
 
 func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 	t.Parallel()

@@ -6,12 +6,15 @@ package provider_generate
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -24,6 +27,52 @@ type GeneratorListNestedAttribute struct {
 	CustomType   *specschema.CustomType
 	NestedObject GeneratorNestedAttributeObject
 	Validators   specschema.ListValidators
+}
+
+func NewGeneratorListNestedAttribute(a *provider.ListNestedAttribute) (GeneratorListNestedAttribute, error) {
+	if a == nil {
+		return GeneratorListNestedAttribute{}, fmt.Errorf("*provider.ListNestedAttribute is nil")
+	}
+
+	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
+
+	for _, v := range a.NestedObject.Attributes {
+		attribute, err := NewAttribute(v)
+
+		if err != nil {
+			return GeneratorListNestedAttribute{}, err
+		}
+
+		attributes[v.Name] = attribute
+	}
+
+	c := convert.NewOptionalRequired(a.OptionalRequired)
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	d := convert.NewDescription(a.Description)
+
+	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
+
+	return GeneratorListNestedAttribute{
+		ListNestedAttribute: schema.ListNestedAttribute{
+			Required:            c.IsRequired(),
+			Optional:            c.IsOptional(),
+			Sensitive:           s.IsSensitive(),
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		CustomType: a.CustomType,
+		NestedObject: GeneratorNestedAttributeObject{
+			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
+			Attributes:             attributes,
+			CustomType:             a.NestedObject.CustomType,
+			Validators:             a.NestedObject.Validators,
+		},
+		Validators: a.Validators,
+	}, nil
 }
 
 func (g GeneratorListNestedAttribute) AssocExtType() *generatorschema.AssocExtType {

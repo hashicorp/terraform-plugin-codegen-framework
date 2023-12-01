@@ -9,9 +9,11 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -24,6 +26,35 @@ type GeneratorNumberAttribute struct {
 	// because support for extracting custom import information is required.
 	CustomType *specschema.CustomType
 	Validators specschema.NumberValidators
+}
+
+func NewGeneratorNumberAttribute(a *provider.NumberAttribute) (GeneratorNumberAttribute, error) {
+	if a == nil {
+		return GeneratorNumberAttribute{}, fmt.Errorf("*provider.NumberAttribute is nil")
+	}
+
+	c := convert.NewOptionalRequired(a.OptionalRequired)
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	d := convert.NewDescription(a.Description)
+
+	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
+
+	return GeneratorNumberAttribute{
+		NumberAttribute: schema.NumberAttribute{
+			Required:            c.IsRequired(),
+			Optional:            c.IsOptional(),
+			Sensitive:           s.IsSensitive(),
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
+	}, nil
 }
 
 func (g GeneratorNumberAttribute) GeneratorSchemaType() generatorschema.Type {

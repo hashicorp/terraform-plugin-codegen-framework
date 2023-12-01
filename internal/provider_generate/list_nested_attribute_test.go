@@ -4,16 +4,342 @@
 package provider_generate
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
+
+func TestGeneratorListNestedAttribute_New(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input         *provider.ListNestedAttribute
+		expected      GeneratorListNestedAttribute
+		expectedError error
+	}{
+		"nil": {
+			expectedError: fmt.Errorf("*provider.ListNestedAttribute is nil"),
+		},
+		"attribute-nil": {
+			input: &provider.ListNestedAttribute{
+				NestedObject: provider.NestedAttributeObject{
+					Attributes: []provider.Attribute{
+						{
+							Name: "empty",
+						},
+					},
+				},
+			},
+			expectedError: fmt.Errorf("attribute type not defined: %+v", provider.Attribute{
+				Name: "empty",
+			}),
+		},
+		"attributes-bool": {
+			input: &provider.ListNestedAttribute{
+				NestedObject: provider.NestedAttributeObject{
+					Attributes: []provider.Attribute{
+						{
+							Name: "bool_attribute",
+							Bool: &provider.BoolAttribute{
+								OptionalRequired: "optional",
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"bool_attribute": GeneratorBoolAttribute{
+							BoolAttribute: schema.BoolAttribute{
+								Optional: true,
+							},
+						},
+					},
+				},
+			},
+		},
+		"attributes-list-bool": {
+			input: &provider.ListNestedAttribute{
+				NestedObject: provider.NestedAttributeObject{
+					Attributes: []provider.Attribute{
+						{
+							Name: "list_attribute",
+							List: &provider.ListAttribute{
+								OptionalRequired: "optional",
+								ElementType: specschema.ElementType{
+									Bool: &specschema.BoolType{},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"list_attribute": GeneratorListAttribute{
+							ListAttribute: schema.ListAttribute{
+								Optional: true,
+							},
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							},
+						},
+					},
+				},
+			},
+		},
+		"attributes-list-nested-bool": {
+			input: &provider.ListNestedAttribute{
+				NestedObject: provider.NestedAttributeObject{
+					Attributes: []provider.Attribute{
+						{
+							Name: "nested_attribute",
+							ListNested: &provider.ListNestedAttribute{
+								NestedObject: provider.NestedAttributeObject{
+									Attributes: []provider.Attribute{
+										{
+											Name: "nested_bool",
+											Bool: &provider.BoolAttribute{
+												OptionalRequired: "optional",
+											},
+										},
+									},
+								},
+								OptionalRequired: "optional",
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"nested_attribute": GeneratorListNestedAttribute{
+							NestedObject: GeneratorNestedAttributeObject{
+								Attributes: generatorschema.GeneratorAttributes{
+									"nested_bool": GeneratorBoolAttribute{
+										BoolAttribute: schema.BoolAttribute{
+											Optional: true,
+										},
+									},
+								},
+							},
+							ListNestedAttribute: schema.ListNestedAttribute{
+								Optional: true,
+							},
+						},
+					},
+				},
+			},
+		},
+		"attributes-object-bool": {
+			input: &provider.ListNestedAttribute{
+				NestedObject: provider.NestedAttributeObject{
+					Attributes: []provider.Attribute{
+						{
+							Name: "object_attribute",
+							Object: &provider.ObjectAttribute{
+								AttributeTypes: specschema.ObjectAttributeTypes{
+									{
+										Name: "obj_bool",
+										Bool: &specschema.BoolType{},
+									},
+								},
+								OptionalRequired: "optional",
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"object_attribute": GeneratorObjectAttribute{
+							ObjectAttribute: schema.ObjectAttribute{
+								Optional: true,
+							},
+							AttributeTypes: specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"attributes-single-nested-bool": {
+			input: &provider.ListNestedAttribute{
+				NestedObject: provider.NestedAttributeObject{
+					Attributes: []provider.Attribute{
+						{
+							Name: "nested_attribute",
+							SingleNested: &provider.SingleNestedAttribute{
+								Attributes: []provider.Attribute{
+									{
+										Name: "nested_bool",
+										Bool: &provider.BoolAttribute{
+											OptionalRequired: "optional",
+										},
+									},
+								},
+								OptionalRequired: "optional",
+							},
+						},
+					},
+				},
+			},
+			expected: GeneratorListNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: generatorschema.GeneratorAttributes{
+						"nested_attribute": GeneratorSingleNestedAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
+								"nested_bool": GeneratorBoolAttribute{
+									BoolAttribute: schema.BoolAttribute{
+										Optional: true,
+									},
+								},
+							},
+							SingleNestedAttribute: schema.SingleNestedAttribute{
+								Optional: true,
+							},
+						},
+					},
+				},
+			},
+		},
+		"optional": {
+			input: &provider.ListNestedAttribute{
+				OptionalRequired: "optional",
+			},
+			expected: GeneratorListNestedAttribute{
+				ListNestedAttribute: schema.ListNestedAttribute{
+					Optional: true,
+				},
+			},
+		},
+		"required": {
+			input: &provider.ListNestedAttribute{
+				OptionalRequired: "required",
+			},
+			expected: GeneratorListNestedAttribute{
+				ListNestedAttribute: schema.ListNestedAttribute{
+					Required: true,
+				},
+			},
+		},
+		"custom_type": {
+			input: &provider.ListNestedAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				},
+			},
+			expected: GeneratorListNestedAttribute{
+				CustomType: &specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				},
+			},
+		},
+		"deprecation_message": {
+			input: &provider.ListNestedAttribute{
+				DeprecationMessage: pointer("deprecation message"),
+			},
+			expected: GeneratorListNestedAttribute{
+				ListNestedAttribute: schema.ListNestedAttribute{
+					DeprecationMessage: "deprecation message",
+				},
+			},
+		},
+		"description": {
+			input: &provider.ListNestedAttribute{
+				Description: pointer("description"),
+			},
+			expected: GeneratorListNestedAttribute{
+				ListNestedAttribute: schema.ListNestedAttribute{
+					Description:         "description",
+					MarkdownDescription: "description",
+				},
+			},
+		},
+		"sensitive": {
+			input: &provider.ListNestedAttribute{
+				Sensitive: pointer(true),
+			},
+			expected: GeneratorListNestedAttribute{
+				ListNestedAttribute: schema.ListNestedAttribute{
+					Sensitive: true,
+				},
+			},
+		},
+		"validators": {
+			input: &provider.ListNestedAttribute{
+				Validators: specschema.ListValidators{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
+							SchemaDefinition: "myvalidator.Validate()",
+						},
+					},
+				},
+			},
+			expected: GeneratorListNestedAttribute{
+				Validators: specschema.ListValidators{
+					{
+						Custom: &specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/.../myvalidator",
+								},
+							},
+							SchemaDefinition: "myvalidator.Validate()",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := NewGeneratorListNestedAttribute(testCase.input)
+
+			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
+				t.Errorf("unexpected error: %s", diff)
+			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
 
 func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 	t.Parallel()
