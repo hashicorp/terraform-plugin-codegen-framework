@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -182,10 +183,8 @@ func Test_NewSchemas(t *testing.T) {
 				"example": {
 					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{
-							BoolAttribute: schema.BoolAttribute{
-								Optional:  true,
-								Sensitive: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							Sensitive:                convert.NewSensitive(pointer(true)),
 						},
 						"list_attribute": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
@@ -227,9 +226,7 @@ func Test_NewSchemas(t *testing.T) {
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": GeneratorBoolAttribute{
-										BoolAttribute: schema.BoolAttribute{
-											Optional: true,
-										},
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 									},
 									"nested_list_attribute": GeneratorListAttribute{
 										ListAttribute: schema.ListAttribute{
@@ -267,9 +264,7 @@ func Test_NewSchemas(t *testing.T) {
 						"single_nested_attribute": GeneratorSingleNestedAttribute{
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool_attribute": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 								"nested_list_attribute": GeneratorListAttribute{
 									ListAttribute: schema.ListAttribute{
@@ -290,9 +285,7 @@ func Test_NewSchemas(t *testing.T) {
 							NestedObject: GeneratorNestedBlockObject{
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": GeneratorBoolAttribute{
-										BoolAttribute: schema.BoolAttribute{
-											Optional: true,
-										},
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 									},
 								},
 							},
@@ -300,9 +293,7 @@ func Test_NewSchemas(t *testing.T) {
 						"single_nested_block": GeneratorSingleNestedBlock{
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool_attribute": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
 						},

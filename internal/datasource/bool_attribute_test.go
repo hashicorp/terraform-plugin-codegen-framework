@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -33,9 +33,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed",
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 			},
 		},
 		"computed_optional": {
@@ -43,10 +41,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed_optional",
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Computed: true,
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
 			},
 		},
 		"optional": {
@@ -54,9 +49,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "optional",
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 			},
 		},
 		"required": {
@@ -64,9 +57,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "required",
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 			},
 		},
 		"custom_type": {
@@ -80,7 +71,6 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{},
 				CustomType: &specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -95,9 +85,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					DeprecationMessage: "deprecation message",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecstion message")),
 			},
 		},
 		"description": {
@@ -105,10 +93,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
 			},
 		},
 		"sensitive": {
@@ -116,9 +101,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Sensitive: true,
-				},
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
 		},
 		"validators": {
@@ -472,9 +455,7 @@ CustomType: my_custom_type,
 
 		"required": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 			},
 			expected: `
 "bool_attribute": schema.BoolAttribute{
@@ -484,9 +465,7 @@ Required: true,
 
 		"optional": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 			},
 			expected: `
 "bool_attribute": schema.BoolAttribute{
@@ -496,9 +475,7 @@ Optional: true,
 
 		"computed": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 			},
 			expected: `
 "bool_attribute": schema.BoolAttribute{
@@ -508,9 +485,7 @@ Computed: true,
 
 		"sensitive": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Sensitive: true,
-				},
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
 			expected: `
 "bool_attribute": schema.BoolAttribute{
@@ -521,9 +496,7 @@ Sensitive: true,
 		// TODO: Do we need separate description and markdown description?
 		"description": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Description: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
 			},
 			expected: `
 "bool_attribute": schema.BoolAttribute{
@@ -534,9 +507,7 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					DeprecationMessage: "deprecated",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
 			},
 			expected: `
 "bool_attribute": schema.BoolAttribute{
@@ -554,18 +525,14 @@ DeprecationMessage: "deprecated",
 		},
 		"validators": {
 			input: GeneratorBoolAttribute{
-				Validators: specschema.BoolValidators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, []*specschema.CustomValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_validator.Validate()",
-						},
+						SchemaDefinition: "my_validator.Validate()",
 					},
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_other_validator.Validate()",
-						},
+						SchemaDefinition: "my_other_validator.Validate()",
 					},
-				},
+				}),
 			},
 			expected: `
 "bool_attribute": schema.BoolAttribute{
