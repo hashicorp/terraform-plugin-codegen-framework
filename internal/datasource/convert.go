@@ -63,7 +63,7 @@ func NewSchema(d datasource.DataSource) (generatorschema.GeneratorSchema, error)
 func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, error) {
 	switch {
 	case a.Bool != nil:
-		return NewGeneratorBoolAttribute(a.Bool)
+		return NewGeneratorBoolAttribute(a.Name, a.Bool)
 	case a.Float64 != nil:
 		return NewGeneratorFloat64Attribute(a.Float64)
 	case a.Int64 != nil:

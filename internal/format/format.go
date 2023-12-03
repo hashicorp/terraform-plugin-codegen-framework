@@ -5,6 +5,8 @@ package format
 
 import (
 	"go/format"
+	"regexp"
+	"strings"
 )
 
 func Format(schemas map[string][]byte) (map[string][]byte, error) {
@@ -21,3 +23,12 @@ func Format(schemas map[string][]byte) (map[string][]byte, error) {
 
 	return formattedSchemas, nil
 }
+
+func ToPascalCase(str string) string {
+	return snakeLetters.ReplaceAllStringFunc(str, func(s string) string {
+		return strings.ToUpper(strings.Replace(s, "_", "", -1))
+	})
+}
+
+// snakeLetters will match to the first letter and an underscore followed by a letter
+var snakeLetters = regexp.MustCompile("(^[a-z])|_[a-z0-9]")

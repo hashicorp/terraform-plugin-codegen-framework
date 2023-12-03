@@ -16,6 +16,7 @@ import (
 )
 
 type GeneratorBoolAttribute struct {
+	AttributeType            convert.AttributeType
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomType               *specschema.CustomType
@@ -26,10 +27,12 @@ type GeneratorBoolAttribute struct {
 	ValidatorsCustom         convert.ValidatorsCustom
 }
 
-func NewGeneratorBoolAttribute(a *datasource.BoolAttribute) (GeneratorBoolAttribute, error) {
+func NewGeneratorBoolAttribute(name string, a *datasource.BoolAttribute) (GeneratorBoolAttribute, error) {
 	if a == nil {
 		return GeneratorBoolAttribute{}, fmt.Errorf("*datasource.BoolAttribute is nil")
 	}
+
+	at := convert.NewAttributeType(a.CustomType, a.AssociatedExternalType, name)
 
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
@@ -39,6 +42,8 @@ func NewGeneratorBoolAttribute(a *datasource.BoolAttribute) (GeneratorBoolAttrib
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
+	// TODO: codegen-spec: Add interface to <Type>Validators []<Type>Validator to allow retrieval of []*specschema.CustomValidator
+	// TODO: codegen-spec: Will need equivalent for <Type>PlanModifiers and Default
 	var custom []*specschema.CustomValidator
 
 	for _, v := range a.Validators {
@@ -48,6 +53,7 @@ func NewGeneratorBoolAttribute(a *datasource.BoolAttribute) (GeneratorBoolAttrib
 	vc := convert.NewValidatorsCustom(convert.ValidatorTypeBool, custom)
 
 	return GeneratorBoolAttribute{
+		AttributeType:            at,
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomType:               a.CustomType,
@@ -90,12 +96,14 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	//TODO: Need to check all other struct fields
+	//TODO: Add equality checks for all struct types
 
 	// TODO: Equality functions that operate on specschema types should be added to codegen-spec repo.
 	//if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
 	//	return false
 	//}
+
+	// TODO: codegen-spec: Add Equality function to allow comparison of []*specschema.CustomValidator
 
 	if !g.CustomType.Equal(h.CustomType) {
 		return false
@@ -109,37 +117,15 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 }
 
 func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	var customType string
-
-	switch {
-	case g.CustomType != nil:
-		customType = g.CustomType.Type
-	// This is specifically to handle the fact that when an associated external
-	// type is declared on this attribute, the generator will create custom
-	// type and value types, and the custom type Type will be used here.
-	case g.AssociatedExternalType != nil:
-		customType = fmt.Sprintf("%sType{}", name.ToPascalCase())
-	}
-
 	var b bytes.Buffer
 
-	// TODO: Addition of newline should be handled by caller.
-	b.WriteString("\n")
-
-	// TODO: Refactor to func accepting attribute type (string) constant - see ComputedOptionalRequired
 	b.WriteString(fmt.Sprintf("%q: schema.BoolAttribute{\n", name))
-
-	if customType != "" {
-		b.WriteString(fmt.Sprintf("CustomType: %s,\n", customType))
-	}
-
+	b.Write(g.AttributeType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.ValidatorsCustom.Schema())
-
-	// TODO: Addition of comma should be handled by caller.
 	b.WriteString("},")
 
 	return b.String(), nil

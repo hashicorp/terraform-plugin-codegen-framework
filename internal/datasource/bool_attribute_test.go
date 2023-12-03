@@ -142,7 +142,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorBoolAttribute(testCase.input)
+			got, err := NewGeneratorBoolAttribute("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -412,43 +412,47 @@ func TestGeneratorBoolAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorBoolAttribute{
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+				AttributeType: convert.NewAttributeType(
+					&specschema.CustomType{
+						Type: "my_custom_type",
+					},
+					nil,
+					"bool_attribute",
+				),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"associated-external-type": {
 			input: GeneratorBoolAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				AttributeType: convert.NewAttributeType(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtBool",
 					},
-				},
+					"bool_attribute",
+				),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 CustomType: BoolAttributeType{},
 },`,
 		},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorBoolAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				AttributeType: convert.NewAttributeType(
+					&specschema.CustomType{
+						Type: "my_custom_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtBool",
+					},
+					"bool_attribute",
+				),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 CustomType: my_custom_type,
 },`,
 		},
@@ -457,8 +461,7 @@ CustomType: my_custom_type,
 			input: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Required: true,
 },`,
 		},
@@ -467,8 +470,7 @@ Required: true,
 			input: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Optional: true,
 },`,
 		},
@@ -477,8 +479,7 @@ Optional: true,
 			input: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Computed: true,
 },`,
 		},
@@ -487,8 +488,7 @@ Computed: true,
 			input: GeneratorBoolAttribute{
 				Sensitive: convert.NewSensitive(pointer(true)),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Sensitive: true,
 },`,
 		},
@@ -498,8 +498,7 @@ Sensitive: true,
 			input: GeneratorBoolAttribute{
 				Description: convert.NewDescription(pointer("description")),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Description: "description",
 MarkdownDescription: "description",
 },`,
@@ -509,8 +508,7 @@ MarkdownDescription: "description",
 			input: GeneratorBoolAttribute{
 				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 DeprecationMessage: "deprecated",
 },`,
 		},
@@ -519,8 +517,7 @@ DeprecationMessage: "deprecated",
 			input: GeneratorBoolAttribute{
 				Validators: specschema.BoolValidators{},
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 },`,
 		},
 		"validators": {
@@ -534,8 +531,7 @@ DeprecationMessage: "deprecated",
 					},
 				}),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Validators: []validator.Bool{
 my_validator.Validate(),
 my_other_validator.Validate(),

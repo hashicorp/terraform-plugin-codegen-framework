@@ -200,6 +200,10 @@ func (g GeneratorAttributes) Schema() (string, error) {
 			return "", err
 		}
 
+		if !strings.HasPrefix(str, "\n") {
+			str = "\n" + str
+		}
+
 		s.WriteString(str)
 	}
 
