@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package convert
 
 import specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
