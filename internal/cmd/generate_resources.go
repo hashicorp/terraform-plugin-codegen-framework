@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource_convert"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/resource"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
@@ -136,8 +136,7 @@ func generateResourceCode(ctx context.Context, spec spec.Specification, outputPa
 	ctx = logging.SetPathInContext(ctx, "resource")
 
 	// convert IR to framework schema
-	c := resource_convert.NewConverter(spec)
-	s, err := c.ToGeneratorResourceSchema()
+	s, err := resource.NewSchemas(spec)
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
