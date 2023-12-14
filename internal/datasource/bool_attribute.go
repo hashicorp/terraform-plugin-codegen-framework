@@ -65,6 +65,36 @@ func NewGeneratorBoolAttribute(name string, a *datasource.BoolAttribute) (Genera
 	}, nil
 }
 
+func NewGeneratorBoolAttribute(a *datasource.BoolAttribute) (GeneratorBoolAttribute, error) {
+	if a == nil {
+		return GeneratorBoolAttribute{}, fmt.Errorf("*datasource.BoolAttribute is nil")
+	}
+
+	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	d := convert.NewDescription(a.Description)
+
+	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
+
+	return GeneratorBoolAttribute{
+		BoolAttribute: schema.BoolAttribute{
+			Required:            c.IsRequired(),
+			Optional:            c.IsOptional(),
+			Computed:            c.IsComputed(),
+			Sensitive:           s.IsSensitive(),
+			Description:         d.Description(),
+			MarkdownDescription: d.Description(),
+			DeprecationMessage:  dm.DeprecationMessage(),
+		},
+
+		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		CustomType:             a.CustomType,
+		Validators:             a.Validators,
+	}, nil
+}
+
 func (g GeneratorBoolAttribute) GeneratorSchemaType() generatorschema.Type {
 	return generatorschema.GeneratorBoolAttribute
 }
