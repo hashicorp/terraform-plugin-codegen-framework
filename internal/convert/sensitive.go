@@ -13,6 +13,18 @@ func NewSensitive(s *bool) Sensitive {
 	}
 }
 
+func (s Sensitive) Equal(other Sensitive) bool {
+	if s.sensitive == nil && other.sensitive == nil {
+		return true
+	}
+
+	if s.sensitive == nil || other.sensitive == nil {
+		return false
+	}
+
+	return *s.sensitive == *other.sensitive
+}
+
 func (s Sensitive) IsSensitive() bool {
 	if s.sensitive == nil {
 		return false

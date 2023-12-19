@@ -27,6 +27,18 @@ func (d Description) Description() string {
 	return *d.description
 }
 
+func (d Description) Equal(other Description) bool {
+	if d.description == nil && other.description == nil {
+		return true
+	}
+
+	if d.description == nil || other.description == nil {
+		return false
+	}
+
+	return *d.description == *other.description
+}
+
 func (d Description) Schema() []byte {
 	var b bytes.Buffer
 

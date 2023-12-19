@@ -16,12 +16,12 @@ import (
 )
 
 type GeneratorBoolAttribute struct {
-	AttributeType            convert.AttributeType
 	AssociatedExternalType   *generatorschema.AssocExtType
+	AttributeType            convert.AttributeType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomType               *specschema.CustomType
-	Description              convert.Description
 	DeprecationMessage       convert.DeprecationMessage
+	Description              convert.Description
 	Sensitive                convert.Sensitive
 	Validators               specschema.BoolValidators
 	ValidatorsCustom         convert.ValidatorsCustom
@@ -42,23 +42,15 @@ func NewGeneratorBoolAttribute(name string, a *datasource.BoolAttribute) (Genera
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	// TODO: codegen-spec: Add interface to <Type>Validators []<Type>Validator to allow retrieval of []*specschema.CustomValidator
-	// TODO: codegen-spec: Will need equivalent for <Type>PlanModifiers and Default
-	var custom []*specschema.CustomValidator
-
-	for _, v := range a.Validators {
-		custom = append(custom, v.Custom)
-	}
-
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeBool, custom)
+	vc := convert.NewValidatorsCustom(convert.ValidatorTypeBool, a.Validators.CustomValidators())
 
 	return GeneratorBoolAttribute{
 		AttributeType:            at,
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomType:               a.CustomType,
-		Description:              d,
 		DeprecationMessage:       dm,
+		Description:              d,
 		Sensitive:                s,
 		Validators:               a.Validators,
 		ValidatorsCustom:         vc,
@@ -96,16 +88,31 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	//TODO: Add equality checks for all struct types
+	if !g.AttributeType.Equal(h.AttributeType) {
+		return false
+	}
 
-	// TODO: Equality functions that operate on specschema types should be added to codegen-spec repo.
-	//if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
-	//	return false
-	//}
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
+		return false
+	}
 
-	// TODO: codegen-spec: Add Equality function to allow comparison of []*specschema.CustomValidator
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
+		return false
+	}
 
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
 		return false
 	}
 
@@ -113,7 +120,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	return true
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {

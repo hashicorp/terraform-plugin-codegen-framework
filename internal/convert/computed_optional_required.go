@@ -20,9 +20,7 @@ func NewComputedOptionalRequired(c specschema.ComputedOptionalRequired) Computed
 }
 
 func (c ComputedOptionalRequired) Equal(other ComputedOptionalRequired) bool {
-	// TODO: Should call c.computedOptionalRequired.Equal(other.computedOptionalRequired)
-	// TODO: Add Equality functions to specschema types
-	return c.computedOptionalRequired == other.computedOptionalRequired
+	return c.computedOptionalRequired.Equal(other.computedOptionalRequired)
 }
 
 func (c ComputedOptionalRequired) IsComputed() bool {

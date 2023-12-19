@@ -11,24 +11,24 @@ import (
 )
 
 const (
-	ValidatorTypeBool ValidatorType = "Bool"
+	PlanModifierTypeBool PlanModifierType = "Bool"
 )
 
-type ValidatorType string
+type PlanModifierType string
 
-type ValidatorsCustom struct {
-	validatorType ValidatorType
-	custom        specschema.CustomValidators
+type PlanModifiersCustom struct {
+	planModifierType PlanModifierType
+	custom           specschema.CustomPlanModifiers
 }
 
-func NewValidatorsCustom(t ValidatorType, c specschema.CustomValidators) ValidatorsCustom {
-	return ValidatorsCustom{
-		validatorType: t,
-		custom:        c,
+func NewPlanModifiersCustom(t PlanModifierType, c specschema.CustomPlanModifiers) PlanModifiersCustom {
+	return PlanModifiersCustom{
+		planModifierType: t,
+		custom:           c,
 	}
 }
 
-func (v ValidatorsCustom) Equal(other ValidatorsCustom) bool {
+func (v PlanModifiersCustom) Equal(other PlanModifiersCustom) bool {
 	if len(v.custom) == 0 && len(other.custom) == 0 {
 		return true
 	}
@@ -50,7 +50,7 @@ func (v ValidatorsCustom) Equal(other ValidatorsCustom) bool {
 	return true
 }
 
-func (v ValidatorsCustom) Schema() []byte {
+func (v PlanModifiersCustom) Schema() []byte {
 	var b, cb bytes.Buffer
 
 	for _, c := range v.custom {
@@ -66,7 +66,7 @@ func (v ValidatorsCustom) Schema() []byte {
 	}
 
 	if cb.Len() > 0 {
-		b.WriteString(fmt.Sprintf("Validators: []validator.%s{\n", v.validatorType))
+		b.WriteString(fmt.Sprintf("PlanModifiers: []planmodifier.%s{\n", v.planModifierType))
 		b.Write(cb.Bytes())
 		b.WriteString("},\n")
 	}

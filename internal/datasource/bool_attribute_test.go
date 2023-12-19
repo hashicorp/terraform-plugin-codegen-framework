@@ -71,6 +71,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorBoolAttribute{
+				AttributeType: convert.NewAttributeType(&specschema.CustomType{Type: "my_type"}, nil, ""),
 				CustomType: &specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -78,6 +79,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
 			},
 		},
 		"deprecation_message": {
@@ -85,7 +87,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorBoolAttribute{
-				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecstion message")),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
 			},
 		},
 		"description": {
@@ -132,6 +134,16 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}

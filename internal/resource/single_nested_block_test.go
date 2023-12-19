@@ -13,6 +13,7 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -54,9 +55,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 			expected: GeneratorSingleNestedBlock{
 				Attributes: generatorschema.GeneratorAttributes{
 					"bool_attribute": GeneratorBoolAttribute{
-						BoolAttribute: schema.BoolAttribute{
-							Optional: true,
-						},
+						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 					},
 				},
 			},
@@ -115,9 +114,9 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						NestedObject: GeneratorNestedAttributeObject{
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Computed: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
 								},
 							},
 						},
@@ -185,9 +184,9 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 					"nested_attribute": GeneratorSingleNestedAttribute{
 						Attributes: generatorschema.GeneratorAttributes{
 							"nested_bool": GeneratorBoolAttribute{
-								BoolAttribute: schema.BoolAttribute{
-									Computed: true,
-								},
+								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+								PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
+								ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
 							},
 						},
 						SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -235,9 +234,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						NestedObject: GeneratorNestedBlockObject{
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
 						},
@@ -268,9 +265,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 					"nested_block": GeneratorSingleNestedBlock{
 						Attributes: generatorschema.GeneratorAttributes{
 							"bool_attribute": GeneratorBoolAttribute{
-								BoolAttribute: schema.BoolAttribute{
-									Optional: true,
-								},
+								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							},
 						},
 					},
@@ -768,9 +763,7 @@ func TestGeneratorSingleNestedBlock_Schema(t *testing.T) {
 			input: GeneratorSingleNestedBlock{
 				Attributes: generatorschema.GeneratorAttributes{
 					"bool": GeneratorBoolAttribute{
-						BoolAttribute: schema.BoolAttribute{
-							Optional: true,
-						},
+						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 					},
 				},
 			},
@@ -825,9 +818,7 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 						NestedObject: GeneratorNestedAttributeObject{
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
 						},
@@ -900,9 +891,7 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 					"nested_single_nested": GeneratorSingleNestedAttribute{
 						Attributes: generatorschema.GeneratorAttributes{
 							"bool": GeneratorBoolAttribute{
-								BoolAttribute: schema.BoolAttribute{
-									Optional: true,
-								},
+								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							},
 						},
 					},
@@ -939,9 +928,7 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 						NestedObject: GeneratorNestedBlockObject{
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
 						},
@@ -980,9 +967,7 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 					"nested_single_nested": GeneratorSingleNestedBlock{
 						Attributes: generatorschema.GeneratorAttributes{
 							"bool": GeneratorBoolAttribute{
-								BoolAttribute: schema.BoolAttribute{
-									Optional: true,
-								},
+								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							},
 						},
 					},
