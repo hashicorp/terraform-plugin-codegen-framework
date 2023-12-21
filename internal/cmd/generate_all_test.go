@@ -6,7 +6,7 @@ package cmd_test
 import (
 	"testing"
 
-	"github.com/mitchellh/cli"
+	"github.com/hashicorp/cli"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
 )

@@ -6,7 +6,7 @@ package cmd
 import (
 	"strings"
 
-	"github.com/mitchellh/cli"
+	"github.com/hashicorp/cli"
 )
 
 type ScaffoldCommand struct {

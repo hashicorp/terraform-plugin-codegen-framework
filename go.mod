@@ -4,11 +4,11 @@ go 1.21
 
 require (
 	github.com/google/go-cmp v0.6.0
+	github.com/hashicorp/cli v1.1.6
 	github.com/hashicorp/terraform-plugin-codegen-spec v0.1.1-0.20231219170147-d906422e4320
 	github.com/hashicorp/terraform-plugin-framework v1.4.2
 	github.com/hashicorp/terraform-plugin-go v0.19.0
 	github.com/mattn/go-colorable v0.1.13
-	github.com/mitchellh/cli v1.1.5
 )
 
 require (
@@ -17,7 +17,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
-	github.com/fatih/color v1.15.0 // indirect
+	github.com/fatih/color v1.16.0 // indirect
 	github.com/google/uuid v1.4.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-hclog v1.5.0 // indirect

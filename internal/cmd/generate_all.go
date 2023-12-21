@@ -11,8 +11,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/hashicorp/cli"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
-	"github.com/mitchellh/cli"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
