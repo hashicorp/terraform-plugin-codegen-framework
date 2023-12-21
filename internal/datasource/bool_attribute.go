@@ -17,9 +17,9 @@ import (
 
 type GeneratorBoolAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
-	AttributeType            convert.AttributeType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomType               *specschema.CustomType
+	CustomTypePrimitive      convert.CustomTypePrimitive
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	Sensitive                convert.Sensitive
@@ -32,23 +32,23 @@ func NewGeneratorBoolAttribute(name string, a *datasource.BoolAttribute) (Genera
 		return GeneratorBoolAttribute{}, fmt.Errorf("*datasource.BoolAttribute is nil")
 	}
 
-	at := convert.NewAttributeType(a.CustomType, a.AssociatedExternalType, name)
-
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	ctp := convert.NewCustomTypePrimitive(a.CustomType, a.AssociatedExternalType, name)
 
 	d := convert.NewDescription(a.Description)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
+	s := convert.NewSensitive(a.Sensitive)
+
 	vc := convert.NewValidatorsCustom(convert.ValidatorTypeBool, a.Validators.CustomValidators())
 
 	return GeneratorBoolAttribute{
-		AttributeType:            at,
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomType:               a.CustomType,
+		CustomTypePrimitive:      ctp,
 		DeprecationMessage:       dm,
 		Description:              d,
 		Sensitive:                s,
@@ -88,10 +88,6 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.AttributeType.Equal(h.AttributeType) {
-		return false
-	}
-
 	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
 		return false
 	}
@@ -101,6 +97,10 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	}
 
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
 		return false
 	}
 
@@ -127,7 +127,7 @@ func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier)
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.BoolAttribute{\n", name))
-	b.Write(g.AttributeType.Schema())
+	b.Write(g.CustomTypePrimitive.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())

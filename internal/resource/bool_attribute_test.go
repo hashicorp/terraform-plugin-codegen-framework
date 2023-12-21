@@ -75,7 +75,6 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorBoolAttribute{
-				AttributeType: convert.NewAttributeType(&specschema.CustomType{Type: "my_type"}, nil, ""),
 				CustomType: &specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -83,6 +82,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{Type: "my_type"}, nil, ""),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
 				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
 			},
@@ -682,7 +682,7 @@ func TestGeneratorBoolAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorBoolAttribute{
-				AttributeType: convert.NewAttributeType(
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -697,7 +697,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorBoolAttribute{
-				AttributeType: convert.NewAttributeType(
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtBool",
@@ -712,7 +712,7 @@ CustomType: BoolAttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorBoolAttribute{
-				AttributeType: convert.NewAttributeType(
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
