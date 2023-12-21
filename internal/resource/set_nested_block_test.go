@@ -61,6 +61,7 @@ func TestGeneratorSetNestedBlock_New(t *testing.T) {
 					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 						},
 					},
 				},
@@ -128,6 +129,7 @@ func TestGeneratorSetNestedBlock_New(t *testing.T) {
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
 							},
@@ -204,6 +206,7 @@ func TestGeneratorSetNestedBlock_New(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
 							SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -260,6 +263,7 @@ func TestGeneratorSetNestedBlock_New(t *testing.T) {
 								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
 							},
@@ -296,6 +300,7 @@ func TestGeneratorSetNestedBlock_New(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
 						},

@@ -34,6 +34,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -42,6 +43,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -50,6 +52,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -58,6 +61,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -89,6 +93,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorBoolAttribute{
 				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				ValidatorsCustom:   convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -96,7 +101,8 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorBoolAttribute{
-				Description: convert.NewDescription(pointer("description")),
+				Description:      convert.NewDescription(pointer("description")),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -104,7 +110,8 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorBoolAttribute{
-				Sensitive: convert.NewSensitive(pointer(true)),
+				Sensitive:        convert.NewSensitive(pointer(true)),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -226,6 +233,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 					},
 					Static: pointer(true),
 				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 	}

@@ -61,6 +61,7 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 						},
 					},
 				},
@@ -86,12 +87,14 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"list_attribute": GeneratorListAttribute{
-							ListAttribute: schema.ListAttribute{
-								Optional: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							ElementType: specschema.ElementType{
 								Bool: &specschema.BoolType{},
 							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							}),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 					},
 				},
@@ -128,6 +131,7 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
 							},
@@ -204,6 +208,7 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
 							SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -260,6 +265,7 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
 							},
@@ -296,6 +302,7 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
 						},
@@ -1039,12 +1046,10 @@ AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
-							ListAttribute: schema.ListAttribute{
-								Optional: true,
-							},
-							ElementType: specschema.ElementType{
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 								String: &specschema.StringType{},
-							},
+							}),
 						},
 					},
 				},

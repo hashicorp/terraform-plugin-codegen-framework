@@ -12,6 +12,7 @@ import (
 
 const (
 	ValidatorTypeBool ValidatorType = "Bool"
+	ValidatorTypeList ValidatorType = "List"
 )
 
 type ValidatorType string
@@ -29,6 +30,10 @@ func NewValidatorsCustom(t ValidatorType, c specschema.CustomValidators) Validat
 }
 
 func (v ValidatorsCustom) Equal(other ValidatorsCustom) bool {
+	if v.validatorType != other.validatorType {
+		return false
+	}
+
 	if len(v.custom) == 0 && len(other.custom) == 0 {
 		return true
 	}

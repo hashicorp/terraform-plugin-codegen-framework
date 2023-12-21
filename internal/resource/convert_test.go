@@ -185,6 +185,7 @@ func Test_NewSchemas(t *testing.T) {
 						"bool_attribute": GeneratorBoolAttribute{
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							Sensitive:                convert.NewSensitive(pointer(true)),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 						},
 						"list_attribute": GeneratorListAttribute{
 							ListAttribute: schema.ListAttribute{
@@ -227,6 +228,7 @@ func Test_NewSchemas(t *testing.T) {
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 									"nested_list_attribute": GeneratorListAttribute{
 										ListAttribute: schema.ListAttribute{
@@ -265,6 +267,7 @@ func Test_NewSchemas(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool_attribute": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 								"nested_list_attribute": GeneratorListAttribute{
 									ListAttribute: schema.ListAttribute{
@@ -286,6 +289,7 @@ func Test_NewSchemas(t *testing.T) {
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
 							},
@@ -294,6 +298,7 @@ func Test_NewSchemas(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool_attribute": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
 						},
