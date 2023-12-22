@@ -79,7 +79,7 @@ func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, e
 	case a.Number != nil:
 		return NewGeneratorNumberAttribute(a.Number)
 	case a.Object != nil:
-		return NewGeneratorObjectAttribute(a.Object)
+		return NewGeneratorObjectAttribute(a.Name, a.Object)
 	case a.Set != nil:
 		return NewGeneratorSetAttribute(a.Set)
 	case a.SetNested != nil:

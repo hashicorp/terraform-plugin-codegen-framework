@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package convert
 
 import (
@@ -17,7 +20,11 @@ func NewObjectAttributeTypes(o schema.ObjectAttributeTypes) ObjectAttributeTypes
 	}
 }
 
-func (o ObjectAttributeTypes) Schema() []byte {
+func (o ObjectAttributeTypes) Equal(other ObjectAttributeTypes) bool {
+	return o.objectAttributeTypes.Equal(other.objectAttributeTypes)
+}
+
+func (o ObjectAttributeTypes) AttributeTypes() []byte {
 	var b bytes.Buffer
 
 	for _, v := range o.objectAttributeTypes {
@@ -54,7 +61,7 @@ func (o ObjectAttributeTypes) Schema() []byte {
 			if v.Map.CustomType != nil {
 				b.WriteString(fmt.Sprintf("%q: %s,", v.Name, v.Map.CustomType.Type))
 			} else {
-				b.WriteString(fmt.Sprintf("%q: types.MapType{\nElemType: %s,\n},", v.Name, NewElementType(v.List.ElementType).ElementType()))
+				b.WriteString(fmt.Sprintf("%q: types.MapType{\nElemType: %s,\n},", v.Name, NewElementType(v.Map.ElementType).ElementType()))
 			}
 		case v.Number != nil:
 			if v.Number.CustomType != nil {
@@ -66,13 +73,13 @@ func (o ObjectAttributeTypes) Schema() []byte {
 			if v.Object.CustomType != nil {
 				b.WriteString(fmt.Sprintf("%q: %s,", v.Name, v.Object.CustomType.Type))
 			} else {
-				b.WriteString(fmt.Sprintf("%q: types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n},", v.Name, NewObjectAttributeTypes(v.Object.AttributeTypes).Schema()))
+				b.WriteString(fmt.Sprintf("%q: types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n},", v.Name, NewObjectAttributeTypes(v.Object.AttributeTypes).AttributeTypes()))
 			}
 		case v.Set != nil:
 			if v.Set.CustomType != nil {
 				b.WriteString(fmt.Sprintf("%q: %s,", v.Name, v.Set.CustomType.Type))
 			} else {
-				b.WriteString(fmt.Sprintf("%q: types.SetType{\nElemType: %s,\n},", v.Name, NewElementType(v.List.ElementType).ElementType()))
+				b.WriteString(fmt.Sprintf("%q: types.SetType{\nElemType: %s,\n},", v.Name, NewElementType(v.Set.ElementType).ElementType()))
 			}
 		case v.String != nil:
 			if v.String.CustomType != nil {
@@ -81,6 +88,20 @@ func (o ObjectAttributeTypes) Schema() []byte {
 				b.WriteString(fmt.Sprintf("%q: types.StringType,", v.Name))
 			}
 		}
+	}
+
+	return b.Bytes()
+}
+
+func (o ObjectAttributeTypes) Schema() []byte {
+	var b, at bytes.Buffer
+
+	at.Write(o.AttributeTypes())
+
+	if at.Len() > 0 {
+		b.WriteString("AttributeTypes: map[string]attr.Type{\n")
+		b.Write(at.Bytes())
+		b.WriteString("\n},\n")
 	}
 
 	return b.Bytes()

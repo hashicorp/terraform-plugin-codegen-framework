@@ -11,8 +11,9 @@ import (
 )
 
 const (
-	ValidatorTypeBool ValidatorType = "Bool"
-	ValidatorTypeList ValidatorType = "List"
+	ValidatorTypeBool   ValidatorType = "Bool"
+	ValidatorTypeList   ValidatorType = "List"
+	ValidatorTypeObject ValidatorType = "Object"
 )
 
 type ValidatorType string

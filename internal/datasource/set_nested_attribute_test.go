@@ -166,15 +166,20 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"object_attribute": GeneratorObjectAttribute{
-							ObjectAttribute: schema.ObjectAttribute{
-								Optional: true,
-							},
 							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "obj_bool",
 									Bool: &specschema.BoolType{},
 								},
 							},
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+							}),
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 				},
@@ -1049,15 +1054,14 @@ AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"object": GeneratorObjectAttribute{
-							ObjectAttribute: schema.ObjectAttribute{
-								Optional: true,
-							},
-							AttributeTypes: specschema.ObjectAttributeTypes{
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 								{
 									Name:   "str",
 									String: &specschema.StringType{},
 								},
-							},
+							}),
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 				},

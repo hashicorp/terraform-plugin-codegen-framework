@@ -98,6 +98,7 @@ func (g GeneratorListAttribute) Imports() *generatorschema.Imports {
 // call returns false when the ElementType is nil.
 func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorListAttribute)
+
 	if !ok {
 		return false
 	}

@@ -65,7 +65,7 @@ func (e ElementType) ElementType() []byte {
 		if e.elementType.Object.CustomType != nil {
 			b.WriteString(fmt.Sprintf(e.elementType.Object.CustomType.Type))
 		} else {
-			b.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", NewObjectAttributeTypes(e.elementType.Object.AttributeTypes).Schema()))
+			b.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", NewObjectAttributeTypes(e.elementType.Object.AttributeTypes).AttributeTypes()))
 		}
 	case e.elementType.Set != nil:
 		if e.elementType.Set.CustomType != nil {

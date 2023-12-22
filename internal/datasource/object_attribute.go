@@ -6,13 +6,10 @@ package datasource
 import (
 	"bytes"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -20,44 +17,50 @@ import (
 )
 
 type GeneratorObjectAttribute struct {
-	schema.ObjectAttribute
-
-	AssociatedExternalType *generatorschema.AssocExtType
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	AttributeTypes specschema.ObjectAttributeTypes
-	CustomType     *specschema.CustomType
-	Validators     specschema.ObjectValidators
+	AssociatedExternalType   *generatorschema.AssocExtType
+	AttributeTypes           specschema.ObjectAttributeTypes
+	AttributeTypesObject     convert.ObjectAttributeTypes
+	ComputedOptionalRequired convert.ComputedOptionalRequired
+	CustomType               *specschema.CustomType
+	CustomTypeObject         convert.CustomTypeObject
+	DeprecationMessage       convert.DeprecationMessage
+	Description              convert.Description
+	Sensitive                convert.Sensitive
+	Validators               specschema.ObjectValidators
+	ValidatorsCustom         convert.ValidatorsCustom
 }
 
-func NewGeneratorObjectAttribute(a *datasource.ObjectAttribute) (GeneratorObjectAttribute, error) {
+func NewGeneratorObjectAttribute(name string, a *datasource.ObjectAttribute) (GeneratorObjectAttribute, error) {
 	if a == nil {
 		return GeneratorObjectAttribute{}, fmt.Errorf("*datasource.ObjectAttribute is nil")
 	}
 
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	cto := convert.NewCustomTypeObject(a.CustomType, a.AssociatedExternalType, name)
 
 	d := convert.NewDescription(a.Description)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	return GeneratorObjectAttribute{
-		ObjectAttribute: schema.ObjectAttribute{
-			Required:            c.IsRequired(),
-			Optional:            c.IsOptional(),
-			Computed:            c.IsComputed(),
-			Sensitive:           s.IsSensitive(),
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	oat := convert.NewObjectAttributeTypes(a.AttributeTypes)
 
-		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
-		AttributeTypes:         a.AttributeTypes,
-		CustomType:             a.CustomType,
-		Validators:             a.Validators,
+	s := convert.NewSensitive(a.Sensitive)
+
+	vc := convert.NewValidatorsCustom(convert.ValidatorTypeObject, a.Validators.CustomValidators())
+
+	return GeneratorObjectAttribute{
+		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AttributeTypes:           a.AttributeTypes,
+		AttributeTypesObject:     oat,
+		ComputedOptionalRequired: c,
+		CustomType:               a.CustomType,
+		CustomTypeObject:         cto,
+		DeprecationMessage:       dm,
+		Description:              d,
+		Sensitive:                s,
+		Validators:               a.Validators,
+		ValidatorsCustom:         vc,
 	}, nil
 }
 
@@ -107,7 +110,19 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
+		return false
+	}
+
 	if !g.AttributeTypes.Equal(h.AttributeTypes) {
+		return false
+	}
+
+	if !g.AttributeTypesObject.Equal(h.AttributeTypesObject) {
+		return false
+	}
+
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
 		return false
 	}
 
@@ -115,51 +130,47 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
+	if !g.CustomTypeObject.Equal(h.CustomTypeObject) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
+		return false
+	}
+
 	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
-	return g.ObjectAttribute.Equal(h.ObjectAttribute)
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorObjectAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type attribute struct {
-		Name                     string
-		AttributeTypes           string
-		CustomType               string
-		GeneratorObjectAttribute GeneratorObjectAttribute
+	var b bytes.Buffer
+
+	customTypeSchema := g.CustomTypeObject.Schema()
+
+	b.WriteString(fmt.Sprintf("%q: schema.ObjectAttribute{\n", name))
+	b.Write(customTypeSchema)
+	if len(customTypeSchema) == 0 {
+		b.Write(g.AttributeTypesObject.Schema())
 	}
+	b.Write(g.ComputedOptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.WriteString("},")
 
-	a := attribute{
-		Name:                     name.ToString(),
-		AttributeTypes:           generatorschema.GetAttrTypes(g.AttributeTypes),
-		GeneratorObjectAttribute: g,
-	}
-
-	switch {
-	case g.CustomType != nil:
-		a.CustomType = g.CustomType.Type
-	case g.AssociatedExternalType != nil:
-		a.CustomType = fmt.Sprintf("%sType{\ntypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n},\n}", name.ToPascalCase(), name.ToPascalCase())
-	}
-
-	t, err := template.New("object_attribute").Parse(objectAttributeTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	if _, err = addAttributeTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, a)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorObjectAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
