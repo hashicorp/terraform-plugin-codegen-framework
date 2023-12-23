@@ -60,6 +60,22 @@ func NewSchema(d datasource.DataSource) (generatorschema.GeneratorSchema, error)
 	return s, nil
 }
 
+func NewAttributes(a datasource.Attributes) (generatorschema.GeneratorAttributes, error) {
+	attributes := make(generatorschema.GeneratorAttributes, len(a))
+
+	for _, v := range a {
+		attribute, err := NewAttribute(v)
+
+		if err != nil {
+			return generatorschema.GeneratorAttributes{}, err
+		}
+
+		attributes[v.Name] = attribute
+	}
+
+	return attributes, nil
+}
+
 func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, error) {
 	switch {
 	case a.Bool != nil:
@@ -85,7 +101,7 @@ func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, e
 	case a.SetNested != nil:
 		return NewGeneratorSetNestedAttribute(a.SetNested)
 	case a.SingleNested != nil:
-		return NewGeneratorSingleNestedAttribute(a.SingleNested)
+		return NewGeneratorSingleNestedAttribute(a.Name, a.SingleNested)
 	case a.String != nil:
 		return NewGeneratorStringAttribute(a.String)
 	}

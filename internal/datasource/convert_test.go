@@ -301,9 +301,9 @@ func Test_NewSchemas(t *testing.T) {
 									ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 								},
 							},
-							SingleNestedAttribute: schema.SingleNestedAttribute{
-								Optional: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypeNested:         convert.NewCustomTypeNested(nil, "single_nested_attribute"),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 					Blocks: generatorschema.GeneratorBlocks{

@@ -33,9 +33,6 @@ var setAttributeTemplate string
 //go:embed templates/set_nested_attribute.gotmpl
 var setNestedAttributeGoTemplate string
 
-//go:embed templates/single_nested_attribute.gotmpl
-var singleNestedAttributeGoTemplate string
-
 //go:embed templates/string_attribute.gotmpl
 var stringAttributeTemplate string
 

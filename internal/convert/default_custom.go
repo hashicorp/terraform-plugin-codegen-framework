@@ -23,9 +23,9 @@ func (d DefaultCustom) Equal(other DefaultCustom) bool {
 	return d.custom.Equal(other.custom)
 }
 
-func (c DefaultCustom) Schema() []byte {
-	if c.custom != nil && c.custom.SchemaDefinition != "" {
-		return []byte(fmt.Sprintf("Default: %s,", c.custom.SchemaDefinition))
+func (d DefaultCustom) Schema() []byte {
+	if d.custom != nil && d.custom.SchemaDefinition != "" {
+		return []byte(fmt.Sprintf("Default: %s,", d.custom.SchemaDefinition))
 	}
 
 	return nil
