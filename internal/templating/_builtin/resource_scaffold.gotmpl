@@ -1,4 +1,4 @@
-{{define "_builtin/resource_scaffold"}}
+{{ define "_builtin/resource_scaffold" -}}
 var _ resource.Resource = (*{{.CamelName}}Resource)(nil)
 
 func New{{.PascalName}}Resource() resource.Resource {
@@ -56,4 +56,4 @@ func (r *{{.CamelName}}Resource) Delete(ctx context.Context, req resource.Delete
         return
     }
 }
-{{end}}
+{{- end}}

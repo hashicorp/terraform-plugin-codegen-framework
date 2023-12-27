@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 )
 
-
 var _ resource.Resource = (*petResource)(nil)
 
 func NewPetResource() resource.Resource {
@@ -65,4 +64,3 @@ func (r *petResource) Delete(ctx context.Context, req resource.DeleteRequest, re
         return
     }
 }
-
