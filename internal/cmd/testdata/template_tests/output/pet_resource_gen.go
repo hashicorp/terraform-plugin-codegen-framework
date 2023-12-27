@@ -1,0 +1,3 @@
+resource_pet.PetResourceSchema
+
+resource_pet.PetModel

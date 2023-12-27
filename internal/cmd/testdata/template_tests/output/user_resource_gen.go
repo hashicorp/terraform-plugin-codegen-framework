@@ -1,0 +1,3 @@
+resource_user.UserResourceSchema
+
+resource_user.UserModel
