@@ -141,7 +141,7 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *
 
 		for fileName, fileBytes := range dOutput {
 			outputFile := path.Join(cmd.flagOutputPath, fileName)
-			err := output.WriteBytes(outputFile, fileBytes, false)
+			err := output.WriteBytes(outputFile, fileBytes, true)
 			if err != nil {
 				return fmt.Errorf("error writing processed template to output dir: %w", err)
 			}
