@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/hashicorp/cli"
@@ -133,13 +134,18 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context, logger *slo
 	if cmd.flagTemplatesPath != "" {
 		templator := templating.NewTemplator(os.DirFS(cmd.flagTemplatesPath))
 
-		output, err := templator.ProcessProvider(templateData)
+		pOutput, err := templator.ProcessProvider(templateData)
 		if err != nil {
 			return fmt.Errorf("error processing provider templates: %w", err)
 		}
 
-		// TODO: write all output to files
-		fmt.Println(output)
+		for fileName, fileBytes := range pOutput {
+			outputFile := path.Join(cmd.flagOutputPath, fileName)
+			err := output.WriteBytes(outputFile, fileBytes, false)
+			if err != nil {
+				return fmt.Errorf("error writing processed template to output dir: %w", err)
+			}
+		}
 	}
 
 	return nil

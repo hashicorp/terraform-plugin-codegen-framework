@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/hashicorp/cli"
@@ -133,13 +134,18 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *
 	if cmd.flagTemplatesPath != "" {
 		templator := templating.NewTemplator(os.DirFS(cmd.flagTemplatesPath))
 
-		output, err := templator.ProcessDataSources(templateData)
+		dOutput, err := templator.ProcessDataSources(templateData)
 		if err != nil {
 			return fmt.Errorf("error processing data source templates: %w", err)
 		}
 
-		// TODO: write all output to files
-		fmt.Println(output)
+		for fileName, fileBytes := range dOutput {
+			outputFile := path.Join(cmd.flagOutputPath, fileName)
+			err := output.WriteBytes(outputFile, fileBytes, false)
+			if err != nil {
+				return fmt.Errorf("error writing processed template to output dir: %w", err)
+			}
+		}
 	}
 
 	return nil

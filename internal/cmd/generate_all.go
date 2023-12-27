@@ -9,12 +9,14 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/hashicorp/cli"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templating"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
@@ -154,8 +156,29 @@ func (cmd *GenerateAllCommand) runInternal(ctx context.Context, logger *slog.Log
 			return fmt.Errorf("error processing provider templates: %w", err)
 		}
 
-		// TODO: write all output to files
-		fmt.Println(rOutput, dOutput, pOutput)
+		for fileName, fileBytes := range rOutput {
+			outputFile := path.Join(cmd.flagOutputPath, fileName)
+			err := output.WriteBytes(outputFile, fileBytes, false)
+			if err != nil {
+				return fmt.Errorf("error writing processed template to output dir: %w", err)
+			}
+		}
+
+		for fileName, fileBytes := range dOutput {
+			outputFile := path.Join(cmd.flagOutputPath, fileName)
+			err := output.WriteBytes(outputFile, fileBytes, false)
+			if err != nil {
+				return fmt.Errorf("error writing processed template to output dir: %w", err)
+			}
+		}
+
+		for fileName, fileBytes := range pOutput {
+			outputFile := path.Join(cmd.flagOutputPath, fileName)
+			err := output.WriteBytes(outputFile, fileBytes, false)
+			if err != nil {
+				return fmt.Errorf("error writing processed template to output dir: %w", err)
+			}
+		}
 	}
 
 	return nil
