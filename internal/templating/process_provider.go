@@ -13,19 +13,22 @@ func (t *templator) ProcessProvider(templateData map[string]ProviderTemplateData
 	for _, providerData := range templateData {
 		templateBytes, err := fs.ReadFile(t.templateDir, "provider.gotmpl")
 		if err != nil {
-			return nil, err
+			// TODO: log
+			continue
 		}
 
 		tmpl := template.New("provider")
 		providerTemplate, err := tmpl.Parse(string(templateBytes))
 		if err != nil {
-			return nil, err
+			// TODO: log
+			continue
 		}
 
 		var buf bytes.Buffer
 		err = providerTemplate.Execute(&buf, providerData)
 		if err != nil {
-			return nil, err
+			// TODO: log
+			continue
 		}
 
 		outputData["provider_gen.go"] = buf.Bytes()

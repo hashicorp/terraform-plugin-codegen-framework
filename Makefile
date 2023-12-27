@@ -40,6 +40,11 @@ testdata:
 		--package generated \
 		--output ./internal/cmd/testdata/custom_and_external/provider_output
 
+	go run ./cmd/tfplugingen-framework generate all \
+		--input ./internal/cmd/testdata/template_tests/ir.json \
+		--output ./internal/cmd/testdata/template_tests/output \
+		--templates ./internal/cmd/testdata/template_tests/codegen_templates
+
 	go run ./cmd/tfplugingen-framework scaffold resource \
 		--name thing \
 		--force \

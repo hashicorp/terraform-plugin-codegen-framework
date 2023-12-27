@@ -16,6 +16,7 @@ func TestGenerateAllCommand(t *testing.T) {
 
 	testCases := map[string]struct {
 		irInputPath   string
+		templatesPath string
 		pkgName       string
 		goldenFileDir string
 	}{
@@ -27,6 +28,11 @@ func TestGenerateAllCommand(t *testing.T) {
 		"default_pkg_name": {
 			irInputPath:   "testdata/custom_and_external/ir.json",
 			goldenFileDir: "testdata/custom_and_external/all_output/default_pkg_name",
+		},
+		"templates_test": {
+			irInputPath:   "testdata/templates_test/ir.json",
+			templatesPath: "testdata/templates_test/codegen_templates",
+			goldenFileDir: "testdata/templates_test/output",
 		},
 	}
 	for name, testCase := range testCases {
@@ -44,6 +50,7 @@ func TestGenerateAllCommand(t *testing.T) {
 				"--input", testCase.irInputPath,
 				"--package", testCase.pkgName,
 				"--output", testOutputDir,
+				"--templates", testCase.templatesPath,
 			}
 
 			exitCode := c.Run(args)
