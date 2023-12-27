@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io/fs"
-	"text/template"
 )
 
 func (t *templator) hasDefaultDataSource() bool {
@@ -26,7 +25,12 @@ func (t *templator) ProcessDataSources(templateData map[string]DataSourceTemplat
 			templateBytes = t.defaultDataSourceBytes
 		}
 
-		tmpl := template.New(name)
+		tmpl, err := t.baseTemplate.Clone()
+		if err != nil {
+			// TODO: log
+			continue
+		}
+
 		datasourceTemplate, err := tmpl.Parse(string(templateBytes))
 		if err != nil {
 			// TODO: log

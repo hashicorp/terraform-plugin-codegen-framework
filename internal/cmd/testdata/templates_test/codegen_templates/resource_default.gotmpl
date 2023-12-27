@@ -1,3 +1,10 @@
-{{.Package}}.{{.SchemaFunc}}
+package provider
 
-{{.Package}}.{{.SchemaModelType}}
+import (
+	"context"
+	"terraform-provider-petstore/internal/provider/{{.Package}}"
+
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+)
+
+{{ template "_builtin/resource_scaffold" . }}

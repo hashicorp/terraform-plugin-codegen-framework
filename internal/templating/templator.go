@@ -1,6 +1,10 @@
 package templating
 
-import "io/fs"
+import (
+	"fmt"
+	"io/fs"
+	"text/template"
+)
 
 const (
 	default_resource_template   = "resource_default.gotmpl"
@@ -8,6 +12,7 @@ const (
 )
 
 type templator struct {
+	baseTemplate           *template.Template
 	templateDir            fs.FS
 	defaultResourceBytes   []byte
 	defaultDataSourceBytes []byte
@@ -66,6 +71,15 @@ func NewTemplator(templateDir fs.FS) Templator {
 	} else {
 		templator.defaultDataSourceBytes = defaultDataSourceBytes
 	}
+
+	// Add built-in templates
+	tmpl, err := addBuiltInTemplates(template.New("base"))
+	if err != nil {
+		// TODO: log
+		fmt.Println(err)
+	}
+
+	templator.baseTemplate = tmpl
 
 	return templator
 }

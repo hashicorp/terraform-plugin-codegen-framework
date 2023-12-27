@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io/fs"
-	"text/template"
 )
 
 func (t *templator) hasDefaultResource() bool {
@@ -26,7 +25,12 @@ func (t *templator) ProcessResources(templateData map[string]ResourceTemplateDat
 			templateBytes = t.defaultResourceBytes
 		}
 
-		tmpl := template.New(name)
+		tmpl, err := t.baseTemplate.Clone()
+		if err != nil {
+			// TODO: log
+			continue
+		}
+
 		resourceTemplate, err := tmpl.Parse(string(templateBytes))
 		if err != nil {
 			// TODO: log

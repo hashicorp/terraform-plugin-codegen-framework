@@ -3,7 +3,6 @@ package templating
 import (
 	"bytes"
 	"io/fs"
-	"text/template"
 )
 
 func (t *templator) ProcessProvider(templateData map[string]ProviderTemplateData) (map[string][]byte, error) {
@@ -17,7 +16,12 @@ func (t *templator) ProcessProvider(templateData map[string]ProviderTemplateData
 			continue
 		}
 
-		tmpl := template.New("provider")
+		tmpl, err := t.baseTemplate.Clone()
+		if err != nil {
+			// TODO: log
+			continue
+		}
+
 		providerTemplate, err := tmpl.Parse(string(templateBytes))
 		if err != nil {
 			// TODO: log
