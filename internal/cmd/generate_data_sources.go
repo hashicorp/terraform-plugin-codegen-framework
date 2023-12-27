@@ -7,7 +7,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 	"strings"
@@ -16,19 +15,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/datasource"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templating"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
 
 type GenerateDataSourcesCommand struct {
-	UI              cli.Ui
-	flagIRInputPath string
-	flagOutputPath  string
-	flagPackageName string
+	UI                cli.Ui
+	flagIRInputPath   string
+	flagOutputPath    string
+	flagPackageName   string
+	flagTemplatesPath string
 }
 
 func (cmd *GenerateDataSourcesCommand) Flags() *flag.FlagSet {
@@ -36,6 +36,7 @@ func (cmd *GenerateDataSourcesCommand) Flags() *flag.FlagSet {
 	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
 	fs.StringVar(&cmd.flagPackageName, "package", "", "name of Go package for generated code files")
+	fs.StringVar(&cmd.flagTemplatesPath, "templates", "", "directory path for templates (*.gotmpl files) to be processed after schema generation")
 
 	return fs
 }
@@ -124,77 +125,65 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateDataSourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource", logger)
+	templateData, err := generateDataSourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource", logger)
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
+	}
+
+	if cmd.flagTemplatesPath != "" {
+		templator := templating.NewTemplator(os.DirFS(cmd.flagTemplatesPath))
+
+		output, err := templator.ProcessDataSources(templateData)
+		if err != nil {
+			return fmt.Errorf("error processing data source templates: %w", err)
+		}
+
+		// TODO: write all output to files
+		fmt.Println(output)
 	}
 
 	return nil
 }
 
-func generateDataSourceCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+func generateDataSourceCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) (map[string]templating.DataSourceTemplateData, error) {
 	ctxWithPath := logging.SetPathInContext(ctx, "data_source")
 
 	// convert IR to framework schema
 	s, err := datasource.NewSchemas(spec)
 	if err != nil {
-		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
+		return nil, fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
 
 	// convert framework schema to []byte
 	g := schema.NewGeneratorSchemas(s)
 	schemas, err := g.Schemas(packageName, generatorType)
 	if err != nil {
-		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
+		return nil, fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
 	// generate model code
 	models, err := g.Models()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// generate custom type and value types code
 	customTypeValue, err := g.CustomTypeValue()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// generate "expand" and "flatten" code
 	toFromFunctions, err := g.ToFromFunctions(ctxWithPath, logger)
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	// format schema code
-	formattedSchemas, err := format.Format(schemas)
-	if err != nil {
-		return fmt.Errorf("error formatting Go code: %w", err)
-	}
-
-	// format model code
-	formattedModels, err := format.Format(models)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// format custom type and value types code
-	formattedCustomTypeValue, err := format.Format(customTypeValue)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// format "expand" and "flatten" code
-	formattedToFromFunctions, err := format.Format(toFromFunctions)
-	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// write code
-	err = output.WriteDataSources(formattedSchemas, formattedModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	templateData, err := output.WriteDataSources(schemas, models, customTypeValue, toFromFunctions, outputPath, packageName)
 	if err != nil {
-		return fmt.Errorf("error writing Go code to output: %w", err)
+		return nil, fmt.Errorf("error writing Go code to output: %w", err)
 	}
 
-	return nil
+	return templateData, nil
 }

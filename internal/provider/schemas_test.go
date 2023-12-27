@@ -217,7 +217,7 @@ func TestGeneratorProviderSchemas_ModelsBytes(t *testing.T) {
 				t.Errorf("unexpected error reading %s file:%s", testCase.expected, err)
 			}
 
-			if diff := cmp.Diff(got["example"], expectedBytes); diff != "" {
+			if diff := cmp.Diff(got["example"].Bytes, expectedBytes); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
 			}
 		})

@@ -6,27 +6,30 @@ import (
 	"text/template"
 )
 
-func (t *templator) ProcessProvider(templateData ProviderTemplateData) (map[string][]byte, error) {
-	outputData := make(map[string][]byte, 1)
+func (t *templator) ProcessProvider(templateData map[string]ProviderTemplateData) (map[string][]byte, error) {
+	outputData := make(map[string][]byte, len(templateData))
 
-	templateBytes, err := fs.ReadFile(t.templateDir, "provider.gotmpl")
-	if err != nil {
-		return nil, err
+	// TODO: swap to single provider processing (everywhere else is a map currently)
+	for _, providerData := range templateData {
+		templateBytes, err := fs.ReadFile(t.templateDir, "provider.gotmpl")
+		if err != nil {
+			return nil, err
+		}
+
+		tmpl := template.New("provider")
+		providerTemplate, err := tmpl.Parse(string(templateBytes))
+		if err != nil {
+			return nil, err
+		}
+
+		var buf bytes.Buffer
+		err = providerTemplate.Execute(&buf, providerData)
+		if err != nil {
+			return nil, err
+		}
+
+		outputData["provider_gen.go"] = buf.Bytes()
 	}
-
-	tmpl := template.New("provider")
-	providerTemplate, err := tmpl.Parse(string(templateBytes))
-	if err != nil {
-		return nil, err
-	}
-
-	var buf bytes.Buffer
-	err = providerTemplate.Execute(&buf, templateData)
-	if err != nil {
-		return nil, err
-	}
-
-	outputData["provider_gen.go"] = buf.Bytes()
 
 	return outputData, nil
 }

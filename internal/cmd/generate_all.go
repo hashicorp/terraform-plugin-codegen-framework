@@ -15,14 +15,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templating"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
 
 type GenerateAllCommand struct {
-	UI              cli.Ui
-	flagIRInputPath string
-	flagOutputPath  string
-	flagPackageName string
+	UI                cli.Ui
+	flagIRInputPath   string
+	flagOutputPath    string
+	flagPackageName   string
+	flagTemplatesPath string
 }
 
 func (cmd *GenerateAllCommand) Flags() *flag.FlagSet {
@@ -30,6 +32,7 @@ func (cmd *GenerateAllCommand) Flags() *flag.FlagSet {
 	fs.StringVar(&cmd.flagIRInputPath, "input", "", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
 	fs.StringVar(&cmd.flagPackageName, "package", "", "name of Go package for generated code files")
+	fs.StringVar(&cmd.flagTemplatesPath, "templates", "", "directory path for templates (*.gotmpl files) to be processed after schema generation")
 
 	return fs
 }
@@ -118,19 +121,41 @@ func (cmd *GenerateAllCommand) runInternal(ctx context.Context, logger *slog.Log
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateDataSourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource", logger)
+	dTemplateData, err := generateDataSourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "DataSource", logger)
 	if err != nil {
 		return fmt.Errorf("error generating data source code: %w", err)
 	}
 
-	err = generateResourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Resource", logger)
+	rTemplateData, err := generateResourceCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Resource", logger)
 	if err != nil {
 		return fmt.Errorf("error generating resource code: %w", err)
 	}
 
-	err = generateProviderCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Provider", logger)
+	pTemplateData, err := generateProviderCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Provider", logger)
 	if err != nil {
 		return fmt.Errorf("error generating provider code: %w", err)
+	}
+
+	if cmd.flagTemplatesPath != "" {
+		templator := templating.NewTemplator(os.DirFS(cmd.flagTemplatesPath))
+
+		rOutput, err := templator.ProcessResources(rTemplateData)
+		if err != nil {
+			return fmt.Errorf("error processing resource templates: %w", err)
+		}
+
+		dOutput, err := templator.ProcessDataSources(dTemplateData)
+		if err != nil {
+			return fmt.Errorf("error processing data source templates: %w", err)
+		}
+
+		pOutput, err := templator.ProcessProvider(pTemplateData)
+		if err != nil {
+			return fmt.Errorf("error processing provider templates: %w", err)
+		}
+
+		// TODO: write all output to files
+		fmt.Println(rOutput, dOutput, pOutput)
 	}
 
 	return nil

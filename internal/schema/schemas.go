@@ -24,8 +24,8 @@ func NewGeneratorSchemas(schemas map[string]GeneratorSchema) GeneratorSchemas {
 	}
 }
 
-func (g GeneratorSchemas) Schemas(packageName, generatorType string) (map[string][]byte, error) {
-	schemasBytes := make(map[string][]byte, len(g.schemas))
+func (g GeneratorSchemas) Schemas(packageName, generatorType string) (map[string]GoCode, error) {
+	schemasCode := make(map[string]GoCode, len(g.schemas))
 
 	for k, s := range g.schemas {
 
@@ -34,20 +34,20 @@ func (g GeneratorSchemas) Schemas(packageName, generatorType string) (map[string
 			pkgName = fmt.Sprintf("%s_%s", strings.ToLower(generatorType), k)
 		}
 
-		b, err := s.Schema(k, pkgName, generatorType)
+		goCode, err := s.Schema(k, pkgName, generatorType)
 
 		if err != nil {
 			return nil, err
 		}
 
-		schemasBytes[k] = b
+		schemasCode[k] = *goCode
 	}
 
-	return schemasBytes, nil
+	return schemasCode, nil
 }
 
-func (g GeneratorSchemas) Models() (map[string][]byte, error) {
-	modelsBytes := make(map[string][]byte, len(g.schemas))
+func (g GeneratorSchemas) Models() (map[string]GoCode, error) {
+	modelsCode := make(map[string]GoCode, len(g.schemas))
 
 	for name, schema := range g.schemas {
 		var buf bytes.Buffer
@@ -57,23 +57,26 @@ func (g GeneratorSchemas) Models() (map[string][]byte, error) {
 			Blocks:     schema.Blocks,
 		}
 
-		models, err := generatorSchema.Models(name)
+		schemaModel, err := generatorSchema.Models(name)
 		if err != nil {
 			return nil, err
 		}
 
-		for _, m := range models {
-			buf.WriteString("\n" + m.String() + "\n")
-		}
+		buf.WriteString("\n" + schemaModel.String() + "\n")
 
-		modelsBytes[name] = buf.Bytes()
+		modelsCode[name] = GoCode{
+			NotableExports: map[NotableExport]string{
+				ExportSchemaModelType: schemaModel.ModelType(),
+			},
+			Bytes: buf.Bytes(),
+		}
 	}
 
-	return modelsBytes, nil
+	return modelsCode, nil
 }
 
-func (g GeneratorSchemas) CustomTypeValue() (map[string][]byte, error) {
-	customTypeValueBytes := make(map[string][]byte, len(g.schemas))
+func (g GeneratorSchemas) CustomTypeValue() (map[string]GoCode, error) {
+	customTypeValueCode := make(map[string]GoCode, len(g.schemas))
 
 	for name, s := range g.schemas {
 		b, err := s.CustomTypeValueBytes()
@@ -81,14 +84,14 @@ func (g GeneratorSchemas) CustomTypeValue() (map[string][]byte, error) {
 			return nil, err
 		}
 
-		customTypeValueBytes[name] = b
+		customTypeValueCode[name] = GoCode{Bytes: b}
 	}
 
-	return customTypeValueBytes, nil
+	return customTypeValueCode, nil
 }
 
-func (g GeneratorSchemas) ToFromFunctions(ctx context.Context, logger *slog.Logger) (map[string][]byte, error) {
-	modelsExpandFlattenBytes := make(map[string][]byte, len(g.schemas))
+func (g GeneratorSchemas) ToFromFunctions(ctx context.Context, logger *slog.Logger) (map[string]GoCode, error) {
+	modelsExpandFlattenCode := make(map[string]GoCode, len(g.schemas))
 
 	for name, s := range g.schemas {
 		ctxWithPath := logging.SetPathInContext(ctx, name)
@@ -98,8 +101,8 @@ func (g GeneratorSchemas) ToFromFunctions(ctx context.Context, logger *slog.Logg
 			return nil, err
 		}
 
-		modelsExpandFlattenBytes[name] = b
+		modelsExpandFlattenCode[name] = GoCode{Bytes: b}
 	}
 
-	return modelsExpandFlattenBytes, nil
+	return modelsExpandFlattenCode, nil
 }

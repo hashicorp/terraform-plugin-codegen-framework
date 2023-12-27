@@ -12,18 +12,20 @@ func TestProcessProviderTemplates(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		providerTemplateData templating.ProviderTemplateData
+		providerTemplateData map[string]templating.ProviderTemplateData
 		templateDir          fstest.MapFS
 		want                 map[string][]byte
 	}{
 		"simple": {
-			providerTemplateData: templating.ProviderTemplateData{
-				SnakeName:       "simple_pet",
-				PascalName:      "SimplePet",
-				CamelName:       "simplePet",
-				Package:         "provider",
-				SchemaFunc:      "SimplePetProviderSchema",
-				SchemaModelType: "SimplePetModel",
+			providerTemplateData: map[string]templating.ProviderTemplateData{
+				"petstore": {
+					SnakeName:       "simple_pet",
+					PascalName:      "SimplePet",
+					CamelName:       "simplePet",
+					Package:         "provider",
+					SchemaFunc:      "SimplePetProviderSchema",
+					SchemaModelType: "SimplePetModel",
+				},
 			},
 			templateDir: fstest.MapFS{
 				"provider.gotmpl": &fstest.MapFile{

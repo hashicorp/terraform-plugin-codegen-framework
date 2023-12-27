@@ -7,7 +7,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 	"strings"
@@ -15,20 +14,21 @@ import (
 	"github.com/hashicorp/cli"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/input"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/provider"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/templating"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/validate"
 )
 
 type GenerateProviderCommand struct {
-	UI              cli.Ui
-	flagIRInputPath string
-	flagOutputPath  string
-	flagPackageName string
+	UI                cli.Ui
+	flagIRInputPath   string
+	flagOutputPath    string
+	flagPackageName   string
+	flagTemplatesPath string
 }
 
 func (cmd *GenerateProviderCommand) Flags() *flag.FlagSet {
@@ -36,6 +36,7 @@ func (cmd *GenerateProviderCommand) Flags() *flag.FlagSet {
 	fs.StringVar(&cmd.flagIRInputPath, "input", "./ir.json", "path to intermediate representation (JSON)")
 	fs.StringVar(&cmd.flagOutputPath, "output", "./output", "directory path to output generated code files")
 	fs.StringVar(&cmd.flagPackageName, "package", "", "name of Go package for generated code files")
+	fs.StringVar(&cmd.flagTemplatesPath, "templates", "", "directory path for templates (*.gotmpl files) to be processed after schema generation")
 
 	return fs
 }
@@ -124,77 +125,65 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context, logger *slo
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
 
-	err = generateProviderCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Provider", logger)
+	templateData, err := generateProviderCode(ctx, spec, cmd.flagOutputPath, cmd.flagPackageName, "Provider", logger)
 	if err != nil {
 		return fmt.Errorf("error generating provider code: %w", err)
+	}
+
+	if cmd.flagTemplatesPath != "" {
+		templator := templating.NewTemplator(os.DirFS(cmd.flagTemplatesPath))
+
+		output, err := templator.ProcessProvider(templateData)
+		if err != nil {
+			return fmt.Errorf("error processing provider templates: %w", err)
+		}
+
+		// TODO: write all output to files
+		fmt.Println(output)
 	}
 
 	return nil
 }
 
-func generateProviderCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+func generateProviderCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) (map[string]templating.ProviderTemplateData, error) {
 	ctx = logging.SetPathInContext(ctx, "provider")
 
 	// convert IR to framework schema
 	s, err := provider.NewSchemas(spec)
 	if err != nil {
-		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
+		return nil, fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
 
 	// convert framework schema to []byte
 	g := schema.NewGeneratorSchemas(s)
 	schemas, err := g.Schemas(packageName, generatorType)
 	if err != nil {
-		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
+		return nil, fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
 	// generate model code
 	models, err := g.Models()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// generate custom type and value types code
 	customTypeValue, err := g.CustomTypeValue()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// generate "expand" and "flatten" code
 	toFromFunctions, err := g.ToFromFunctions(ctx, logger)
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	// format schema code
-	formattedSchemas, err := format.Format(schemas)
-	if err != nil {
-		return fmt.Errorf("error formatting Go code: %w", err)
-	}
-
-	// format model code
-	formattedModels, err := format.Format(models)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// format custom type and value types code
-	formattedCustomTypeValue, err := format.Format(customTypeValue)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// format "expand" and "flatten" code
-	formattedToFromFunctions, err := format.Format(toFromFunctions)
-	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// write code
-	err = output.WriteProviders(formattedSchemas, formattedModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	templateData, err := output.WriteProviders(schemas, models, customTypeValue, toFromFunctions, outputPath, packageName)
 	if err != nil {
-		return fmt.Errorf("error writing Go code to output: %w", err)
+		return nil, fmt.Errorf("error writing Go code to output: %w", err)
 	}
 
-	return nil
+	return templateData, nil
 }

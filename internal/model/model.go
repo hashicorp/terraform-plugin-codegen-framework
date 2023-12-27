@@ -44,5 +44,9 @@ func (m Model) String() string {
 
 	fieldsStrTrim := strings.TrimSuffix(fieldsStr, "\n")
 
-	return fmt.Sprintf("type %sModel struct {\n%s\n}", m.Name, fieldsStrTrim)
+	return fmt.Sprintf("type %s struct {\n%s\n}", m.ModelType(), fieldsStrTrim)
+}
+
+func (m Model) ModelType() string {
+	return fmt.Sprintf("%sModel", m.Name)
 }

@@ -120,7 +120,7 @@ func (g GeneratorSchema) Imports() (string, error) {
 	return sb.String(), nil
 }
 
-func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte, error) {
+func (g GeneratorSchema) Schema(name, packageName, generatorType string) (*GoCode, error) {
 	attributes, err := g.Attributes.Schema()
 
 	if err != nil {
@@ -139,20 +139,23 @@ func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte
 		return nil, err
 	}
 
+	schemaName := FrameworkIdentifier(name).ToPascalCase()
+	schemaFuncName := schemaName + generatorType + "Schema"
+
 	templateData := struct {
-		Name          string
-		PackageName   string
-		GeneratorType string
-		Attributes    string
-		Blocks        string
-		Imports       string
+		PackageName    string
+		SchemaFuncName string
+		GeneratorType  string
+		Attributes     string
+		Blocks         string
+		Imports        string
 	}{
-		Name:          FrameworkIdentifier(name).ToPascalCase(),
-		PackageName:   packageName,
-		GeneratorType: generatorType,
-		Attributes:    attributes,
-		Blocks:        blocks,
-		Imports:       imports,
+		PackageName:    packageName,
+		SchemaFuncName: schemaFuncName,
+		GeneratorType:  generatorType,
+		Attributes:     attributes,
+		Blocks:         blocks,
+		Imports:        imports,
 	}
 
 	t, err := template.New("schema").Parse(SchemaGoTemplate)
@@ -168,12 +171,16 @@ func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return &GoCode{
+		PackageName: packageName,
+		NotableExports: map[NotableExport]string{
+			ExportSchemaFunc: schemaFuncName,
+		},
+		Bytes: buf.Bytes(),
+	}, nil
 }
 
-func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
-	var models []model.Model
-
+func (g GeneratorSchema) Models(name string) (*model.Model, error) {
 	var modelFields []model.Field
 
 	attributeKeys := g.Attributes.SortedKeys()
@@ -208,14 +215,10 @@ func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 		modelFields = append(modelFields, modelField)
 	}
 
-	m := model.Model{
+	return &model.Model{
 		Name:   FrameworkIdentifier(name).ToPascalCase(),
 		Fields: modelFields,
-	}
-
-	models = append(models, m)
-
-	return models, nil
+	}, nil
 }
 
 // CustomTypeValueBytes iterates over all the attributes and blocks to generate code

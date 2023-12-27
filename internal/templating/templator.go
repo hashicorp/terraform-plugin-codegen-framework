@@ -43,7 +43,7 @@ type ProviderTemplateData struct {
 type Templator interface {
 	ProcessResources(templateData map[string]ResourceTemplateData) (map[string][]byte, error)
 	ProcessDataSources(templateData map[string]DataSourceTemplateData) (map[string][]byte, error)
-	ProcessProvider(templateData ProviderTemplateData) (map[string][]byte, error)
+	ProcessProvider(templateData map[string]ProviderTemplateData) (map[string][]byte, error)
 }
 
 func NewTemplator(templateDir fs.FS) Templator {
