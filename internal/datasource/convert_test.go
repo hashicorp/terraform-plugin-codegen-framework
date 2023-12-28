@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -206,9 +205,7 @@ func Test_NewSchemas(t *testing.T) {
 							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 						"map_attribute": GeneratorMapAttribute{
-							MapAttribute: schema.MapAttribute{
-								Computed: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 							ElementType: specschema.ElementType{
 								Map: &specschema.MapType{
 									ElementType: specschema.ElementType{
@@ -216,11 +213,17 @@ func Test_NewSchemas(t *testing.T) {
 									},
 								},
 							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Map: &specschema.MapType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
+								},
+							}),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 						},
 						"set_attribute": GeneratorSetAttribute{
-							SetAttribute: schema.SetAttribute{
-								Computed: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 							ElementType: specschema.ElementType{
 								Set: &specschema.SetType{
 									ElementType: specschema.ElementType{
@@ -228,6 +231,14 @@ func Test_NewSchemas(t *testing.T) {
 									},
 								},
 							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Set: &specschema.SetType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
+								},
+							}),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 						},
 						"list_nested_attribute": GeneratorListNestedAttribute{
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),

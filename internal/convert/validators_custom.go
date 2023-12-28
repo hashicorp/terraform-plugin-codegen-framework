@@ -15,8 +15,10 @@ const (
 	ValidatorTypeFloat64 ValidatorType = "Float64"
 	ValidatorTypeInt64   ValidatorType = "Int64"
 	ValidatorTypeList    ValidatorType = "List"
+	ValidatorTypeMap     ValidatorType = "Map"
 	ValidatorTypeNumber  ValidatorType = "Number"
 	ValidatorTypeObject  ValidatorType = "Object"
+	ValidatorTypeSet     ValidatorType = "Set"
 	ValidatorTypeString  ValidatorType = "String"
 )
 

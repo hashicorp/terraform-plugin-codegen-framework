@@ -13,6 +13,8 @@ import (
 
 const (
 	CustomCollectionTypeList CustomCollectionTypes = "List"
+	CustomCollectionTypeMap  CustomCollectionTypes = "Map"
+	CustomCollectionTypeSet  CustomCollectionTypes = "Set"
 )
 
 type CustomCollectionTypes string

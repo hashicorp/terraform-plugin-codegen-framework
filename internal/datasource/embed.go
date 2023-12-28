@@ -9,14 +9,8 @@ import (
 	"text/template"
 )
 
-//go:embed templates/map_attribute.gotmpl
-var mapAttributeTemplate string
-
 //go:embed templates/map_nested_attribute.gotmpl
 var mapNestedAttributeGoTemplate string
-
-//go:embed templates/set_attribute.gotmpl
-var setAttributeTemplate string
 
 //go:embed templates/set_nested_attribute.gotmpl
 var setNestedAttributeGoTemplate string
@@ -50,15 +44,4 @@ func addCommonBlockTemplate(t *template.Template) (*template.Template, error) {
 	}
 
 	return t.New("common_block").Funcs(commonTemplateFuncs).Parse(commonBlockGoTemplate)
-}
-
-//go:embed templates/attribute.gotmpl
-var attributeTemplate string
-
-func addAttributeTemplate(t *template.Template) (*template.Template, error) {
-	templateFuncs := template.FuncMap{
-		"quote": strconv.Quote,
-	}
-
-	return t.New("attribute").Funcs(templateFuncs).Parse(attributeTemplate)
 }
