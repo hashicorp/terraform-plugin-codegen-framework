@@ -11,9 +11,13 @@ import (
 )
 
 const (
-	ValidatorTypeBool   ValidatorType = "Bool"
-	ValidatorTypeList   ValidatorType = "List"
-	ValidatorTypeObject ValidatorType = "Object"
+	ValidatorTypeBool    ValidatorType = "Bool"
+	ValidatorTypeFloat64 ValidatorType = "Float64"
+	ValidatorTypeInt64   ValidatorType = "Int64"
+	ValidatorTypeList    ValidatorType = "List"
+	ValidatorTypeNumber  ValidatorType = "Number"
+	ValidatorTypeObject  ValidatorType = "Object"
+	ValidatorTypeString  ValidatorType = "String"
 )
 
 type ValidatorType string

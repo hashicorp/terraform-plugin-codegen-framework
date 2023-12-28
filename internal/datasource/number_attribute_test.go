@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -33,9 +33,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed",
 			},
 			expected: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -43,10 +42,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed_optional",
 			},
 			expected: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Computed: true,
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -54,9 +51,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "optional",
 			},
 			expected: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -64,9 +60,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "required",
 			},
 			expected: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -80,7 +75,6 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{},
 				CustomType: &specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -88,6 +82,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{Type: "my_type"}, nil, ""),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, nil),
 			},
 		},
 		"deprecation_message": {
@@ -95,9 +91,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					DeprecationMessage: "deprecation message",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				ValidatorsCustom:   convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -105,10 +100,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				Description:      convert.NewDescription(pointer("description")),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -116,9 +109,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Sensitive: true,
-				},
+				Sensitive:        convert.NewSensitive(pointer(true)),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -149,6 +141,16 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}
@@ -159,7 +161,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorNumberAttribute(testCase.input)
+			got, err := NewGeneratorNumberAttribute("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -182,91 +184,83 @@ func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
+					},
+					nil,
+					"number_attribute",
+				),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"associated-external-type": {
 			input: GeneratorNumberAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.NumberAttribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtNumber",
 					},
-				},
+					"number_attribute",
+				),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 CustomType: NumberAttributeType{},
 },`,
 		},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorNumberAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.NumberAttribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtNumber",
+					},
+					"number_attribute",
+				),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"required": {
 			input: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 Required: true,
 },`,
 		},
 
 		"optional": {
 			input: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 Optional: true,
 },`,
 		},
 
 		"computed": {
 			input: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 Computed: true,
 },`,
 		},
 
 		"sensitive": {
 			input: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Sensitive: true,
-				},
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 Sensitive: true,
 },`,
 		},
@@ -274,12 +268,9 @@ Sensitive: true,
 		// TODO: Do we need separate description and markdown description?
 		"description": {
 			input: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					Description: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 Description: "description",
 MarkdownDescription: "description",
 },`,
@@ -287,33 +278,32 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorNumberAttribute{
-				NumberAttribute: schema.NumberAttribute{
-					DeprecationMessage: "deprecated",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 DeprecationMessage: "deprecated",
 },`,
 		},
 
+		"validators-empty": {
+			input: GeneratorNumberAttribute{
+				Validators: specschema.NumberValidators{},
+			},
+			expected: `"number_attribute": schema.NumberAttribute{
+},`,
+		},
 		"validators": {
 			input: GeneratorNumberAttribute{
-				Validators: specschema.NumberValidators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, []*specschema.CustomValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_validator.Validate()",
-						},
+						SchemaDefinition: "my_validator.Validate()",
 					},
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_other_validator.Validate()",
-						},
+						SchemaDefinition: "my_other_validator.Validate()",
 					},
-				},
+				}),
 			},
-			expected: `
-"number_attribute": schema.NumberAttribute{
+			expected: `"number_attribute": schema.NumberAttribute{
 Validators: []validator.Number{
 my_validator.Validate(),
 my_other_validator.Validate(),

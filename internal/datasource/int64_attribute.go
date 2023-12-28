@@ -6,12 +6,9 @@ package datasource
 import (
 	"bytes"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -19,42 +16,44 @@ import (
 )
 
 type GeneratorInt64Attribute struct {
-	schema.Int64Attribute
-
-	AssociatedExternalType *generatorschema.AssocExtType
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType *specschema.CustomType
-	Validators specschema.Int64Validators
+	AssociatedExternalType   *generatorschema.AssocExtType
+	ComputedOptionalRequired convert.ComputedOptionalRequired
+	CustomType               *specschema.CustomType
+	CustomTypePrimitive      convert.CustomTypePrimitive
+	DeprecationMessage       convert.DeprecationMessage
+	Description              convert.Description
+	Sensitive                convert.Sensitive
+	Validators               specschema.Int64Validators
+	ValidatorsCustom         convert.ValidatorsCustom
 }
 
-func NewGeneratorInt64Attribute(a *datasource.Int64Attribute) (GeneratorInt64Attribute, error) {
+func NewGeneratorInt64Attribute(name string, a *datasource.Int64Attribute) (GeneratorInt64Attribute, error) {
 	if a == nil {
 		return GeneratorInt64Attribute{}, fmt.Errorf("*datasource.Int64Attribute is nil")
 	}
 
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	ctp := convert.NewCustomTypePrimitive(a.CustomType, a.AssociatedExternalType, name)
 
 	d := convert.NewDescription(a.Description)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	return GeneratorInt64Attribute{
-		Int64Attribute: schema.Int64Attribute{
-			Required:            c.IsRequired(),
-			Optional:            c.IsOptional(),
-			Computed:            c.IsComputed(),
-			Sensitive:           s.IsSensitive(),
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	s := convert.NewSensitive(a.Sensitive)
 
-		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
-		CustomType:             a.CustomType,
-		Validators:             a.Validators,
+	vc := convert.NewValidatorsCustom(convert.ValidatorTypeInt64, a.Validators.CustomValidators())
+
+	return GeneratorInt64Attribute{
+		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		ComputedOptionalRequired: c,
+		CustomType:               a.CustomType,
+		CustomTypePrimitive:      ctp,
+		DeprecationMessage:       dm,
+		Description:              d,
+		Sensitive:                s,
+		Validators:               a.Validators,
+		ValidatorsCustom:         vc,
 	}, nil
 }
 
@@ -84,7 +83,16 @@ func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
 
 func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorInt64Attribute)
+
 	if !ok {
+		return false
+	}
+
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
+		return false
+	}
+
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
 		return false
 	}
 
@@ -92,49 +100,42 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 		return false
 	}
 
+	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
+		return false
+	}
+
 	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
-	return g.Int64Attribute.Equal(h.Int64Attribute)
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type attribute struct {
-		Name                    string
-		CustomType              string
-		GeneratorInt64Attribute GeneratorInt64Attribute
-	}
+	var b bytes.Buffer
 
-	a := attribute{
-		Name:                    name.ToString(),
-		GeneratorInt64Attribute: g,
-	}
+	b.WriteString(fmt.Sprintf("%q: schema.Int64Attribute{\n", name))
+	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.ComputedOptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.WriteString("},")
 
-	switch {
-	case g.CustomType != nil:
-		a.CustomType = g.CustomType.Type
-	case g.AssociatedExternalType != nil:
-		a.CustomType = fmt.Sprintf("%sType{}", name.ToPascalCase())
-	}
-
-	t, err := template.New("int64_attribute").Parse(int64AttributeTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	if _, err = addAttributeTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, a)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorInt64Attribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {

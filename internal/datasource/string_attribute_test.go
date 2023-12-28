@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -33,9 +33,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed",
 			},
 			expected: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -43,10 +42,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed_optional",
 			},
 			expected: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Computed: true,
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -54,9 +51,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "optional",
 			},
 			expected: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -64,9 +60,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: "required",
 			},
 			expected: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -80,7 +75,6 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{},
 				CustomType: &specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -88,6 +82,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{Type: "my_type"}, nil, ""),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeString, nil),
 			},
 		},
 		"deprecation_message": {
@@ -95,9 +91,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					DeprecationMessage: "deprecation message",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				ValidatorsCustom:   convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -105,10 +100,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				Description:      convert.NewDescription(pointer("description")),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -116,9 +109,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Sensitive: true,
-				},
+				Sensitive:        convert.NewSensitive(pointer(true)),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -149,6 +141,16 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}
@@ -159,7 +161,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorStringAttribute(testCase.input)
+			got, err := NewGeneratorStringAttribute("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -182,91 +184,83 @@ func TestGeneratorStringAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorStringAttribute{
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
+					},
+					nil,
+					"string_attribute",
+				),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"associated-external-type": {
 			input: GeneratorStringAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.StringAttribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtString",
 					},
-				},
+					"string_attribute",
+				),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 CustomType: StringAttributeType{},
 },`,
 		},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorStringAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.StringAttribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtString",
+					},
+					"string_attribute",
+				),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"required": {
 			input: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 Required: true,
 },`,
 		},
 
 		"optional": {
 			input: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 Optional: true,
 },`,
 		},
 
 		"computed": {
 			input: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 Computed: true,
 },`,
 		},
 
 		"sensitive": {
 			input: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Sensitive: true,
-				},
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 Sensitive: true,
 },`,
 		},
@@ -274,12 +268,9 @@ Sensitive: true,
 		// TODO: Do we need separate description and markdown description?
 		"description": {
 			input: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					Description: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 Description: "description",
 MarkdownDescription: "description",
 },`,
@@ -287,33 +278,32 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorStringAttribute{
-				StringAttribute: schema.StringAttribute{
-					DeprecationMessage: "deprecated",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 DeprecationMessage: "deprecated",
 },`,
 		},
 
+		"validators-empty": {
+			input: GeneratorStringAttribute{
+				Validators: specschema.StringValidators{},
+			},
+			expected: `"string_attribute": schema.StringAttribute{
+},`,
+		},
 		"validators": {
 			input: GeneratorStringAttribute{
-				Validators: specschema.StringValidators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeString, []*specschema.CustomValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_validator.Validate()",
-						},
+						SchemaDefinition: "my_validator.Validate()",
 					},
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_other_validator.Validate()",
-						},
+						SchemaDefinition: "my_other_validator.Validate()",
 					},
-				},
+				}),
 			},
-			expected: `
-"string_attribute": schema.StringAttribute{
+			expected: `"string_attribute": schema.StringAttribute{
 Validators: []validator.String{
 my_validator.Validate(),
 my_other_validator.Validate(),

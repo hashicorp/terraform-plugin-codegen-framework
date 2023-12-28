@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -33,9 +33,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed",
 			},
 			expected: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -43,10 +42,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed_optional",
 			},
 			expected: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Computed: true,
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -54,9 +51,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: "optional",
 			},
 			expected: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -64,9 +60,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: "required",
 			},
 			expected: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -80,7 +75,6 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{},
 				CustomType: &specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -88,6 +82,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{Type: "my_type"}, nil, ""),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, nil),
 			},
 		},
 		"deprecation_message": {
@@ -95,9 +91,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					DeprecationMessage: "deprecation message",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				ValidatorsCustom:   convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -105,10 +100,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				Description:      convert.NewDescription(pointer("description")),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -116,9 +109,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Sensitive: true,
-				},
+				Sensitive:        convert.NewSensitive(pointer(true)),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -149,6 +141,16 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}
@@ -159,7 +161,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorInt64Attribute(testCase.input)
+			got, err := NewGeneratorInt64Attribute("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -182,91 +184,83 @@ func TestGeneratorInt64Attribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorInt64Attribute{
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
+					},
+					nil,
+					"int64_attribute",
+				),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"associated-external-type": {
 			input: GeneratorInt64Attribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.Int64Attribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtInt64",
 					},
-				},
+					"int64_attribute",
+				),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 CustomType: Int64AttributeType{},
 },`,
 		},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorInt64Attribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.Int64Attribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtInt64",
+					},
+					"int64_attribute",
+				),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"required": {
 			input: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 Required: true,
 },`,
 		},
 
 		"optional": {
 			input: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 Optional: true,
 },`,
 		},
 
 		"computed": {
 			input: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 Computed: true,
 },`,
 		},
 
 		"sensitive": {
 			input: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Sensitive: true,
-				},
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 Sensitive: true,
 },`,
 		},
@@ -274,12 +268,9 @@ Sensitive: true,
 		// TODO: Do we need separate description and markdown description?
 		"description": {
 			input: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					Description: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 Description: "description",
 MarkdownDescription: "description",
 },`,
@@ -287,33 +278,32 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorInt64Attribute{
-				Int64Attribute: schema.Int64Attribute{
-					DeprecationMessage: "deprecated",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 DeprecationMessage: "deprecated",
 },`,
 		},
 
+		"validators-empty": {
+			input: GeneratorInt64Attribute{
+				Validators: specschema.Int64Validators{},
+			},
+			expected: `"int64_attribute": schema.Int64Attribute{
+},`,
+		},
 		"validators": {
 			input: GeneratorInt64Attribute{
-				Validators: specschema.Int64Validators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, []*specschema.CustomValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_validator.Validate()",
-						},
+						SchemaDefinition: "my_validator.Validate()",
 					},
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_other_validator.Validate()",
-						},
+						SchemaDefinition: "my_other_validator.Validate()",
 					},
-				},
+				}),
 			},
-			expected: `
-"int64_attribute": schema.Int64Attribute{
+			expected: `"int64_attribute": schema.Int64Attribute{
 Validators: []validator.Int64{
 my_validator.Validate(),
 my_other_validator.Validate(),

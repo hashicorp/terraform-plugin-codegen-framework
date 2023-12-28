@@ -81,9 +81,9 @@ func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, e
 	case a.Bool != nil:
 		return NewGeneratorBoolAttribute(a.Name, a.Bool)
 	case a.Float64 != nil:
-		return NewGeneratorFloat64Attribute(a.Float64)
+		return NewGeneratorFloat64Attribute(a.Name, a.Float64)
 	case a.Int64 != nil:
-		return NewGeneratorInt64Attribute(a.Int64)
+		return NewGeneratorInt64Attribute(a.Name, a.Int64)
 	case a.List != nil:
 		return NewGeneratorListAttribute(a.Name, a.List)
 	case a.ListNested != nil:
@@ -93,7 +93,7 @@ func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, e
 	case a.MapNested != nil:
 		return NewGeneratorMapNestedAttribute(a.MapNested)
 	case a.Number != nil:
-		return NewGeneratorNumberAttribute(a.Number)
+		return NewGeneratorNumberAttribute(a.Name, a.Number)
 	case a.Object != nil:
 		return NewGeneratorObjectAttribute(a.Name, a.Object)
 	case a.Set != nil:
@@ -103,7 +103,7 @@ func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, e
 	case a.SingleNested != nil:
 		return NewGeneratorSingleNestedAttribute(a.Name, a.SingleNested)
 	case a.String != nil:
-		return NewGeneratorStringAttribute(a.String)
+		return NewGeneratorStringAttribute(a.Name, a.String)
 	}
 
 	return nil, fmt.Errorf("attribute type not defined: %+v", a)
