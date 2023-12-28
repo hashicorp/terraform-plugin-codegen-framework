@@ -135,9 +135,19 @@ func TestGeneratorSetNestedBlock_New(t *testing.T) {
 									},
 								},
 							},
-							SetNestedAttribute: schema.SetNestedAttribute{
-								Optional: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
+									"nested_bool": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"nested_attribute",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 						},
 					},
 				},
@@ -1089,6 +1099,15 @@ AttrTypes: SetNestedBlockValue{}.AttributeTypes(ctx),
 									},
 								},
 							},
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
+									"bool": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									},
+								},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+								"nested_list_nested"),
 						},
 					},
 				},
