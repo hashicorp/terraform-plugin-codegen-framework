@@ -230,6 +230,7 @@ func Test_NewSchemas(t *testing.T) {
 							},
 						},
 						"list_nested_attribute": GeneratorListNestedAttribute{
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool_attribute": GeneratorBoolAttribute{
@@ -248,9 +249,28 @@ func Test_NewSchemas(t *testing.T) {
 									},
 								},
 							},
-							ListNestedAttribute: schema.ListNestedAttribute{
-								Optional: true,
-							},
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
+									"nested_bool_attribute": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+									"nested_list_attribute": GeneratorListAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										ElementType: specschema.ElementType{
+											String: &specschema.StringType{},
+										},
+										ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+											String: &specschema.StringType{},
+										}),
+										ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+									},
+								},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"list_nested_attribute",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 						"object_attribute": GeneratorObjectAttribute{
 							AttributeTypes: specschema.ObjectAttributeTypes{
@@ -302,7 +322,7 @@ func Test_NewSchemas(t *testing.T) {
 								},
 							},
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypeNested:         convert.NewCustomTypeNested(nil, "single_nested_attribute"),
+							CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "single_nested_attribute"),
 							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},

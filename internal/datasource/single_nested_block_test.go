@@ -122,9 +122,19 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 								},
 							},
 						},
-						ListNestedAttribute: schema.ListNestedAttribute{
-							Optional: true,
-						},
+						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+						NestedAttributeObject: convert.NewNestedAttributeObject(
+							generatorschema.GeneratorAttributes{
+								"nested_bool": GeneratorBoolAttribute{
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+								},
+							},
+							nil,
+							convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+							"nested_attribute",
+						),
+						ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 					},
 				},
 			},
@@ -196,7 +206,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 							},
 						},
 						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-						CustomTypeNested:         convert.NewCustomTypeNested(nil, "nested_attribute"),
+						CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
 						ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 					},
 				},
@@ -791,13 +801,16 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 			input: GeneratorSingleNestedBlock{
 				Attributes: generatorschema.GeneratorAttributes{
 					"nested_list_nested": GeneratorListNestedAttribute{
-						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: generatorschema.GeneratorAttributes{
+						NestedAttributeObject: convert.NewNestedAttributeObject(
+							generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
-						},
+							nil,
+							convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+							"nested_list_nested",
+						),
 					},
 				},
 			},
@@ -868,7 +881,7 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							},
 						},
-						CustomTypeNested: convert.NewCustomTypeNested(nil, "nested_single_nested"),
+						CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_single_nested"),
 					},
 				},
 			},

@@ -87,7 +87,7 @@ func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, e
 	case a.List != nil:
 		return NewGeneratorListAttribute(a.Name, a.List)
 	case a.ListNested != nil:
-		return NewGeneratorListNestedAttribute(a.ListNested)
+		return NewGeneratorListNestedAttribute(a.Name, a.ListNested)
 	case a.Map != nil:
 		return NewGeneratorMapAttribute(a.Map)
 	case a.MapNested != nil:

@@ -21,7 +21,7 @@ type GeneratorSingleNestedAttribute struct {
 	Attributes               generatorschema.GeneratorAttributes
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomType               *specschema.CustomType
-	CustomTypeNested         convert.CustomTypeNested
+	CustomTypeNestedObject   convert.CustomTypeNestedObject
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	Sensitive                convert.Sensitive
@@ -42,7 +42,7 @@ func NewGeneratorSingleNestedAttribute(name string, a *datasource.SingleNestedAt
 
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
-	ctn := convert.NewCustomTypeNested(a.CustomType, name)
+	ct := convert.NewCustomTypeNestedObject(a.CustomType, name)
 
 	d := convert.NewDescription(a.Description)
 
@@ -57,7 +57,7 @@ func NewGeneratorSingleNestedAttribute(name string, a *datasource.SingleNestedAt
 		Attributes:               attributes,
 		ComputedOptionalRequired: c,
 		CustomType:               a.CustomType,
-		CustomTypeNested:         ctn,
+		CustomTypeNestedObject:   ct,
 		DeprecationMessage:       dm,
 		Description:              d,
 		Sensitive:                s,
@@ -120,7 +120,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	if !g.CustomTypeNested.Equal(h.CustomTypeNested) {
+	if !g.CustomTypeNestedObject.Equal(h.CustomTypeNestedObject) {
 		return false
 	}
 
@@ -144,7 +144,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 }
 
 func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	attributes, err := g.Attributes.Schema()
+	attributesSchema, err := g.Attributes.Schema()
 
 	if err != nil {
 		return "", err
@@ -154,9 +154,9 @@ func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIde
 
 	b.WriteString(fmt.Sprintf("%q: schema.SingleNestedAttribute{\n", name))
 	b.WriteString("Attributes: map[string]schema.Attribute{")
-	b.WriteString(attributes)
+	b.WriteString(attributesSchema)
 	b.WriteString("\n},\n")
-	b.Write(g.CustomTypeNested.Schema())
+	b.Write(g.CustomTypeNestedObject.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
