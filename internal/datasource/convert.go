@@ -132,7 +132,7 @@ func NewBlock(b datasource.Block) (generatorschema.GeneratorBlock, error) {
 	case b.SetNested != nil:
 		return NewGeneratorSetNestedBlock(b.Name, b.SetNested)
 	case b.SingleNested != nil:
-		return NewGeneratorSingleNestedBlock(b.SingleNested)
+		return NewGeneratorSingleNestedBlock(b.Name, b.SingleNested)
 	}
 
 	return nil, fmt.Errorf("block type not defined: %+v", b)

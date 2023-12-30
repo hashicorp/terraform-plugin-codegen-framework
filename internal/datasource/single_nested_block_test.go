@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -59,6 +58,8 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-list-bool": {
@@ -88,6 +89,8 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-list-nested-bool": {
@@ -137,6 +140,8 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-object-bool": {
@@ -175,6 +180,8 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-single-nested-bool": {
@@ -210,6 +217,8 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"blocks-nil": {
@@ -270,6 +279,8 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"blocks-single-nested-bool": {
@@ -299,8 +310,12 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 								ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 							},
 						},
+						CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_block"),
+						ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -321,6 +336,17 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/",
+						},
+						Type:      "my_type",
+						ValueType: "myvalue_type",
+					},
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -328,9 +354,9 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorSingleNestedBlock{
-				SingleNestedBlock: schema.SingleNestedBlock{
-					DeprecationMessage: "deprecation message",
-				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				DeprecationMessage:     convert.NewDeprecationMessage(pointer("deprecation message")),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -338,10 +364,9 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorSingleNestedBlock{
-				SingleNestedBlock: schema.SingleNestedBlock{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
+				Description:            convert.NewDescription(pointer("description")),
+				ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -360,6 +385,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSingleNestedBlock{
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
 				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -372,6 +398,16 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}
@@ -382,7 +418,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorSingleNestedBlock(testCase.input)
+			got, err := NewGeneratorSingleNestedBlock("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -755,6 +791,8 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 func TestGeneratorSingleNestedBlock_Schema(t *testing.T) {
 	t.Parallel()
 
+	blockName := "single_nested_block"
+
 	testCases := map[string]struct {
 		input         GeneratorSingleNestedBlock
 		expected      string
@@ -767,9 +805,9 @@ func TestGeneratorSingleNestedBlock_Schema(t *testing.T) {
 						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 Attributes: map[string]schema.Attribute{
 "bool": schema.BoolAttribute{
 Optional: true,
@@ -793,9 +831,9 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 						}),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 Attributes: map[string]schema.Attribute{
 "list": schema.ListAttribute{
 ElementType: types.StringType,
@@ -826,9 +864,9 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 						),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 Attributes: map[string]schema.Attribute{
 "nested_list_nested": schema.ListNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
@@ -866,9 +904,9 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 Attributes: map[string]schema.Attribute{
 "object": schema.ObjectAttribute{
 AttributeTypes: map[string]attr.Type{
@@ -897,9 +935,9 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 						CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_single_nested"),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 Attributes: map[string]schema.Attribute{
 "nested_single_nested": schema.SingleNestedAttribute{
 Attributes: map[string]schema.Attribute{
@@ -939,9 +977,9 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 						),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 Blocks: map[string]schema.Block{
 "nested_list_nested": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
@@ -975,11 +1013,12 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							},
 						},
+						CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_single_nested"),
 					},
 				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 Blocks: map[string]schema.Block{
 "nested_single_nested": schema.SingleNestedBlock{
 Attributes: map[string]schema.Attribute{
@@ -1004,24 +1043,24 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 
 		"custom-type": {
 			input: GeneratorSingleNestedBlock{
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(
+					&specschema.CustomType{
+						Type: "my_custom_type",
+					},
+					blockName,
+				),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"description": {
 			input: GeneratorSingleNestedBlock{
-				SingleNestedBlock: schema.SingleNestedBlock{
-					Description: "description",
-				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
+				Description:            convert.NewDescription(pointer("description")),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 CustomType: SingleNestedBlockType{
 ObjectType: types.ObjectType{
 AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
@@ -1034,12 +1073,10 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorSingleNestedBlock{
-				SingleNestedBlock: schema.SingleNestedBlock{
-					DeprecationMessage: "deprecated",
-				},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
+				DeprecationMessage:     convert.NewDeprecationMessage(pointer("deprecated")),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 CustomType: SingleNestedBlockType{
 ObjectType: types.ObjectType{
 AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
@@ -1051,21 +1088,17 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorSingleNestedBlock{
-				Validators: specschema.ObjectValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_validator.Validate()",
-						},
+				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, blockName),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						SchemaDefinition: "my_validator.Validate()",
 					},
-					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_other_validator.Validate()",
-						},
+					&specschema.CustomValidator{
+						SchemaDefinition: "my_other_validator.Validate()",
 					},
-				},
+				}),
 			},
-			expected: `
-"single_nested_block": schema.SingleNestedBlock{
+			expected: `"single_nested_block": schema.SingleNestedBlock{
 CustomType: SingleNestedBlockType{
 ObjectType: types.ObjectType{
 AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),

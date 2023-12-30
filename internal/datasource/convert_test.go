@@ -368,6 +368,8 @@ func Test_NewSchemas(t *testing.T) {
 									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "single_nested_block"),
+							ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 				},
