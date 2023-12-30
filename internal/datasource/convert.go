@@ -109,10 +109,26 @@ func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, e
 	return nil, fmt.Errorf("attribute type not defined: %+v", a)
 }
 
+func NewBlocks(b datasource.Blocks) (generatorschema.GeneratorBlocks, error) {
+	blocks := make(generatorschema.GeneratorBlocks, len(b))
+
+	for _, v := range b {
+		block, err := NewBlock(v)
+
+		if err != nil {
+			return generatorschema.GeneratorBlocks{}, err
+		}
+
+		blocks[v.Name] = block
+	}
+
+	return blocks, nil
+}
+
 func NewBlock(b datasource.Block) (generatorschema.GeneratorBlock, error) {
 	switch {
 	case b.ListNested != nil:
-		return NewGeneratorListNestedBlock(b.ListNested)
+		return NewGeneratorListNestedBlock(b.Name, b.ListNested)
 	case b.SetNested != nil:
 		return NewGeneratorSetNestedBlock(b.SetNested)
 	case b.SingleNested != nil:

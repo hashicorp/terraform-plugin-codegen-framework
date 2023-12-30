@@ -347,6 +347,19 @@ func Test_NewSchemas(t *testing.T) {
 									},
 								},
 							},
+							NestedBlockObject: convert.NewNestedBlockObject(
+								generatorschema.GeneratorAttributes{
+									"nested_bool_attribute": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+								generatorschema.GeneratorBlocks{},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"list_nested_block",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 						"single_nested_block": GeneratorSingleNestedBlock{
 							Attributes: generatorschema.GeneratorAttributes{

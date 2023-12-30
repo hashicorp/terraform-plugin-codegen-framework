@@ -76,6 +76,26 @@ func (g GeneratorBlocks) AttrValues() (map[string]string, error) {
 	return attrValues, nil
 }
 
+func (g GeneratorBlocks) Equal(other GeneratorBlocks) bool {
+	if len(g) != len(other) {
+		return false
+	}
+
+	for k, v := range g {
+		otherBlock, ok := other[k]
+
+		if !ok {
+			return false
+		}
+
+		if !v.Equal(otherBlock) {
+			return false
+		}
+	}
+
+	return true
+}
+
 // FromFuncs returns a mapping of block names to string representations of the
 // function that converts a Go value to a framework value.
 func (g GeneratorBlocks) FromFuncs() map[string]string {
@@ -122,6 +142,10 @@ func (g GeneratorBlocks) Schema() (string, error) {
 
 		if err != nil {
 			return "", err
+		}
+
+		if !strings.HasPrefix(str, "\n") {
+			str = "\n" + str
 		}
 
 		s.WriteString(str)
