@@ -77,10 +77,6 @@ func NewGeneratorSingleNestedAttribute(a *resource.SingleNestedAttribute) (Gener
 	}, nil
 }
 
-func (g GeneratorSingleNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
-	return g.AssociatedExternalType
-}
-
 func (g GeneratorSingleNestedAttribute) GeneratorSchemaType() generatorschema.Type {
 	return generatorschema.GeneratorSingleNestedAttribute
 }

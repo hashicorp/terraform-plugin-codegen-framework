@@ -81,10 +81,6 @@ func NewGeneratorMapNestedAttribute(a *resource.MapNestedAttribute) (GeneratorMa
 	}, nil
 }
 
-func (g GeneratorMapNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
-	return g.NestedObject.AssociatedExternalType
-}
-
 func (g GeneratorMapNestedAttribute) GeneratorSchemaType() generatorschema.Type {
 	return generatorschema.GeneratorMapNestedAttribute
 }

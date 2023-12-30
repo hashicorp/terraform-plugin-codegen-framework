@@ -81,10 +81,6 @@ func NewGeneratorSingleNestedBlock(b *resource.SingleNestedBlock) (GeneratorSing
 	}, nil
 }
 
-func (g GeneratorSingleNestedBlock) AssocExtType() *generatorschema.AssocExtType {
-	return g.AssociatedExternalType
-}
-
 func (g GeneratorSingleNestedBlock) GeneratorSchemaType() generatorschema.Type {
 	return generatorschema.GeneratorSingleNestedBlock
 }

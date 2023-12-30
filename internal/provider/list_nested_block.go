@@ -81,10 +81,6 @@ func NewGeneratorListNestedBlock(b *provider.ListNestedBlock) (GeneratorListNest
 	}, nil
 }
 
-func (g GeneratorListNestedBlock) AssocExtType() *generatorschema.AssocExtType {
-	return g.NestedObject.AssociatedExternalType
-}
-
 func (g GeneratorListNestedBlock) GeneratorSchemaType() generatorschema.Type {
 	return generatorschema.GeneratorListNestedBlock
 }

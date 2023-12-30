@@ -83,10 +83,6 @@ func NewGeneratorSetNestedBlock(name string, b *datasource.SetNestedBlock) (Gene
 	}, nil
 }
 
-func (g GeneratorSetNestedBlock) AssocExtType() *generatorschema.AssocExtType {
-	return g.NestedObject.AssociatedExternalType
-}
-
 func (g GeneratorSetNestedBlock) GeneratorSchemaType() generatorschema.Type {
 	return generatorschema.GeneratorSetNestedBlock
 }

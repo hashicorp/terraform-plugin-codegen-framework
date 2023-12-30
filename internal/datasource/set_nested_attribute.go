@@ -76,10 +76,6 @@ func NewGeneratorSetNestedAttribute(name string, a *datasource.SetNestedAttribut
 	}, nil
 }
 
-func (g GeneratorSetNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
-	return g.NestedObject.AssociatedExternalType
-}
-
 func (g GeneratorSetNestedAttribute) GeneratorSchemaType() generatorschema.Type {
 	return generatorschema.GeneratorSetNestedAttribute
 }
