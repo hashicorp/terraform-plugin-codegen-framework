@@ -50,6 +50,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 						Bool: &specschema.BoolType{},
 					},
 				}),
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -75,6 +76,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 						String: &specschema.StringType{},
 					},
 				}),
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -112,6 +114,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 						},
 					},
 				}),
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -149,6 +152,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 						},
 					},
 				}),
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -207,6 +211,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 						},
 					},
 				}),
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -232,6 +237,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 						String: &specschema.StringType{},
 					},
 				}),
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -269,6 +275,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 						},
 					},
 				}),
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -278,6 +285,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorObjectAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+				CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -287,6 +295,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorObjectAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
+				CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -296,6 +305,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorObjectAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+				CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{})},
 		},
 		"required": {
@@ -304,6 +314,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorObjectAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
+				CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "name"),
 				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -333,7 +344,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 					ValueType: "myvalue_type",
 				},
 					nil,
-					"",
+					"name",
 				),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{})},
 		},
@@ -342,6 +353,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorObjectAttribute{
+				CustomTypeObject:   convert.NewCustomTypeObject(nil, nil, "name"),
 				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
 				ValidatorsCustom:   convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{})},
 		},
@@ -350,6 +362,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorObjectAttribute{
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				Description:      convert.NewDescription(pointer("description")),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
@@ -359,6 +372,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorObjectAttribute{
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				Sensitive:        convert.NewSensitive(pointer(true)),
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
@@ -379,6 +393,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorObjectAttribute{
+				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
 				Validators: specschema.ObjectValidators{
 					{
 						Custom: &specschema.CustomValidator{

@@ -35,6 +35,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.BoolType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					Bool: &specschema.BoolType{},
 				},
@@ -51,6 +58,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
@@ -71,6 +85,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.ListType{\nElemType: types.StringType,\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
@@ -99,6 +120,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.MapType{\nElemType: types.StringType,\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					Map: &specschema.MapType{
 						ElementType: specschema.ElementType{
@@ -134,6 +162,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.ListType{\nElemType: types.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"str\": types.StringType,\n},\n},\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
@@ -179,6 +214,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"str\": types.StringType,\n},\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -220,6 +262,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"list\": types.ListType{\nElemType: types.StringType,\n},\n},\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -260,6 +309,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
@@ -278,6 +334,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
@@ -296,6 +359,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
@@ -314,6 +384,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
@@ -354,8 +431,8 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 					},
 					nil,
 					convert.CustomCollectionTypeList,
-					"",
-					"",
+					"types.StringType",
+					"name",
 				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
@@ -374,6 +451,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
@@ -392,6 +476,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				Description: convert.NewDescription(pointer("description")),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
@@ -410,6 +501,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
@@ -439,6 +537,13 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeList,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},

@@ -12,7 +12,9 @@ import (
 )
 
 type CustomTypeObject struct {
-	customType string
+	associatedExternalType *specschema.AssociatedExternalType
+	customType             *specschema.CustomType
+	name                   string
 }
 
 // NewCustomTypeObject constructs an CustomTypeObject which is used to determine whether a CustomType
@@ -25,27 +27,37 @@ type CustomTypeObject struct {
 // will create custom Type and Value types using the attribute name, and the generated custom
 // Type type will be used as the CustomType in the schema.
 func NewCustomTypeObject(c *specschema.CustomType, a *specschema.AssociatedExternalType, name string) CustomTypeObject {
+	return CustomTypeObject{
+		associatedExternalType: a,
+		customType:             c,
+		name:                   name,
+	}
+}
+
+func (c CustomTypeObject) Equal(other CustomTypeObject) bool {
+	if !c.associatedExternalType.Equal(other.associatedExternalType) {
+		return false
+	}
+
+	if !c.customType.Equal(other.customType) {
+		return false
+	}
+
+	return c.name == other.name
+}
+
+func (c CustomTypeObject) Schema() []byte {
 	var customType string
 
 	switch {
-	case c != nil:
-		customType = c.Type
-	case a != nil:
-		customType = fmt.Sprintf("%sType{\ntypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n},\n}", format.ToPascalCase(name), format.ToPascalCase(name))
+	case c.customType != nil:
+		customType = c.customType.Type
+	case c.associatedExternalType != nil:
+		customType = fmt.Sprintf("%sType{\ntypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n},\n}", format.ToPascalCase(c.name), format.ToPascalCase(c.name))
 	}
 
-	return CustomTypeObject{
-		customType: customType,
-	}
-}
-
-func (a CustomTypeObject) Equal(other CustomTypeObject) bool {
-	return a.customType == other.customType
-}
-
-func (a CustomTypeObject) Schema() []byte {
-	if a.customType != "" {
-		return []byte(fmt.Sprintf("CustomType: %s,\n", a.customType))
+	if customType != "" {
+		return []byte(fmt.Sprintf("CustomType: %s,\n", customType))
 	}
 
 	return nil

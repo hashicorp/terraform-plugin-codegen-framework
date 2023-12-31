@@ -56,6 +56,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 				Attributes: generatorschema.GeneratorAttributes{
 					"bool_attribute": GeneratorBoolAttribute{
 						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+						CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
 						ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 					},
 				},
@@ -116,6 +117,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
 									PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
 									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
 								},
@@ -186,6 +188,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						Attributes: generatorschema.GeneratorAttributes{
 							"nested_bool": GeneratorBoolAttribute{
 								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+								CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
 								PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
 								ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
 							},
@@ -236,6 +239,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
 									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
@@ -268,6 +272,7 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 						Attributes: generatorschema.GeneratorAttributes{
 							"bool_attribute": GeneratorBoolAttribute{
 								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+								CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
 								ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 							},
 						},

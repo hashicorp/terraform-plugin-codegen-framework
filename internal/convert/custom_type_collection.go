@@ -19,8 +19,16 @@ const (
 
 type CustomCollectionTypes string
 
+func (c CustomCollectionTypes) Equal(other CustomCollectionTypes) bool {
+	return c == other
+}
+
 type CustomTypeCollection struct {
-	customType string
+	associatedExternalType *specschema.AssociatedExternalType
+	customCollectionType   CustomCollectionTypes
+	customType             *specschema.CustomType
+	elementType            string
+	name                   string
 }
 
 // NewCustomTypeCollection constructs an CustomTypeCollection which is used to determine whether a CustomType
@@ -33,27 +41,47 @@ type CustomTypeCollection struct {
 // will create custom Type and Value types using the attribute name, and the generated custom
 // Type type will be used as the CustomType in the schema.
 func NewCustomTypeCollection(c *specschema.CustomType, a *specschema.AssociatedExternalType, cct CustomCollectionTypes, elemType, name string) CustomTypeCollection {
+	return CustomTypeCollection{
+		associatedExternalType: a,
+		customCollectionType:   cct,
+		customType:             c,
+		elementType:            elemType,
+		name:                   name,
+	}
+}
+
+func (c CustomTypeCollection) Equal(other CustomTypeCollection) bool {
+	if !c.associatedExternalType.Equal(other.associatedExternalType) {
+		return false
+	}
+
+	if !c.customCollectionType.Equal(other.customCollectionType) {
+		return false
+	}
+
+	if !c.customType.Equal(other.customType) {
+		return false
+	}
+
+	if c.elementType != other.elementType {
+		return false
+	}
+
+	return c.name == other.name
+}
+
+func (c CustomTypeCollection) Schema() []byte {
 	var customType string
 
 	switch {
-	case c != nil:
-		customType = c.Type
-	case a != nil:
-		customType = fmt.Sprintf("%sType{\ntypes.%sType{\nElemType: %s,\n},\n}", format.ToPascalCase(name), cct, elemType)
+	case c.customType != nil:
+		customType = c.customType.Type
+	case c.associatedExternalType != nil:
+		customType = fmt.Sprintf("%sType{\ntypes.%sType{\nElemType: %s,\n},\n}", format.ToPascalCase(c.name), c.customCollectionType, c.elementType)
 	}
 
-	return CustomTypeCollection{
-		customType: customType,
-	}
-}
-
-func (a CustomTypeCollection) Equal(other CustomTypeCollection) bool {
-	return a.customType == other.customType
-}
-
-func (a CustomTypeCollection) Schema() []byte {
-	if a.customType != "" {
-		return []byte(fmt.Sprintf("CustomType: %s,\n", a.customType))
+	if customType != "" {
+		return []byte(fmt.Sprintf("CustomType: %s,\n", customType))
 	}
 
 	return nil

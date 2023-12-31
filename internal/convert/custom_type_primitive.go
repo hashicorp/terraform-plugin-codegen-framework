@@ -12,7 +12,9 @@ import (
 )
 
 type CustomTypePrimitive struct {
-	customType string
+	associatedExternalType *specschema.AssociatedExternalType
+	customType             *specschema.CustomType
+	name                   string
 }
 
 // NewCustomTypePrimitive constructs an CustomTypePrimitive which is used to determine whether a CustomType
@@ -25,27 +27,37 @@ type CustomTypePrimitive struct {
 // will create custom Type and Value types using the attribute name, and the generated custom
 // Type type will be used as the CustomType in the schema.
 func NewCustomTypePrimitive(c *specschema.CustomType, a *specschema.AssociatedExternalType, name string) CustomTypePrimitive {
+	return CustomTypePrimitive{
+		associatedExternalType: a,
+		customType:             c,
+		name:                   name,
+	}
+}
+
+func (c CustomTypePrimitive) Equal(other CustomTypePrimitive) bool {
+	if !c.associatedExternalType.Equal(other.associatedExternalType) {
+		return false
+	}
+
+	if !c.customType.Equal(other.customType) {
+		return false
+	}
+
+	return c.name == other.name
+}
+
+func (c CustomTypePrimitive) Schema() []byte {
 	var customType string
 
 	switch {
-	case c != nil:
-		customType = c.Type
-	case a != nil:
-		customType = fmt.Sprintf("%sType{}", format.ToPascalCase(name))
+	case c.customType != nil:
+		customType = c.customType.Type
+	case c.associatedExternalType != nil:
+		customType = fmt.Sprintf("%sType{}", format.ToPascalCase(c.name))
 	}
 
-	return CustomTypePrimitive{
-		customType: customType,
-	}
-}
-
-func (a CustomTypePrimitive) Equal(other CustomTypePrimitive) bool {
-	return a.customType == other.customType
-}
-
-func (a CustomTypePrimitive) Schema() []byte {
-	if a.customType != "" {
-		return []byte(fmt.Sprintf("CustomType: %s,\n", a.customType))
+	if customType != "" {
+		return []byte(fmt.Sprintf("CustomType: %s,\n", customType))
 	}
 
 	return nil
