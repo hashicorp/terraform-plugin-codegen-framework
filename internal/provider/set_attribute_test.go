@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -35,9 +35,20 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.BoolType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					Bool: &specschema.BoolType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Bool: &specschema.BoolType{},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-string": {
@@ -47,9 +58,20 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					String: &specschema.StringType{},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-string": {
@@ -63,6 +85,13 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.ListType{\nElemType: types.StringType,\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
@@ -70,6 +99,14 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							String: &specschema.StringType{},
+						},
+					},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-map-string": {
@@ -83,6 +120,13 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.MapType{\nElemType: types.StringType,\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					Map: &specschema.MapType{
 						ElementType: specschema.ElementType{
@@ -90,6 +134,14 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Map: &specschema.MapType{
+						ElementType: specschema.ElementType{
+							String: &specschema.StringType{},
+						},
+					},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-object-string": {
@@ -110,6 +162,13 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.ListType{\nElemType: types.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"str\": types.StringType,\n},\n},\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
@@ -124,6 +183,21 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Object: &specschema.ObjectType{
+								AttributeTypes: specschema.ObjectAttributeTypes{
+									{
+										Name:   "str",
+										String: &specschema.StringType{},
+									},
+								},
+							},
+						},
+					},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-string": {
@@ -140,6 +214,13 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"str\": types.StringType,\n},\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -150,6 +231,17 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
+							{
+								Name:   "str",
+								String: &specschema.StringType{},
+							},
+						},
+					},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-list-string": {
@@ -170,6 +262,13 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.ObjectType{\nAttrTypes: map[string]attr.Type{\n\"list\": types.ListType{\nElemType: types.StringType,\n},\n},\n}",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
@@ -184,6 +283,21 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
+							{
+								Name: "list",
+								List: &specschema.ListType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
+								},
+							},
+						},
+					},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -194,12 +308,21 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Optional: true,
-				},
+				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					String: &specschema.StringType{},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -210,12 +333,21 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Required: true,
-				},
+				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					String: &specschema.StringType{},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -239,9 +371,26 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/",
+						},
+						Type:      "my_type",
+						ValueType: "myvalue_type",
+					},
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					String: &specschema.StringType{},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -252,12 +401,21 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					DeprecationMessage: "deprecation message",
-				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					String: &specschema.StringType{},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -268,13 +426,21 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
+				Description: convert.NewDescription(pointer("description")),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					String: &specschema.StringType{},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -285,12 +451,21 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Sensitive: true,
-				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					String: &specschema.StringType{},
+				}),
+				Sensitive:        convert.NewSensitive(pointer(true)),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -312,9 +487,19 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					nil,
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
 				ElementType: specschema.ElementType{
 					String: &specschema.StringType{},
 				},
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					String: &specschema.StringType{},
+				}),
 				Validators: specschema.SetValidators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -327,6 +512,16 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}
@@ -337,16 +532,10 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorSetAttribute(testCase.input)
+			got, err := NewGeneratorSetAttribute("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
-			}
-
-			// TODO: This prevents misleading failure when ElementType for both got and expected are nil.
-			// TODO: Could overwrite comparison using an option to cmp.Diff()?
-			if got.SetAttribute.ElementType == nil && testCase.expected.SetAttribute.ElementType == nil {
-				return
 			}
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
@@ -366,28 +555,26 @@ func TestGeneratorSetAttribute_Schema(t *testing.T) {
 	}{
 		"element-type-bool": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Bool: &specschema.BoolType{},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.BoolType,
 },`,
 		},
 
 		"element-type-list": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.ListType{
 ElemType: types.BoolType,
 },
@@ -396,7 +583,7 @@ ElemType: types.BoolType,
 
 		"element-type-list-list": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
 							List: &specschema.ListType{
@@ -406,10 +593,9 @@ ElemType: types.BoolType,
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.ListType{
 ElemType: types.ListType{
 ElemType: types.BoolType,
@@ -420,7 +606,7 @@ ElemType: types.BoolType,
 
 		"element-type-list-object": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
@@ -433,10 +619,9 @@ ElemType: types.BoolType,
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.ListType{
 ElemType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -449,16 +634,15 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-map": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Map: &specschema.MapType{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.MapType{
 ElemType: types.BoolType,
 },
@@ -467,7 +651,7 @@ ElemType: types.BoolType,
 
 		"element-type-map-map": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Map: &specschema.MapType{
 						ElementType: specschema.ElementType{
 							Map: &specschema.MapType{
@@ -477,10 +661,9 @@ ElemType: types.BoolType,
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.MapType{
 ElemType: types.MapType{
 ElemType: types.BoolType,
@@ -491,7 +674,7 @@ ElemType: types.BoolType,
 
 		"element-type-map-object": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Map: &specschema.MapType{
 						ElementType: specschema.ElementType{
 							Object: &specschema.ObjectType{
@@ -504,10 +687,9 @@ ElemType: types.BoolType,
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.MapType{
 ElemType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
@@ -520,7 +702,7 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-object": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -529,10 +711,9 @@ AttrTypes: map[string]attr.Type{
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
 "bool": types.BoolType,
@@ -543,7 +724,7 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-object-object": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -559,10 +740,9 @@ AttrTypes: map[string]attr.Type{
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
 "obj": types.ObjectType{
@@ -577,7 +757,7 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-object-list": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -590,10 +770,9 @@ AttrTypes: map[string]attr.Type{
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
 "list": types.ListType{
@@ -606,44 +785,49 @@ ElemType: types.BoolType,
 
 		"element-type-string": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 },`,
 		},
 
 		"custom-type": {
 			input: GeneratorSetAttribute{
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
-				ElementType: specschema.ElementType{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Type: "my_custom_type",
+					},
+					nil,
+					convert.CustomCollectionTypeSet,
+					"",
+					"",
+				),
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"associated-external-type": {
 			input: GeneratorSetAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.ListAttribute",
-					},
-				},
-				ElementType: specschema.ElementType{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					&specschema.AssociatedExternalType{Type: "*api.SetAttribute"},
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"set_attribute",
+				),
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 CustomType: SetAttributeType{
 types.SetType{
 ElemType: types.StringType,
@@ -654,32 +838,27 @@ ElemType: types.StringType,
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorSetAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.ListAttribute",
-					},
-				},
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{Type: "my_custom_type"},
+					&specschema.AssociatedExternalType{Type: "*api.SetAttribute"},
+					convert.CustomCollectionTypeSet,
+					"types.StringType",
+					"name",
+				),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"required": {
 			input: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Required: true,
-				},
-				ElementType: specschema.ElementType{
+				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Required: true,
 },`,
@@ -687,15 +866,12 @@ Required: true,
 
 		"optional": {
 			input: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Optional: true,
-				},
-				ElementType: specschema.ElementType{
+				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Optional: true,
 },`,
@@ -703,32 +879,25 @@ Optional: true,
 
 		"sensitive": {
 			input: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Sensitive: true,
-				},
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
+				}),
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Sensitive: true,
 },`,
 		},
 
-		// TODO: Do we need separate description and markdown description?
 		"description": {
 			input: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					Description: "description",
-				},
-				ElementType: specschema.ElementType{
+				Description: convert.NewDescription(pointer("description")),
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Description: "description",
 MarkdownDescription: "description",
@@ -737,15 +906,12 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorSetAttribute{
-				SetAttribute: schema.SetAttribute{
-					DeprecationMessage: "deprecated",
-				},
-				ElementType: specschema.ElementType{
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 DeprecationMessage: "deprecated",
 },`,
@@ -753,24 +919,20 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
-				},
-				Validators: specschema.SetValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_validator.Validate()",
-						},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						SchemaDefinition: "my_validator.Validate()",
 					},
-					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_other_validator.Validate()",
-						},
+
+					&specschema.CustomValidator{
+						SchemaDefinition: "my_other_validator.Validate()",
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
 Validators: []validator.Set{
 my_validator.Validate(),
@@ -781,55 +943,52 @@ my_other_validator.Validate(),
 
 		"element-type-bool-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Bool: &specschema.BoolType{
 						CustomType: &specschema.CustomType{
 							Type: "boolCustomType",
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: boolCustomType,
 },`,
 		},
 
 		"element-type-float64-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Float64: &specschema.Float64Type{
 						CustomType: &specschema.CustomType{
 							Type: "float64CustomType",
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: float64CustomType,
 },`,
 		},
 
 		"element-type-int64-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Int64: &specschema.Int64Type{
 						CustomType: &specschema.CustomType{
 							Type: "int64CustomType",
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: int64CustomType,
 },`,
 		},
 
 		"element-type-list-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					List: &specschema.ListType{
 						CustomType: &specschema.CustomType{
 							Type: "customListType",
@@ -842,19 +1001,16 @@ ElementType: int64CustomType,
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
-ElementType: customListType{
-ElemType: customBoolType,
-},
+			expected: `"set_attribute": schema.SetAttribute{
+ElementType: customListType,
 },`,
 		},
 
 		"element-type-map-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Map: &specschema.MapType{
 						CustomType: &specschema.CustomType{
 							Type: "customMapType",
@@ -867,35 +1023,31 @@ ElemType: customBoolType,
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
-ElementType: customMapType{
-ElemType: customBoolType,
-},
+			expected: `"set_attribute": schema.SetAttribute{
+ElementType: customMapType,
 },`,
 		},
 
 		"element-type-number-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Number: &specschema.NumberType{
 						CustomType: &specschema.CustomType{
 							Type: "numberCustomType",
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: numberCustomType,
 },`,
 		},
 
 		"element-type-object-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -908,10 +1060,9 @@ ElementType: numberCustomType,
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.ObjectType{
 AttrTypes: map[string]attr.Type{
 "bool": customBoolType,
@@ -922,7 +1073,7 @@ AttrTypes: map[string]attr.Type{
 
 		"element-type-set-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Set: &specschema.SetType{
 						CustomType: &specschema.CustomType{
 							Type: "customSetType",
@@ -935,28 +1086,24 @@ AttrTypes: map[string]attr.Type{
 							},
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
-ElementType: customSetType{
-ElemType: customBoolType,
-},
+			expected: `"set_attribute": schema.SetAttribute{
+ElementType: customSetType,
 },`,
 		},
 
 		"element-type-string-custom": {
 			input: GeneratorSetAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{
 						CustomType: &specschema.CustomType{
 							Type: "stringCustomType",
 						},
 					},
-				},
+				}),
 			},
-			expected: `
-"set_attribute": schema.SetAttribute{
+			expected: `"set_attribute": schema.SetAttribute{
 ElementType: stringCustomType,
 },`,
 		},

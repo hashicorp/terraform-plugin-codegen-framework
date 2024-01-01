@@ -6,12 +6,9 @@ package provider
 import (
 	"bytes"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -19,43 +16,50 @@ import (
 )
 
 type GeneratorMapAttribute struct {
-	schema.MapAttribute
-
 	AssociatedExternalType *generatorschema.AssocExtType
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType  *specschema.CustomType
-	ElementType specschema.ElementType
-	Validators  specschema.MapValidators
+	OptionalRequired       convert.OptionalRequired
+	CustomType             *specschema.CustomType
+	CustomTypeCollection   convert.CustomTypeCollection
+	DeprecationMessage     convert.DeprecationMessage
+	Description            convert.Description
+	ElementType            specschema.ElementType
+	ElementTypeCollection  convert.ElementType
+	Sensitive              convert.Sensitive
+	Validators             specschema.MapValidators
+	ValidatorsCustom       convert.ValidatorsCustom
 }
 
-func NewGeneratorMapAttribute(a *provider.MapAttribute) (GeneratorMapAttribute, error) {
+func NewGeneratorMapAttribute(name string, a *provider.MapAttribute) (GeneratorMapAttribute, error) {
 	if a == nil {
 		return GeneratorMapAttribute{}, fmt.Errorf("*provider.MapAttribute is nil")
 	}
 
+	et := convert.NewElementType(a.ElementType)
+
 	c := convert.NewOptionalRequired(a.OptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	ctc := convert.NewCustomTypeCollection(a.CustomType, a.AssociatedExternalType, convert.CustomCollectionTypeMap, string(et.ElementType()), name)
 
 	d := convert.NewDescription(a.Description)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	return GeneratorMapAttribute{
-		MapAttribute: schema.MapAttribute{
-			Required:            c.IsRequired(),
-			Optional:            c.IsOptional(),
-			Sensitive:           s.IsSensitive(),
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	s := convert.NewSensitive(a.Sensitive)
 
+	vc := convert.NewValidatorsCustom(convert.ValidatorTypeMap, a.Validators.CustomValidators())
+
+	return GeneratorMapAttribute{
 		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		OptionalRequired:       c,
 		CustomType:             a.CustomType,
+		CustomTypeCollection:   ctc,
+		DeprecationMessage:     dm,
+		Description:            d,
 		ElementType:            a.ElementType,
+		ElementTypeCollection:  et,
+		Sensitive:              s,
 		Validators:             a.Validators,
+		ValidatorsCustom:       vc,
 	}, nil
 }
 
@@ -94,7 +98,16 @@ func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {
 // call returns false when the ElementType is nil.
 func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorMapAttribute)
+
 	if !ok {
+		return false
+	}
+
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
+		return false
+	}
+
+	if !g.OptionalRequired.Equal(h.OptionalRequired) {
 		return false
 	}
 
@@ -102,7 +115,27 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
+	if !g.CustomTypeCollection.Equal(h.CustomTypeCollection) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
+		return false
+	}
+
 	if !g.ElementType.Equal(h.ElementType) {
+		return false
+	}
+
+	if !g.ElementTypeCollection.Equal(h.ElementTypeCollection) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
 		return false
 	}
 
@@ -110,71 +143,27 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if g.Required != h.Required {
-		return false
-	}
-
-	if g.Optional != h.Optional {
-		return false
-	}
-
-	if g.Sensitive != h.Sensitive {
-		return false
-	}
-
-	if g.Description != h.Description {
-		return false
-	}
-
-	if g.MarkdownDescription != h.MarkdownDescription {
-		return false
-	}
-
-	if g.DeprecationMessage != h.DeprecationMessage {
-		return false
-	}
-
-	return true
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorMapAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type attribute struct {
-		Name                  string
-		CustomType            string
-		ElementType           string
-		GeneratorMapAttribute GeneratorMapAttribute
+	var b bytes.Buffer
+
+	customTypeSchema := g.CustomTypeCollection.Schema()
+
+	b.WriteString(fmt.Sprintf("%q: schema.MapAttribute{\n", name))
+	b.Write(customTypeSchema)
+	if len(customTypeSchema) == 0 {
+		b.Write(g.ElementTypeCollection.Schema())
 	}
+	b.Write(g.OptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.WriteString("},")
 
-	a := attribute{
-		Name:                  name.ToString(),
-		ElementType:           generatorschema.GetElementType(g.ElementType),
-		GeneratorMapAttribute: g,
-	}
-
-	switch {
-	case g.CustomType != nil:
-		a.CustomType = g.CustomType.Type
-	case g.AssociatedExternalType != nil:
-		a.CustomType = fmt.Sprintf("%sType{\ntypes.MapType{\nElemType: %s,\n},\n}", name.ToPascalCase(), generatorschema.GetElementType(g.ElementType))
-	}
-
-	t, err := template.New("map_attribute").Parse(mapAttributeTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	if _, err = addAttributeTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, a)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorMapAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {

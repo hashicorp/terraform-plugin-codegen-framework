@@ -6,12 +6,9 @@ package provider
 import (
 	"bytes"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -19,41 +16,44 @@ import (
 )
 
 type GeneratorNumberAttribute struct {
-	schema.NumberAttribute
-
 	AssociatedExternalType *generatorschema.AssocExtType
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType *specschema.CustomType
-	Validators specschema.NumberValidators
+	OptionalRequired       convert.OptionalRequired
+	CustomType             *specschema.CustomType
+	CustomTypePrimitive    convert.CustomTypePrimitive
+	DeprecationMessage     convert.DeprecationMessage
+	Description            convert.Description
+	Sensitive              convert.Sensitive
+	Validators             specschema.NumberValidators
+	ValidatorsCustom       convert.ValidatorsCustom
 }
 
-func NewGeneratorNumberAttribute(a *provider.NumberAttribute) (GeneratorNumberAttribute, error) {
+func NewGeneratorNumberAttribute(name string, a *provider.NumberAttribute) (GeneratorNumberAttribute, error) {
 	if a == nil {
 		return GeneratorNumberAttribute{}, fmt.Errorf("*provider.NumberAttribute is nil")
 	}
 
 	c := convert.NewOptionalRequired(a.OptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	ctp := convert.NewCustomTypePrimitive(a.CustomType, a.AssociatedExternalType, name)
 
 	d := convert.NewDescription(a.Description)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	return GeneratorNumberAttribute{
-		NumberAttribute: schema.NumberAttribute{
-			Required:            c.IsRequired(),
-			Optional:            c.IsOptional(),
-			Sensitive:           s.IsSensitive(),
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	s := convert.NewSensitive(a.Sensitive)
 
+	vc := convert.NewValidatorsCustom(convert.ValidatorTypeNumber, a.Validators.CustomValidators())
+
+	return GeneratorNumberAttribute{
 		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		OptionalRequired:       c,
 		CustomType:             a.CustomType,
+		CustomTypePrimitive:    ctp,
+		DeprecationMessage:     dm,
+		Description:            d,
+		Sensitive:              s,
 		Validators:             a.Validators,
+		ValidatorsCustom:       vc,
 	}, nil
 }
 
@@ -83,7 +83,16 @@ func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
 
 func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorNumberAttribute)
+
 	if !ok {
+		return false
+	}
+
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
+		return false
+	}
+
+	if !g.OptionalRequired.Equal(h.OptionalRequired) {
 		return false
 	}
 
@@ -91,49 +100,42 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
+	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
+		return false
+	}
+
 	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
-	return g.NumberAttribute.Equal(h.NumberAttribute)
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorNumberAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type attribute struct {
-		Name                     string
-		CustomType               string
-		GeneratorNumberAttribute GeneratorNumberAttribute
-	}
+	var b bytes.Buffer
 
-	a := attribute{
-		Name:                     name.ToString(),
-		GeneratorNumberAttribute: g,
-	}
+	b.WriteString(fmt.Sprintf("%q: schema.NumberAttribute{\n", name))
+	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.OptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.WriteString("},")
 
-	switch {
-	case g.CustomType != nil:
-		a.CustomType = g.CustomType.Type
-	case g.AssociatedExternalType != nil:
-		a.CustomType = fmt.Sprintf("%sType{}", name.ToPascalCase())
-	}
-
-	t, err := template.New("number_attribute").Parse(numberAttributeTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	if _, err = addAttributeTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, a)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorNumberAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {

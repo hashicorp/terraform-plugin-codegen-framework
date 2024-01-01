@@ -11,14 +11,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 	t.Parallel()
+
+	attributes, err := NewAttributes(provider.Attributes{})
+
+	if err != nil {
+		t.Error(err)
+	}
 
 	testCases := map[string]struct {
 		input         *provider.MapNestedAttribute
@@ -59,12 +65,25 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{
-							BoolAttribute: schema.BoolAttribute{
-								Optional: true,
-							},
+							OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+							CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+							ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
+						"bool_attribute": GeneratorBoolAttribute{
+							OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+							CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+							ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+						},
+					},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-list-bool": {
@@ -87,18 +106,52 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"list_attribute": GeneratorListAttribute{
-							ListAttribute: schema.ListAttribute{
-								Optional: true,
-							},
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								nil,
+								nil,
+								convert.CustomCollectionTypeList,
+								"types.BoolType",
+								"list_attribute",
+							),
 							ElementType: specschema.ElementType{
 								Bool: &specschema.BoolType{},
 							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							}),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
+						"list_attribute": GeneratorListAttribute{
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								nil,
+								nil,
+								convert.CustomCollectionTypeList,
+								"types.BoolType",
+								"list_attribute",
+							),
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							}),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+						},
+					},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
-		"attributes-list-nested-bool": {
+		"attributes-map-nested-bool": {
 			input: &provider.MapNestedAttribute{
 				NestedObject: provider.NestedAttributeObject{
 					Attributes: []provider.Attribute{
@@ -128,18 +181,62 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": GeneratorBoolAttribute{
-										BoolAttribute: schema.BoolAttribute{
-											Optional: true,
-										},
+										OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+										CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
 							},
-							MapNestedAttribute: schema.MapNestedAttribute{
-								Optional: true,
-							},
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
+									"nested_bool": GeneratorBoolAttribute{
+										OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+										CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"nested_attribute",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
+						"nested_attribute": GeneratorMapNestedAttribute{
+							NestedObject: GeneratorNestedAttributeObject{
+								Attributes: generatorschema.GeneratorAttributes{
+									"nested_bool": GeneratorBoolAttribute{
+										OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+										CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+							},
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
+									"nested_bool": GeneratorBoolAttribute{
+										OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+										CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"nested_attribute",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+						},
+					},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-object-bool": {
@@ -165,18 +262,49 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 				NestedObject: GeneratorNestedAttributeObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"object_attribute": GeneratorObjectAttribute{
-							ObjectAttribute: schema.ObjectAttribute{
-								Optional: true,
-							},
 							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "obj_bool",
 									Bool: &specschema.BoolType{},
 								},
 							},
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+							}),
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+							CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "object_attribute"),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
+						"object_attribute": GeneratorObjectAttribute{
+							AttributeTypes: specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+							},
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+							}),
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+							CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "object_attribute"),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+						},
+					},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-single-nested-bool": {
@@ -206,17 +334,37 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 						"nested_attribute": GeneratorSingleNestedAttribute{
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+									CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+									ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
-							SingleNestedAttribute: schema.SingleNestedAttribute{
-								Optional: true,
-							},
+							OptionalRequired:       convert.NewOptionalRequired(specschema.Optional),
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
+							ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
+						"nested_attribute": GeneratorSingleNestedAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
+								"nested_bool": GeneratorBoolAttribute{
+									OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+									CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+									ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+								},
+							},
+							OptionalRequired:       convert.NewOptionalRequired(specschema.Optional),
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
+							ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+						},
+					},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -224,19 +372,34 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 				OptionalRequired: "optional",
 			},
 			expected: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					Optional: true,
+				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: attributes,
 				},
-			},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					attributes,
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{})},
 		},
 		"required": {
 			input: &provider.MapNestedAttribute{
 				OptionalRequired: "required",
 			},
 			expected: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					Required: true,
+				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: attributes,
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					attributes,
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -257,6 +420,23 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				}),
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: attributes,
+				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					attributes,
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, nil),
 			},
 		},
 		"deprecation_message": {
@@ -264,9 +444,17 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					DeprecationMessage: "deprecation message",
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: attributes,
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					attributes,
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, nil),
 			},
 		},
 		"description": {
@@ -274,10 +462,17 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					Description:         "description",
-					MarkdownDescription: "description",
+				Description: convert.NewDescription(pointer("description")),
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: attributes,
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					attributes,
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, nil),
 			},
 		},
 		"sensitive": {
@@ -285,9 +480,17 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					Sensitive: true,
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: attributes,
 				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					attributes,
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"name",
+				),
+				Sensitive:        convert.NewSensitive(pointer(true)),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, nil),
 			},
 		},
 		"validators": {
@@ -306,6 +509,15 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapNestedAttribute{
+				NestedObject: GeneratorNestedAttributeObject{
+					Attributes: attributes,
+				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					attributes,
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"name",
+				),
 				Validators: specschema.MapValidators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -318,6 +530,16 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}
@@ -328,7 +550,7 @@ func TestGeneratorMapNestedAttribute_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorMapNestedAttribute(testCase.input)
+			got, err := NewGeneratorMapNestedAttribute("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -916,6 +1138,8 @@ func TestGeneratorMapNestedAttribute_Imports(t *testing.T) {
 func TestGeneratorMapNestedAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
+	attributeName := "map_nested_attribute"
+
 	testCases := map[string]struct {
 		input         GeneratorMapNestedAttribute
 		expected      string
@@ -923,18 +1147,18 @@ func TestGeneratorMapNestedAttribute_Schema(t *testing.T) {
 	}{
 		"attribute-bool": {
 			input: GeneratorMapNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
 						"bool": GeneratorBoolAttribute{
-							BoolAttribute: schema.BoolAttribute{
-								Optional: true,
-							},
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
 						},
 					},
-				},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 "bool": schema.BoolAttribute{
@@ -952,21 +1176,21 @@ AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
 
 		"attribute-list": {
 			input: GeneratorMapNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
-							ListAttribute: schema.ListAttribute{
-								Optional: true,
-							},
-							ElementType: specschema.ElementType{
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 								String: &specschema.StringType{},
-							},
+							}),
 						},
 					},
-				},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 "list": schema.ListAttribute{
@@ -983,29 +1207,32 @@ AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
 },`,
 		},
 
-		"attribute-list-nested": {
+		"attribute-map-nested": {
 			input: GeneratorMapNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
-						"nested_list_nested": GeneratorMapNestedAttribute{
-							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
+						"nested_map_nested": GeneratorMapNestedAttribute{
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{
-										BoolAttribute: schema.BoolAttribute{
-											Optional: true,
-										},
+										OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
 									},
 								},
-							},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+								"nested_list_nested",
+							),
 						},
 					},
-				},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
-"nested_list_nested": schema.MapNestedAttribute{
+"nested_map_nested": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 "bool": schema.BoolAttribute{
@@ -1031,24 +1258,24 @@ AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
 
 		"attribute-object": {
 			input: GeneratorMapNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
 						"object": GeneratorObjectAttribute{
-							ObjectAttribute: schema.ObjectAttribute{
-								Optional: true,
-							},
-							AttributeTypes: specschema.ObjectAttributeTypes{
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 								{
 									Name:   "str",
 									String: &specschema.StringType{},
 								},
-							},
+							}),
+							OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
 						},
 					},
-				},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 "object": schema.ObjectAttribute{
@@ -1069,22 +1296,23 @@ AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
 
 		"attribute-single-nested-bool": {
 			input: GeneratorMapNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
 						"nested_single_nested": GeneratorSingleNestedAttribute{
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
 								},
 							},
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_single_nested"),
 						},
 					},
-				},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 "nested_single_nested": schema.SingleNestedAttribute{
@@ -1111,12 +1339,17 @@ AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
 
 		"custom-type": {
 			input: GeneratorMapNestedAttribute{
-				CustomType: &specschema.CustomType{
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
 					Type: "my_custom_type",
-				},
+				}),
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
@@ -1132,12 +1365,15 @@ CustomType: my_custom_type,
 
 		"required": {
 			input: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					Required: true,
-				},
+				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					nil,
+					convert.ValidatorsCustom{},
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
@@ -1153,12 +1389,15 @@ Required: true,
 
 		"optional": {
 			input: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					Optional: true,
-				},
+				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					nil,
+					convert.ValidatorsCustom{},
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
@@ -1174,12 +1413,15 @@ Optional: true,
 
 		"sensitive": {
 			input: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					Sensitive: true,
-				},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					nil,
+					convert.ValidatorsCustom{},
+					attributeName,
+				),
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
@@ -1195,12 +1437,15 @@ Sensitive: true,
 
 		"description": {
 			input: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					Description: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					nil,
+					convert.ValidatorsCustom{},
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
@@ -1217,12 +1462,15 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorMapNestedAttribute{
-				MapNestedAttribute: schema.MapNestedAttribute{
-					DeprecationMessage: "deprecated",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					nil,
+					convert.ValidatorsCustom{},
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
@@ -1238,6 +1486,12 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorMapNestedAttribute{
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					attributeName,
+				),
 				Validators: specschema.MapValidators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -1250,9 +1504,16 @@ DeprecationMessage: "deprecated",
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						SchemaDefinition: "my_validator.Validate()",
+					},
+					&specschema.CustomValidator{
+						SchemaDefinition: "my_other_validator.Validate()",
+					},
+				}),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
@@ -1271,14 +1532,16 @@ my_other_validator.Validate(),
 
 		"nested-object-custom-type": {
 			input: GeneratorMapNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					CustomType: &specschema.CustomType{
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
-				},
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },
@@ -1289,23 +1552,21 @@ CustomType: my_custom_type,
 
 		"nested-object-validators": {
 			input: GeneratorMapNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Validators: specschema.ObjectValidators{
-						{
-							Custom: &specschema.CustomValidator{
-								SchemaDefinition: "my_validator.Validate()",
-							},
+				NestedAttributeObject: convert.NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{
+						&specschema.CustomValidator{
+							SchemaDefinition: "my_validator.Validate()",
 						},
-						{
-							Custom: &specschema.CustomValidator{
-								SchemaDefinition: "my_other_validator.Validate()",
-							},
+						&specschema.CustomValidator{
+							SchemaDefinition: "my_other_validator.Validate()",
 						},
-					},
-				},
+					}),
+					attributeName,
+				),
 			},
-			expected: `
-"map_nested_attribute": schema.MapNestedAttribute{
+			expected: `"map_nested_attribute": schema.MapNestedAttribute{
 NestedObject: schema.NestedAttributeObject{
 Attributes: map[string]schema.Attribute{
 },

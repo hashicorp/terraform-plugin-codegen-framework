@@ -3,7 +3,11 @@
 
 package convert
 
-import specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+import (
+	"bytes"
+
+	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+)
 
 type OptionalRequired struct {
 	optionalRequired specschema.OptionalRequired
@@ -15,10 +19,28 @@ func NewOptionalRequired(c specschema.OptionalRequired) OptionalRequired {
 	}
 }
 
-func (c OptionalRequired) IsRequired() bool {
-	return c.optionalRequired == specschema.Required
+func (o OptionalRequired) Equal(other OptionalRequired) bool {
+	return o.optionalRequired.Equal(other.optionalRequired)
 }
 
-func (c OptionalRequired) IsOptional() bool {
-	return c.optionalRequired == specschema.Optional
+func (o OptionalRequired) IsRequired() bool {
+	return o.optionalRequired == specschema.Required
+}
+
+func (o OptionalRequired) IsOptional() bool {
+	return o.optionalRequired == specschema.Optional
+}
+
+func (o OptionalRequired) Schema() []byte {
+	var b bytes.Buffer
+
+	if o.IsRequired() {
+		b.WriteString("Required: true,\n")
+	}
+
+	if o.IsOptional() {
+		b.WriteString("Optional: true,\n")
+	}
+
+	return b.Bytes()
 }
