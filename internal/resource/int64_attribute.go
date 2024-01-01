@@ -6,13 +6,10 @@ package resource
 import (
 	"bytes"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -20,46 +17,56 @@ import (
 )
 
 type GeneratorInt64Attribute struct {
-	schema.Int64Attribute
-
-	AssociatedExternalType *generatorschema.AssocExtType
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType    *specschema.CustomType
-	Default       *specschema.Int64Default
-	PlanModifiers specschema.Int64PlanModifiers
-	Validators    specschema.Int64Validators
+	AssociatedExternalType   *generatorschema.AssocExtType
+	ComputedOptionalRequired convert.ComputedOptionalRequired
+	CustomType               *specschema.CustomType
+	CustomTypePrimitive      convert.CustomTypePrimitive
+	Default                  *specschema.Int64Default
+	DefaultInt64             convert.DefaultInt64
+	DeprecationMessage       convert.DeprecationMessage
+	Description              convert.Description
+	PlanModifiers            specschema.Int64PlanModifiers
+	PlanModifiersCustom      convert.PlanModifiersCustom
+	Sensitive                convert.Sensitive
+	Validators               specschema.Int64Validators
+	ValidatorsCustom         convert.ValidatorsCustom
 }
 
-func NewGeneratorInt64Attribute(a *resource.Int64Attribute) (GeneratorInt64Attribute, error) {
+func NewGeneratorInt64Attribute(name string, a *resource.Int64Attribute) (GeneratorInt64Attribute, error) {
 	if a == nil {
 		return GeneratorInt64Attribute{}, fmt.Errorf("*resource.Int64Attribute is nil")
 	}
 
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	ctp := convert.NewCustomTypePrimitive(a.CustomType, a.AssociatedExternalType, name)
 
-	d := convert.NewDescription(a.Description)
+	db := convert.NewDefaultInt64(a.Default)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	return GeneratorInt64Attribute{
-		Int64Attribute: schema.Int64Attribute{
-			Required:            c.IsRequired(),
-			Optional:            c.IsOptional(),
-			Computed:            c.IsComputed(),
-			Sensitive:           s.IsSensitive(),
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	d := convert.NewDescription(a.Description)
 
-		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
-		CustomType:             a.CustomType,
-		Default:                a.Default,
-		PlanModifiers:          a.PlanModifiers,
-		Validators:             a.Validators,
+	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, a.PlanModifiers.CustomPlanModifiers())
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	vc := convert.NewValidatorsCustom(convert.ValidatorTypeInt64, a.Validators.CustomValidators())
+
+	return GeneratorInt64Attribute{
+		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		ComputedOptionalRequired: c,
+		CustomType:               a.CustomType,
+		CustomTypePrimitive:      ctp,
+		Default:                  a.Default,
+		DefaultInt64:             db,
+		Description:              d,
+		DeprecationMessage:       dm,
+		PlanModifiers:            a.PlanModifiers,
+		PlanModifiersCustom:      pm,
+		Sensitive:                s,
+		Validators:               a.Validators,
+		ValidatorsCustom:         vc,
 	}, nil
 }
 
@@ -105,7 +112,16 @@ func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
 
 func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorInt64Attribute)
+
 	if !ok {
+		return false
+	}
+
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
+		return false
+	}
+
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
 		return false
 	}
 
@@ -113,7 +129,23 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 		return false
 	}
 
+	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
+		return false
+	}
+
 	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.DefaultInt64.Equal(h.DefaultInt64) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
 		return false
 	}
 
@@ -121,67 +153,36 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 		return false
 	}
 
+	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
+		return false
+	}
+
 	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
-	return g.Int64Attribute.Equal(h.Int64Attribute)
-}
-
-func int64Default(d *specschema.Int64Default) string {
-	if d == nil {
-		return ""
-	}
-
-	if d.Static != nil {
-		return fmt.Sprintf("int64default.StaticInt64(%d)", *d.Static)
-	}
-
-	if d.Custom != nil {
-		return d.Custom.SchemaDefinition
-	}
-
-	return ""
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type attribute struct {
-		Name                    string
-		CustomType              string
-		Default                 string
-		GeneratorInt64Attribute GeneratorInt64Attribute
-	}
+	var b bytes.Buffer
 
-	a := attribute{
-		Name:                    name.ToString(),
-		Default:                 int64Default(g.Default),
-		GeneratorInt64Attribute: g,
-	}
+	b.WriteString(fmt.Sprintf("%q: schema.Int64Attribute{\n", name))
+	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.ComputedOptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.DefaultInt64.Schema())
+	b.WriteString("},")
 
-	switch {
-	case g.CustomType != nil:
-		a.CustomType = g.CustomType.Type
-	case g.AssociatedExternalType != nil:
-		a.CustomType = fmt.Sprintf("%sType{}", name.ToPascalCase())
-	}
-
-	t, err := template.New("int64_attribute").Parse(int64AttributeTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	if _, err = addAttributeTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, a)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorInt64Attribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {

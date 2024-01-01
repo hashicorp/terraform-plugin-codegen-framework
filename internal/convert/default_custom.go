@@ -25,7 +25,7 @@ func (d DefaultCustom) Equal(other DefaultCustom) bool {
 
 func (d DefaultCustom) Schema() []byte {
 	if d.custom != nil && d.custom.SchemaDefinition != "" {
-		return []byte(fmt.Sprintf("Default: %s,", d.custom.SchemaDefinition))
+		return []byte(fmt.Sprintf("Default: %s,\n", d.custom.SchemaDefinition))
 	}
 
 	return nil

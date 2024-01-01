@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -33,9 +33,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed",
 			},
 			expected: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -43,10 +43,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: "computed_optional",
 			},
 			expected: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Computed: true,
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
+				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -54,9 +53,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: "optional",
 			},
 			expected: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -64,9 +63,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: "required",
 			},
 			expected: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
+				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -80,7 +79,6 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{},
 				CustomType: &specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -88,6 +86,15 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				}, nil, "name"),
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, nil),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, nil),
 			},
 		},
 		"deprecation_message": {
@@ -95,9 +102,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					DeprecationMessage: "deprecation message",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -105,10 +112,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description:         convert.NewDescription(pointer("description")),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -116,9 +122,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Sensitive: true,
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:           convert.NewSensitive(pointer(true)),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -137,6 +143,8 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorFloat64Attribute{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, nil),
 				Validators: specschema.Float64Validators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -149,6 +157,16 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 		"plan-modifiers": {
@@ -167,6 +185,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorFloat64Attribute{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers: specschema.Float64PlanModifiers{
 					{
 						Custom: &specschema.CustomPlanModifier{
@@ -179,6 +198,17 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 						},
 					},
 				},
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../my_planmodifier",
+							},
+						},
+						SchemaDefinition: "my_planmodifier.Modify()",
+					},
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"default": {
@@ -196,6 +226,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorFloat64Attribute{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Default: &specschema.Float64Default{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
@@ -207,6 +238,18 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 					},
 					Static: pointer(1.234),
 				},
+				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
+					Custom: &specschema.CustomDefault{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../my_default",
+							},
+						},
+						SchemaDefinition: "my_default.Default()",
+					},
+					Static: pointer(1.234),
+				}),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -217,7 +260,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorFloat64Attribute(testCase.input)
+			got, err := NewGeneratorFloat64Attribute("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -240,91 +283,83 @@ func TestGeneratorFloat64Attribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
+					},
+					nil,
+					"float64_attribute",
+				),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"associated-external-type": {
 			input: GeneratorFloat64Attribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.Float64Attribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtFloat64",
 					},
-				},
+					"float64_attribute",
+				),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 CustomType: Float64AttributeType{},
 },`,
 		},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorFloat64Attribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.Float64Attribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtFloat64",
+					},
+					"float64_attribute",
+				),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"required": {
 			input: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Required: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 Required: true,
 },`,
 		},
 
 		"optional": {
 			input: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Optional: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 Optional: true,
 },`,
 		},
 
 		"computed": {
 			input: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Computed: true,
-				},
+				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 Computed: true,
 },`,
 		},
 
 		"sensitive": {
 			input: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Sensitive: true,
-				},
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 Sensitive: true,
 },`,
 		},
@@ -332,12 +367,9 @@ Sensitive: true,
 		// TODO: Do we need separate description and markdown description?
 		"description": {
 			input: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					Description: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 Description: "description",
 MarkdownDescription: "description",
 },`,
@@ -345,33 +377,25 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorFloat64Attribute{
-				Float64Attribute: schema.Float64Attribute{
-					DeprecationMessage: "deprecated",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 DeprecationMessage: "deprecated",
 },`,
 		},
 
 		"validators": {
 			input: GeneratorFloat64Attribute{
-				Validators: specschema.Float64Validators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, []*specschema.CustomValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_validator.Validate()",
-						},
+						SchemaDefinition: "my_validator.Validate()",
 					},
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_other_validator.Validate()",
-						},
+						SchemaDefinition: "my_other_validator.Validate()",
 					},
-				},
+				}),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 Validators: []validator.Float64{
 my_validator.Validate(),
 my_other_validator.Validate(),
@@ -381,21 +405,16 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorFloat64Attribute{
-				PlanModifiers: specschema.Float64PlanModifiers{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, []*specschema.CustomPlanModifier{
 					{
-						Custom: &specschema.CustomPlanModifier{
-							SchemaDefinition: "my_plan_modifier.Modify()",
-						},
+						SchemaDefinition: "my_plan_modifier.Modify()",
 					},
 					{
-						Custom: &specschema.CustomPlanModifier{
-							SchemaDefinition: "my_other_plan_modifier.Modify()",
-						},
+						SchemaDefinition: "my_other_plan_modifier.Modify()",
 					},
-				},
+				}),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 PlanModifiers: []planmodifier.Float64{
 my_plan_modifier.Modify(),
 my_other_plan_modifier.Modify(),
@@ -405,26 +424,24 @@ my_other_plan_modifier.Modify(),
 
 		"default-static": {
 			input: GeneratorFloat64Attribute{
-				Default: &specschema.Float64Default{
+				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Static: pointer(1.234),
-				},
+				}),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 Default: float64default.StaticFloat64(1.234),
 },`,
 		},
 
 		"default-custom": {
 			input: GeneratorFloat64Attribute{
-				Default: &specschema.Float64Default{
+				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Custom: &specschema.CustomDefault{
 						SchemaDefinition: "my_float64_default.Default()",
 					},
-				},
+				}),
 			},
-			expected: `
-"float64_attribute": schema.Float64Attribute{
+			expected: `"float64_attribute": schema.Float64Attribute{
 Default: my_float64_default.Default(),
 },`,
 		},

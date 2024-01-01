@@ -11,7 +11,11 @@ import (
 )
 
 const (
-	PlanModifierTypeBool PlanModifierType = "Bool"
+	PlanModifierTypeBool    PlanModifierType = "Bool"
+	PlanModifierTypeFloat64 PlanModifierType = "Float64"
+	PlanModifierTypeInt64   PlanModifierType = "Int64"
+	PlanModifierTypeNumber  PlanModifierType = "Number"
+	PlanModifierTypeString  PlanModifierType = "String"
 )
 
 type PlanModifierType string
