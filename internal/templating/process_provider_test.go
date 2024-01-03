@@ -44,7 +44,7 @@ func TestProcessProviderTemplates(t *testing.T) {
 
 			templator := templating.NewTemplator(testCase.templateDir)
 
-			got, err := templator.ProcessProvider(testCase.providerTemplateData)
+			got, err := templator.ProcessProvider(testCase.providerTemplateData, map[string]templating.ResourceTemplateData{}, map[string]templating.DataSourceTemplateData{})
 			if err != nil {
 				t.Fatalf("unexpected err: %s", err)
 			}

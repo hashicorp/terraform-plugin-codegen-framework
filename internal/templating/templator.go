@@ -43,12 +43,14 @@ type ProviderTemplateData struct {
 	Package         string
 	SchemaFunc      string
 	SchemaModelType string
+	Resources       []ResourceTemplateData
+	DataSources     []DataSourceTemplateData
 }
 
 type Templator interface {
-	ProcessResources(templateData map[string]ResourceTemplateData) (map[string][]byte, error)
-	ProcessDataSources(templateData map[string]DataSourceTemplateData) (map[string][]byte, error)
-	ProcessProvider(templateData map[string]ProviderTemplateData) (map[string][]byte, error)
+	ProcessResources(map[string]ResourceTemplateData) (map[string][]byte, error)
+	ProcessDataSources(map[string]DataSourceTemplateData) (map[string][]byte, error)
+	ProcessProvider(map[string]ProviderTemplateData, map[string]ResourceTemplateData, map[string]DataSourceTemplateData) (map[string][]byte, error)
 }
 
 func NewTemplator(templateDir fs.FS) Templator {

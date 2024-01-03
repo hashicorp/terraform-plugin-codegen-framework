@@ -1,0 +1,39 @@
+{{ define "_builtin/provider_scaffold" -}}
+var _ provider.Provider = (*{{.CamelName}}Provider)(nil)
+
+func New{{.PascalName}}Provider() func() provider.Provider {
+	return func() provider.Provider {
+		return &{{.CamelName}}Provider{}
+	}
+}
+
+type {{.CamelName}}Provider struct{}
+
+func (p *{{.CamelName}}Provider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "{{.SnakeName}}"
+}
+
+func (p *{{.CamelName}}Provider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+	resp.Schema = {{.Package}}.{{.SchemaFunc}}(ctx)
+}
+
+func (p *{{.CamelName}}Provider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+
+}
+
+func (p *{{.CamelName}}Provider) DataSources(ctx context.Context) []func() datasource.DataSource {
+	return []func() datasource.DataSource{
+		{{- range .DataSources}}
+		New{{.PascalName}}DataSource,
+		{{- end}}
+	}
+}
+
+func (p *{{.CamelName}}Provider) Resources(ctx context.Context) []func() resource.Resource {
+	return []func() resource.Resource{
+		{{- range .Resources}}
+		New{{.PascalName}}Resource,
+		{{- end}}
+	}
+}
+{{- end}}

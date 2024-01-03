@@ -2,27 +2,27 @@
 var _ datasource.DataSource = (*{{.CamelName}}DataSource)(nil)
 
 func New{{.PascalName}}DataSource() datasource.DataSource {
-    return &{{.CamelName}}DataSource{}
+	return &{{.CamelName}}DataSource{}
 }
 
 type {{.CamelName}}DataSource struct{}
 
-func (r *{{.CamelName}}DataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-    resp.TypeName = req.ProviderTypeName + "_{{.SnakeName}}"
+func (d *{{.CamelName}}DataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_{{.SnakeName}}"
 }
 
-func (r *{{.CamelName}}DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-    resp.Schema = {{.Package}}.{{.SchemaFunc}}(ctx)
+func (d *{{.CamelName}}DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	resp.Schema = {{.Package}}.{{.SchemaFunc}}(ctx)
 }
 
-func (r *{{.CamelName}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-    var data {{.Package}}.{{.SchemaModelType}}
+func (d *{{.CamelName}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data {{.Package}}.{{.SchemaModelType}}
 
-    resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-    if resp.Diagnostics.HasError() {
-        return
-    }
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-    resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 {{- end}}

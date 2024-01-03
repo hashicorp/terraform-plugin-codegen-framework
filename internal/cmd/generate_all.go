@@ -151,7 +151,7 @@ func (cmd *GenerateAllCommand) runInternal(ctx context.Context, logger *slog.Log
 			return fmt.Errorf("error processing data source templates: %w", err)
 		}
 
-		pOutput, err := templator.ProcessProvider(pTemplateData)
+		pOutput, err := templator.ProcessProvider(pTemplateData, rTemplateData, dTemplateData)
 		if err != nil {
 			return fmt.Errorf("error processing provider templates: %w", err)
 		}
