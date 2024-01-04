@@ -186,12 +186,18 @@ func Test_NewSchemas(t *testing.T) {
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 							CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
 							Sensitive:                convert.NewSensitive(pointer(true)),
+							PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, specschema.CustomPlanModifiers{}),
 							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 						},
 						"list_attribute": GeneratorListAttribute{
-							ListAttribute: schema.ListAttribute{
-								Computed: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								nil,
+								nil,
+								convert.CustomCollectionTypeList,
+								"types.ListType{\nElemType: types.StringType,\n}",
+								"list_attribute",
+							),
 							ElementType: specschema.ElementType{
 								List: &specschema.ListType{
 									ElementType: specschema.ElementType{
@@ -199,6 +205,15 @@ func Test_NewSchemas(t *testing.T) {
 									},
 								},
 							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								List: &specschema.ListType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
+								},
+							}),
+							PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{}),
+							ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 						"map_attribute": GeneratorMapAttribute{
 							MapAttribute: schema.MapAttribute{
@@ -230,15 +245,26 @@ func Test_NewSchemas(t *testing.T) {
 									"nested_bool_attribute": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool_attribute"),
+										PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, specschema.CustomPlanModifiers{}),
 										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 									"nested_list_attribute": GeneratorListAttribute{
-										ListAttribute: schema.ListAttribute{
-											Computed: true,
-										},
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										CustomTypeCollection: convert.NewCustomTypeCollection(
+											nil,
+											nil,
+											convert.CustomCollectionTypeList,
+											"types.StringType",
+											"nested_list_attribute",
+										),
 										ElementType: specschema.ElementType{
 											String: &specschema.StringType{},
 										},
+										ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+											String: &specschema.StringType{},
+										}),
+										PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{}),
+										ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 									},
 								},
 							},
@@ -270,15 +296,26 @@ func Test_NewSchemas(t *testing.T) {
 								"nested_bool_attribute": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool_attribute"),
+									PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, specschema.CustomPlanModifiers{}),
 									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 								"nested_list_attribute": GeneratorListAttribute{
-									ListAttribute: schema.ListAttribute{
-										Computed: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									CustomTypeCollection: convert.NewCustomTypeCollection(
+										nil,
+										nil,
+										convert.CustomCollectionTypeList,
+										"types.StringType",
+										"nested_list_attribute",
+									),
 									ElementType: specschema.ElementType{
 										String: &specschema.StringType{},
 									},
+									ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+										String: &specschema.StringType{},
+									}),
+									PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{}),
+									ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 								},
 							},
 							SingleNestedAttribute: schema.SingleNestedAttribute{
@@ -293,6 +330,7 @@ func Test_NewSchemas(t *testing.T) {
 									"nested_bool_attribute": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool_attribute"),
+										PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, specschema.CustomPlanModifiers{}),
 										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
@@ -303,6 +341,7 @@ func Test_NewSchemas(t *testing.T) {
 								"nested_bool_attribute": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool_attribute"),
+									PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, specschema.CustomPlanModifiers{}),
 									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},

@@ -14,7 +14,10 @@ const (
 	PlanModifierTypeBool    PlanModifierType = "Bool"
 	PlanModifierTypeFloat64 PlanModifierType = "Float64"
 	PlanModifierTypeInt64   PlanModifierType = "Int64"
+	PlanModifierTypeList    PlanModifierType = "List"
+	PlanModifierTypeMap     PlanModifierType = "Map"
 	PlanModifierTypeNumber  PlanModifierType = "Number"
+	PlanModifierTypeSet     PlanModifierType = "Set"
 	PlanModifierTypeString  PlanModifierType = "String"
 )
 
@@ -33,6 +36,10 @@ func NewPlanModifiersCustom(t PlanModifierType, c specschema.CustomPlanModifiers
 }
 
 func (v PlanModifiersCustom) Equal(other PlanModifiersCustom) bool {
+	if v.planModifierType != other.planModifierType {
+		return false
+	}
+
 	if len(v.custom) == 0 && len(other.custom) == 0 {
 		return true
 	}

@@ -9,15 +9,6 @@ import (
 	"text/template"
 )
 
-//go:embed templates/float64_attribute.gotmpl
-var float64AttributeTemplate string
-
-//go:embed templates/int64_attribute.gotmpl
-var int64AttributeTemplate string
-
-//go:embed templates/list_attribute.gotmpl
-var listAttributeTemplate string
-
 //go:embed templates/list_nested_attribute.gotmpl
 var listNestedAttributeGoTemplate string
 
@@ -26,9 +17,6 @@ var mapAttributeTemplate string
 
 //go:embed templates/map_nested_attribute.gotmpl
 var mapNestedAttributeGoTemplate string
-
-//go:embed templates/number_attribute.gotmpl
-var numberAttributeTemplate string
 
 //go:embed templates/object_attribute.gotmpl
 var objectAttributeTemplate string
@@ -41,9 +29,6 @@ var setNestedAttributeGoTemplate string
 
 //go:embed templates/single_nested_attribute.gotmpl
 var singleNestedAttributeGoTemplate string
-
-//go:embed templates/string_attribute.gotmpl
-var stringAttributeTemplate string
 
 //go:embed templates/list_nested_block.gotmpl
 var listNestedBlockGoTemplate string
