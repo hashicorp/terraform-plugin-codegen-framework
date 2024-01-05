@@ -216,9 +216,14 @@ func Test_NewSchemas(t *testing.T) {
 							ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 						"map_attribute": GeneratorMapAttribute{
-							MapAttribute: schema.MapAttribute{
-								Computed: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								nil,
+								nil,
+								convert.CustomCollectionTypeMap,
+								"types.MapType{\nElemType: types.StringType,\n}",
+								"map_attribute",
+							),
 							ElementType: specschema.ElementType{
 								Map: &specschema.MapType{
 									ElementType: specschema.ElementType{
@@ -226,11 +231,25 @@ func Test_NewSchemas(t *testing.T) {
 									},
 								},
 							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Map: &specschema.MapType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
+								},
+							}),
+							PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+							ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 						},
 						"set_attribute": GeneratorSetAttribute{
-							SetAttribute: schema.SetAttribute{
-								Computed: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								nil,
+								nil,
+								convert.CustomCollectionTypeSet,
+								"types.SetType{\nElemType: types.StringType,\n}",
+								"set_attribute",
+							),
 							ElementType: specschema.ElementType{
 								Set: &specschema.SetType{
 									ElementType: specschema.ElementType{
@@ -238,6 +257,15 @@ func Test_NewSchemas(t *testing.T) {
 									},
 								},
 							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Set: &specschema.SetType{
+									ElementType: specschema.ElementType{
+										String: &specschema.StringType{},
+									},
+								},
+							}),
+							PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, specschema.CustomPlanModifiers{}),
+							ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 						},
 						"list_nested_attribute": GeneratorListNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{

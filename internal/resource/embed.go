@@ -12,17 +12,11 @@ import (
 //go:embed templates/list_nested_attribute.gotmpl
 var listNestedAttributeGoTemplate string
 
-//go:embed templates/map_attribute.gotmpl
-var mapAttributeTemplate string
-
 //go:embed templates/map_nested_attribute.gotmpl
 var mapNestedAttributeGoTemplate string
 
 //go:embed templates/object_attribute.gotmpl
 var objectAttributeTemplate string
-
-//go:embed templates/set_attribute.gotmpl
-var setAttributeTemplate string
 
 //go:embed templates/set_nested_attribute.gotmpl
 var setNestedAttributeGoTemplate string
