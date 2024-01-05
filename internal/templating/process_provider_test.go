@@ -37,6 +37,30 @@ func TestProcessProviderTemplates(t *testing.T) {
 				"provider_gen.go": []byte(`SimplePetProviderSchema`),
 			},
 		},
+		"simple_with_test": {
+			providerTemplateData: map[string]templating.ProviderTemplateData{
+				"petstore": {
+					SnakeName:       "simple_pet",
+					PascalName:      "SimplePet",
+					CamelName:       "simplePet",
+					Package:         "provider",
+					SchemaFunc:      "SimplePetProviderSchema",
+					SchemaModelType: "SimplePetModel",
+				},
+			},
+			templateDir: fstest.MapFS{
+				"provider.gotmpl": &fstest.MapFile{
+					Data: []byte(`{{.SchemaFunc}}`),
+				},
+				"provider_test.gotmpl": &fstest.MapFile{
+					Data: []byte(`Test{{.SchemaFunc}}`),
+				},
+			},
+			want: map[string][]byte{
+				"provider_gen.go":      []byte(`SimplePetProviderSchema`),
+				"provider_gen_test.go": []byte(`TestSimplePetProviderSchema`),
+			},
+		},
 	}
 	for name, testCase := range testCases {
 		name, testCase := name, testCase

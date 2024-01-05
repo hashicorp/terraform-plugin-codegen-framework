@@ -17,7 +17,7 @@ func TestProcessResourceTemplates(t *testing.T) {
 		templateDir          fstest.MapFS
 		want                 map[string][]byte
 	}{
-		"simple": {
+		"simple_no_test": {
 			resourceTemplateData: map[string]templating.ResourceTemplateData{
 				"simple_pet": {
 					SnakeName:       "simple_pet",
@@ -37,7 +37,31 @@ func TestProcessResourceTemplates(t *testing.T) {
 				"simple_pet_resource_gen.go": []byte(`SimplePetResourceSchema`),
 			},
 		},
-		"defaults": {
+		"simple_with_test": {
+			resourceTemplateData: map[string]templating.ResourceTemplateData{
+				"simple_pet": {
+					SnakeName:       "simple_pet",
+					PascalName:      "SimplePet",
+					CamelName:       "simplePet",
+					Package:         "provider",
+					SchemaFunc:      "SimplePetResourceSchema",
+					SchemaModelType: "SimplePetModel",
+				},
+			},
+			templateDir: fstest.MapFS{
+				"simple_pet_resource.gotmpl": &fstest.MapFile{
+					Data: []byte(`{{.SchemaFunc}}`),
+				},
+				"simple_pet_resource_test.gotmpl": &fstest.MapFile{
+					Data: []byte(`Test{{.SchemaFunc}}`),
+				},
+			},
+			want: map[string][]byte{
+				"simple_pet_resource_gen.go":      []byte(`SimplePetResourceSchema`),
+				"simple_pet_resource_gen_test.go": []byte(`TestSimplePetResourceSchema`),
+			},
+		},
+		"defaults_no_test": {
 			resourceTemplateData: map[string]templating.ResourceTemplateData{
 				"simple_pet": {
 					SnakeName:       "simple_pet",
@@ -64,6 +88,40 @@ func TestProcessResourceTemplates(t *testing.T) {
 			want: map[string][]byte{
 				"simple_pet_resource_gen.go":   []byte(`SimplePetResourceSchema`),
 				"simple_order_resource_gen.go": []byte(`SimpleOrderResourceSchema`),
+			},
+		},
+		"defaults_with_test": {
+			resourceTemplateData: map[string]templating.ResourceTemplateData{
+				"simple_pet": {
+					SnakeName:       "simple_pet",
+					PascalName:      "SimplePet",
+					CamelName:       "simplePet",
+					Package:         "provider",
+					SchemaFunc:      "SimplePetResourceSchema",
+					SchemaModelType: "SimplePetModel",
+				},
+				"simple_order": {
+					SnakeName:       "simple_order",
+					PascalName:      "SimpleOrder",
+					CamelName:       "simpleOrder",
+					Package:         "provider",
+					SchemaFunc:      "SimpleOrderResourceSchema",
+					SchemaModelType: "SimpleOrderModel",
+				},
+			},
+			templateDir: fstest.MapFS{
+				"resource_default.gotmpl": &fstest.MapFile{
+					Data: []byte(`{{.SchemaFunc}}`),
+				},
+				"resource_default_test.gotmpl": &fstest.MapFile{
+					Data: []byte(`Test{{.SchemaFunc}}`),
+				},
+			},
+			want: map[string][]byte{
+				"simple_pet_resource_gen.go":        []byte(`SimplePetResourceSchema`),
+				"simple_pet_resource_gen_test.go":   []byte(`TestSimplePetResourceSchema`),
+				"simple_order_resource_gen.go":      []byte(`SimpleOrderResourceSchema`),
+				"simple_order_resource_gen_test.go": []byte(`TestSimpleOrderResourceSchema`),
 			},
 		},
 	}

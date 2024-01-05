@@ -1,7 +1,6 @@
 package templating
 
 import (
-	"bytes"
 	"fmt"
 	"io/fs"
 	"sort"
@@ -13,37 +12,38 @@ func (t *templator) ProcessProvider(providerTemplateData map[string]ProviderTemp
 	sortedResources := mapToSortedSlice(resourceTemplateData)
 	sortedDataSources := mapToSortedSlice(dataSourceTemplateData)
 
-	// TODO: swap to single provider processing (everywhere else is a map currently)
+	// TODO: swap to single provider processing? (everywhere else is a map currently)
 	for name, providerData := range providerTemplateData {
 		providerData.Resources = sortedResources
 		providerData.DataSources = sortedDataSources
 
+		// Process provider template
 		templateBytes, err := fs.ReadFile(t.templateDir, "provider.gotmpl")
 		if err != nil {
 			t.logger.Debug(fmt.Sprintf("no provider template found for %q, skipping", name))
 			continue
 		}
 
-		tmpl, err := t.baseTemplate.Clone()
+		providerBytes, err := t.processTemplate(templateBytes, providerData)
 		if err != nil {
-			t.logger.Warn(fmt.Sprintf("error cloning base template with built-ins: %s, skipping", err))
+			t.logger.Warn(fmt.Sprintf("error processing %q provider template: %s, skipping", name, err))
+			continue
+		}
+		outputData["provider_gen.go"] = providerBytes
+
+		// Process provider test template
+		testTemplateBytes, err := fs.ReadFile(t.templateDir, "provider_test.gotmpl")
+		if err != nil {
+			t.logger.Debug(fmt.Sprintf("no provider test template found for %q, skipping", name))
 			continue
 		}
 
-		providerTemplate, err := tmpl.Parse(string(templateBytes))
+		testBytes, err := t.processTemplate(testTemplateBytes, providerData)
 		if err != nil {
-			t.logger.Warn(fmt.Sprintf("error parsing  %q provider template: %s, skipping", name, err))
+			t.logger.Warn(fmt.Sprintf("error processing %q provider test template: %s, skipping", name, err))
 			continue
 		}
-
-		var buf bytes.Buffer
-		err = providerTemplate.Execute(&buf, providerData)
-		if err != nil {
-			t.logger.Warn(fmt.Sprintf("error executing %q provider template: %s, skipping", name, err))
-			continue
-		}
-
-		outputData["provider_gen.go"] = buf.Bytes()
+		outputData["provider_gen_test.go"] = testBytes
 	}
 
 	return outputData, nil

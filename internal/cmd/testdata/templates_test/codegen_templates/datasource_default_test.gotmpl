@@ -1,0 +1,18 @@
+package provider_test
+
+import (
+	"context"
+	"testing"
+
+	"terraform-provider-petstore/internal/provider/{{.Package}}"
+)
+
+// Just a simple test for ensuring the {{.SnakeName}} data source template data is passed here
+func Test{{.SchemaFunc}}(t *testing.T) {
+	t.Parallel()
+
+	schema := {{.Package}}.{{.SchemaFunc}}(context.Background())
+	if schema == nil {
+		t.Fatal("no schema generated!")
+	}
+}

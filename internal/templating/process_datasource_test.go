@@ -17,7 +17,7 @@ func TestProcessDataSourceTemplates(t *testing.T) {
 		templateDir            fstest.MapFS
 		want                   map[string][]byte
 	}{
-		"simple": {
+		"simple_no_test": {
 			datasourceTemplateData: map[string]templating.DataSourceTemplateData{
 				"simple_pet": {
 					SnakeName:       "simple_pet",
@@ -37,7 +37,31 @@ func TestProcessDataSourceTemplates(t *testing.T) {
 				"simple_pet_datasource_gen.go": []byte(`SimplePetDataSourceSchema`),
 			},
 		},
-		"defaults": {
+		"simple_with_test": {
+			datasourceTemplateData: map[string]templating.DataSourceTemplateData{
+				"simple_pet": {
+					SnakeName:       "simple_pet",
+					PascalName:      "SimplePet",
+					CamelName:       "simplePet",
+					Package:         "provider",
+					SchemaFunc:      "SimplePetDataSourceSchema",
+					SchemaModelType: "SimplePetModel",
+				},
+			},
+			templateDir: fstest.MapFS{
+				"simple_pet_datasource.gotmpl": &fstest.MapFile{
+					Data: []byte(`{{.SchemaFunc}}`),
+				},
+				"simple_pet_datasource_test.gotmpl": &fstest.MapFile{
+					Data: []byte(`Test{{.SchemaFunc}}`),
+				},
+			},
+			want: map[string][]byte{
+				"simple_pet_datasource_gen.go":      []byte(`SimplePetDataSourceSchema`),
+				"simple_pet_datasource_gen_test.go": []byte(`TestSimplePetDataSourceSchema`),
+			},
+		},
+		"defaults_no_test": {
 			datasourceTemplateData: map[string]templating.DataSourceTemplateData{
 				"simple_pet": {
 					SnakeName:       "simple_pet",
@@ -64,6 +88,40 @@ func TestProcessDataSourceTemplates(t *testing.T) {
 			want: map[string][]byte{
 				"simple_pet_datasource_gen.go":   []byte(`SimplePetDataSourceSchema`),
 				"simple_order_datasource_gen.go": []byte(`SimpleOrderDataSourceSchema`),
+			},
+		},
+		"defaults_with_test": {
+			datasourceTemplateData: map[string]templating.DataSourceTemplateData{
+				"simple_pet": {
+					SnakeName:       "simple_pet",
+					PascalName:      "SimplePet",
+					CamelName:       "simplePet",
+					Package:         "provider",
+					SchemaFunc:      "SimplePetDataSourceSchema",
+					SchemaModelType: "SimplePetModel",
+				},
+				"simple_order": {
+					SnakeName:       "simple_order",
+					PascalName:      "SimpleOrder",
+					CamelName:       "simpleOrder",
+					Package:         "provider",
+					SchemaFunc:      "SimpleOrderDataSourceSchema",
+					SchemaModelType: "SimpleOrderModel",
+				},
+			},
+			templateDir: fstest.MapFS{
+				"datasource_default.gotmpl": &fstest.MapFile{
+					Data: []byte(`{{.SchemaFunc}}`),
+				},
+				"datasource_default_test.gotmpl": &fstest.MapFile{
+					Data: []byte(`Test{{.SchemaFunc}}`),
+				},
+			},
+			want: map[string][]byte{
+				"simple_pet_datasource_gen.go":        []byte(`SimplePetDataSourceSchema`),
+				"simple_pet_datasource_gen_test.go":   []byte(`TestSimplePetDataSourceSchema`),
+				"simple_order_datasource_gen.go":      []byte(`SimpleOrderDataSourceSchema`),
+				"simple_order_datasource_gen_test.go": []byte(`TestSimpleOrderDataSourceSchema`),
 			},
 		},
 	}
