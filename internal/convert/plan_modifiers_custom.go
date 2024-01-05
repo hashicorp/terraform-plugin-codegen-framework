@@ -17,6 +17,7 @@ const (
 	PlanModifierTypeList    PlanModifierType = "List"
 	PlanModifierTypeMap     PlanModifierType = "Map"
 	PlanModifierTypeNumber  PlanModifierType = "Number"
+	PlanModifierTypeObject  PlanModifierType = "Object"
 	PlanModifierTypeSet     PlanModifierType = "Set"
 	PlanModifierTypeString  PlanModifierType = "String"
 )

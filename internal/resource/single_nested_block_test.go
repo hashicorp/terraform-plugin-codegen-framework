@@ -161,15 +161,22 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 			expected: GeneratorSingleNestedBlock{
 				Attributes: generatorschema.GeneratorAttributes{
 					"object_attribute": GeneratorObjectAttribute{
-						ObjectAttribute: schema.ObjectAttribute{
-							Optional: true,
-						},
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
 								Name: "obj_bool",
 								Bool: &specschema.BoolType{},
 							},
 						},
+						AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
+							{
+								Name: "obj_bool",
+								Bool: &specschema.BoolType{},
+							},
+						}),
+						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+						CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "object_attribute"),
+						PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+						ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 					},
 				},
 			},
@@ -874,15 +881,13 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 			input: GeneratorSingleNestedBlock{
 				Attributes: generatorschema.GeneratorAttributes{
 					"object": GeneratorObjectAttribute{
-						ObjectAttribute: schema.ObjectAttribute{
-							Optional: true,
-						},
-						AttributeTypes: specschema.ObjectAttributeTypes{
+						AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 							{
 								Name:   "str",
 								String: &specschema.StringType{},
 							},
-						},
+						}),
+						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 					},
 				},
 			},

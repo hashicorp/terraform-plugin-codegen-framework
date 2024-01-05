@@ -301,9 +301,6 @@ func Test_NewSchemas(t *testing.T) {
 							},
 						},
 						"object_attribute": GeneratorObjectAttribute{
-							ObjectAttribute: schema.ObjectAttribute{
-								Optional: true,
-							},
 							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "obj_bool",
@@ -318,6 +315,24 @@ func Test_NewSchemas(t *testing.T) {
 									},
 								},
 							},
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+								{
+									Name: "obj_list",
+									List: &specschema.ListType{
+										ElementType: specschema.ElementType{
+											String: &specschema.StringType{},
+										},
+									},
+								},
+							}),
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "object_attribute"),
+							PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 						"single_nested_attribute": GeneratorSingleNestedAttribute{
 							Attributes: generatorschema.GeneratorAttributes{
