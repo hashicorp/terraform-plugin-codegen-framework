@@ -3,6 +3,7 @@ package templating
 import (
 	"fmt"
 	"io/fs"
+	"log/slog"
 	"text/template"
 )
 
@@ -13,6 +14,7 @@ const (
 
 type templator struct {
 	baseTemplate           *template.Template
+	logger                 *slog.Logger
 	templateDir            fs.FS
 	defaultResourceBytes   []byte
 	defaultDataSourceBytes []byte
@@ -53,32 +55,29 @@ type Templator interface {
 	ProcessProvider(map[string]ProviderTemplateData, map[string]ResourceTemplateData, map[string]DataSourceTemplateData) (map[string][]byte, error)
 }
 
-func NewTemplator(templateDir fs.FS) Templator {
+func NewTemplator(logger *slog.Logger, templateDir fs.FS) Templator {
 	templator := &templator{
+		logger:      logger,
 		templateDir: templateDir,
 	}
 
-	// Check for defaults
 	defaultResourceBytes, err := fs.ReadFile(templateDir, default_resource_template)
 	if err != nil {
-		// TODO: log
+		templator.logger.Debug("no default resource template found")
 	} else {
 		templator.defaultResourceBytes = defaultResourceBytes
 	}
 
-	// Check for defaults
 	defaultDataSourceBytes, err := fs.ReadFile(templateDir, default_datasource_template)
 	if err != nil {
-		// TODO: log
+		templator.logger.Debug("no default datasource template found")
 	} else {
 		templator.defaultDataSourceBytes = defaultDataSourceBytes
 	}
 
-	// Add built-in templates
 	tmpl, err := addBuiltInTemplates(template.New("base"))
 	if err != nil {
-		// TODO: log
-		fmt.Println(err)
+		templator.logger.Warn(fmt.Sprintf("error loading built-in templates: %s", err))
 	}
 
 	templator.baseTemplate = tmpl

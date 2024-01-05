@@ -139,7 +139,7 @@ func (cmd *GenerateAllCommand) runInternal(ctx context.Context, logger *slog.Log
 	}
 
 	if cmd.flagTemplatesPath != "" {
-		templator := templating.NewTemplator(os.DirFS(cmd.flagTemplatesPath))
+		templator := templating.NewTemplator(logger, os.DirFS(cmd.flagTemplatesPath))
 
 		rOutput, err := templator.ProcessResources(rTemplateData)
 		if err != nil {

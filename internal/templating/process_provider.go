@@ -2,6 +2,7 @@ package templating
 
 import (
 	"bytes"
+	"fmt"
 	"io/fs"
 	"sort"
 )
@@ -13,32 +14,32 @@ func (t *templator) ProcessProvider(providerTemplateData map[string]ProviderTemp
 	sortedDataSources := mapToSortedSlice(dataSourceTemplateData)
 
 	// TODO: swap to single provider processing (everywhere else is a map currently)
-	for _, providerData := range providerTemplateData {
+	for name, providerData := range providerTemplateData {
 		providerData.Resources = sortedResources
 		providerData.DataSources = sortedDataSources
 
 		templateBytes, err := fs.ReadFile(t.templateDir, "provider.gotmpl")
 		if err != nil {
-			// TODO: log
+			t.logger.Debug(fmt.Sprintf("no provider template found for %q, skipping", name))
 			continue
 		}
 
 		tmpl, err := t.baseTemplate.Clone()
 		if err != nil {
-			// TODO: log
+			t.logger.Warn(fmt.Sprintf("error cloning base template with built-ins: %s, skipping", err))
 			continue
 		}
 
 		providerTemplate, err := tmpl.Parse(string(templateBytes))
 		if err != nil {
-			// TODO: log
+			t.logger.Warn(fmt.Sprintf("error parsing  %q provider template: %s, skipping", name, err))
 			continue
 		}
 
 		var buf bytes.Buffer
 		err = providerTemplate.Execute(&buf, providerData)
 		if err != nil {
-			// TODO: log
+			t.logger.Warn(fmt.Sprintf("error executing %q provider template: %s, skipping", name, err))
 			continue
 		}
 

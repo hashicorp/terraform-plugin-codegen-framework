@@ -1,6 +1,7 @@
 package templating_test
 
 import (
+	"log/slog"
 	"testing"
 	"testing/fstest"
 
@@ -71,7 +72,7 @@ func TestProcessDataSourceTemplates(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			templator := templating.NewTemplator(testCase.templateDir)
+			templator := templating.NewTemplator(slog.Default(), testCase.templateDir)
 
 			got, err := templator.ProcessDataSources(testCase.datasourceTemplateData)
 			if err != nil {

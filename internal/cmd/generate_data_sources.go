@@ -132,7 +132,7 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *
 	}
 
 	if cmd.flagTemplatesPath != "" {
-		templator := templating.NewTemplator(os.DirFS(cmd.flagTemplatesPath))
+		templator := templating.NewTemplator(logger, os.DirFS(cmd.flagTemplatesPath))
 
 		dOutput, err := templator.ProcessDataSources(templateData)
 		if err != nil {

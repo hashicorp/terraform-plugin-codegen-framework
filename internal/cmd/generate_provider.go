@@ -132,7 +132,7 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context, logger *slo
 	}
 
 	if cmd.flagTemplatesPath != "" {
-		templator := templating.NewTemplator(os.DirFS(cmd.flagTemplatesPath))
+		templator := templating.NewTemplator(logger, os.DirFS(cmd.flagTemplatesPath))
 
 		pOutput, err := templator.ProcessProvider(templateData, map[string]templating.ResourceTemplateData{}, map[string]templating.DataSourceTemplateData{})
 		if err != nil {
