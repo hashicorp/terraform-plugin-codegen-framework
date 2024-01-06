@@ -9,9 +9,6 @@ import (
 	"text/template"
 )
 
-//go:embed templates/list_nested_block.gotmpl
-var listNestedBlockGoTemplate string
-
 //go:embed templates/set_nested_block.gotmpl
 var setNestedBlockGoTemplate string
 

@@ -278,6 +278,23 @@ func TestGeneratorSingleNestedBlock_New(t *testing.T) {
 								},
 							},
 						},
+						NestedBlockObject: NewNestedBlockObject(
+							generatorschema.GeneratorAttributes{
+								"bool_attribute": GeneratorBoolAttribute{
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+									PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, specschema.CustomPlanModifiers{}),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+								},
+							},
+							nil,
+							nil,
+							convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+							convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+							"nested_block",
+						),
+						PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{}),
+						ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 					},
 				},
 			},
@@ -968,13 +985,20 @@ AttrTypes: SingleNestedBlockValue{}.AttributeTypes(ctx),
 			input: GeneratorSingleNestedBlock{
 				Blocks: generatorschema.GeneratorBlocks{
 					"nested_list_nested": GeneratorListNestedBlock{
-						NestedObject: GeneratorNestedBlockObject{
-							Attributes: generatorschema.GeneratorAttributes{
+						NestedBlockObject: NewNestedBlockObject(
+							generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
-						},
+							generatorschema.GeneratorBlocks{},
+							nil,
+							convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+							convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+							"nested_list_nested",
+						),
+						PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{}),
+						ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 					},
 				},
 			},
