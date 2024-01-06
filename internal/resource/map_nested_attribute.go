@@ -17,7 +17,6 @@ import (
 )
 
 type GeneratorMapNestedAttribute struct {
-	AssociatedExternalType     *generatorschema.AssocExtType
 	ComputedOptionalRequired   convert.ComputedOptionalRequired
 	CustomType                 *specschema.CustomType
 	CustomTypeNestedCollection convert.CustomTypeNestedCollection
@@ -144,10 +143,6 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 	h, ok := ga.(GeneratorMapNestedAttribute)
 
 	if !ok {
-		return false
-	}
-
-	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
 		return false
 	}
 

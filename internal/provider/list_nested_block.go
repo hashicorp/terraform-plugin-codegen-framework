@@ -17,7 +17,6 @@ import (
 )
 
 type GeneratorListNestedBlock struct {
-	AssociatedExternalType     *generatorschema.AssocExtType
 	OptionalRequired           convert.OptionalRequired
 	CustomType                 *specschema.CustomType
 	CustomTypeNestedCollection convert.CustomTypeNestedCollection
@@ -126,10 +125,6 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 	h, ok := ga.(GeneratorListNestedBlock)
 
 	if !ok {
-		return false
-	}
-
-	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
 		return false
 	}
 
