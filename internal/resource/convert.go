@@ -101,7 +101,7 @@ func NewAttribute(a resource.Attribute) (generatorschema.GeneratorAttribute, err
 	case a.SetNested != nil:
 		return NewGeneratorSetNestedAttribute(a.Name, a.SetNested)
 	case a.SingleNested != nil:
-		return NewGeneratorSingleNestedAttribute(a.SingleNested)
+		return NewGeneratorSingleNestedAttribute(a.Name, a.SingleNested)
 	case a.String != nil:
 		return NewGeneratorStringAttribute(a.Name, a.String)
 	}
