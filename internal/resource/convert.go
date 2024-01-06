@@ -91,7 +91,7 @@ func NewAttribute(a resource.Attribute) (generatorschema.GeneratorAttribute, err
 	case a.Map != nil:
 		return NewGeneratorMapAttribute(a.Name, a.Map)
 	case a.MapNested != nil:
-		return NewGeneratorMapNestedAttribute(a.MapNested)
+		return NewGeneratorMapNestedAttribute(a.Name, a.MapNested)
 	case a.Number != nil:
 		return NewGeneratorNumberAttribute(a.Name, a.Number)
 	case a.Object != nil:
@@ -99,7 +99,7 @@ func NewAttribute(a resource.Attribute) (generatorschema.GeneratorAttribute, err
 	case a.Set != nil:
 		return NewGeneratorSetAttribute(a.Name, a.Set)
 	case a.SetNested != nil:
-		return NewGeneratorSetNestedAttribute(a.SetNested)
+		return NewGeneratorSetNestedAttribute(a.Name, a.SetNested)
 	case a.SingleNested != nil:
 		return NewGeneratorSingleNestedAttribute(a.SingleNested)
 	case a.String != nil:
