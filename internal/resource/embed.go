@@ -9,9 +9,6 @@ import (
 	"text/template"
 )
 
-//go:embed templates/list_nested_attribute.gotmpl
-var listNestedAttributeGoTemplate string
-
 //go:embed templates/map_nested_attribute.gotmpl
 var mapNestedAttributeGoTemplate string
 

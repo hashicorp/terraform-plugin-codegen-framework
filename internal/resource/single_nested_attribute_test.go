@@ -124,6 +124,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			expected: GeneratorSingleNestedAttribute{
 				Attributes: generatorschema.GeneratorAttributes{
 					"nested_attribute": GeneratorListNestedAttribute{
+						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 						NestedObject: GeneratorNestedAttributeObject{
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
@@ -134,9 +135,22 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 								},
 							},
 						},
-						ListNestedAttribute: schema.ListNestedAttribute{
-							Optional: true,
-						},
+						NestedAttributeObject: NewNestedAttributeObject(
+							generatorschema.GeneratorAttributes{
+								"nested_bool": GeneratorBoolAttribute{
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+									PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
+								},
+							},
+							nil,
+							convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+							convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+							"nested_attribute",
+						),
+						PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, nil),
+						ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeList, nil),
 					},
 				},
 			},
@@ -812,13 +826,16 @@ AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
 			input: GeneratorSingleNestedAttribute{
 				Attributes: generatorschema.GeneratorAttributes{
 					"nested_list_nested": GeneratorListNestedAttribute{
-						NestedObject: GeneratorNestedAttributeObject{
-							Attributes: generatorschema.GeneratorAttributes{
+						NestedAttributeObject: NewNestedAttributeObject(
+							generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
-						},
+							nil,
+							convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+							convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+							"nested_list_nested"),
 					},
 				},
 			},

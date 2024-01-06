@@ -60,6 +60,22 @@ func NewSchema(d resource.Resource) (generatorschema.GeneratorSchema, error) {
 	return s, nil
 }
 
+func NewAttributes(a resource.Attributes) (generatorschema.GeneratorAttributes, error) {
+	attributes := make(generatorschema.GeneratorAttributes, len(a))
+
+	for _, v := range a {
+		attribute, err := NewAttribute(v)
+
+		if err != nil {
+			return generatorschema.GeneratorAttributes{}, err
+		}
+
+		attributes[v.Name] = attribute
+	}
+
+	return attributes, nil
+}
+
 func NewAttribute(a resource.Attribute) (generatorschema.GeneratorAttribute, error) {
 	switch {
 	case a.Bool != nil:
@@ -71,7 +87,7 @@ func NewAttribute(a resource.Attribute) (generatorschema.GeneratorAttribute, err
 	case a.List != nil:
 		return NewGeneratorListAttribute(a.Name, a.List)
 	case a.ListNested != nil:
-		return NewGeneratorListNestedAttribute(a.ListNested)
+		return NewGeneratorListNestedAttribute(a.Name, a.ListNested)
 	case a.Map != nil:
 		return NewGeneratorMapAttribute(a.Name, a.Map)
 	case a.MapNested != nil:
