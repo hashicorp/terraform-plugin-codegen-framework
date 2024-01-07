@@ -7,12 +7,9 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -20,64 +17,66 @@ import (
 )
 
 type GeneratorSingleNestedBlock struct {
-	schema.SingleNestedBlock
-
-	AssociatedExternalType *generatorschema.AssocExtType
-	Attributes             generatorschema.GeneratorAttributes
-	Blocks                 generatorschema.GeneratorBlocks
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType    *specschema.CustomType
-	PlanModifiers specschema.ObjectPlanModifiers
-	Validators    specschema.ObjectValidators
+	AssociatedExternalType   *generatorschema.AssocExtType
+	Attributes               generatorschema.GeneratorAttributes
+	Blocks                   generatorschema.GeneratorBlocks
+	ComputedOptionalRequired convert.ComputedOptionalRequired
+	CustomType               *specschema.CustomType
+	CustomTypeNestedObject   convert.CustomTypeNestedObject
+	DeprecationMessage       convert.DeprecationMessage
+	Description              convert.Description
+	PlanModifiers            specschema.ObjectPlanModifiers
+	PlanModifiersCustom      convert.PlanModifiersCustom
+	Sensitive                convert.Sensitive
+	Validators               specschema.ObjectValidators
+	ValidatorsCustom         convert.ValidatorsCustom
 }
 
-func NewGeneratorSingleNestedBlock(b *resource.SingleNestedBlock) (GeneratorSingleNestedBlock, error) {
+func NewGeneratorSingleNestedBlock(name string, b *resource.SingleNestedBlock) (GeneratorSingleNestedBlock, error) {
 	if b == nil {
 		return GeneratorSingleNestedBlock{}, fmt.Errorf("*resource.SingleNestedBlock is nil")
 	}
 
-	attributes := make(generatorschema.GeneratorAttributes, len(b.Attributes))
+	attributes, err := NewAttributes(b.Attributes)
 
-	for _, v := range b.Attributes {
-		attribute, err := NewAttribute(v)
-
-		if err != nil {
-			return GeneratorSingleNestedBlock{}, err
-		}
-
-		attributes[v.Name] = attribute
+	if err != nil {
+		return GeneratorSingleNestedBlock{}, err
 	}
 
-	blocks := make(generatorschema.GeneratorBlocks, len(b.Blocks))
+	blocks, err := NewBlocks(b.Blocks)
 
-	for _, v := range b.Blocks {
-		block, err := NewBlock(v)
-
-		if err != nil {
-			return GeneratorSingleNestedBlock{}, err
-		}
-
-		blocks[v.Name] = block
+	if err != nil {
+		return GeneratorSingleNestedBlock{}, err
 	}
+
+	c := convert.NewComputedOptionalRequired(b.ComputedOptionalRequired)
+
+	ct := convert.NewCustomTypeNestedObject(b.CustomType, name)
 
 	d := convert.NewDescription(b.Description)
 
 	dm := convert.NewDeprecationMessage(b.DeprecationMessage)
 
-	return GeneratorSingleNestedBlock{
-		SingleNestedBlock: schema.SingleNestedBlock{
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, b.PlanModifiers.CustomPlanModifiers())
 
-		AssociatedExternalType: generatorschema.NewAssocExtType(b.AssociatedExternalType),
-		Attributes:             attributes,
-		Blocks:                 blocks,
-		CustomType:             b.CustomType,
-		PlanModifiers:          b.PlanModifiers,
-		Validators:             b.Validators,
+	s := convert.NewSensitive(b.Sensitive)
+
+	vc := convert.NewValidatorsCustom(convert.ValidatorTypeObject, b.Validators.CustomValidators())
+
+	return GeneratorSingleNestedBlock{
+		AssociatedExternalType:   generatorschema.NewAssocExtType(b.AssociatedExternalType),
+		Attributes:               attributes,
+		Blocks:                   blocks,
+		ComputedOptionalRequired: c,
+		CustomType:               b.CustomType,
+		CustomTypeNestedObject:   ct,
+		DeprecationMessage:       dm,
+		Description:              d,
+		PlanModifiers:            b.PlanModifiers,
+		PlanModifiersCustom:      pm,
+		Sensitive:                s,
+		Validators:               b.Validators,
+		ValidatorsCustom:         vc,
 	}, nil
 }
 
@@ -124,27 +123,19 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	for k := range g.Attributes {
-		if _, ok := h.Attributes[k]; !ok {
-			return false
-		}
-
-		if !g.Attributes[k].Equal(h.Attributes[k]) {
-			return false
-		}
-	}
-
-	for k := range g.Blocks {
-		if _, ok := h.Blocks[k]; !ok {
-			return false
-		}
-
-		if !g.Blocks[k].Equal(h.Blocks[k]) {
-			return false
-		}
-	}
-
 	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
+		return false
+	}
+
+	if !g.Attributes.Equal(h.Attributes) {
+		return false
+	}
+
+	if !g.Blocks.Equal(h.Blocks) {
+		return false
+	}
+
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
 		return false
 	}
 
@@ -152,7 +143,27 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
+	if !g.CustomTypeNestedObject.Equal(h.CustomTypeNestedObject) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
+		return false
+	}
+
 	if !g.PlanModifiers.Equal(h.PlanModifiers) {
+		return false
+	}
+
+	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
 		return false
 	}
 
@@ -160,55 +171,45 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	return g.SingleNestedBlock.Equal(h.SingleNestedBlock)
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type block struct {
-		Name                       string
-		TypeValueName              string
-		Attributes                 string
-		Blocks                     string
-		GeneratorSingleNestedBlock GeneratorSingleNestedBlock
-	}
-
-	attributesStr, err := g.Attributes.Schema()
+	attributesSchema, err := g.Attributes.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	blocksStr, err := g.Blocks.Schema()
+	blocksSchema, err := g.Blocks.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	b := block{
-		Name:                       name.ToString(),
-		TypeValueName:              name.ToPascalCase(),
-		Attributes:                 attributesStr,
-		Blocks:                     blocksStr,
-		GeneratorSingleNestedBlock: g,
+	var b bytes.Buffer
+
+	b.WriteString(fmt.Sprintf("%q: schema.SingleNestedBlock{\n", name))
+	if attributesSchema != "" {
+		b.WriteString("Attributes: map[string]schema.Attribute{")
+		b.WriteString(attributesSchema)
+		b.WriteString("\n},\n")
 	}
-
-	t, err := template.New("single_nested_block").Parse(singleNestedBlockGoTemplate)
-	if err != nil {
-		return "", err
+	if blocksSchema != "" {
+		b.WriteString("Blocks: map[string]schema.Block{")
+		b.WriteString(blocksSchema)
+		b.WriteString("\n},\n")
 	}
+	b.Write(g.CustomTypeNestedObject.Schema())
+	b.Write(g.ComputedOptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.WriteString("},")
 
-	if _, err = addCommonBlockTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, b)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorSingleNestedBlock) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
