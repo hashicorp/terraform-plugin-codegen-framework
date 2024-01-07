@@ -130,7 +130,7 @@ func NewBlock(b resource.Block) (generatorschema.GeneratorBlock, error) {
 	case b.ListNested != nil:
 		return NewGeneratorListNestedBlock(b.Name, b.ListNested)
 	case b.SetNested != nil:
-		return NewGeneratorSetNestedBlock(b.SetNested)
+		return NewGeneratorSetNestedBlock(b.Name, b.SetNested)
 	case b.SingleNested != nil:
 		return NewGeneratorSingleNestedBlock(b.SingleNested)
 	}
