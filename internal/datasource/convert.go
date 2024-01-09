@@ -60,47 +60,79 @@ func NewSchema(d datasource.DataSource) (generatorschema.GeneratorSchema, error)
 	return s, nil
 }
 
+func NewAttributes(a datasource.Attributes) (generatorschema.GeneratorAttributes, error) {
+	attributes := make(generatorschema.GeneratorAttributes, len(a))
+
+	for _, v := range a {
+		attribute, err := NewAttribute(v)
+
+		if err != nil {
+			return generatorschema.GeneratorAttributes{}, err
+		}
+
+		attributes[v.Name] = attribute
+	}
+
+	return attributes, nil
+}
+
 func NewAttribute(a datasource.Attribute) (generatorschema.GeneratorAttribute, error) {
 	switch {
 	case a.Bool != nil:
-		return NewGeneratorBoolAttribute(a.Bool)
+		return NewGeneratorBoolAttribute(a.Name, a.Bool)
 	case a.Float64 != nil:
-		return NewGeneratorFloat64Attribute(a.Float64)
+		return NewGeneratorFloat64Attribute(a.Name, a.Float64)
 	case a.Int64 != nil:
-		return NewGeneratorInt64Attribute(a.Int64)
+		return NewGeneratorInt64Attribute(a.Name, a.Int64)
 	case a.List != nil:
-		return NewGeneratorListAttribute(a.List)
+		return NewGeneratorListAttribute(a.Name, a.List)
 	case a.ListNested != nil:
-		return NewGeneratorListNestedAttribute(a.ListNested)
+		return NewGeneratorListNestedAttribute(a.Name, a.ListNested)
 	case a.Map != nil:
-		return NewGeneratorMapAttribute(a.Map)
+		return NewGeneratorMapAttribute(a.Name, a.Map)
 	case a.MapNested != nil:
-		return NewGeneratorMapNestedAttribute(a.MapNested)
+		return NewGeneratorMapNestedAttribute(a.Name, a.MapNested)
 	case a.Number != nil:
-		return NewGeneratorNumberAttribute(a.Number)
+		return NewGeneratorNumberAttribute(a.Name, a.Number)
 	case a.Object != nil:
-		return NewGeneratorObjectAttribute(a.Object)
+		return NewGeneratorObjectAttribute(a.Name, a.Object)
 	case a.Set != nil:
-		return NewGeneratorSetAttribute(a.Set)
+		return NewGeneratorSetAttribute(a.Name, a.Set)
 	case a.SetNested != nil:
-		return NewGeneratorSetNestedAttribute(a.SetNested)
+		return NewGeneratorSetNestedAttribute(a.Name, a.SetNested)
 	case a.SingleNested != nil:
-		return NewGeneratorSingleNestedAttribute(a.SingleNested)
+		return NewGeneratorSingleNestedAttribute(a.Name, a.SingleNested)
 	case a.String != nil:
-		return NewGeneratorStringAttribute(a.String)
+		return NewGeneratorStringAttribute(a.Name, a.String)
 	}
 
 	return nil, fmt.Errorf("attribute type not defined: %+v", a)
 }
 
+func NewBlocks(b datasource.Blocks) (generatorschema.GeneratorBlocks, error) {
+	blocks := make(generatorschema.GeneratorBlocks, len(b))
+
+	for _, v := range b {
+		block, err := NewBlock(v)
+
+		if err != nil {
+			return generatorschema.GeneratorBlocks{}, err
+		}
+
+		blocks[v.Name] = block
+	}
+
+	return blocks, nil
+}
+
 func NewBlock(b datasource.Block) (generatorschema.GeneratorBlock, error) {
 	switch {
 	case b.ListNested != nil:
-		return NewGeneratorListNestedBlock(b.ListNested)
+		return NewGeneratorListNestedBlock(b.Name, b.ListNested)
 	case b.SetNested != nil:
-		return NewGeneratorSetNestedBlock(b.SetNested)
+		return NewGeneratorSetNestedBlock(b.Name, b.SetNested)
 	case b.SingleNested != nil:
-		return NewGeneratorSingleNestedBlock(b.SingleNested)
+		return NewGeneratorSingleNestedBlock(b.Name, b.SingleNested)
 	}
 
 	return nil, fmt.Errorf("block type not defined: %+v", b)

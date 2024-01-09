@@ -7,12 +7,9 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -20,72 +17,77 @@ import (
 )
 
 type GeneratorListNestedBlock struct {
-	schema.ListNestedBlock
-
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType    *specschema.CustomType
-	NestedObject  GeneratorNestedBlockObject
-	PlanModifiers specschema.ListPlanModifiers
-	Validators    specschema.ListValidators
+	ComputedOptionalRequired   convert.ComputedOptionalRequired
+	CustomType                 *specschema.CustomType
+	CustomTypeNestedCollection convert.CustomTypeNestedCollection
+	DeprecationMessage         convert.DeprecationMessage
+	Description                convert.Description
+	NestedObject               GeneratorNestedBlockObject
+	NestedBlockObject          NestedBlockObject
+	PlanModifiers              specschema.ListPlanModifiers
+	PlanModifiersCustom        convert.PlanModifiersCustom
+	Sensitive                  convert.Sensitive
+	Validators                 specschema.ListValidators
+	ValidatorsCustom           convert.ValidatorsCustom
 }
 
-func NewGeneratorListNestedBlock(b *resource.ListNestedBlock) (GeneratorListNestedBlock, error) {
+func NewGeneratorListNestedBlock(name string, b *resource.ListNestedBlock) (GeneratorListNestedBlock, error) {
 	if b == nil {
 		return GeneratorListNestedBlock{}, fmt.Errorf("*resource.ListNestedBlock is nil")
 	}
 
-	attributes := make(generatorschema.GeneratorAttributes, len(b.NestedObject.Attributes))
+	attributes, err := NewAttributes(b.NestedObject.Attributes)
 
-	for _, v := range b.NestedObject.Attributes {
-		attribute, err := NewAttribute(v)
-
-		if err != nil {
-			return GeneratorListNestedBlock{}, err
-		}
-
-		attributes[v.Name] = attribute
+	if err != nil {
+		return GeneratorListNestedBlock{}, err
 	}
 
-	blocks := make(generatorschema.GeneratorBlocks, len(b.NestedObject.Blocks))
+	blocks, err := NewBlocks(b.NestedObject.Blocks)
 
-	for _, v := range b.NestedObject.Blocks {
-		block, err := NewBlock(v)
-
-		if err != nil {
-			return GeneratorListNestedBlock{}, err
-		}
-
-		blocks[v.Name] = block
+	if err != nil {
+		return GeneratorListNestedBlock{}, err
 	}
+
+	c := convert.NewComputedOptionalRequired(b.ComputedOptionalRequired)
+
+	ct := convert.NewCustomTypeNestedCollection(b.CustomType)
 
 	d := convert.NewDescription(b.Description)
 
 	dm := convert.NewDeprecationMessage(b.DeprecationMessage)
 
-	return GeneratorListNestedBlock{
-		ListNestedBlock: schema.ListNestedBlock{
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	pmo := convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, b.NestedObject.PlanModifiers.CustomPlanModifiers())
 
-		CustomType: b.CustomType,
+	vco := convert.NewValidatorsCustom(convert.ValidatorTypeObject, b.NestedObject.Validators.CustomValidators())
+
+	nbo := NewNestedBlockObject(attributes, blocks, b.NestedObject.CustomType, pmo, vco, name)
+
+	s := convert.NewSensitive(b.Sensitive)
+
+	pml := convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, b.PlanModifiers.CustomPlanModifiers())
+
+	vcl := convert.NewValidatorsCustom(convert.ValidatorTypeList, b.Validators.CustomValidators())
+
+	return GeneratorListNestedBlock{
+		ComputedOptionalRequired:   c,
+		CustomType:                 b.CustomType,
+		CustomTypeNestedCollection: ct,
+		DeprecationMessage:         dm,
+		Description:                d,
 		NestedObject: GeneratorNestedBlockObject{
 			AssociatedExternalType: generatorschema.NewAssocExtType(b.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			Blocks:                 blocks,
 			CustomType:             b.NestedObject.CustomType,
-			PlanModifiers:          b.NestedObject.PlanModifiers,
 			Validators:             b.NestedObject.Validators,
 		},
-		PlanModifiers: b.PlanModifiers,
-		Validators:    b.Validators,
+		NestedBlockObject:   nbo,
+		PlanModifiers:       b.PlanModifiers,
+		PlanModifiersCustom: pml,
+		Sensitive:           s,
+		Validators:          b.Validators,
+		ValidatorsCustom:    vcl,
 	}, nil
-}
-
-func (g GeneratorListNestedBlock) AssocExtType() *generatorschema.AssocExtType {
-	return g.NestedObject.AssociatedExternalType
 }
 
 func (g GeneratorListNestedBlock) GeneratorSchemaType() generatorschema.Type {
@@ -144,15 +146,23 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 		return false
 	}
 
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
+		return false
+	}
+
 	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
-	if !g.PlanModifiers.Equal(h.PlanModifiers) {
+	if !g.CustomTypeNestedCollection.Equal(h.CustomTypeNestedCollection) {
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
 		return false
 	}
 
@@ -160,55 +170,50 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 		return false
 	}
 
-	return g.ListNestedBlock.Equal(h.ListNestedBlock)
+	if !g.NestedBlockObject.Equal(h.NestedBlockObject) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
+		return false
+	}
+
+	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
+		return false
+	}
+
+	if !g.Validators.Equal(h.Validators) {
+		return false
+	}
+
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorListNestedBlock) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type block struct {
-		Name                     string
-		TypeValueName            string
-		Attributes               string
-		Blocks                   string
-		GeneratorListNestedBlock GeneratorListNestedBlock
-	}
-
-	attributesStr, err := g.NestedObject.Attributes.Schema()
+	nestedObjectSchema, err := g.NestedBlockObject.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	blocksStr, err := g.NestedObject.Blocks.Schema()
+	var b bytes.Buffer
 
-	if err != nil {
-		return "", err
-	}
+	b.WriteString(fmt.Sprintf("%q: schema.ListNestedBlock{\n", name))
+	b.Write(nestedObjectSchema)
+	b.Write(g.CustomTypeNestedCollection.Schema())
+	b.Write(g.ComputedOptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.WriteString("},")
 
-	b := block{
-		Name:                     name.ToString(),
-		TypeValueName:            name.ToPascalCase(),
-		Attributes:               attributesStr,
-		Blocks:                   blocksStr,
-		GeneratorListNestedBlock: g,
-	}
-
-	t, err := template.New("list_nested_block").Parse(listNestedBlockGoTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	if _, err = addCommonBlockTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, b)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorListNestedBlock) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {

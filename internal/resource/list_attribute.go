@@ -6,12 +6,9 @@ package resource
 import (
 	"bytes"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -19,48 +16,62 @@ import (
 )
 
 type GeneratorListAttribute struct {
-	schema.ListAttribute
-
-	AssociatedExternalType *generatorschema.AssocExtType
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType    *specschema.CustomType
-	Default       *specschema.ListDefault
-	ElementType   specschema.ElementType
-	PlanModifiers specschema.ListPlanModifiers
-	Validators    specschema.ListValidators
+	AssociatedExternalType   *generatorschema.AssocExtType
+	ComputedOptionalRequired convert.ComputedOptionalRequired
+	CustomType               *specschema.CustomType
+	CustomTypeCollection     convert.CustomTypeCollection
+	Default                  *specschema.ListDefault
+	DefaultCustom            convert.DefaultCustom
+	DeprecationMessage       convert.DeprecationMessage
+	Description              convert.Description
+	ElementType              specschema.ElementType
+	ElementTypeCollection    convert.ElementType
+	PlanModifiers            specschema.ListPlanModifiers
+	PlanModifiersCustom      convert.PlanModifiersCustom
+	Sensitive                convert.Sensitive
+	Validators               specschema.ListValidators
+	ValidatorsCustom         convert.ValidatorsCustom
 }
 
-func NewGeneratorListAttribute(a *resource.ListAttribute) (GeneratorListAttribute, error) {
+func NewGeneratorListAttribute(name string, a *resource.ListAttribute) (GeneratorListAttribute, error) {
 	if a == nil {
 		return GeneratorListAttribute{}, fmt.Errorf("*resource.ListAttribute is nil")
 	}
 
+	et := convert.NewElementType(a.ElementType)
+
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	ctc := convert.NewCustomTypeCollection(a.CustomType, a.AssociatedExternalType, convert.CustomCollectionTypeList, string(et.ElementType()), name)
+
+	dc := convert.NewDefaultCustom(a.Default.CustomDefault())
 
 	d := convert.NewDescription(a.Description)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	return GeneratorListAttribute{
-		ListAttribute: schema.ListAttribute{
-			Required:            c.IsRequired(),
-			Optional:            c.IsOptional(),
-			Computed:            c.IsComputed(),
-			Sensitive:           s.IsSensitive(),
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, a.PlanModifiers.CustomPlanModifiers())
 
-		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
-		CustomType:             a.CustomType,
-		Default:                a.Default,
-		ElementType:            a.ElementType,
-		PlanModifiers:          a.PlanModifiers,
-		Validators:             a.Validators,
+	s := convert.NewSensitive(a.Sensitive)
+
+	vc := convert.NewValidatorsCustom(convert.ValidatorTypeList, a.Validators.CustomValidators())
+
+	return GeneratorListAttribute{
+		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		ComputedOptionalRequired: c,
+		CustomType:               a.CustomType,
+		CustomTypeCollection:     ctc,
+		Default:                  a.Default,
+		DefaultCustom:            dc,
+		DeprecationMessage:       dm,
+		Description:              d,
+		ElementType:              a.ElementType,
+		PlanModifiers:            a.PlanModifiers,
+		PlanModifiersCustom:      pm,
+		ElementTypeCollection:    et,
+		Sensitive:                s,
+		Validators:               a.Validators,
+		ValidatorsCustom:         vc,
 	}, nil
 }
 
@@ -109,7 +120,16 @@ func (g GeneratorListAttribute) Imports() *generatorschema.Imports {
 // call returns false when the ElementType is nil.
 func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorListAttribute)
+
 	if !ok {
+		return false
+	}
+
+	if !g.AssociatedExternalType.Equal(h.AssociatedExternalType) {
+		return false
+	}
+
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
 		return false
 	}
 
@@ -117,7 +137,23 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
+	if !g.CustomTypeCollection.Equal(h.CustomTypeCollection) {
+		return false
+	}
+
 	if !g.Default.Equal(h.Default) {
+		return false
+	}
+
+	if !g.DefaultCustom.Equal(h.DefaultCustom) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
 		return false
 	}
 
@@ -125,7 +161,19 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
+	if !g.ElementTypeCollection.Equal(h.ElementTypeCollection) {
+		return false
+	}
+
 	if !g.PlanModifiers.Equal(h.PlanModifiers) {
+		return false
+	}
+
+	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
 		return false
 	}
 
@@ -133,85 +181,29 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if g.Required != h.Required {
-		return false
-	}
-
-	if g.Optional != h.Optional {
-		return false
-	}
-
-	if g.Sensitive != h.Sensitive {
-		return false
-	}
-
-	if g.Description != h.Description {
-		return false
-	}
-
-	if g.MarkdownDescription != h.MarkdownDescription {
-		return false
-	}
-
-	if g.DeprecationMessage != h.DeprecationMessage {
-		return false
-	}
-
-	return true
-}
-
-func listDefault(d *specschema.ListDefault) string {
-	if d == nil {
-		return ""
-	}
-
-	if d.Custom != nil {
-		return d.Custom.SchemaDefinition
-	}
-
-	return ""
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type attribute struct {
-		Name                   string
-		CustomType             string
-		Default                string
-		ElementType            string
-		GeneratorListAttribute GeneratorListAttribute
+	var b bytes.Buffer
+
+	customTypeSchema := g.CustomTypeCollection.Schema()
+
+	b.WriteString(fmt.Sprintf("%q: schema.ListAttribute{\n", name))
+	b.Write(customTypeSchema)
+	if len(customTypeSchema) == 0 {
+		b.Write(g.ElementTypeCollection.Schema())
 	}
+	b.Write(g.ComputedOptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.DefaultCustom.Schema())
+	b.WriteString("},")
 
-	a := attribute{
-		Name:                   name.ToString(),
-		Default:                listDefault(g.Default),
-		ElementType:            generatorschema.GetElementType(g.ElementType),
-		GeneratorListAttribute: g,
-	}
-
-	switch {
-	case g.CustomType != nil:
-		a.CustomType = g.CustomType.Type
-	case g.AssociatedExternalType != nil:
-		a.CustomType = fmt.Sprintf("%sType{\ntypes.ListType{\nElemType: %s,\n},\n}", name.ToPascalCase(), generatorschema.GetElementType(g.ElementType))
-	}
-
-	t, err := template.New("list_attribute").Parse(listAttributeTemplate)
-	if err != nil {
-		return "", err
-	}
-
-	if _, err = addAttributeTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, a)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorListAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {

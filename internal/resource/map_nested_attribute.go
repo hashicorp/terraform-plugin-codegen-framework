@@ -7,12 +7,9 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -20,69 +17,76 @@ import (
 )
 
 type GeneratorMapNestedAttribute struct {
-	schema.MapNestedAttribute
-
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType    *specschema.CustomType
-	Default       *specschema.MapDefault
-	NestedObject  GeneratorNestedAttributeObject
-	PlanModifiers specschema.MapPlanModifiers
-	Validators    specschema.MapValidators
+	ComputedOptionalRequired   convert.ComputedOptionalRequired
+	CustomType                 *specschema.CustomType
+	CustomTypeNestedCollection convert.CustomTypeNestedCollection
+	Default                    *specschema.MapDefault
+	DefaultCustom              convert.DefaultCustom
+	DeprecationMessage         convert.DeprecationMessage
+	Description                convert.Description
+	NestedObject               GeneratorNestedAttributeObject
+	NestedAttributeObject      NestedAttributeObject
+	PlanModifiers              specschema.MapPlanModifiers
+	PlanModifiersCustom        convert.PlanModifiersCustom
+	Sensitive                  convert.Sensitive
+	Validators                 specschema.MapValidators
+	ValidatorsCustom           convert.ValidatorsCustom
 }
 
-func NewGeneratorMapNestedAttribute(a *resource.MapNestedAttribute) (GeneratorMapNestedAttribute, error) {
+func NewGeneratorMapNestedAttribute(name string, a *resource.MapNestedAttribute) (GeneratorMapNestedAttribute, error) {
 	if a == nil {
 		return GeneratorMapNestedAttribute{}, fmt.Errorf("*resource.MapNestedAttribute is nil")
 	}
 
-	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
+	attributes, err := NewAttributes(a.NestedObject.Attributes)
 
-	for _, v := range a.NestedObject.Attributes {
-		attribute, err := NewAttribute(v)
-
-		if err != nil {
-			return GeneratorMapNestedAttribute{}, err
-		}
-
-		attributes[v.Name] = attribute
+	if err != nil {
+		return GeneratorMapNestedAttribute{}, err
 	}
 
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	ct := convert.NewCustomTypeNestedCollection(a.CustomType)
+
+	dc := convert.NewDefaultCustom(a.Default.CustomDefault())
 
 	d := convert.NewDescription(a.Description)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	return GeneratorMapNestedAttribute{
-		MapNestedAttribute: schema.MapNestedAttribute{
-			Required:            c.IsRequired(),
-			Optional:            c.IsOptional(),
-			Computed:            c.IsComputed(),
-			Sensitive:           s.IsSensitive(),
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	pmo := convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, a.NestedObject.PlanModifiers.CustomPlanModifiers())
 
-		CustomType: a.CustomType,
-		Default:    a.Default,
+	vco := convert.NewValidatorsCustom(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
+
+	nat := NewNestedAttributeObject(attributes, a.NestedObject.CustomType, pmo, vco, name)
+
+	pml := convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, a.PlanModifiers.CustomPlanModifiers())
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	vcl := convert.NewValidatorsCustom(convert.ValidatorTypeMap, a.Validators.CustomValidators())
+
+	return GeneratorMapNestedAttribute{
+		ComputedOptionalRequired:   c,
+		CustomType:                 a.CustomType,
+		CustomTypeNestedCollection: ct,
+		Default:                    a.Default,
+		DefaultCustom:              dc,
+		DeprecationMessage:         dm,
+		Description:                d,
 		NestedObject: GeneratorNestedAttributeObject{
 			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			CustomType:             a.NestedObject.CustomType,
-			PlanModifiers:          a.NestedObject.PlanModifiers,
 			Validators:             a.NestedObject.Validators,
 		},
-		PlanModifiers: a.PlanModifiers,
-		Validators:    a.Validators,
+		NestedAttributeObject: nat,
+		PlanModifiers:         a.PlanModifiers,
+		PlanModifiersCustom:   pml,
+		Sensitive:             s,
+		Validators:            a.Validators,
+		ValidatorsCustom:      vcl,
 	}, nil
-}
-
-func (g GeneratorMapNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
-	return g.NestedObject.AssociatedExternalType
 }
 
 func (g GeneratorMapNestedAttribute) GeneratorSchemaType() generatorschema.Type {
@@ -142,7 +146,15 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
+		return false
+	}
+
 	if !g.CustomType.Equal(h.CustomType) {
+		return false
+	}
+
+	if !g.CustomTypeNestedCollection.Equal(h.CustomTypeNestedCollection) {
 		return false
 	}
 
@@ -150,11 +162,15 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !g.PlanModifiers.Equal(h.PlanModifiers) {
+	if !g.DefaultCustom.Equal(h.DefaultCustom) {
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
 		return false
 	}
 
@@ -162,47 +178,51 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	return g.MapNestedAttribute.Equal(h.MapNestedAttribute)
+	if !g.NestedAttributeObject.Equal(h.NestedAttributeObject) {
+		return false
+	}
+
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
+		return false
+	}
+
+	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
+		return false
+	}
+
+	if !g.Validators.Equal(h.Validators) {
+		return false
+	}
+
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorMapNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type attribute struct {
-		Name                        string
-		TypeValueName               string
-		Attributes                  string
-		GeneratorMapNestedAttribute GeneratorMapNestedAttribute
-	}
-
-	attributesStr, err := g.NestedObject.Attributes.Schema()
+	nestedObjectSchema, err := g.NestedAttributeObject.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	a := attribute{
-		Name:                        name.ToString(),
-		TypeValueName:               name.ToPascalCase(),
-		Attributes:                  attributesStr,
-		GeneratorMapNestedAttribute: g,
-	}
+	var b bytes.Buffer
 
-	t, err := template.New("map_nested_attribute").Parse(mapNestedAttributeGoTemplate)
-	if err != nil {
-		return "", err
-	}
+	b.WriteString(fmt.Sprintf("%q: schema.MapNestedAttribute{\n", name))
+	b.Write(nestedObjectSchema)
+	b.Write(g.CustomTypeNestedCollection.Schema())
+	b.Write(g.ComputedOptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.DefaultCustom.Schema())
+	b.WriteString("},")
 
-	if _, err = addCommonAttributeTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, a)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorMapNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {

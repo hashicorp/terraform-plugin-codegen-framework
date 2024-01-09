@@ -10,22 +10,15 @@ import (
 )
 
 type GeneratorNestedAttributeObject struct {
-	Attributes schema.GeneratorAttributes
-
+	Attributes             schema.GeneratorAttributes
 	AssociatedExternalType *schema.AssocExtType
 	CustomType             *specschema.CustomType
 	Validators             specschema.ObjectValidators
 }
 
 func (g GeneratorNestedAttributeObject) Equal(other GeneratorNestedAttributeObject) bool {
-	for k := range g.Attributes {
-		if _, ok := other.Attributes[k]; !ok {
-			return false
-		}
-
-		if !g.Attributes[k].Equal(other.Attributes[k]) {
-			return false
-		}
+	if !g.Attributes.Equal(other.Attributes) {
+		return false
 	}
 
 	if !g.AssociatedExternalType.Equal(other.AssociatedExternalType) {

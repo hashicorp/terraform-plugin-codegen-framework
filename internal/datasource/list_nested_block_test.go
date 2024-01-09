@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -59,12 +59,26 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{
-							BoolAttribute: schema.BoolAttribute{
-								Optional: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
+						"bool_attribute": GeneratorBoolAttribute{
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+						},
+					},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-list-bool": {
@@ -87,15 +101,50 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"list_attribute": GeneratorListAttribute{
-							ListAttribute: schema.ListAttribute{
-								Optional: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								nil,
+								nil,
+								convert.CustomCollectionTypeList,
+								"types.BoolType",
+								"list_attribute",
+							),
 							ElementType: specschema.ElementType{
 								Bool: &specschema.BoolType{},
 							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							}),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
+						"list_attribute": GeneratorListAttribute{
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								nil,
+								nil,
+								convert.CustomCollectionTypeList,
+								"types.BoolType",
+								"list_attribute",
+							),
+							ElementType: specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							},
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+								Bool: &specschema.BoolType{},
+							}),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+						},
+					},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-list-nested-bool": {
@@ -128,18 +177,63 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": GeneratorBoolAttribute{
-										BoolAttribute: schema.BoolAttribute{
-											Computed: true,
-										},
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
 							},
-							ListNestedAttribute: schema.ListNestedAttribute{
-								Optional: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
+									"nested_bool": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"nested_attribute",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
+						"nested_attribute": GeneratorListNestedAttribute{
+							NestedObject: GeneratorNestedAttributeObject{
+								Attributes: generatorschema.GeneratorAttributes{
+									"nested_bool": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
+									"nested_bool": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"nested_attribute",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+						},
+					},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-object-bool": {
@@ -165,18 +259,50 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"object_attribute": GeneratorObjectAttribute{
-							ObjectAttribute: schema.ObjectAttribute{
-								Optional: true,
-							},
 							AttributeTypes: specschema.ObjectAttributeTypes{
 								{
 									Name: "obj_bool",
 									Bool: &specschema.BoolType{},
 								},
 							},
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+							}),
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "object_attribute"),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
+						"object_attribute": GeneratorObjectAttribute{
+							AttributeTypes: specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+							},
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
+								{
+									Name: "obj_bool",
+									Bool: &specschema.BoolType{},
+								},
+							}),
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "object_attribute"),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+						},
+					},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"attributes-single-nested-bool": {
@@ -206,17 +332,38 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 						"nested_attribute": GeneratorSingleNestedAttribute{
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Computed: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
-							SingleNestedAttribute: schema.SingleNestedAttribute{
-								Optional: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
+						"nested_attribute": GeneratorSingleNestedAttribute{
+							Attributes: generatorschema.GeneratorAttributes{
+								"nested_bool": GeneratorBoolAttribute{
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
+									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+								},
+							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
+							ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+						},
+					},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 
@@ -264,15 +411,63 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 							NestedObject: GeneratorNestedBlockObject{
 								Attributes: generatorschema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{
-										BoolAttribute: schema.BoolAttribute{
-											Optional: true,
-										},
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
 							},
+							NestedBlockObject: convert.NewNestedBlockObject(
+								generatorschema.GeneratorAttributes{
+									"bool_attribute": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+								generatorschema.GeneratorBlocks{},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"nested_block",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{
+						"nested_block": GeneratorListNestedBlock{
+							NestedObject: GeneratorNestedBlockObject{
+								Attributes: generatorschema.GeneratorAttributes{
+									"bool_attribute": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+							},
+							NestedBlockObject: convert.NewNestedBlockObject(
+								generatorschema.GeneratorAttributes{
+									"bool_attribute": GeneratorBoolAttribute{
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+										ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+									},
+								},
+								generatorschema.GeneratorBlocks{},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"nested_block",
+							),
+							ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+						},
+					},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 
@@ -302,14 +497,36 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 						"nested_block": GeneratorSingleNestedBlock{
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_block"),
+							ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
 				},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{
+						"nested_block": GeneratorSingleNestedBlock{
+							Attributes: generatorschema.GeneratorAttributes{
+								"bool_attribute": GeneratorBoolAttribute{
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+									ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+								},
+							},
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_block"),
+							ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+						},
+					},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 
@@ -331,6 +548,21 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				}),
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -338,9 +570,16 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorListNestedBlock{
-				ListNestedBlock: schema.ListNestedBlock{
-					DeprecationMessage: "deprecation message",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				NestedObject:       GeneratorNestedBlockObject{},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -348,10 +587,16 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorListNestedBlock{
-				ListNestedBlock: schema.ListNestedBlock{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				Description:  convert.NewDescription(pointer("description")),
+				NestedObject: GeneratorNestedBlockObject{},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -370,6 +615,13 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListNestedBlock{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					"name",
+				),
 				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -382,6 +634,16 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}
@@ -392,7 +654,7 @@ func TestGeneratorListNestedBlock_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorListNestedBlock(testCase.input)
+			got, err := NewGeneratorListNestedBlock("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -1011,6 +1273,8 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 func TestGeneratorListNestedBlock_Schema(t *testing.T) {
 	t.Parallel()
 
+	blockName := "list_nested_block"
+
 	testCases := map[string]struct {
 		input         GeneratorListNestedBlock
 		expected      string
@@ -1018,18 +1282,19 @@ func TestGeneratorListNestedBlock_Schema(t *testing.T) {
 	}{
 		"attribute-bool": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
 						"bool": GeneratorBoolAttribute{
-							BoolAttribute: schema.BoolAttribute{
-								Optional: true,
-							},
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 						},
 					},
-				},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 Attributes: map[string]schema.Attribute{
 "bool": schema.BoolAttribute{
@@ -1047,21 +1312,22 @@ AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 
 		"attribute-list": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
-							ListAttribute: schema.ListAttribute{
-								Optional: true,
-							},
-							ElementType: specschema.ElementType{
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 								String: &specschema.StringType{},
-							},
+							}),
 						},
 					},
-				},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 Attributes: map[string]schema.Attribute{
 "list": schema.ListAttribute{
@@ -1080,24 +1346,28 @@ AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 
 		"attribute-list-nested": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
 						"nested_list_nested": GeneratorListNestedAttribute{
-							NestedObject: GeneratorNestedAttributeObject{
-								Attributes: generatorschema.GeneratorAttributes{
+							NestedAttributeObject: convert.NewNestedAttributeObject(
+								generatorschema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{
-										BoolAttribute: schema.BoolAttribute{
-											Optional: true,
-										},
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 									},
 								},
-							},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+								"nested_list_nested",
+							),
 						},
 					},
-				},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 Attributes: map[string]schema.Attribute{
 "nested_list_nested": schema.ListNestedAttribute{
@@ -1126,24 +1396,25 @@ AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 
 		"attribute-object": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
 						"object": GeneratorObjectAttribute{
-							ObjectAttribute: schema.ObjectAttribute{
-								Optional: true,
-							},
-							AttributeTypes: specschema.ObjectAttributeTypes{
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 								{
 									Name:   "str",
 									String: &specschema.StringType{},
 								},
-							},
+							}),
+							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 						},
 					},
-				},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 Attributes: map[string]schema.Attribute{
 "object": schema.ObjectAttribute{
@@ -1164,22 +1435,24 @@ AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 
 		"attribute-single-nested-bool": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{
 						"nested_single_nested": GeneratorSingleNestedAttribute{
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_single_nested"),
 						},
 					},
-				},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 Attributes: map[string]schema.Attribute{
 "nested_single_nested": schema.SingleNestedAttribute{
@@ -1206,24 +1479,29 @@ AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 
 		"block-list-nested-bool": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					Blocks: generatorschema.GeneratorBlocks{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{
 						"nested_list_nested": GeneratorListNestedBlock{
-							NestedObject: GeneratorNestedBlockObject{
-								Attributes: generatorschema.GeneratorAttributes{
+							NestedBlockObject: convert.NewNestedBlockObject(
+								generatorschema.GeneratorAttributes{
 									"bool": GeneratorBoolAttribute{
-										BoolAttribute: schema.BoolAttribute{
-											Optional: true,
-										},
+										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 									},
 								},
-							},
+								generatorschema.GeneratorBlocks{},
+								nil,
+								convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+								"nested_list_nested",
+							),
 						},
 					},
-				},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 Blocks: map[string]schema.Block{
 "nested_list_nested": schema.ListNestedBlock{
@@ -1252,22 +1530,25 @@ AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 
 		"block-single-nested-bool": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					Blocks: generatorschema.GeneratorBlocks{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{
 						"nested_single_nested": GeneratorSingleNestedBlock{
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool": GeneratorBoolAttribute{
-									BoolAttribute: schema.BoolAttribute{
-										Optional: true,
-									},
+									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_single_nested"),
+							ValidatorsCustom:       convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
-				},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 Blocks: map[string]schema.Block{
 "nested_single_nested": schema.SingleNestedBlock{
@@ -1294,12 +1575,18 @@ AttrTypes: ListNestedBlockValue{}.AttributeTypes(ctx),
 
 		"custom-type": {
 			input: GeneratorListNestedBlock{
-				CustomType: &specschema.CustomType{
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
 					Type: "my_custom_type",
-				},
+				}),
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 CustomType: ListNestedBlockType{
 ObjectType: types.ObjectType{
@@ -1313,12 +1600,16 @@ CustomType: my_custom_type,
 
 		"description": {
 			input: GeneratorListNestedBlock{
-				ListNestedBlock: schema.ListNestedBlock{
-					Description: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 CustomType: ListNestedBlockType{
 ObjectType: types.ObjectType{
@@ -1333,12 +1624,16 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorListNestedBlock{
-				ListNestedBlock: schema.ListNestedBlock{
-					DeprecationMessage: "deprecated",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 CustomType: ListNestedBlockType{
 ObjectType: types.ObjectType{
@@ -1352,6 +1647,13 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorListNestedBlock{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 				Validators: specschema.ListValidators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -1364,9 +1666,16 @@ DeprecationMessage: "deprecated",
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						SchemaDefinition: "my_validator.Validate()",
+					},
+					&specschema.CustomValidator{
+						SchemaDefinition: "my_other_validator.Validate()",
+					},
+				}),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 CustomType: ListNestedBlockType{
 ObjectType: types.ObjectType{
@@ -1383,14 +1692,17 @@ my_other_validator.Validate(),
 
 		"nested-object-custom-type": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					CustomType: &specschema.CustomType{
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
-				},
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 CustomType: my_custom_type,
 },
@@ -1399,23 +1711,22 @@ CustomType: my_custom_type,
 
 		"nested-object-validators": {
 			input: GeneratorListNestedBlock{
-				NestedObject: GeneratorNestedBlockObject{
-					Validators: specschema.ObjectValidators{
-						{
-							Custom: &specschema.CustomValidator{
-								SchemaDefinition: "my_validator.Validate()",
-							},
+				NestedBlockObject: convert.NewNestedBlockObject(
+					generatorschema.GeneratorAttributes{},
+					generatorschema.GeneratorBlocks{},
+					nil,
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{
+						&specschema.CustomValidator{
+							SchemaDefinition: "my_validator.Validate()",
 						},
-						{
-							Custom: &specschema.CustomValidator{
-								SchemaDefinition: "my_other_validator.Validate()",
-							},
+						&specschema.CustomValidator{
+							SchemaDefinition: "my_other_validator.Validate()",
 						},
-					},
-				},
+					}),
+					blockName,
+				),
 			},
-			expected: `
-"list_nested_block": schema.ListNestedBlock{
+			expected: `"list_nested_block": schema.ListNestedBlock{
 NestedObject: schema.NestedBlockObject{
 CustomType: ListNestedBlockType{
 ObjectType: types.ObjectType{

@@ -7,12 +7,9 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"strings"
-	"text/template"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -20,64 +17,62 @@ import (
 )
 
 type GeneratorSetNestedAttribute struct {
-	schema.SetNestedAttribute
-
-	// The "specschema" types are used instead of the types within the attribute
-	// because support for extracting custom import information is required.
-	CustomType   *specschema.CustomType
-	NestedObject GeneratorNestedAttributeObject
-	Validators   specschema.SetValidators
+	ComputedOptionalRequired   convert.ComputedOptionalRequired
+	CustomType                 *specschema.CustomType
+	CustomTypeNestedCollection convert.CustomTypeNestedCollection
+	DeprecationMessage         convert.DeprecationMessage
+	Description                convert.Description
+	NestedObject               GeneratorNestedAttributeObject
+	NestedAttributeObject      convert.NestedAttributeObject
+	Sensitive                  convert.Sensitive
+	Validators                 specschema.SetValidators
+	ValidatorsCustom           convert.ValidatorsCustom
 }
 
-func NewGeneratorSetNestedAttribute(a *datasource.SetNestedAttribute) (GeneratorSetNestedAttribute, error) {
+func NewGeneratorSetNestedAttribute(name string, a *datasource.SetNestedAttribute) (GeneratorSetNestedAttribute, error) {
 	if a == nil {
 		return GeneratorSetNestedAttribute{}, fmt.Errorf("*datasource.SetNestedAttribute is nil")
 	}
 
-	attributes := make(generatorschema.GeneratorAttributes, len(a.NestedObject.Attributes))
+	attributes, err := NewAttributes(a.NestedObject.Attributes)
 
-	for _, v := range a.NestedObject.Attributes {
-		attribute, err := NewAttribute(v)
-
-		if err != nil {
-			return GeneratorSetNestedAttribute{}, err
-		}
-
-		attributes[v.Name] = attribute
+	if err != nil {
+		return GeneratorSetNestedAttribute{}, err
 	}
 
 	c := convert.NewComputedOptionalRequired(a.ComputedOptionalRequired)
 
-	s := convert.NewSensitive(a.Sensitive)
+	ct := convert.NewCustomTypeNestedCollection(a.CustomType)
 
 	d := convert.NewDescription(a.Description)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	return GeneratorSetNestedAttribute{
-		SetNestedAttribute: schema.SetNestedAttribute{
-			Required:            c.IsRequired(),
-			Optional:            c.IsOptional(),
-			Computed:            c.IsComputed(),
-			Sensitive:           s.IsSensitive(),
-			Description:         d.Description(),
-			MarkdownDescription: d.Description(),
-			DeprecationMessage:  dm.DeprecationMessage(),
-		},
+	vco := convert.NewValidatorsCustom(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
 
-		CustomType: a.CustomType,
+	nat := convert.NewNestedAttributeObject(attributes, a.NestedObject.CustomType, vco, name)
+
+	s := convert.NewSensitive(a.Sensitive)
+
+	vcl := convert.NewValidatorsCustom(convert.ValidatorTypeSet, a.Validators.CustomValidators())
+
+	return GeneratorSetNestedAttribute{
+		ComputedOptionalRequired:   c,
+		CustomType:                 a.CustomType,
+		CustomTypeNestedCollection: ct,
+		DeprecationMessage:         dm,
+		Description:                d,
 		NestedObject: GeneratorNestedAttributeObject{
 			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			CustomType:             a.NestedObject.CustomType,
 			Validators:             a.NestedObject.Validators,
 		},
-		Validators: a.Validators,
+		NestedAttributeObject: nat,
+		Sensitive:             s,
+		Validators:            a.Validators,
+		ValidatorsCustom:      vcl,
 	}, nil
-}
-
-func (g GeneratorSetNestedAttribute) AssocExtType() *generatorschema.AssocExtType {
-	return g.NestedObject.AssociatedExternalType
 }
 
 func (g GeneratorSetNestedAttribute) GeneratorSchemaType() generatorschema.Type {
@@ -122,11 +117,23 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
+	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
+		return false
+	}
+
 	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
+	if !g.CustomTypeNestedCollection.Equal(h.CustomTypeNestedCollection) {
+		return false
+	}
+
+	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
+		return false
+	}
+
+	if !g.Description.Equal(h.Description) {
 		return false
 	}
 
@@ -134,47 +141,41 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	return g.SetNestedAttribute.Equal(h.SetNestedAttribute)
+	if !g.NestedAttributeObject.Equal(h.NestedAttributeObject) {
+		return false
+	}
+
+	if !g.Sensitive.Equal(h.Sensitive) {
+		return false
+	}
+
+	if !g.Validators.Equal(h.Validators) {
+		return false
+	}
+
+	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
 func (g GeneratorSetNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
-	type attribute struct {
-		Name                        string
-		TypeValueName               string
-		Attributes                  string
-		GeneratorSetNestedAttribute GeneratorSetNestedAttribute
-	}
-
-	attributesStr, err := g.NestedObject.Attributes.Schema()
+	nestedObjectSchema, err := g.NestedAttributeObject.Schema()
 
 	if err != nil {
 		return "", err
 	}
 
-	a := attribute{
-		Name:                        name.ToString(),
-		TypeValueName:               name.ToPascalCase(),
-		Attributes:                  attributesStr,
-		GeneratorSetNestedAttribute: g,
-	}
+	var b bytes.Buffer
 
-	t, err := template.New("set_nested_attribute").Parse(setNestedAttributeGoTemplate)
-	if err != nil {
-		return "", err
-	}
+	b.WriteString(fmt.Sprintf("%q: schema.SetNestedAttribute{\n", name))
+	b.Write(nestedObjectSchema)
+	b.Write(g.CustomTypeNestedCollection.Schema())
+	b.Write(g.ComputedOptionalRequired.Schema())
+	b.Write(g.Sensitive.Schema())
+	b.Write(g.Description.Schema())
+	b.Write(g.DeprecationMessage.Schema())
+	b.Write(g.ValidatorsCustom.Schema())
+	b.WriteString("},")
 
-	if _, err = addCommonAttributeTemplate(t); err != nil {
-		return "", err
-	}
-
-	var buf strings.Builder
-
-	err = t.Execute(&buf, a)
-	if err != nil {
-		return "", err
-	}
-
-	return buf.String(), nil
+	return b.String(), nil
 }
 
 func (g GeneratorSetNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {

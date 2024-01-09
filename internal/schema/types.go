@@ -58,16 +58,6 @@ type GeneratorBlock interface {
 	Schema(FrameworkIdentifier) (string, error)
 }
 
-type GeneratorAttributeAssocExtType interface {
-	GeneratorAttribute
-	AssocExtType() *AssocExtType
-}
-
-type GeneratorBlockAssocExtType interface {
-	GeneratorBlock
-	AssocExtType() *AssocExtType
-}
-
 type ToFrom interface {
 	ToFromFunctions(name string) ([]byte, error)
 }

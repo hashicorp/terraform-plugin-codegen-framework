@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
-	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
@@ -33,9 +33,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				OptionalRequired: "optional",
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Optional: true,
-				},
+				OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -43,9 +43,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				OptionalRequired: "required",
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Required: true,
-				},
+				OptionalRequired:    convert.NewOptionalRequired(specschema.Required),
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -59,7 +59,6 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{},
 				CustomType: &specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -67,6 +66,14 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+					Import: &code.Import{
+						Path: "github.com/",
+					},
+					Type:      "my_type",
+					ValueType: "myvalue_type",
+				}, nil, "name"),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
 			},
 		},
 		"deprecation_message": {
@@ -74,9 +81,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					DeprecationMessage: "deprecation message",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -84,10 +91,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Description:         "description",
-					MarkdownDescription: "description",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description:         convert.NewDescription(pointer("description")),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -95,9 +101,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Sensitive: true,
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:           convert.NewSensitive(pointer(true)),
+				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -116,6 +122,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorBoolAttribute{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Validators: specschema.BoolValidators{
 					{
 						Custom: &specschema.CustomValidator{
@@ -128,6 +135,16 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 						},
 					},
 				},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/.../myvalidator",
+							},
+						},
+						SchemaDefinition: "myvalidator.Validate()",
+					},
+				}),
 			},
 		},
 	}
@@ -138,7 +155,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewGeneratorBoolAttribute(testCase.input)
+			got, err := NewGeneratorBoolAttribute("name", testCase.input)
 
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
@@ -408,79 +425,74 @@ func TestGeneratorBoolAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorBoolAttribute{
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
+					},
+					nil,
+					"bool_attribute",
+				),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"associated-external-type": {
 			input: GeneratorBoolAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtBool",
 					},
-				},
+					"bool_attribute",
+				),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 CustomType: BoolAttributeType{},
 },`,
 		},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorBoolAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Type: "my_custom_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					Type: "my_custom_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ExtBool",
+					},
+					"bool_attribute",
+				),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 CustomType: my_custom_type,
 },`,
 		},
 
 		"required": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Required: true,
-				},
+				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Required: true,
 },`,
 		},
 
 		"optional": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Optional: true,
-				},
+				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Optional: true,
 },`,
 		},
 
 		"sensitive": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Sensitive: true,
-				},
+				Sensitive: convert.NewSensitive(pointer(true)),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Sensitive: true,
 },`,
 		},
@@ -488,12 +500,9 @@ Sensitive: true,
 		// TODO: Do we need separate description and markdown description?
 		"description": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					Description: "description",
-				},
+				Description: convert.NewDescription(pointer("description")),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Description: "description",
 MarkdownDescription: "description",
 },`,
@@ -501,33 +510,32 @@ MarkdownDescription: "description",
 
 		"deprecation-message": {
 			input: GeneratorBoolAttribute{
-				BoolAttribute: schema.BoolAttribute{
-					DeprecationMessage: "deprecated",
-				},
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecated")),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 DeprecationMessage: "deprecated",
 },`,
 		},
 
+		"validators-empty": {
+			input: GeneratorBoolAttribute{
+				Validators: specschema.BoolValidators{},
+			},
+			expected: `"bool_attribute": schema.BoolAttribute{
+},`,
+		},
 		"validators": {
 			input: GeneratorBoolAttribute{
-				Validators: specschema.BoolValidators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, []*specschema.CustomValidator{
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_validator.Validate()",
-						},
+						SchemaDefinition: "my_validator.Validate()",
 					},
 					{
-						Custom: &specschema.CustomValidator{
-							SchemaDefinition: "my_other_validator.Validate()",
-						},
+						SchemaDefinition: "my_other_validator.Validate()",
 					},
-				},
+				}),
 			},
-			expected: `
-"bool_attribute": schema.BoolAttribute{
+			expected: `"bool_attribute": schema.BoolAttribute{
 Validators: []validator.Bool{
 my_validator.Validate(),
 my_other_validator.Validate(),

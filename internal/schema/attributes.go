@@ -149,6 +149,26 @@ func (g GeneratorAttributes) CollectionTypes() (map[string]map[string]string, er
 	return collectionTypes, nil
 }
 
+func (g GeneratorAttributes) Equal(other GeneratorAttributes) bool {
+	if len(g) != len(other) {
+		return false
+	}
+
+	for k, v := range g {
+		otherAttribute, ok := other[k]
+
+		if !ok {
+			return false
+		}
+
+		if !v.Equal(otherAttribute) {
+			return false
+		}
+	}
+
+	return true
+}
+
 // FromFuncs returns a mapping of attribute names to string representations of the
 // function that converts a Go value to a framework value.
 func (g GeneratorAttributes) FromFuncs() (map[string]ToFromConversion, error) {
@@ -198,6 +218,10 @@ func (g GeneratorAttributes) Schema() (string, error) {
 
 		if err != nil {
 			return "", err
+		}
+
+		if !strings.HasPrefix(str, "\n") {
+			str = "\n" + str
 		}
 
 		s.WriteString(str)
