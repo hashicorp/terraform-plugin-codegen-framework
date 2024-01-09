@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/cli v1.1.6
 	github.com/hashicorp/terraform-plugin-codegen-spec v0.1.1-0.20240104173918-8a979efa31b3
 	github.com/hashicorp/terraform-plugin-framework v1.4.2
-	github.com/hashicorp/terraform-plugin-go v0.19.0
+	github.com/hashicorp/terraform-plugin-go v0.20.0
 	github.com/mattn/go-colorable v0.1.13
 )
 
