@@ -7,20 +7,22 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
+	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type ElementType struct {
-	elementType schema.ElementType
+	elementType specschema.ElementType
 }
 
-func NewElementType(e schema.ElementType) ElementType {
+func NewElementType(e specschema.ElementType) ElementType {
 	return ElementType{
 		elementType: e,
 	}
 }
 
-// TODO: Indentation (\t) for types with elem / attr types?
 func (e ElementType) ElementType() []byte {
 	var b bytes.Buffer
 
@@ -86,6 +88,72 @@ func (e ElementType) ElementType() []byte {
 
 func (e ElementType) Equal(other ElementType) bool {
 	return e.elementType.Equal(other.elementType)
+}
+
+func (e ElementType) Imports() *schema.Imports {
+	imports := schema.NewImports()
+
+	switch {
+	case e.elementType.Bool != nil:
+		if e.elementType.Bool.CustomType != nil && e.elementType.Bool.CustomType.HasImport() {
+			imports.Add(*e.elementType.Bool.CustomType.Import)
+			return imports
+		}
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+		return imports
+	case e.elementType.Float64 != nil:
+		if e.elementType.Float64.CustomType != nil && e.elementType.Float64.CustomType.HasImport() {
+			imports.Add(*e.elementType.Float64.CustomType.Import)
+			return imports
+		}
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+		return imports
+	case e.elementType.Int64 != nil:
+		if e.elementType.Int64.CustomType != nil && e.elementType.Int64.CustomType.HasImport() {
+			imports.Add(*e.elementType.Int64.CustomType.Import)
+			return imports
+		}
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+		return imports
+	case e.elementType.List != nil:
+		imports.Add(NewElementType(e.elementType.List.ElementType).Imports().All()...)
+		return imports
+	case e.elementType.Map != nil:
+		imports.Add(NewElementType(e.elementType.Map.ElementType).Imports().All()...)
+		return imports
+	case e.elementType.Number != nil:
+		if e.elementType.Number.CustomType != nil && e.elementType.Number.CustomType.HasImport() {
+			imports.Add(*e.elementType.Number.CustomType.Import)
+			return imports
+		}
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+		return imports
+	case e.elementType.Object != nil:
+		imports.Add(schema.GetAttrTypesImports(e.elementType.Object.CustomType, e.elementType.Object.AttributeTypes).All()...)
+		return imports
+	case e.elementType.Set != nil:
+		imports.Add(NewElementType(e.elementType.Set.ElementType).Imports().All()...)
+		return imports
+	case e.elementType.String != nil:
+		if e.elementType.String.CustomType != nil && e.elementType.String.CustomType.HasImport() {
+			imports.Add(*e.elementType.String.CustomType.Import)
+			return imports
+		}
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+		return imports
+	default:
+		return imports
+	}
 }
 
 func (e ElementType) Schema() []byte {

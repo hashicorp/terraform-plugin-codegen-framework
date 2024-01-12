@@ -877,11 +877,17 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
-							CustomType: &specschema.CustomType{
-								Import: &code.Import{
-									Path: "github.com/my_account/my_project/nested_list",
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								&specschema.CustomType{
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/nested_list",
+									},
 								},
-							},
+								nil,
+								convert.CustomCollectionTypeList,
+								"",
+								"",
+							),
 						},
 					},
 				},
@@ -903,12 +909,18 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
-							CustomType: &specschema.CustomType{
-								Import: &code.Import{
-									Path: "github.com/my_account/my_project/nested_list",
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								&specschema.CustomType{
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/nested_list",
+									},
 								},
-							},
-							ElementType: specschema.ElementType{
+								nil,
+								convert.CustomCollectionTypeList,
+								"",
+								"",
+							),
+							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 								Bool: &specschema.BoolType{
 									CustomType: &specschema.CustomType{
 										Import: &code.Import{
@@ -916,7 +928,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 										},
 									},
 								},
-							},
+							}),
 						},
 					},
 				},
@@ -965,11 +977,15 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
-							CustomType: &specschema.CustomType{
-								Import: &code.Import{
-									Path: "github.com/my_account/my_project/nested_object",
+							CustomTypeObject: convert.NewCustomTypeObject(
+								&specschema.CustomType{
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/nested_object",
+									},
 								},
-							},
+								nil,
+								"",
+							),
 						},
 					},
 				},
@@ -991,12 +1007,7 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 				NestedObject: GeneratorNestedBlockObject{
 					Attributes: generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
-							CustomType: &specschema.CustomType{
-								Import: &code.Import{
-									Path: "github.com/my_account/my_project/nested_object",
-								},
-							},
-							AttributeTypes: specschema.ObjectAttributeTypes{
+							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 								{
 									Name: "bool",
 									Bool: &specschema.BoolType{
@@ -1007,7 +1018,16 @@ func TestGeneratorListNestedBlock_Imports(t *testing.T) {
 										},
 									},
 								},
-							},
+							}),
+							CustomTypeObject: convert.NewCustomTypeObject(
+								&specschema.CustomType{
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/nested_object",
+									},
+								},
+								nil,
+								"",
+							),
 						},
 					},
 				},

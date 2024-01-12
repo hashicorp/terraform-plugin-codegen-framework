@@ -197,6 +197,16 @@ func (g GeneratorAttributes) FromFuncs() (map[string]ToFromConversion, error) {
 	return fromFuncs, nil
 }
 
+func (g GeneratorAttributes) Imports() *Imports {
+	imports := NewImports()
+
+	for _, v := range g {
+		imports.Append(v.Imports())
+	}
+
+	return imports
+}
+
 func (g GeneratorAttributes) Schema() (string, error) {
 	var s strings.Builder
 

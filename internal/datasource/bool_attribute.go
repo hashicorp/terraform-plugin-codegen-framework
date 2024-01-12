@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -18,12 +17,10 @@ import (
 type GeneratorBoolAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
 	CustomTypePrimitive      convert.CustomTypePrimitive
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	Sensitive                convert.Sensitive
-	Validators               specschema.BoolValidators
 	ValidatorsCustom         convert.ValidatorsCustom
 }
 
@@ -47,12 +44,10 @@ func NewGeneratorBoolAttribute(name string, a *datasource.BoolAttribute) (Genera
 	return GeneratorBoolAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
 		CustomTypePrimitive:      ctp,
 		DeprecationMessage:       dm,
 		Description:              d,
 		Sensitive:                s,
-		Validators:               a.Validators,
 		ValidatorsCustom:         vc,
 	}, nil
 }
@@ -64,13 +59,9 @@ func (g GeneratorBoolAttribute) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypePrimitive.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -96,10 +87,6 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.CustomType.Equal(h.CustomType) {
-		return false
-	}
-
 	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
 		return false
 	}
@@ -113,10 +100,6 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -145,11 +128,10 @@ func (g GeneratorBoolAttribute) ModelField(name generatorschema.FrameworkIdentif
 		ValueType: model.BoolValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomTypePrimitive.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil

@@ -18,14 +18,12 @@ import (
 type GeneratorListAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
 	CustomTypeCollection     convert.CustomTypeCollection
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	ElementType              specschema.ElementType
 	ElementTypeCollection    convert.ElementType
 	Sensitive                convert.Sensitive
-	Validators               specschema.ListValidators
 	ValidatorsCustom         convert.ValidatorsCustom
 }
 
@@ -51,14 +49,12 @@ func NewGeneratorListAttribute(name string, a *datasource.ListAttribute) (Genera
 	return GeneratorListAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
 		CustomTypeCollection:     ctc,
 		DeprecationMessage:       dm,
 		Description:              d,
 		ElementType:              a.ElementType,
 		ElementTypeCollection:    et,
 		Sensitive:                s,
-		Validators:               a.Validators,
 		ValidatorsCustom:         vc,
 	}, nil
 }
@@ -74,16 +70,11 @@ func (g GeneratorListAttribute) ElemType() specschema.ElementType {
 func (g GeneratorListAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypeCollection.Imports())
 
-	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType)
-	imports.Append(elemTypeImports)
+	imports.Append(g.ElementTypeCollection.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -111,10 +102,6 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.CustomType.Equal(h.CustomType) {
-		return false
-	}
-
 	if !g.CustomTypeCollection.Equal(h.CustomTypeCollection) {
 		return false
 	}
@@ -136,10 +123,6 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -173,11 +156,10 @@ func (g GeneratorListAttribute) ModelField(name generatorschema.FrameworkIdentif
 		ValueType: model.ListValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomTypeCollection.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil
