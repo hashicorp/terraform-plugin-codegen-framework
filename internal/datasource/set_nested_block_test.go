@@ -1105,7 +1105,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorSetNestedBlock{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, nil),
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, nil),
 			},
 			expected: []code.Import{
 				{
@@ -1118,7 +1118,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorSetNestedBlock{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
 					&specschema.CustomValidator{},
 				}),
 			},
@@ -1133,7 +1133,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorSetNestedBlock{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -1154,7 +1154,7 @@ func TestGeneratorSetNestedBlock_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorSetNestedBlock{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{

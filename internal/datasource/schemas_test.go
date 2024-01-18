@@ -241,9 +241,12 @@ func TestGeneratorDataSourceSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"single_nested_block_custom": GeneratorSingleNestedBlock{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_single_nested_value_type",
-							},
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(
+								&specschema.CustomType{
+									ValueType: "my_single_nested_value_type",
+								},
+								"",
+							),
 							Attributes: schema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
