@@ -9,7 +9,6 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -18,14 +17,12 @@ import (
 
 type GeneratorMapNestedAttribute struct {
 	ComputedOptionalRequired   convert.ComputedOptionalRequired
-	CustomType                 *specschema.CustomType
 	CustomTypeNestedCollection convert.CustomTypeNestedCollection
 	DeprecationMessage         convert.DeprecationMessage
 	Description                convert.Description
 	NestedObject               GeneratorNestedAttributeObject
 	NestedAttributeObject      convert.NestedAttributeObject
 	Sensitive                  convert.Sensitive
-	Validators                 specschema.MapValidators
 	ValidatorsCustom           convert.ValidatorsCustom
 }
 
@@ -58,7 +55,6 @@ func NewGeneratorMapNestedAttribute(name string, a *datasource.MapNestedAttribut
 
 	return GeneratorMapNestedAttribute{
 		ComputedOptionalRequired:   c,
-		CustomType:                 a.CustomType,
 		CustomTypeNestedCollection: ct,
 		DeprecationMessage:         dm,
 		Description:                d,
@@ -70,7 +66,6 @@ func NewGeneratorMapNestedAttribute(name string, a *datasource.MapNestedAttribut
 		},
 		NestedAttributeObject: nat,
 		Sensitive:             s,
-		Validators:            a.Validators,
 		ValidatorsCustom:      vcl,
 	}, nil
 }
@@ -82,27 +77,12 @@ func (g GeneratorMapNestedAttribute) GeneratorSchemaType() generatorschema.Type 
 func (g GeneratorMapNestedAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypeNestedCollection.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
-	customTypeImports = generatorschema.CustomTypeImports(g.NestedObject.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.NestedAttributeObject.Imports())
 
-	for _, v := range g.NestedObject.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
-
-	for _, v := range g.NestedObject.Attributes {
-		imports.Append(v.Imports())
-	}
-
-	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
@@ -118,10 +98,6 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 	}
 
 	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
-		return false
-	}
-
-	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -146,10 +122,6 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -179,17 +151,19 @@ func (g GeneratorMapNestedAttribute) Schema(name generatorschema.FrameworkIdenti
 }
 
 func (g GeneratorMapNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
-	field := model.Field{
+	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
 		ValueType: model.MapValueType,
 	}
 
-	if g.CustomType != nil {
-		field.ValueType = g.CustomType.ValueType
+	customValueType := g.CustomTypeNestedCollection.ValueType()
+
+	if customValueType != "" {
+		f.ValueType = customValueType
 	}
 
-	return field, nil
+	return f, nil
 }
 
 func (g GeneratorMapNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {

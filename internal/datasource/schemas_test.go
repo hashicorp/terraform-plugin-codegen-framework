@@ -107,9 +107,11 @@ func TestGeneratorDataSourceSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"map_nested_attribute_custom": GeneratorMapNestedAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_map_nested_value_type",
-							},
+							CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+								&specschema.CustomType{
+									ValueType: "my_map_nested_value_type",
+								},
+							),
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: schema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
@@ -156,9 +158,11 @@ func TestGeneratorDataSourceSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"set_nested_attribute_custom": GeneratorSetNestedAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_set_nested_value_type",
-							},
+							CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+								&specschema.CustomType{
+									ValueType: "my_set_nested_value_type",
+								},
+							),
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: schema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
