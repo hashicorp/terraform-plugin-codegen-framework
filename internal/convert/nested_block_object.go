@@ -6,21 +6,22 @@ package convert
 import (
 	"bytes"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type NestedBlockObject struct {
-	attributes       generatorschema.GeneratorAttributes
-	blocks           generatorschema.GeneratorBlocks
+	attributes       schema.GeneratorAttributes
+	blocks           schema.GeneratorBlocks
 	customType       CustomTypeNestedObject
 	validatorsCustom ValidatorsCustom
 }
 
 // NewNestedBlockObject constructs a NestedBlockObject which is used to generate a
 // nested attribute block in the schema.
-func NewNestedBlockObject(a generatorschema.GeneratorAttributes, b generatorschema.GeneratorBlocks, c *specschema.CustomType, v ValidatorsCustom, name string) NestedBlockObject {
+func NewNestedBlockObject(a schema.GeneratorAttributes, b schema.GeneratorBlocks, c *specschema.CustomType, v ValidatorsCustom, name string) NestedBlockObject {
 	return NestedBlockObject{
 		attributes:       a,
 		blocks:           b,
@@ -43,6 +44,28 @@ func (n NestedBlockObject) Equal(other NestedBlockObject) bool {
 	}
 
 	return n.validatorsCustom.Equal(other.validatorsCustom)
+}
+
+func (n NestedBlockObject) Imports() *schema.Imports {
+	imports := schema.NewImports()
+
+	if n.customType.customType != nil {
+		if n.customType.customType.HasImport() {
+			imports.Add(*n.customType.customType.Import)
+		}
+	} else {
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+	}
+
+	imports.Append(n.validatorsCustom.Imports())
+
+	imports.Append(n.attributes.Imports())
+
+	imports.Append(n.blocks.Imports())
+
+	return imports
 }
 
 func (n NestedBlockObject) Schema() ([]byte, error) {

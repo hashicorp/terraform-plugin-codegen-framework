@@ -692,11 +692,13 @@ func TestGeneratorSingleNestedBlock_Imports(t *testing.T) {
 			input: GeneratorSingleNestedBlock{
 				Blocks: generatorschema.GeneratorBlocks{
 					"list-nested-block": GeneratorListNestedBlock{
-						CustomType: &specschema.CustomType{
-							Import: &code.Import{
-								Path: "github.com/my_account/my_project/nested_block",
+						CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+							&specschema.CustomType{
+								Import: &code.Import{
+									Path: "github.com/my_account/my_project/nested_block",
+								},
 							},
-						},
+						),
 					},
 				},
 			},

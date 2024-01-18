@@ -9,7 +9,6 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -18,14 +17,12 @@ import (
 
 type GeneratorListNestedBlock struct {
 	ComputedOptionalRequired   convert.ComputedOptionalRequired
-	CustomType                 *specschema.CustomType
 	CustomTypeNestedCollection convert.CustomTypeNestedCollection
 	DeprecationMessage         convert.DeprecationMessage
 	Description                convert.Description
 	NestedObject               GeneratorNestedBlockObject
 	NestedBlockObject          convert.NestedBlockObject
 	Sensitive                  convert.Sensitive
-	Validators                 specschema.ListValidators
 	ValidatorsCustom           convert.ValidatorsCustom
 }
 
@@ -64,7 +61,6 @@ func NewGeneratorListNestedBlock(name string, b *datasource.ListNestedBlock) (Ge
 
 	return GeneratorListNestedBlock{
 		ComputedOptionalRequired:   c,
-		CustomType:                 b.CustomType,
 		CustomTypeNestedCollection: ct,
 		DeprecationMessage:         dm,
 		Description:                d,
@@ -77,7 +73,6 @@ func NewGeneratorListNestedBlock(name string, b *datasource.ListNestedBlock) (Ge
 		},
 		NestedBlockObject: nbo,
 		Sensitive:         s,
-		Validators:        b.Validators,
 		ValidatorsCustom:  vcl,
 	}, nil
 }
@@ -89,31 +84,12 @@ func (g GeneratorListNestedBlock) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorListNestedBlock) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypeNestedCollection.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
-	customTypeImports = generatorschema.CustomTypeImports(g.NestedObject.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.NestedBlockObject.Imports())
 
-	for _, v := range g.NestedObject.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
-
-	for _, v := range g.NestedObject.Attributes {
-		imports.Append(v.Imports())
-	}
-
-	for _, v := range g.NestedObject.Blocks {
-		imports.Append(v.Imports())
-	}
-
-	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
@@ -129,10 +105,6 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 	}
 
 	if !g.ComputedOptionalRequired.Equal(h.ComputedOptionalRequired) {
-		return false
-	}
-
-	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -157,10 +129,6 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -190,17 +158,19 @@ func (g GeneratorListNestedBlock) Schema(name generatorschema.FrameworkIdentifie
 }
 
 func (g GeneratorListNestedBlock) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
-	field := model.Field{
+	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
 		ValueType: model.ListValueType,
 	}
 
-	if g.CustomType != nil {
-		field.ValueType = g.CustomType.ValueType
+	customValueType := g.CustomTypeNestedCollection.ValueType()
+
+	if customValueType != "" {
+		f.ValueType = customValueType
 	}
 
-	return field, nil
+	return f, nil
 }
 
 func (g GeneratorListNestedBlock) GetAttributes() generatorschema.GeneratorAttributes {
