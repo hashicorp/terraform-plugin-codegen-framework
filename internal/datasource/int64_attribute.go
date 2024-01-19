@@ -11,11 +11,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorInt64Attribute struct {
-	AssociatedExternalType   *generatorschema.AssocExtType
+	AssociatedExternalType   *schema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypePrimitive      convert.CustomTypePrimitive
 	DeprecationMessage       convert.DeprecationMessage
@@ -42,7 +42,7 @@ func NewGeneratorInt64Attribute(name string, a *datasource.Int64Attribute) (Gene
 	vc := convert.NewValidatorsCustom(convert.ValidatorTypeInt64, a.Validators.CustomValidators())
 
 	return GeneratorInt64Attribute{
-		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AssociatedExternalType:   schema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomTypePrimitive:      ctp,
 		DeprecationMessage:       dm,
@@ -52,19 +52,19 @@ func NewGeneratorInt64Attribute(name string, a *datasource.Int64Attribute) (Gene
 	}, nil
 }
 
-func (g GeneratorInt64Attribute) GeneratorSchemaType() generatorschema.Type {
-	return generatorschema.GeneratorInt64Attribute
+func (g GeneratorInt64Attribute) GeneratorSchemaType() schema.Type {
+	return schema.GeneratorInt64Attribute
 }
 
-func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
-	imports := generatorschema.NewImports()
+func (g GeneratorInt64Attribute) Imports() *schema.Imports {
+	imports := schema.NewImports()
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
 	imports.Append(g.ValidatorsCustom.Imports())
 
 	if g.AssociatedExternalType != nil {
-		imports.Append(generatorschema.AssociatedExternalTypeImports())
+		imports.Append(schema.AssociatedExternalTypeImports())
 	}
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -72,7 +72,7 @@ func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bool {
+func (g GeneratorInt64Attribute) Equal(ga schema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorInt64Attribute)
 
 	if !ok {
@@ -106,7 +106,7 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
-func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorInt64Attribute) Schema(name schema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.Int64Attribute{\n", name))
@@ -121,7 +121,7 @@ func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier
 	return b.String(), nil
 }
 
-func (g GeneratorInt64Attribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
+func (g GeneratorInt64Attribute) ModelField(name schema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
@@ -144,7 +144,7 @@ func (g GeneratorInt64Attribute) CustomTypeAndValue(name string) ([]byte, error)
 
 	var buf bytes.Buffer
 
-	int64Type := generatorschema.NewCustomInt64Type(name)
+	int64Type := schema.NewCustomInt64Type(name)
 
 	b, err := int64Type.Render()
 
@@ -154,7 +154,7 @@ func (g GeneratorInt64Attribute) CustomTypeAndValue(name string) ([]byte, error)
 
 	buf.Write(b)
 
-	int64Value := generatorschema.NewCustomInt64Value(name)
+	int64Value := schema.NewCustomInt64Value(name)
 
 	b, err = int64Value.Render()
 
@@ -172,7 +172,7 @@ func (g GeneratorInt64Attribute) ToFromFunctions(name string) ([]byte, error) {
 		return nil, nil
 	}
 
-	toFrom := generatorschema.NewToFromInt64(name, g.AssociatedExternalType)
+	toFrom := schema.NewToFromInt64(name, g.AssociatedExternalType)
 
 	b, err := toFrom.Render()
 
@@ -184,7 +184,7 @@ func (g GeneratorInt64Attribute) ToFromFunctions(name string) ([]byte, error) {
 }
 
 // AttrType returns a string representation of a basetypes.Int64Typable type.
-func (g GeneratorInt64Attribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorInt64Attribute) AttrType(name schema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
@@ -193,7 +193,7 @@ func (g GeneratorInt64Attribute) AttrType(name generatorschema.FrameworkIdentifi
 }
 
 // AttrValue returns a string representation of a basetypes.Int64Valuable type.
-func (g GeneratorInt64Attribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorInt64Attribute) AttrValue(name schema.FrameworkIdentifier) string {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
@@ -201,26 +201,26 @@ func (g GeneratorInt64Attribute) AttrValue(name generatorschema.FrameworkIdentif
 	return "basetypes.Int64Value"
 }
 
-func (g GeneratorInt64Attribute) To() (generatorschema.ToFromConversion, error) {
+func (g GeneratorInt64Attribute) To() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "ValueInt64Pointer",
 	}, nil
 }
 
-func (g GeneratorInt64Attribute) From() (generatorschema.ToFromConversion, error) {
+func (g GeneratorInt64Attribute) From() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "Int64PointerValue",
 	}, nil
 }

@@ -11,11 +11,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorNumberAttribute struct {
-	AssociatedExternalType *generatorschema.AssocExtType
+	AssociatedExternalType *schema.AssocExtType
 	OptionalRequired       convert.OptionalRequired
 	CustomTypePrimitive    convert.CustomTypePrimitive
 	DeprecationMessage     convert.DeprecationMessage
@@ -42,7 +42,7 @@ func NewGeneratorNumberAttribute(name string, a *provider.NumberAttribute) (Gene
 	vc := convert.NewValidatorsCustom(convert.ValidatorTypeNumber, a.Validators.CustomValidators())
 
 	return GeneratorNumberAttribute{
-		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AssociatedExternalType: schema.NewAssocExtType(a.AssociatedExternalType),
 		OptionalRequired:       c,
 		CustomTypePrimitive:    ctp,
 		DeprecationMessage:     dm,
@@ -52,19 +52,19 @@ func NewGeneratorNumberAttribute(name string, a *provider.NumberAttribute) (Gene
 	}, nil
 }
 
-func (g GeneratorNumberAttribute) GeneratorSchemaType() generatorschema.Type {
-	return generatorschema.GeneratorNumberAttribute
+func (g GeneratorNumberAttribute) GeneratorSchemaType() schema.Type {
+	return schema.GeneratorNumberAttribute
 }
 
-func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
-	imports := generatorschema.NewImports()
+func (g GeneratorNumberAttribute) Imports() *schema.Imports {
+	imports := schema.NewImports()
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
 	imports.Append(g.ValidatorsCustom.Imports())
 
 	if g.AssociatedExternalType != nil {
-		imports.Append(generatorschema.AssociatedExternalTypeImports())
+		imports.Append(schema.AssociatedExternalTypeImports())
 	}
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -72,7 +72,7 @@ func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
+func (g GeneratorNumberAttribute) Equal(ga schema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorNumberAttribute)
 
 	if !ok {
@@ -106,7 +106,7 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
-func (g GeneratorNumberAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorNumberAttribute) Schema(name schema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.NumberAttribute{\n", name))
@@ -121,7 +121,7 @@ func (g GeneratorNumberAttribute) Schema(name generatorschema.FrameworkIdentifie
 	return b.String(), nil
 }
 
-func (g GeneratorNumberAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
+func (g GeneratorNumberAttribute) ModelField(name schema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
@@ -144,7 +144,7 @@ func (g GeneratorNumberAttribute) CustomTypeAndValue(name string) ([]byte, error
 
 	var buf bytes.Buffer
 
-	numberType := generatorschema.NewCustomNumberType(name)
+	numberType := schema.NewCustomNumberType(name)
 
 	b, err := numberType.Render()
 
@@ -154,7 +154,7 @@ func (g GeneratorNumberAttribute) CustomTypeAndValue(name string) ([]byte, error
 
 	buf.Write(b)
 
-	numberValue := generatorschema.NewCustomNumberValue(name)
+	numberValue := schema.NewCustomNumberValue(name)
 
 	b, err = numberValue.Render()
 
@@ -172,7 +172,7 @@ func (g GeneratorNumberAttribute) ToFromFunctions(name string) ([]byte, error) {
 		return nil, nil
 	}
 
-	toFrom := generatorschema.NewToFromNumber(name, g.AssociatedExternalType)
+	toFrom := schema.NewToFromNumber(name, g.AssociatedExternalType)
 
 	b, err := toFrom.Render()
 
@@ -184,7 +184,7 @@ func (g GeneratorNumberAttribute) ToFromFunctions(name string) ([]byte, error) {
 }
 
 // AttrType returns a string representation of a basetypes.NumberTypable type.
-func (g GeneratorNumberAttribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorNumberAttribute) AttrType(name schema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
@@ -193,7 +193,7 @@ func (g GeneratorNumberAttribute) AttrType(name generatorschema.FrameworkIdentif
 }
 
 // AttrValue returns a string representation of a basetypes.NumberValuable type.
-func (g GeneratorNumberAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorNumberAttribute) AttrValue(name schema.FrameworkIdentifier) string {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
@@ -201,26 +201,26 @@ func (g GeneratorNumberAttribute) AttrValue(name generatorschema.FrameworkIdenti
 	return "basetypes.NumberValue"
 }
 
-func (g GeneratorNumberAttribute) To() (generatorschema.ToFromConversion, error) {
+func (g GeneratorNumberAttribute) To() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "ValueBigFloat",
 	}, nil
 }
 
-func (g GeneratorNumberAttribute) From() (generatorschema.ToFromConversion, error) {
+func (g GeneratorNumberAttribute) From() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "NumberValue",
 	}, nil
 }

@@ -11,11 +11,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorBoolAttribute struct {
-	AssociatedExternalType   *generatorschema.AssocExtType
+	AssociatedExternalType   *schema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypePrimitive      convert.CustomTypePrimitive
 	DeprecationMessage       convert.DeprecationMessage
@@ -42,7 +42,7 @@ func NewGeneratorBoolAttribute(name string, a *datasource.BoolAttribute) (Genera
 	vc := convert.NewValidatorsCustom(convert.ValidatorTypeBool, a.Validators.CustomValidators())
 
 	return GeneratorBoolAttribute{
-		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AssociatedExternalType:   schema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomTypePrimitive:      ctp,
 		DeprecationMessage:       dm,
@@ -52,19 +52,19 @@ func NewGeneratorBoolAttribute(name string, a *datasource.BoolAttribute) (Genera
 	}, nil
 }
 
-func (g GeneratorBoolAttribute) GeneratorSchemaType() generatorschema.Type {
-	return generatorschema.GeneratorBoolAttribute
+func (g GeneratorBoolAttribute) GeneratorSchemaType() schema.Type {
+	return schema.GeneratorBoolAttribute
 }
 
-func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
-	imports := generatorschema.NewImports()
+func (g GeneratorBoolAttribute) Imports() *schema.Imports {
+	imports := schema.NewImports()
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
 	imports.Append(g.ValidatorsCustom.Imports())
 
 	if g.AssociatedExternalType != nil {
-		imports.Append(generatorschema.AssociatedExternalTypeImports())
+		imports.Append(schema.AssociatedExternalTypeImports())
 	}
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -72,7 +72,7 @@ func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
+func (g GeneratorBoolAttribute) Equal(ga schema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorBoolAttribute)
 
 	if !ok {
@@ -106,7 +106,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
 }
 
-func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorBoolAttribute) Schema(name schema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.BoolAttribute{\n", name))
@@ -121,7 +121,7 @@ func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier)
 	return b.String(), nil
 }
 
-func (g GeneratorBoolAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
+func (g GeneratorBoolAttribute) ModelField(name schema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
@@ -144,7 +144,7 @@ func (g GeneratorBoolAttribute) CustomTypeAndValue(name string) ([]byte, error) 
 
 	var buf bytes.Buffer
 
-	boolType := generatorschema.NewCustomBoolType(name)
+	boolType := schema.NewCustomBoolType(name)
 
 	b, err := boolType.Render()
 
@@ -154,7 +154,7 @@ func (g GeneratorBoolAttribute) CustomTypeAndValue(name string) ([]byte, error) 
 
 	buf.Write(b)
 
-	boolValue := generatorschema.NewCustomBoolValue(name)
+	boolValue := schema.NewCustomBoolValue(name)
 
 	b, err = boolValue.Render()
 
@@ -172,7 +172,7 @@ func (g GeneratorBoolAttribute) ToFromFunctions(name string) ([]byte, error) {
 		return nil, nil
 	}
 
-	toFrom := generatorschema.NewToFromBool(name, g.AssociatedExternalType)
+	toFrom := schema.NewToFromBool(name, g.AssociatedExternalType)
 
 	b, err := toFrom.Render()
 
@@ -184,7 +184,7 @@ func (g GeneratorBoolAttribute) ToFromFunctions(name string) ([]byte, error) {
 }
 
 // AttrType returns a string representation of a basetypes.BoolTypable type.
-func (g GeneratorBoolAttribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorBoolAttribute) AttrType(name schema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
@@ -193,7 +193,7 @@ func (g GeneratorBoolAttribute) AttrType(name generatorschema.FrameworkIdentifie
 }
 
 // AttrValue returns a string representation of a basetypes.BoolValuable type.
-func (g GeneratorBoolAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorBoolAttribute) AttrValue(name schema.FrameworkIdentifier) string {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
@@ -201,26 +201,26 @@ func (g GeneratorBoolAttribute) AttrValue(name generatorschema.FrameworkIdentifi
 	return "basetypes.BoolValue"
 }
 
-func (g GeneratorBoolAttribute) To() (generatorschema.ToFromConversion, error) {
+func (g GeneratorBoolAttribute) To() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "ValueBoolPointer",
 	}, nil
 }
 
-func (g GeneratorBoolAttribute) From() (generatorschema.ToFromConversion, error) {
+func (g GeneratorBoolAttribute) From() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "BoolPointerValue",
 	}, nil
 }
