@@ -14,7 +14,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorSetAttribute_New(t *testing.T) {
@@ -364,13 +363,6 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
 				CustomTypeCollection: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
@@ -500,18 +492,6 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Validators: specschema.SetValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -1145,9 +1125,15 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorSetAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					convert.CustomCollectionTypeSet,
+					"",
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "SetAttribute",
@@ -1157,11 +1143,15 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorSetAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.SetAttribute",
 					},
-				},
+					convert.CustomCollectionTypeSet,
+					"",
+					"set_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "SetAttribute",
@@ -1171,14 +1161,17 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorSetAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.SetAttribute",
+					},
+					convert.CustomCollectionTypeSet,
+					"",
+					"set_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "SetAttribute",

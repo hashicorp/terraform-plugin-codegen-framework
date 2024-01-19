@@ -14,7 +14,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorMapAttribute_New(t *testing.T) {
@@ -364,13 +363,6 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
 				CustomTypeCollection: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
@@ -500,18 +492,6 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Validators: specschema.MapValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -1145,9 +1125,15 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorMapAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					convert.CustomCollectionTypeMap,
+					"",
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",
@@ -1157,11 +1143,15 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorMapAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.MapAttribute",
 					},
-				},
+					convert.CustomCollectionTypeMap,
+					"",
+					"map_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",
@@ -1171,14 +1161,17 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorMapAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
+					},
+					convert.CustomCollectionTypeMap,
+					"",
+					"map_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",

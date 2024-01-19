@@ -309,13 +309,6 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorObjectAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
 				CustomTypeObject: convert.NewCustomTypeObject(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -374,18 +367,6 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorObjectAttribute{
 				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
-				Validators: specschema.ObjectValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -435,27 +416,39 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-without-import": {
 			input: GeneratorObjectAttribute{
-				CustomType: &specschema.CustomType{},
+				CustomTypeObject: convert.NewCustomTypeObject(
+					&specschema.CustomType{},
+					nil,
+					"",
+				),
 			},
 			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorObjectAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "",
+				CustomTypeObject: convert.NewCustomTypeObject(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
 					},
-				},
+					nil,
+					"",
+				),
 			},
 			expected: []code.Import{},
 		},
 		"custom-type-with-import": {
 			input: GeneratorObjectAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/my_account/my_project/attribute",
+				CustomTypeObject: convert.NewCustomTypeObject(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
 					},
-				},
+					nil,
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -483,12 +476,12 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"object-with-attr-type-bool": {
 			input: GeneratorObjectAttribute{
-				AttributeTypes: specschema.ObjectAttributeTypes{
+				AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 					{
 						Name: "bool",
 						Bool: &specschema.BoolType{},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -509,6 +502,12 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Number: &specschema.NumberType{},
 					},
 				},
+				AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
+					{
+						Name:   "number",
+						Number: &specschema.NumberType{},
+					},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -524,7 +523,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"object-with-attr-type-bool-with-import": {
 			input: GeneratorObjectAttribute{
-				AttributeTypes: specschema.ObjectAttributeTypes{
+				AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 					{
 						Name: "bool",
 						Bool: &specschema.BoolType{
@@ -535,7 +534,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 							},
 						},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -548,7 +547,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"object-with-attr-type-bool-with-imports": {
 			input: GeneratorObjectAttribute{
-				AttributeTypes: specschema.ObjectAttributeTypes{
+				AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 					{
 						Name: "bool",
 						Bool: &specschema.BoolType{
@@ -582,7 +581,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Name:   "str",
 						String: &specschema.StringType{},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -604,11 +603,8 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorObjectAttribute{
-				Validators: specschema.ObjectValidators{
-					{
-						Custom: nil,
-					},
-				}},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, nil),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -617,11 +613,10 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorObjectAttribute{
-				Validators: specschema.ObjectValidators{
-					{
-						Custom: &specschema.CustomValidator{},
-					},
-				}},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -630,17 +625,16 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorObjectAttribute{
-				Validators: specschema.ObjectValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "",
-								},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "",
 							},
 						},
 					},
-				}},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -649,26 +643,23 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorObjectAttribute{
-				Validators: specschema.ObjectValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/myotherproject/myvalidators/validator",
-								},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myvalidators/validator",
 							},
 						},
 					},
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/myproject/myvalidators/validator",
-								},
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myvalidators/validator",
 							},
 						},
 					},
-				}},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -758,11 +749,20 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Type: "*api.ObjectAttribute",
 					},
 				},
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/my_account/my_project/attribute",
+				CustomTypeObject: convert.NewCustomTypeObject(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
 					},
-				},
+					&specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.ObjectAttribute",
+					},
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -797,12 +797,12 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 						Type: "*api.ObjectAttribute",
 					},
 				},
-				AttributeTypes: specschema.ObjectAttributeTypes{
+				AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 					{
 						Name:   "number",
 						Number: &specschema.NumberType{},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -1615,9 +1615,13 @@ func TestGeneratorObjectAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorObjectAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomTypeObject: convert.NewCustomTypeObject(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "ObjectAttribute",
@@ -1627,11 +1631,13 @@ func TestGeneratorObjectAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorObjectAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypeObject: convert.NewCustomTypeObject(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.ObjectAttribute",
 					},
-				},
+					"object_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "ObjectAttribute",
@@ -1641,14 +1647,15 @@ func TestGeneratorObjectAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorObjectAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypeObject: convert.NewCustomTypeObject(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ObjectAttribute",
+					},
+					"object_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "ObjectAttribute",

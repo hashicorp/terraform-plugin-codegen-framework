@@ -9,7 +9,6 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -20,12 +19,10 @@ type GeneratorSingleNestedAttribute struct {
 	AssociatedExternalType *generatorschema.AssocExtType
 	Attributes             generatorschema.GeneratorAttributes
 	OptionalRequired       convert.OptionalRequired
-	CustomType             *specschema.CustomType
 	CustomTypeNestedObject convert.CustomTypeNestedObject
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
-	Validators             specschema.ObjectValidators
 	ValidatorsCustom       convert.ValidatorsCustom
 }
 
@@ -56,12 +53,10 @@ func NewGeneratorSingleNestedAttribute(name string, a *provider.SingleNestedAttr
 		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		Attributes:             attributes,
 		OptionalRequired:       c,
-		CustomType:             a.CustomType,
 		CustomTypeNestedObject: ct,
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
-		Validators:             a.Validators,
 		ValidatorsCustom:       vc,
 	}, nil
 }
@@ -73,19 +68,12 @@ func (g GeneratorSingleNestedAttribute) GeneratorSchemaType() generatorschema.Ty
 func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypeNestedObject.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
-	for _, v := range g.Attributes {
-		imports.Append(v.Imports())
-	}
+	imports.Append(g.Attributes.Imports())
 
-	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -112,10 +100,6 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	if !g.CustomType.Equal(h.CustomType) {
-		return false
-	}
-
 	if !g.CustomTypeNestedObject.Equal(h.CustomTypeNestedObject) {
 		return false
 	}
@@ -129,10 +113,6 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -164,17 +144,19 @@ func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIde
 }
 
 func (g GeneratorSingleNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
-	field := model.Field{
+	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
 		ValueType: name.ToPascalCase() + "Value",
 	}
 
-	if g.CustomType != nil {
-		field.ValueType = g.CustomType.ValueType
+	customValueType := g.CustomTypeNestedObject.ValueType()
+
+	if customValueType != "" {
+		f.ValueType = customValueType
 	}
 
-	return field, nil
+	return f, nil
 }
 
 func (g GeneratorSingleNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {

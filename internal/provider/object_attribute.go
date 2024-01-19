@@ -21,12 +21,10 @@ type GeneratorObjectAttribute struct {
 	AttributeTypes         specschema.ObjectAttributeTypes
 	AttributeTypesObject   convert.ObjectAttributeTypes
 	OptionalRequired       convert.OptionalRequired
-	CustomType             *specschema.CustomType
 	CustomTypeObject       convert.CustomTypeObject
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
-	Validators             specschema.ObjectValidators
 	ValidatorsCustom       convert.ValidatorsCustom
 }
 
@@ -54,12 +52,10 @@ func NewGeneratorObjectAttribute(name string, a *provider.ObjectAttribute) (Gene
 		AttributeTypes:         a.AttributeTypes,
 		AttributeTypesObject:   oat,
 		OptionalRequired:       c,
-		CustomType:             a.CustomType,
 		CustomTypeObject:       cto,
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
-		Validators:             a.Validators,
 		ValidatorsCustom:       vc,
 	}, nil
 }
@@ -75,16 +71,11 @@ func (g GeneratorObjectAttribute) AttrTypes() specschema.ObjectAttributeTypes {
 func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypeObject.Imports())
 
-	attrTypesImports := generatorschema.GetAttrTypesImports(g.CustomType, g.AttributeTypes)
-	imports.Append(attrTypesImports)
+	imports.Append(g.AttributeTypesObject.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -126,10 +117,6 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.CustomType.Equal(h.CustomType) {
-		return false
-	}
-
 	if !g.CustomTypeObject.Equal(h.CustomTypeObject) {
 		return false
 	}
@@ -143,10 +130,6 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -180,11 +163,10 @@ func (g GeneratorObjectAttribute) ModelField(name generatorschema.FrameworkIdent
 		ValueType: model.ObjectValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomTypeObject.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil
