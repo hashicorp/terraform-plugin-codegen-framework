@@ -10,6 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
@@ -27,21 +28,33 @@ func TestGeneratorResourceSchemas_ModelsBytes(t *testing.T) {
 					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{},
 						"bool_attribute_custom": GeneratorBoolAttribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_bool_value_type",
-							},
+							CustomTypePrimitive: convert.NewCustomTypePrimitive(
+								&schema.CustomType{
+									ValueType: "my_bool_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"float64_attribute": GeneratorFloat64Attribute{},
 						"float64_attribute_custom": GeneratorFloat64Attribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_float64_value_type",
-							},
+							CustomTypePrimitive: convert.NewCustomTypePrimitive(
+								&schema.CustomType{
+									ValueType: "my_float64_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"int64_attribute": GeneratorInt64Attribute{},
 						"int64_attribute_custom": GeneratorInt64Attribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_int64_value_type",
-							},
+							CustomTypePrimitive: convert.NewCustomTypePrimitive(
+								&schema.CustomType{
+									ValueType: "my_int64_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"list_attribute": GeneratorListAttribute{},
 						"list_attribute_custom": GeneratorListAttribute{
@@ -91,9 +104,13 @@ func TestGeneratorResourceSchemas_ModelsBytes(t *testing.T) {
 						},
 						"number_attribute": GeneratorNumberAttribute{},
 						"number_attribute_custom": GeneratorNumberAttribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_number_value_type",
-							},
+							CustomTypePrimitive: convert.NewCustomTypePrimitive(
+								&schema.CustomType{
+									ValueType: "my_number_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"object_attribute": GeneratorObjectAttribute{},
 						"object_attribute_custom": GeneratorObjectAttribute{
@@ -139,9 +156,13 @@ func TestGeneratorResourceSchemas_ModelsBytes(t *testing.T) {
 						},
 						"string_attribute": GeneratorStringAttribute{},
 						"string_attribute_custom": GeneratorStringAttribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_string_value_type",
-							},
+							CustomTypePrimitive: convert.NewCustomTypePrimitive(
+								&schema.CustomType{
+									ValueType: "my_string_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 					},
 					Blocks: generatorschema.GeneratorBlocks{

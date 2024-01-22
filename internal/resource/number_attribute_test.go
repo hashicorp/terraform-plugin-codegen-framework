@@ -83,13 +83,6 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -152,18 +145,6 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
-				Validators: specschema.NumberValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -193,18 +174,6 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiers: specschema.NumberPlanModifiers{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../my_planmodifier",
-								},
-							},
-							SchemaDefinition: "my_planmodifier.Modify()",
-						},
-					},
-				},
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
@@ -233,16 +202,6 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Default: &specschema.NumberDefault{
-					Custom: &specschema.CustomDefault{
-						Imports: []code.Import{
-							{
-								Path: "github.com/.../my_default",
-							},
-						},
-						SchemaDefinition: "my_default.Default()",
-					},
-				},
 				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
@@ -268,6 +227,384 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
 			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorNumberAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorNumberAttribute
+		expected []code.Import
+	}{
+		"default": {
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorNumberAttribute{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorNumberAttribute{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorNumberAttribute{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorNumberAttribute{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorNumberAttribute{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+					&specschema.CustomValidator{},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorNumberAttribute{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				})},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorNumberAttribute{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myvalidators/validator",
+							},
+						},
+					},
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myvalidators/validator",
+							},
+						},
+					},
+				})},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+			},
+		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorNumberAttribute{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorNumberAttribute{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorNumberAttribute{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorNumberAttribute{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.PlanModifierImport,
+				},
+				{
+					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+				},
+				{
+					Path: "github.com/myproject/myplanmodifiers/planmodifier",
+				},
+			},
+		},
+		"default-nil": {
+			input: GeneratorNumberAttribute{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorNumberAttribute{
+				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorNumberAttribute{
+				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+					Imports: []code.Import{
+						{
+							Path: "",
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorNumberAttribute{
+				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+					Imports: []code.Import{
+						{
+							Path: "github.com/myproject/mydefaults/default",
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/myproject/mydefaults/default",
+				},
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+			},
+		},
+		"associated-external-type-with-import": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.NumberAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+		"associated-external-type-with-custom-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.NumberAttribute",
+					},
+				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports().All()
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
@@ -473,9 +810,13 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",
@@ -485,11 +826,13 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorNumberAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
 						Type: "*api.NumberAttribute",
 					},
-				},
+					"number_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",
@@ -499,14 +842,15 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorNumberAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					&specschema.AssociatedExternalType{
 						Type: "*api.NumberAttribute",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",

@@ -7,9 +7,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -19,16 +17,12 @@ import (
 type GeneratorInt64Attribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
 	CustomTypePrimitive      convert.CustomTypePrimitive
-	Default                  *specschema.Int64Default
 	DefaultInt64             convert.DefaultInt64
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiers            specschema.Int64PlanModifiers
 	PlanModifiersCustom      convert.PlanModifiersCustom
 	Sensitive                convert.Sensitive
-	Validators               specschema.Int64Validators
 	ValidatorsCustom         convert.ValidatorsCustom
 }
 
@@ -56,16 +50,12 @@ func NewGeneratorInt64Attribute(name string, a *resource.Int64Attribute) (Genera
 	return GeneratorInt64Attribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
 		CustomTypePrimitive:      ctp,
-		Default:                  a.Default,
 		DefaultInt64:             db,
 		Description:              d,
 		DeprecationMessage:       dm,
-		PlanModifiers:            a.PlanModifiers,
 		PlanModifiersCustom:      pm,
 		Sensitive:                s,
-		Validators:               a.Validators,
 		ValidatorsCustom:         vc,
 	}, nil
 }
@@ -77,29 +67,13 @@ func (g GeneratorInt64Attribute) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypePrimitive.Imports())
 
-	if g.Default != nil {
-		if g.Default.Static != nil {
-			imports.Add(code.Import{
-				Path: defaultInt64Import,
-			})
-		} else {
-			customDefaultImports := generatorschema.CustomDefaultImports(g.Default.Custom)
-			imports.Append(customDefaultImports)
-		}
-	}
+	imports.Append(g.DefaultInt64.Imports())
 
-	for _, v := range g.PlanModifiers {
-		customPlanModifierImports := generatorschema.CustomPlanModifierImports(v.Custom)
-		imports.Append(customPlanModifierImports)
-	}
+	imports.Append(g.PlanModifiersCustom.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -125,15 +99,7 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 		return false
 	}
 
-	if !g.CustomType.Equal(h.CustomType) {
-		return false
-	}
-
 	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
-		return false
-	}
-
-	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -149,19 +115,11 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 		return false
 	}
 
-	if !g.PlanModifiers.Equal(h.PlanModifiers) {
-		return false
-	}
-
 	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
 		return false
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -192,11 +150,10 @@ func (g GeneratorInt64Attribute) ModelField(name generatorschema.FrameworkIdenti
 		ValueType: model.Int64ValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomTypePrimitive.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil

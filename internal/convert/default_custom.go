@@ -7,6 +7,8 @@ import (
 	"fmt"
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type DefaultCustom struct {
@@ -21,6 +23,22 @@ func NewDefaultCustom(c *specschema.CustomDefault) DefaultCustom {
 
 func (d DefaultCustom) Equal(other DefaultCustom) bool {
 	return d.custom.Equal(other.custom)
+}
+
+func (d DefaultCustom) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
+
+	if d.custom == nil {
+		return imports
+	}
+
+	for _, i := range d.custom.Imports {
+		if len(i.Path) > 0 {
+			imports.Add(i)
+		}
+	}
+
+	return imports
 }
 
 func (d DefaultCustom) Schema() []byte {

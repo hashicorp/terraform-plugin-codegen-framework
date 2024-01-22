@@ -7,7 +7,10 @@ import (
 	"bytes"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 const (
@@ -60,6 +63,28 @@ func (v PlanModifiersCustom) Equal(other PlanModifiersCustom) bool {
 	}
 
 	return true
+}
+
+func (v PlanModifiersCustom) Imports() *schema.Imports {
+	imports := schema.NewImports()
+
+	if v.custom == nil {
+		return imports
+	}
+
+	for _, c := range v.custom {
+		for _, i := range c.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: schema.PlanModifierImport,
+				})
+
+				imports.Add(i)
+			}
+		}
+	}
+
+	return imports
 }
 
 func (v PlanModifiersCustom) Schema() []byte {
