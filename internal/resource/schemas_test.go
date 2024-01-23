@@ -169,9 +169,12 @@ func TestGeneratorResourceSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"single_nested_attribute_custom": GeneratorSingleNestedAttribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_single_nested_value_type",
-							},
+							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(
+								&schema.CustomType{
+									ValueType: "my_single_nested_value_type",
+								},
+								"",
+							),
 							Attributes: generatorschema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
