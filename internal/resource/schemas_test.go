@@ -126,9 +126,13 @@ func TestGeneratorResourceSchemas_ModelsBytes(t *testing.T) {
 						},
 						"object_attribute": GeneratorObjectAttribute{},
 						"object_attribute_custom": GeneratorObjectAttribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_object_value_type",
-							},
+							CustomTypeObject: convert.NewCustomTypeObject(
+								&schema.CustomType{
+									ValueType: "my_object_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"set_attribute": GeneratorSetAttribute{},
 						"set_attribute_custom": GeneratorSetAttribute{

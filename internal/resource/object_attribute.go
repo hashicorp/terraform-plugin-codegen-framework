@@ -21,16 +21,12 @@ type GeneratorObjectAttribute struct {
 	AttributeTypes           specschema.ObjectAttributeTypes
 	AttributeTypesObject     convert.ObjectAttributeTypes
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
 	CustomTypeObject         convert.CustomTypeObject
-	Default                  *specschema.ObjectDefault
 	DefaultCustom            convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiers            specschema.ObjectPlanModifiers
 	PlanModifiersCustom      convert.PlanModifiersCustom
 	Sensitive                convert.Sensitive
-	Validators               specschema.ObjectValidators
 	ValidatorsCustom         convert.ValidatorsCustom
 }
 
@@ -62,16 +58,12 @@ func NewGeneratorObjectAttribute(name string, a *resource.ObjectAttribute) (Gene
 		AttributeTypes:           a.AttributeTypes,
 		AttributeTypesObject:     oat,
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
 		CustomTypeObject:         cto,
-		Default:                  a.Default,
 		DefaultCustom:            dc,
 		DeprecationMessage:       dm,
 		Description:              d,
-		PlanModifiers:            a.PlanModifiers,
 		PlanModifiersCustom:      pm,
 		Sensitive:                s,
-		Validators:               a.Validators,
 		ValidatorsCustom:         vc,
 	}, nil
 }
@@ -87,26 +79,15 @@ func (g GeneratorObjectAttribute) AttrTypes() specschema.ObjectAttributeTypes {
 func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypeObject.Imports())
 
-	attrTypesImports := generatorschema.GetAttrTypesImports(g.CustomType, g.AttributeTypes)
-	imports.Append(attrTypesImports)
+	imports.Append(g.AttributeTypesObject.Imports())
 
-	if g.Default != nil {
-		customDefaultImports := generatorschema.CustomDefaultImports(g.Default.Custom)
-		imports.Append(customDefaultImports)
-	}
+	imports.Append(g.DefaultCustom.Imports())
 
-	for _, v := range g.PlanModifiers {
-		customPlanModifierImports := generatorschema.CustomPlanModifierImports(v.Custom)
-		imports.Append(customPlanModifierImports)
-	}
+	imports.Append(g.PlanModifiersCustom.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -148,15 +129,7 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.CustomType.Equal(h.CustomType) {
-		return false
-	}
-
 	if !g.CustomTypeObject.Equal(h.CustomTypeObject) {
-		return false
-	}
-
-	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -172,19 +145,11 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.PlanModifiers.Equal(h.PlanModifiers) {
-		return false
-	}
-
 	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
 		return false
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -220,11 +185,10 @@ func (g GeneratorObjectAttribute) ModelField(name generatorschema.FrameworkIdent
 		ValueType: model.ObjectValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomTypeObject.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil
