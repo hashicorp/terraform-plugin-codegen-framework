@@ -519,7 +519,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 					Path: generatorschema.TypesImport,
 				},
 				{
-					Path: defaultFloat64Import,
+					Path: "github.com/hashicorp/terraform-plugin-framework/resource/schema/float64default",
 				},
 			},
 		},

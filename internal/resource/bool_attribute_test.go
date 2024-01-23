@@ -519,7 +519,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 					Path: generatorschema.TypesImport,
 				},
 				{
-					Path: defaultBoolImport,
+					Path: "github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault",
 				},
 			},
 		},

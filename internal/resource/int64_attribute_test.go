@@ -519,7 +519,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 					Path: generatorschema.TypesImport,
 				},
 				{
-					Path: defaultInt64Import,
+					Path: "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default",
 				},
 			},
 		},

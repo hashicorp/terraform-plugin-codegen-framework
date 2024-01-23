@@ -519,7 +519,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 					Path: generatorschema.TypesImport,
 				},
 				{
-					Path: defaultStringImport,
+					Path: "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault",
 				},
 			},
 		},
