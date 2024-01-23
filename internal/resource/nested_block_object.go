@@ -52,6 +52,22 @@ func (n NestedBlockObject) Equal(other NestedBlockObject) bool {
 	return n.validatorsCustom.Equal(other.validatorsCustom)
 }
 
+func (n NestedBlockObject) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
+
+	imports.Append(n.customType.Imports())
+
+	imports.Append(n.planModifiersCustom.Imports())
+
+	imports.Append(n.validatorsCustom.Imports())
+
+	imports.Append(n.attributes.Imports())
+
+	imports.Append(n.blocks.Imports())
+
+	return imports
+}
+
 func (n NestedBlockObject) Schema() ([]byte, error) {
 	var b bytes.Buffer
 

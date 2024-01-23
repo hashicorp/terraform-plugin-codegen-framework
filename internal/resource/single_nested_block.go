@@ -9,7 +9,6 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -21,14 +20,11 @@ type GeneratorSingleNestedBlock struct {
 	Attributes               generatorschema.GeneratorAttributes
 	Blocks                   generatorschema.GeneratorBlocks
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
 	CustomTypeNestedObject   convert.CustomTypeNestedObject
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiers            specschema.ObjectPlanModifiers
 	PlanModifiersCustom      convert.PlanModifiersCustom
 	Sensitive                convert.Sensitive
-	Validators               specschema.ObjectValidators
 	ValidatorsCustom         convert.ValidatorsCustom
 }
 
@@ -68,14 +64,11 @@ func NewGeneratorSingleNestedBlock(name string, b *resource.SingleNestedBlock) (
 		Attributes:               attributes,
 		Blocks:                   blocks,
 		ComputedOptionalRequired: c,
-		CustomType:               b.CustomType,
 		CustomTypeNestedObject:   ct,
 		DeprecationMessage:       dm,
 		Description:              d,
-		PlanModifiers:            b.PlanModifiers,
 		PlanModifiersCustom:      pm,
 		Sensitive:                s,
-		Validators:               b.Validators,
 		ValidatorsCustom:         vc,
 	}, nil
 }
@@ -87,28 +80,16 @@ func (g GeneratorSingleNestedBlock) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomTypeNestedObject.Imports())
 
-	for _, v := range g.PlanModifiers {
-		customPlanModifierImports := generatorschema.CustomPlanModifierImports(v.Custom)
-		imports.Append(customPlanModifierImports)
-	}
+	imports.Append(g.PlanModifiersCustom.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.ValidatorsCustom.Imports())
 
-	for _, v := range g.Attributes {
-		imports.Append(v.Imports())
-	}
+	imports.Append(g.Attributes.Imports())
 
-	for _, v := range g.Blocks {
-		imports.Append(v.Imports())
-	}
+	imports.Append(g.Blocks.Imports())
 
-	// TODO: This should only be added if custom types (models) are being generated.
 	imports.Append(generatorschema.AttrImports())
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -139,10 +120,6 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	if !g.CustomType.Equal(h.CustomType) {
-		return false
-	}
-
 	if !g.CustomTypeNestedObject.Equal(h.CustomTypeNestedObject) {
 		return false
 	}
@@ -155,19 +132,11 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	if !g.PlanModifiers.Equal(h.PlanModifiers) {
-		return false
-	}
-
 	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
 		return false
 	}
 
 	if !g.Sensitive.Equal(h.Sensitive) {
-		return false
-	}
-
-	if !g.Validators.Equal(h.Validators) {
 		return false
 	}
 
@@ -213,17 +182,19 @@ func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentif
 }
 
 func (g GeneratorSingleNestedBlock) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
-	field := model.Field{
+	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
 		ValueType: name.ToPascalCase() + "Value",
 	}
 
-	if g.CustomType != nil {
-		field.ValueType = g.CustomType.ValueType
+	customValueType := g.CustomTypeNestedObject.ValueType()
+
+	if customValueType != "" {
+		f.ValueType = customValueType
 	}
 
-	return field, nil
+	return f, nil
 }
 
 func (g GeneratorSingleNestedBlock) GetAttributes() generatorschema.GeneratorAttributes {
