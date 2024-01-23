@@ -137,7 +137,7 @@ func (e ElementType) Imports() *schema.Imports {
 		})
 		return imports
 	case e.elementType.Object != nil:
-		imports.Add(schema.GetAttrTypesImports(e.elementType.Object.CustomType, e.elementType.Object.AttributeTypes).All()...)
+		imports.Add(NewObjectAttributeTypes(e.elementType.Object.AttributeTypes).Imports().All()...)
 		return imports
 	case e.elementType.Set != nil:
 		imports.Add(NewElementType(e.elementType.Set.ElementType).Imports().All()...)
