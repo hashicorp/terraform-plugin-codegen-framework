@@ -425,13 +425,6 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
 				CustomTypeCollection: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
@@ -566,18 +559,6 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 					String: &specschema.StringType{},
 				}),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, specschema.CustomPlanModifiers{}),
-				Validators: specschema.SetValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -622,18 +603,6 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiers: specschema.SetPlanModifiers{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../my_planmodifier",
-								},
-							},
-							SchemaDefinition: "my_planmodifier.Modify()",
-						},
-					},
-				},
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
@@ -671,16 +640,6 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 					"types.StringType",
 					"name",
 				),
-				Default: &specschema.SetDefault{
-					Custom: &specschema.CustomDefault{
-						Imports: []code.Import{
-							{
-								Path: "github.com/.../my_default",
-							},
-						},
-						SchemaDefinition: "my_default.Default()",
-					},
-				},
 				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
@@ -712,6 +671,590 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
 			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorSetAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorSetAttribute
+		expected []code.Import
+	}{
+		"default": {
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{},
+					nil,
+					convert.CustomCollectionTypeSet,
+					"",
+					"",
+				),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
+					},
+					nil,
+					convert.CustomCollectionTypeSet,
+					"",
+					"",
+				),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorSetAttribute{
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					nil,
+					convert.CustomCollectionTypeSet,
+					"",
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+			},
+		},
+		"elem-type-bool": {
+			input: GeneratorSetAttribute{
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-bool-with-import": {
+			input: GeneratorSetAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Bool: &specschema.BoolType{
+						CustomType: &specschema.CustomType{
+							Import: &code.Import{
+								Path: "github.com/my_account/my_project/element",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-list-bool": {
+			input: GeneratorSetAttribute{
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-list-bool-with-import": {
+			input: GeneratorSetAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/element",
+									},
+								},
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-object": {
+			input: GeneratorSetAttribute{
+				ElementType: specschema.ElementType{
+					Object: &specschema.ObjectType{},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-object-bool": {
+			input: GeneratorSetAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
+							{
+								Name: "b",
+								Bool: &specschema.BoolType{},
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"elem-type-object-bool-with-import": {
+			input: GeneratorSetAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
+							{
+								Name: "bool",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/element",
+										},
+									},
+								},
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-object-with-imports": {
+			input: GeneratorSetAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
+							{
+								Name: "b",
+								Bool: &specschema.BoolType{},
+							},
+							{
+								Name: "c",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/element",
+										},
+									},
+								},
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorSetAttribute{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorSetAttribute{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
+					&specschema.CustomValidator{},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorSetAttribute{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorSetAttribute{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myvalidators/validator",
+							},
+						},
+					},
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myvalidators/validator",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+			},
+		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorSetAttribute{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorSetAttribute{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorSetAttribute{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorSetAttribute{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.PlanModifierImport,
+				},
+				{
+					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+				},
+				{
+					Path: "github.com/myproject/myplanmodifiers/planmodifier",
+				},
+			},
+		},
+		"default-nil": {
+			input: GeneratorSetAttribute{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-nil": {
+			input: GeneratorSetAttribute{
+				DefaultCustom: convert.NewDefaultCustom(nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorSetAttribute{
+				DefaultCustom: convert.NewDefaultCustom(
+					&specschema.CustomDefault{},
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorSetAttribute{
+				DefaultCustom: convert.NewDefaultCustom(
+					&specschema.CustomDefault{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorSetAttribute{
+				DefaultCustom: convert.NewDefaultCustom(
+					&specschema.CustomDefault{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/mydefaults/default",
+							},
+						},
+					},
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/myproject/mydefaults/default",
+				},
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorSetAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.SetAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+			},
+		},
+		"associated-external-type-with-import": {
+			input: GeneratorSetAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.SetAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+		"associated-external-type-with-custom-type": {
+			input: GeneratorSetAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.SetAttribute",
+					},
+				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					&specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.SetAttribute",
+					},
+					convert.CustomCollectionTypeSet,
+					"",
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports().All()
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
@@ -1111,7 +1654,7 @@ DeprecationMessage: "deprecated",
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						SchemaDefinition: "my_validator.Validate()",
 					},
@@ -1122,7 +1665,7 @@ DeprecationMessage: "deprecated",
 			},
 			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
-Validators: []validator.List{
+Validators: []validator.Set{
 my_validator.Validate(),
 my_other_validator.Validate(),
 },
@@ -1134,7 +1677,7 @@ my_other_validator.Validate(),
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{
+				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						SchemaDefinition: "my_plan_modifier.Modify()",
 					},
@@ -1145,7 +1688,7 @@ my_other_validator.Validate(),
 			},
 			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
-PlanModifiers: []planmodifier.List{
+PlanModifiers: []planmodifier.Set{
 my_plan_modifier.Modify(),
 my_other_plan_modifier.Modify(),
 },
@@ -1155,7 +1698,7 @@ my_other_plan_modifier.Modify(),
 		"default-custom": {
 			input: GeneratorSetAttribute{
 				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
-					SchemaDefinition: "my_list_default.Default()",
+					SchemaDefinition: "my_set_default.Default()",
 				}),
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
@@ -1163,7 +1706,7 @@ my_other_plan_modifier.Modify(),
 			},
 			expected: `"set_attribute": schema.SetAttribute{
 ElementType: types.StringType,
-Default: my_list_default.Default(),
+Default: my_set_default.Default(),
 },`,
 		},
 
@@ -1350,9 +1893,15 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorSetAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					convert.CustomCollectionTypeSet,
+					"",
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "SetAttribute",
@@ -1362,11 +1911,15 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorSetAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.SetAttribute",
 					},
-				},
+					convert.CustomCollectionTypeSet,
+					"",
+					"set_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "SetAttribute",
@@ -1376,14 +1929,17 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorSetAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomTypeCollection: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.SetAttribute",
+					},
+					convert.CustomCollectionTypeSet,
+					"",
+					"set_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "SetAttribute",

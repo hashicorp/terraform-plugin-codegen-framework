@@ -58,9 +58,15 @@ func TestGeneratorResourceSchemas_ModelsBytes(t *testing.T) {
 						},
 						"list_attribute": GeneratorListAttribute{},
 						"list_attribute_custom": GeneratorListAttribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_list_value_type",
-							},
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								&schema.CustomType{
+									ValueType: "my_list_value_type",
+								},
+								nil,
+								convert.CustomCollectionTypeList,
+								"",
+								"",
+							),
 						},
 						"list_nested_attribute": GeneratorListNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
@@ -81,9 +87,15 @@ func TestGeneratorResourceSchemas_ModelsBytes(t *testing.T) {
 						},
 						"map_attribute": GeneratorMapAttribute{},
 						"map_attribute_custom": GeneratorMapAttribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_map_value_type",
-							},
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								&schema.CustomType{
+									ValueType: "my_map_value_type",
+								},
+								nil,
+								convert.CustomCollectionTypeList,
+								"",
+								"",
+							),
 						},
 						"map_nested_attribute": GeneratorMapNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
@@ -120,9 +132,15 @@ func TestGeneratorResourceSchemas_ModelsBytes(t *testing.T) {
 						},
 						"set_attribute": GeneratorSetAttribute{},
 						"set_attribute_custom": GeneratorSetAttribute{
-							CustomType: &schema.CustomType{
-								ValueType: "my_set_value_type",
-							},
+							CustomTypeCollection: convert.NewCustomTypeCollection(
+								&schema.CustomType{
+									ValueType: "my_set_value_type",
+								},
+								nil,
+								convert.CustomCollectionTypeList,
+								"",
+								"",
+							),
 						},
 						"set_nested_attribute": GeneratorSetNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
