@@ -485,13 +485,6 @@ func TestGeneratorListNestedAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
 				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
@@ -600,18 +593,6 @@ func TestGeneratorListNestedAttribute_New(t *testing.T) {
 					"name",
 				),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{}),
-				Validators: specschema.ListValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
 				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -650,18 +631,6 @@ func TestGeneratorListNestedAttribute_New(t *testing.T) {
 					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
 					"name",
 				),
-				PlanModifiers: specschema.ListPlanModifiers{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../my_planmodifier",
-								},
-							},
-							SchemaDefinition: "my_planmodifier.Modify()",
-						},
-					},
-				},
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
@@ -689,16 +658,6 @@ func TestGeneratorListNestedAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListNestedAttribute{
-				Default: &specschema.ListDefault{
-					Custom: &specschema.CustomDefault{
-						Imports: []code.Import{
-							{
-								Path: "github.com/.../my_default",
-							},
-						},
-						SchemaDefinition: "my_default.Default()",
-					},
-				},
 				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
@@ -761,8 +720,9 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-without-import": {
 			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{},
-			},
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+					&specschema.CustomType{},
+				)},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -788,10 +748,16 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-and-nested-object-custom-type-without-import": {
 			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{},
-				NestedObject: GeneratorNestedAttributeObject{
-					CustomType: &specschema.CustomType{},
-				},
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+					&specschema.CustomType{},
+				),
+				NestedAttributeObject: NewNestedAttributeObject(
+					nil,
+					&specschema.CustomType{},
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -801,11 +767,13 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "",
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
 					},
-				},
+				),
 			},
 			expected: []code.Import{
 				{
@@ -835,18 +803,24 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "",
-					},
-				},
-				NestedObject: GeneratorNestedAttributeObject{
-					CustomType: &specschema.CustomType{
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "",
 						},
 					},
-				},
+				),
+				NestedAttributeObject: NewNestedAttributeObject(
+					nil,
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
+					},
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -856,11 +830,13 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import": {
 			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/my_account/my_project/attribute",
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
 					},
-				},
+				),
 			},
 			expected: []code.Import{
 				{
@@ -876,13 +852,17 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-object-custom-type-with-import": {
 			input: GeneratorListNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					CustomType: &specschema.CustomType{
+				NestedAttributeObject: NewNestedAttributeObject(
+					nil,
+					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
 						},
 					},
-				},
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -898,18 +878,24 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import-with-nested-object-custom-type-with-import": {
 			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/my_account/my_project/attribute",
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
 					},
-				},
-				NestedObject: GeneratorNestedAttributeObject{
-					CustomType: &specschema.CustomType{
+				),
+				NestedAttributeObject: NewNestedAttributeObject(
+					nil,
+					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/nested_object",
 						},
 					},
-				},
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -944,8 +930,8 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-list-with-custom-type": {
 			input: GeneratorListNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							CustomTypeCollection: convert.NewCustomTypeCollection(
 								&specschema.CustomType{
@@ -956,11 +942,15 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 								nil,
 								convert.CustomCollectionTypeList,
 								"",
-								"list",
+								"",
 							),
 						},
 					},
-				},
+					nil,
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -976,8 +966,8 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-list-with-custom-type-with-element-with-custom-type": {
 			input: GeneratorListNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
 							CustomTypeCollection: convert.NewCustomTypeCollection(
 								&specschema.CustomType{
@@ -988,7 +978,7 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 								nil,
 								convert.CustomCollectionTypeList,
 								"",
-								"list",
+								"",
 							),
 							ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 								Bool: &specschema.BoolType{
@@ -1001,7 +991,11 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 							}),
 						},
 					},
-				},
+					nil,
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -1044,8 +1038,8 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-object-with-custom-type": {
 			input: GeneratorListNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
 							CustomTypeObject: convert.NewCustomTypeObject(
 								&specschema.CustomType{
@@ -1058,7 +1052,11 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 							),
 						},
 					},
-				},
+					nil,
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -1074,18 +1072,9 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-object-with-custom-type-with-attribute-with-custom-type": {
 			input: GeneratorListNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Attributes: generatorschema.GeneratorAttributes{
+				NestedAttributeObject: NewNestedAttributeObject(
+					generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
-							CustomTypeObject: convert.NewCustomTypeObject(
-								&specschema.CustomType{
-									Import: &code.Import{
-										Path: "github.com/my_account/my_project/nested_object",
-									},
-								},
-								nil,
-								"",
-							),
 							AttributeTypesObject: convert.NewObjectAttributeTypes(specschema.ObjectAttributeTypes{
 								{
 									Name: "bool",
@@ -1098,9 +1087,22 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 									},
 								},
 							}),
+							CustomTypeObject: convert.NewCustomTypeObject(
+								&specschema.CustomType{
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/nested_object",
+									},
+								},
+								nil,
+								"",
+							),
 						},
 					},
-				},
+					nil,
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -1119,11 +1121,8 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorListNestedAttribute{
-				Validators: specschema.ListValidators{
-					{
-						Custom: nil,
-					},
-				}},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, nil),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -1135,11 +1134,10 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorListNestedAttribute{
-				Validators: specschema.ListValidators{
-					{
-						Custom: &specschema.CustomValidator{},
-					},
-				}},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -1151,17 +1149,16 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorListNestedAttribute{
-				Validators: specschema.ListValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "",
-								},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "",
 							},
 						},
 					},
-				}},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -1173,26 +1170,23 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorListNestedAttribute{
-				Validators: specschema.ListValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/myotherproject/myvalidators/validator",
-								},
+				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myvalidators/validator",
 							},
 						},
 					},
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/myproject/myvalidators/validator",
-								},
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myvalidators/validator",
 							},
 						},
 					},
-				}},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -1276,28 +1270,28 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 		},
 		"nested-object-validator-custom-import": {
 			input: GeneratorListNestedAttribute{
-				NestedObject: GeneratorNestedAttributeObject{
-					Validators: specschema.ObjectValidators{
-						{
-							Custom: &specschema.CustomValidator{
-								Imports: []code.Import{
-									{
-										Path: "github.com/myotherproject/myvalidators/validator",
-									},
+				NestedAttributeObject: NewNestedAttributeObject(
+					nil,
+					nil,
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, specschema.CustomValidators{
+						&specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myvalidators/validator",
 								},
 							},
 						},
-						{
-							Custom: &specschema.CustomValidator{
-								Imports: []code.Import{
-									{
-										Path: "github.com/myproject/myvalidators/validator",
-									},
+						&specschema.CustomValidator{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myvalidators/validator",
 								},
 							},
 						},
-					},
-				},
+					}),
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -1311,6 +1305,49 @@ func TestGeneratorListNestedAttribute_Imports(t *testing.T) {
 				},
 				{
 					Path: "github.com/myproject/myvalidators/validator",
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"nested-object-plan-modifier-custom-import": {
+			input: GeneratorListNestedAttribute{
+				NestedAttributeObject: NewNestedAttributeObject(
+					nil,
+					nil,
+					convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{
+						&specschema.CustomPlanModifier{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+								},
+							},
+						},
+						&specschema.CustomPlanModifier{
+							Imports: []code.Import{
+								{
+									Path: "github.com/myproject/myplanmodifiers/planmodifier",
+								},
+							},
+						},
+					}),
+					convert.NewValidatorsCustom(convert.ValidatorTypeObject, nil),
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.PlanModifierImport,
+				},
+				{
+					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+				},
+				{
+					Path: "github.com/myproject/myplanmodifiers/planmodifier",
 				},
 				{
 					Path: generatorschema.AttrImport,
@@ -1909,9 +1946,11 @@ func TestGeneratorListNestedAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorListNestedAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+				),
 			},
 			expected: model.Field{
 				Name:      "ListNestedAttribute",

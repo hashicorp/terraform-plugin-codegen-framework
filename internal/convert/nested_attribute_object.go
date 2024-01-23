@@ -6,7 +6,6 @@ package convert
 import (
 	"bytes"
 
-	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
@@ -43,15 +42,7 @@ func (n NestedAttributeObject) Equal(other NestedAttributeObject) bool {
 func (n NestedAttributeObject) Imports() *schema.Imports {
 	imports := schema.NewImports()
 
-	if n.customType.customType != nil {
-		if n.customType.customType.HasImport() {
-			imports.Add(*n.customType.customType.Import)
-		}
-	} else {
-		imports.Add(code.Import{
-			Path: schema.TypesImport,
-		})
-	}
+	imports.Append(n.customType.Imports())
 
 	imports.Append(n.validatorsCustom.Imports())
 

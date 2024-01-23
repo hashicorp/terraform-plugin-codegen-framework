@@ -46,6 +46,20 @@ func (n NestedAttributeObject) Equal(other NestedAttributeObject) bool {
 	return n.validatorsCustom.Equal(other.validatorsCustom)
 }
 
+func (n NestedAttributeObject) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
+
+	imports.Append(n.customType.Imports())
+
+	imports.Append(n.planModifiersCustom.Imports())
+
+	imports.Append(n.validatorsCustom.Imports())
+
+	imports.Append(n.attributes.Imports())
+
+	return imports
+}
+
 func (n NestedAttributeObject) Schema() ([]byte, error) {
 	var b bytes.Buffer
 
