@@ -23,7 +23,7 @@ type GeneratorListNestedBlock struct {
 	NestedObject               GeneratorNestedBlockObject
 	NestedBlockObject          convert.NestedBlockObject
 	Sensitive                  convert.Sensitive
-	ValidatorsCustom           convert.ValidatorsCustom
+	Validators                 convert.Validators
 }
 
 func NewGeneratorListNestedBlock(name string, b *provider.ListNestedBlock) (GeneratorListNestedBlock, error) {
@@ -51,13 +51,13 @@ func NewGeneratorListNestedBlock(name string, b *provider.ListNestedBlock) (Gene
 
 	dm := convert.NewDeprecationMessage(b.DeprecationMessage)
 
-	vco := convert.NewValidatorsCustom(convert.ValidatorTypeObject, b.NestedObject.Validators.CustomValidators())
+	vo := convert.NewValidators(convert.ValidatorTypeObject, b.NestedObject.Validators.CustomValidators())
 
-	nbo := convert.NewNestedBlockObject(attributes, blocks, b.NestedObject.CustomType, vco, name)
+	nbo := convert.NewNestedBlockObject(attributes, blocks, b.NestedObject.CustomType, vo, name)
 
 	s := convert.NewSensitive(b.Sensitive)
 
-	vcl := convert.NewValidatorsCustom(convert.ValidatorTypeList, b.Validators.CustomValidators())
+	vl := convert.NewValidators(convert.ValidatorTypeList, b.Validators.CustomValidators())
 
 	return GeneratorListNestedBlock{
 		OptionalRequired:           c,
@@ -73,7 +73,7 @@ func NewGeneratorListNestedBlock(name string, b *provider.ListNestedBlock) (Gene
 		},
 		NestedBlockObject: nbo,
 		Sensitive:         s,
-		ValidatorsCustom:  vcl,
+		Validators:        vl,
 	}, nil
 }
 
@@ -86,7 +86,7 @@ func (g GeneratorListNestedBlock) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypeNestedCollection.Imports())
 
-	imports.Append(g.ValidatorsCustom.Imports())
+	imports.Append(g.Validators.Imports())
 
 	imports.Append(g.NestedBlockObject.Imports())
 
@@ -132,7 +132,7 @@ func (g GeneratorListNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool 
 		return false
 	}
 
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorListNestedBlock) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
@@ -151,7 +151,7 @@ func (g GeneratorListNestedBlock) Schema(name generatorschema.FrameworkIdentifie
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

@@ -21,7 +21,7 @@ type GeneratorBoolAttribute struct {
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
-	ValidatorsCustom       convert.ValidatorsCustom
+	Validators             convert.Validators
 }
 
 func NewGeneratorBoolAttribute(name string, a *provider.BoolAttribute) (GeneratorBoolAttribute, error) {
@@ -39,7 +39,7 @@ func NewGeneratorBoolAttribute(name string, a *provider.BoolAttribute) (Generato
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeBool, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeBool, a.Validators.CustomValidators())
 
 	return GeneratorBoolAttribute{
 		AssociatedExternalType: schema.NewAssocExtType(a.AssociatedExternalType),
@@ -48,7 +48,7 @@ func NewGeneratorBoolAttribute(name string, a *provider.BoolAttribute) (Generato
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
-		ValidatorsCustom:       vc,
+		Validators:             v,
 	}, nil
 }
 
@@ -61,7 +61,7 @@ func (g GeneratorBoolAttribute) Imports() *schema.Imports {
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
-	imports.Append(g.ValidatorsCustom.Imports())
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(schema.AssociatedExternalTypeImports())
@@ -103,7 +103,7 @@ func (g GeneratorBoolAttribute) Equal(ga schema.GeneratorAttribute) bool {
 		return false
 	}
 
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorBoolAttribute) Schema(name schema.FrameworkIdentifier) (string, error) {
@@ -115,7 +115,7 @@ func (g GeneratorBoolAttribute) Schema(name schema.FrameworkIdentifier) (string,
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

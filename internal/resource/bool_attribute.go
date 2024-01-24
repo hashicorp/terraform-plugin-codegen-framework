@@ -23,7 +23,7 @@ type GeneratorBoolAttribute struct {
 	Description              convert.Description
 	PlanModifiersCustom      convert.PlanModifiersCustom
 	Sensitive                convert.Sensitive
-	ValidatorsCustom         convert.ValidatorsCustom
+	Validators               convert.Validators
 }
 
 func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (GeneratorBoolAttribute, error) {
@@ -45,7 +45,7 @@ func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (Generato
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeBool, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeBool, a.Validators.CustomValidators())
 
 	return GeneratorBoolAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
@@ -56,7 +56,7 @@ func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (Generato
 		DeprecationMessage:       dm,
 		PlanModifiersCustom:      pm,
 		Sensitive:                s,
-		ValidatorsCustom:         vc,
+		Validators:               v,
 	}, nil
 }
 
@@ -73,7 +73,7 @@ func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.PlanModifiersCustom.Imports())
 
-	imports.Append(g.ValidatorsCustom.Imports())
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -123,7 +123,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
@@ -136,7 +136,7 @@ func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier)
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiersCustom.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.Write(g.DefaultBool.Schema())
 	b.WriteString("},")
 

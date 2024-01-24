@@ -35,7 +35,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			expected: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -45,7 +45,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			expected: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -55,7 +55,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			expected: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -65,7 +65,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			expected: GeneratorBoolAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -86,7 +86,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, nil),
 			},
 		},
 		"deprecation_message": {
@@ -96,7 +96,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			expected: GeneratorBoolAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -106,7 +106,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			expected: GeneratorBoolAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Description:         convert.NewDescription(pointer("description")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -116,7 +116,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			expected: GeneratorBoolAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Sensitive:           convert.NewSensitive(pointer(true)),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -136,7 +136,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorBoolAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -223,7 +223,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorBoolAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, nil),
 			},
 			expected: []code.Import{
 				{
@@ -233,7 +233,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorBoolAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{
 					&specschema.CustomValidator{},
 				}),
 			},
@@ -245,7 +245,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -262,7 +262,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorBoolAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -531,14 +531,14 @@ DeprecationMessage: "deprecated",
 
 		"validators-empty": {
 			input: GeneratorBoolAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, nil),
 			},
 			expected: `"bool_attribute": schema.BoolAttribute{
 },`,
 		},
 		"validators": {
 			input: GeneratorBoolAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeBool, []*specschema.CustomValidator{
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, []*specschema.CustomValidator{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},

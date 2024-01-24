@@ -34,7 +34,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -44,7 +44,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				OptionalRequired:    convert.NewOptionalRequired(specschema.Required),
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -65,7 +65,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, nil),
 			},
 		},
 		"deprecation_message": {
@@ -75,7 +75,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -85,7 +85,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Description:         convert.NewDescription(pointer("description")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -95,7 +95,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Sensitive:           convert.NewSensitive(pointer(true)),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -115,7 +115,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -252,14 +252,14 @@ DeprecationMessage: "deprecated",
 
 		"validators-empty": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 			expected: `"number_attribute": schema.NumberAttribute{
 },`,
 		},
 		"validators": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},

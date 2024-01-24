@@ -15,12 +15,12 @@ type NestedBlockObject struct {
 	attributes       schema.GeneratorAttributes
 	blocks           schema.GeneratorBlocks
 	customType       CustomTypeNestedObject
-	validatorsCustom ValidatorsCustom
+	validatorsCustom Validators
 }
 
 // NewNestedBlockObject constructs a NestedBlockObject which is used to generate a
 // nested attribute block in the schema.
-func NewNestedBlockObject(a schema.GeneratorAttributes, b schema.GeneratorBlocks, c *specschema.CustomType, v ValidatorsCustom, name string) NestedBlockObject {
+func NewNestedBlockObject(a schema.GeneratorAttributes, b schema.GeneratorBlocks, c *specschema.CustomType, v Validators, name string) NestedBlockObject {
 	return NestedBlockObject{
 		attributes:       a,
 		blocks:           b,

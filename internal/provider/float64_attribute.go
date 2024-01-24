@@ -21,7 +21,7 @@ type GeneratorFloat64Attribute struct {
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
-	ValidatorsCustom       convert.ValidatorsCustom
+	Validators             convert.Validators
 }
 
 func NewGeneratorFloat64Attribute(name string, a *provider.Float64Attribute) (GeneratorFloat64Attribute, error) {
@@ -39,7 +39,7 @@ func NewGeneratorFloat64Attribute(name string, a *provider.Float64Attribute) (Ge
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeFloat64, a.Validators.CustomValidators())
 
 	return GeneratorFloat64Attribute{
 		AssociatedExternalType: schema.NewAssocExtType(a.AssociatedExternalType),
@@ -48,7 +48,7 @@ func NewGeneratorFloat64Attribute(name string, a *provider.Float64Attribute) (Ge
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
-		ValidatorsCustom:       vc,
+		Validators:             v,
 	}, nil
 }
 
@@ -61,7 +61,7 @@ func (g GeneratorFloat64Attribute) Imports() *schema.Imports {
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
-	imports.Append(g.ValidatorsCustom.Imports())
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(schema.AssociatedExternalTypeImports())
@@ -103,7 +103,7 @@ func (g GeneratorFloat64Attribute) Equal(ga schema.GeneratorAttribute) bool {
 		return false
 	}
 
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorFloat64Attribute) Schema(name schema.FrameworkIdentifier) (string, error) {
@@ -115,7 +115,7 @@ func (g GeneratorFloat64Attribute) Schema(name schema.FrameworkIdentifier) (stri
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

@@ -34,7 +34,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -44,7 +44,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -54,7 +54,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -64,7 +64,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -85,7 +85,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, nil),
 			},
 		},
 		"deprecation_message": {
@@ -95,7 +95,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -105,7 +105,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Description:         convert.NewDescription(pointer("description")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -115,7 +115,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Sensitive:           convert.NewSensitive(pointer(true)),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -135,7 +135,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -281,14 +281,14 @@ DeprecationMessage: "deprecated",
 
 		"validators-empty": {
 			input: GeneratorInt64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, nil),
 			},
 			expected: `"int64_attribute": schema.Int64Attribute{
 },`,
 		},
 		"validators": {
 			input: GeneratorInt64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},

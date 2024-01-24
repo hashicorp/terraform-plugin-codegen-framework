@@ -23,7 +23,7 @@ type GeneratorSingleNestedAttribute struct {
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	Sensitive                convert.Sensitive
-	ValidatorsCustom         convert.ValidatorsCustom
+	Validators               convert.Validators
 }
 
 func NewGeneratorSingleNestedAttribute(name string, a *datasource.SingleNestedAttribute) (GeneratorSingleNestedAttribute, error) {
@@ -47,7 +47,7 @@ func NewGeneratorSingleNestedAttribute(name string, a *datasource.SingleNestedAt
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeObject, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeObject, a.Validators.CustomValidators())
 
 	return GeneratorSingleNestedAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
@@ -57,7 +57,7 @@ func NewGeneratorSingleNestedAttribute(name string, a *datasource.SingleNestedAt
 		DeprecationMessage:       dm,
 		Description:              d,
 		Sensitive:                s,
-		ValidatorsCustom:         vc,
+		Validators:               v,
 	}, nil
 }
 
@@ -70,7 +70,7 @@ func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypeNestedObject.Imports())
 
-	imports.Append(g.ValidatorsCustom.Imports())
+	imports.Append(g.Validators.Imports())
 
 	imports.Append(g.Attributes.Imports())
 
@@ -116,7 +116,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
@@ -137,7 +137,7 @@ func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIde
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

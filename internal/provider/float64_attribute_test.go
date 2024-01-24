@@ -34,7 +34,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 			expected: GeneratorFloat64Attribute{
 				OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -44,7 +44,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 			expected: GeneratorFloat64Attribute{
 				OptionalRequired:    convert.NewOptionalRequired(specschema.Required),
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -65,7 +65,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, nil),
 			},
 		},
 		"deprecation_message": {
@@ -75,7 +75,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 			expected: GeneratorFloat64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -85,7 +85,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 			expected: GeneratorFloat64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Description:         convert.NewDescription(pointer("description")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -95,7 +95,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 			expected: GeneratorFloat64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Sensitive:           convert.NewSensitive(pointer(true)),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -115,7 +115,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorFloat64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -252,13 +252,13 @@ DeprecationMessage: "deprecated",
 
 		"validators-empty": {
 			input: GeneratorFloat64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, nil)},
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, nil)},
 			expected: `"float64_attribute": schema.Float64Attribute{
 },`,
 		},
 		"validators": {
 			input: GeneratorFloat64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},

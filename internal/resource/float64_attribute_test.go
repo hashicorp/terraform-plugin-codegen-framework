@@ -36,7 +36,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -47,7 +47,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -58,7 +58,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -69,7 +69,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -91,7 +91,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 					ValueType: "myvalue_type",
 				}, nil, "name"),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, nil),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, nil),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, nil),
 			},
 		},
 		"deprecation_message": {
@@ -102,7 +102,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -113,7 +113,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Description:         convert.NewDescription(pointer("description")),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -124,7 +124,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Sensitive:           convert.NewSensitive(pointer(true)),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -145,7 +145,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 			expected: GeneratorFloat64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, nil),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -184,7 +184,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 						SchemaDefinition: "my_planmodifier.Modify()",
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"default": {
@@ -215,7 +215,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 					Static: pointer(1.234),
 				}),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -293,7 +293,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorFloat64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, nil),
 			},
 			expected: []code.Import{
 				{
@@ -303,7 +303,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorFloat64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{
 					&specschema.CustomValidator{},
 				}),
 			},
@@ -315,7 +315,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorFloat64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -332,7 +332,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorFloat64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -761,7 +761,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorFloat64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, []*specschema.CustomValidator{
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, []*specschema.CustomValidator{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},

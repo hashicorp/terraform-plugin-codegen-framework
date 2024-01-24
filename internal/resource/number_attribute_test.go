@@ -36,7 +36,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -47,7 +47,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -58,7 +58,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -69,7 +69,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -91,7 +91,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 					ValueType: "myvalue_type",
 				}, nil, "name"),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, nil),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, nil),
 			},
 		},
 		"deprecation_message": {
@@ -102,7 +102,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -113,7 +113,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Description:         convert.NewDescription(pointer("description")),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -124,7 +124,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Sensitive:           convert.NewSensitive(pointer(true)),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -145,7 +145,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -184,7 +184,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 						SchemaDefinition: "my_planmodifier.Modify()",
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"default": {
@@ -211,7 +211,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 					SchemaDefinition: "my_default.Default()",
 				}),
 				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -289,7 +289,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, nil),
 			},
 			expected: []code.Import{
 				{
@@ -299,7 +299,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{},
 				}),
 			},
@@ -311,7 +311,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -328,7 +328,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -726,7 +726,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, []*specschema.CustomValidator{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, []*specschema.CustomValidator{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},

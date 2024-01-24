@@ -47,7 +47,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Bool: &specschema.BoolType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-string": {
@@ -70,7 +70,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-string": {
@@ -105,7 +105,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-map-string": {
@@ -140,7 +140,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-object-string": {
@@ -196,7 +196,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-string": {
@@ -240,7 +240,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-list-string": {
@@ -296,7 +296,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -321,7 +321,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -346,7 +346,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -382,7 +382,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -407,7 +407,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -432,7 +432,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -456,8 +456,8 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Sensitive:        convert.NewSensitive(pointer(true)),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{}),
+				Sensitive:  convert.NewSensitive(pointer(true)),
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -492,7 +492,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -902,7 +902,7 @@ DeprecationMessage: "deprecated",
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeSet, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeSet, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						SchemaDefinition: "my_validator.Validate()",
 					},

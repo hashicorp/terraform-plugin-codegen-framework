@@ -27,19 +27,19 @@ const (
 
 type ValidatorType string
 
-type ValidatorsCustom struct {
+type Validators struct {
 	validatorType ValidatorType
 	custom        specschema.CustomValidators
 }
 
-func NewValidatorsCustom(t ValidatorType, c specschema.CustomValidators) ValidatorsCustom {
-	return ValidatorsCustom{
+func NewValidators(t ValidatorType, c specschema.CustomValidators) Validators {
+	return Validators{
 		validatorType: t,
 		custom:        c,
 	}
 }
 
-func (v ValidatorsCustom) Equal(other ValidatorsCustom) bool {
+func (v Validators) Equal(other Validators) bool {
 	if v.validatorType != other.validatorType {
 		return false
 	}
@@ -65,7 +65,7 @@ func (v ValidatorsCustom) Equal(other ValidatorsCustom) bool {
 	return true
 }
 
-func (v ValidatorsCustom) Imports() *schema.Imports {
+func (v Validators) Imports() *schema.Imports {
 	imports := schema.NewImports()
 
 	if v.custom == nil {
@@ -87,7 +87,7 @@ func (v ValidatorsCustom) Imports() *schema.Imports {
 	return imports
 }
 
-func (v ValidatorsCustom) Schema() []byte {
+func (v Validators) Schema() []byte {
 	var b, cb bytes.Buffer
 
 	for _, c := range v.custom {

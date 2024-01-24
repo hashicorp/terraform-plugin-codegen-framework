@@ -14,12 +14,12 @@ import (
 type NestedAttributeObject struct {
 	attributes       schema.GeneratorAttributes
 	customType       CustomTypeNestedObject
-	validatorsCustom ValidatorsCustom
+	validatorsCustom Validators
 }
 
 // NewNestedAttributeObject constructs a NestedAttributeObject which is used to generate a
 // nested attribute object in the schema.
-func NewNestedAttributeObject(a schema.GeneratorAttributes, c *specschema.CustomType, v ValidatorsCustom, name string) NestedAttributeObject {
+func NewNestedAttributeObject(a schema.GeneratorAttributes, c *specschema.CustomType, v Validators, name string) NestedAttributeObject {
 	return NestedAttributeObject{
 		attributes:       a,
 		customType:       NewCustomTypeNestedObject(c, name),

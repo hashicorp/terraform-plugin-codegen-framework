@@ -24,7 +24,7 @@ type GeneratorSingleNestedBlock struct {
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
-	ValidatorsCustom       convert.ValidatorsCustom
+	Validators             convert.Validators
 }
 
 func NewGeneratorSingleNestedBlock(name string, b *provider.SingleNestedBlock) (GeneratorSingleNestedBlock, error) {
@@ -54,7 +54,7 @@ func NewGeneratorSingleNestedBlock(name string, b *provider.SingleNestedBlock) (
 
 	s := convert.NewSensitive(b.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeObject, b.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeObject, b.Validators.CustomValidators())
 
 	return GeneratorSingleNestedBlock{
 		AssociatedExternalType: generatorschema.NewAssocExtType(b.AssociatedExternalType),
@@ -65,7 +65,7 @@ func NewGeneratorSingleNestedBlock(name string, b *provider.SingleNestedBlock) (
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
-		ValidatorsCustom:       vc,
+		Validators:             v,
 	}, nil
 }
 
@@ -78,7 +78,7 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypeNestedObject.Imports())
 
-	imports.Append(g.ValidatorsCustom.Imports())
+	imports.Append(g.Validators.Imports())
 
 	imports.Append(g.Attributes.Imports())
 
@@ -130,7 +130,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
@@ -164,7 +164,7 @@ func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentif
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

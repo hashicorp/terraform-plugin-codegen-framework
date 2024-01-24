@@ -23,7 +23,7 @@ type GeneratorSetNestedAttribute struct {
 	NestedObject               GeneratorNestedAttributeObject
 	NestedAttributeObject      convert.NestedAttributeObject
 	Sensitive                  convert.Sensitive
-	ValidatorsCustom           convert.ValidatorsCustom
+	Validators                 convert.Validators
 }
 
 func NewGeneratorSetNestedAttribute(name string, a *provider.SetNestedAttribute) (GeneratorSetNestedAttribute, error) {
@@ -45,13 +45,13 @@ func NewGeneratorSetNestedAttribute(name string, a *provider.SetNestedAttribute)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	vco := convert.NewValidatorsCustom(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
+	vo := convert.NewValidators(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
 
-	nat := convert.NewNestedAttributeObject(attributes, a.NestedObject.CustomType, vco, name)
+	nat := convert.NewNestedAttributeObject(attributes, a.NestedObject.CustomType, vo, name)
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vcl := convert.NewValidatorsCustom(convert.ValidatorTypeSet, a.Validators.CustomValidators())
+	vs := convert.NewValidators(convert.ValidatorTypeSet, a.Validators.CustomValidators())
 
 	return GeneratorSetNestedAttribute{
 		OptionalRequired:           c,
@@ -66,7 +66,7 @@ func NewGeneratorSetNestedAttribute(name string, a *provider.SetNestedAttribute)
 		},
 		NestedAttributeObject: nat,
 		Sensitive:             s,
-		ValidatorsCustom:      vcl,
+		Validators:            vs,
 	}, nil
 }
 
@@ -79,7 +79,7 @@ func (g GeneratorSetNestedAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypeNestedCollection.Imports())
 
-	imports.Append(g.ValidatorsCustom.Imports())
+	imports.Append(g.Validators.Imports())
 
 	imports.Append(g.NestedAttributeObject.Imports())
 
@@ -125,7 +125,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorSetNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
@@ -144,7 +144,7 @@ func (g GeneratorSetNestedAttribute) Schema(name generatorschema.FrameworkIdenti
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

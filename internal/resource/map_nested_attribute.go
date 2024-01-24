@@ -25,7 +25,7 @@ type GeneratorMapNestedAttribute struct {
 	NestedAttributeObject      NestedAttributeObject
 	PlanModifiersCustom        convert.PlanModifiersCustom
 	Sensitive                  convert.Sensitive
-	ValidatorsCustom           convert.ValidatorsCustom
+	Validators                 convert.Validators
 }
 
 func NewGeneratorMapNestedAttribute(name string, a *resource.MapNestedAttribute) (GeneratorMapNestedAttribute, error) {
@@ -51,15 +51,15 @@ func NewGeneratorMapNestedAttribute(name string, a *resource.MapNestedAttribute)
 
 	pmo := convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, a.NestedObject.PlanModifiers.CustomPlanModifiers())
 
-	vco := convert.NewValidatorsCustom(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
+	vo := convert.NewValidators(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
 
-	nat := NewNestedAttributeObject(attributes, a.NestedObject.CustomType, pmo, vco, name)
+	nat := NewNestedAttributeObject(attributes, a.NestedObject.CustomType, pmo, vo, name)
 
 	pml := convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vcl := convert.NewValidatorsCustom(convert.ValidatorTypeMap, a.Validators.CustomValidators())
+	vm := convert.NewValidators(convert.ValidatorTypeMap, a.Validators.CustomValidators())
 
 	return GeneratorMapNestedAttribute{
 		ComputedOptionalRequired:   c,
@@ -76,7 +76,7 @@ func NewGeneratorMapNestedAttribute(name string, a *resource.MapNestedAttribute)
 		NestedAttributeObject: nat,
 		PlanModifiersCustom:   pml,
 		Sensitive:             s,
-		ValidatorsCustom:      vcl,
+		Validators:            vm,
 	}, nil
 }
 
@@ -93,7 +93,7 @@ func (g GeneratorMapNestedAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.PlanModifiersCustom.Imports())
 
-	imports.Append(g.ValidatorsCustom.Imports())
+	imports.Append(g.Validators.Imports())
 
 	imports.Append(g.NestedAttributeObject.Imports())
 
@@ -147,7 +147,7 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorMapNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
@@ -167,7 +167,7 @@ func (g GeneratorMapNestedAttribute) Schema(name generatorschema.FrameworkIdenti
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiersCustom.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.Write(g.DefaultCustom.Schema())
 	b.WriteString("},")
 
