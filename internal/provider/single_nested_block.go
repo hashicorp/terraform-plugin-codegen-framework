@@ -12,13 +12,13 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorSingleNestedBlock struct {
-	AssociatedExternalType *generatorschema.AssocExtType
-	Attributes             generatorschema.GeneratorAttributes
-	Blocks                 generatorschema.GeneratorBlocks
+	AssociatedExternalType *schema.AssocExtType
+	Attributes             schema.GeneratorAttributes
+	Blocks                 schema.GeneratorBlocks
 	OptionalRequired       convert.OptionalRequired
 	CustomType             convert.CustomTypeNestedObject
 	DeprecationMessage     convert.DeprecationMessage
@@ -57,7 +57,7 @@ func NewGeneratorSingleNestedBlock(name string, b *provider.SingleNestedBlock) (
 	v := convert.NewValidators(convert.ValidatorTypeObject, b.Validators.CustomValidators())
 
 	return GeneratorSingleNestedBlock{
-		AssociatedExternalType: generatorschema.NewAssocExtType(b.AssociatedExternalType),
+		AssociatedExternalType: schema.NewAssocExtType(b.AssociatedExternalType),
 		Attributes:             attributes,
 		Blocks:                 blocks,
 		OptionalRequired:       c,
@@ -69,12 +69,12 @@ func NewGeneratorSingleNestedBlock(name string, b *provider.SingleNestedBlock) (
 	}, nil
 }
 
-func (g GeneratorSingleNestedBlock) GeneratorSchemaType() generatorschema.Type {
-	return generatorschema.GeneratorSingleNestedBlock
+func (g GeneratorSingleNestedBlock) GeneratorSchemaType() schema.Type {
+	return schema.GeneratorSingleNestedBlock
 }
 
-func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
-	imports := generatorschema.NewImports()
+func (g GeneratorSingleNestedBlock) Imports() *schema.Imports {
+	imports := schema.NewImports()
 
 	imports.Append(g.CustomType.Imports())
 
@@ -84,14 +84,14 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 
 	imports.Append(g.Blocks.Imports())
 
-	imports.Append(generatorschema.AttrImports())
+	imports.Append(schema.AttrImports())
 
 	imports.Append(g.AssociatedExternalType.Imports())
 
 	return imports
 }
 
-func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
+func (g GeneratorSingleNestedBlock) Equal(ga schema.GeneratorBlock) bool {
 	h, ok := ga.(GeneratorSingleNestedBlock)
 
 	if !ok {
@@ -133,7 +133,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 	return g.Validators.Equal(h.Validators)
 }
 
-func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorSingleNestedBlock) Schema(name schema.FrameworkIdentifier) (string, error) {
 	attributesSchema, err := g.Attributes.Schema()
 
 	if err != nil {
@@ -170,7 +170,7 @@ func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentif
 	return b.String(), nil
 }
 
-func (g GeneratorSingleNestedBlock) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
+func (g GeneratorSingleNestedBlock) ModelField(name schema.FrameworkIdentifier) (model.Field, error) {
 	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
@@ -186,11 +186,11 @@ func (g GeneratorSingleNestedBlock) ModelField(name generatorschema.FrameworkIde
 	return f, nil
 }
 
-func (g GeneratorSingleNestedBlock) GetAttributes() generatorschema.GeneratorAttributes {
+func (g GeneratorSingleNestedBlock) GetAttributes() schema.GeneratorAttributes {
 	return g.Attributes
 }
 
-func (g GeneratorSingleNestedBlock) GetBlocks() generatorschema.GeneratorBlocks {
+func (g GeneratorSingleNestedBlock) GetBlocks() schema.GeneratorBlocks {
 	return g.Blocks
 }
 
@@ -219,7 +219,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 		attributesBlocksAttrValues[k] = v
 	}
 
-	objectType := generatorschema.NewCustomNestedObjectType(name, attributesBlocksAttrValues)
+	objectType := schema.NewCustomNestedObjectType(name, attributesBlocksAttrValues)
 
 	b, err := objectType.Render()
 
@@ -280,7 +280,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 		return nil, err
 	}
 
-	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues, attributeCollectionTypes)
+	objectValue := schema.NewCustomNestedObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues, attributeCollectionTypes)
 
 	b, err = objectValue.Render()
 
@@ -297,7 +297,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 	// Recursively call CustomTypeAndValue() for each attribute that implements
 	// CustomTypeAndValue interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
-		if c, ok := g.Attributes[k].(generatorschema.CustomTypeAndValue); ok {
+		if c, ok := g.Attributes[k].(schema.CustomTypeAndValue); ok {
 			b, err := c.CustomTypeAndValue(k)
 
 			if err != nil {
@@ -309,7 +309,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 	}
 
 	for _, k := range blockKeys {
-		if c, ok := g.Blocks[k].(generatorschema.CustomTypeAndValue); ok {
+		if c, ok := g.Blocks[k].(schema.CustomTypeAndValue); ok {
 			b, err := c.CustomTypeAndValue(k)
 
 			if err != nil {
@@ -338,7 +338,7 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 
 	fromFuncs, _ := g.Attributes.FromFuncs()
 
-	toFrom := generatorschema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := schema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 
@@ -353,7 +353,7 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 	// Recursively call ToFromFunctions() for each attribute that implements
 	// ToFrom interface.
 	for _, k := range attributeKeys {
-		if c, ok := g.Attributes[k].(generatorschema.ToFrom); ok {
+		if c, ok := g.Attributes[k].(schema.ToFrom); ok {
 			b, err := c.ToFromFunctions(k)
 
 			if err != nil {
@@ -367,10 +367,10 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorSingleNestedBlock) To() (generatorschema.ToFromConversion, error) {
-	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
+func (g GeneratorSingleNestedBlock) To() (schema.ToFromConversion, error) {
+	return schema.ToFromConversion{}, schema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
 }
 
-func (g GeneratorSingleNestedBlock) From() (generatorschema.ToFromConversion, error) {
-	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
+func (g GeneratorSingleNestedBlock) From() (schema.ToFromConversion, error) {
+	return schema.ToFromConversion{}, schema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
 }
