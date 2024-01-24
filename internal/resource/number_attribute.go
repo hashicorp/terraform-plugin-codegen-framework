@@ -21,7 +21,7 @@ type GeneratorNumberAttribute struct {
 	DefaultCustom            convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
 	Validators               convert.Validators
 }
@@ -41,7 +41,7 @@ func NewGeneratorNumberAttribute(name string, a *resource.NumberAttribute) (Gene
 
 	d := convert.NewDescription(a.Description)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeNumber, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
@@ -54,7 +54,7 @@ func NewGeneratorNumberAttribute(name string, a *resource.NumberAttribute) (Gene
 		DefaultCustom:            dc,
 		Description:              d,
 		DeprecationMessage:       dm,
-		PlanModifiersCustom:      pm,
+		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
 	}, nil
@@ -71,7 +71,7 @@ func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.DefaultCustom.Imports())
 
-	imports.Append(g.PlanModifiersCustom.Imports())
+	imports.Append(g.PlanModifiers.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -115,7 +115,7 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
@@ -135,7 +135,7 @@ func (g GeneratorNumberAttribute) Schema(name generatorschema.FrameworkIdentifie
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
 	b.Write(g.DefaultCustom.Schema())
 	b.WriteString("},")

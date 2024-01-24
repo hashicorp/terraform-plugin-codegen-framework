@@ -27,19 +27,19 @@ const (
 
 type PlanModifierType string
 
-type PlanModifiersCustom struct {
+type PlanModifiers struct {
 	planModifierType PlanModifierType
 	custom           specschema.CustomPlanModifiers
 }
 
-func NewPlanModifiersCustom(t PlanModifierType, c specschema.CustomPlanModifiers) PlanModifiersCustom {
-	return PlanModifiersCustom{
+func NewPlanModifiers(t PlanModifierType, c specschema.CustomPlanModifiers) PlanModifiers {
+	return PlanModifiers{
 		planModifierType: t,
 		custom:           c,
 	}
 }
 
-func (v PlanModifiersCustom) Equal(other PlanModifiersCustom) bool {
+func (v PlanModifiers) Equal(other PlanModifiers) bool {
 	if v.planModifierType != other.planModifierType {
 		return false
 	}
@@ -65,7 +65,7 @@ func (v PlanModifiersCustom) Equal(other PlanModifiersCustom) bool {
 	return true
 }
 
-func (v PlanModifiersCustom) Imports() *schema.Imports {
+func (v PlanModifiers) Imports() *schema.Imports {
 	imports := schema.NewImports()
 
 	if v.custom == nil {
@@ -87,7 +87,7 @@ func (v PlanModifiersCustom) Imports() *schema.Imports {
 	return imports
 }
 
-func (v PlanModifiersCustom) Schema() []byte {
+func (v PlanModifiers) Schema() []byte {
 	var b, cb bytes.Buffer
 
 	for _, c := range v.custom {

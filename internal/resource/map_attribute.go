@@ -24,7 +24,7 @@ type GeneratorMapAttribute struct {
 	Description              convert.Description
 	ElementType              specschema.ElementType
 	ElementTypeCollection    convert.ElementType
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
 	Validators               convert.Validators
 }
@@ -46,7 +46,7 @@ func NewGeneratorMapAttribute(name string, a *resource.MapAttribute) (GeneratorM
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeMap, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
@@ -60,7 +60,7 @@ func NewGeneratorMapAttribute(name string, a *resource.MapAttribute) (GeneratorM
 		DeprecationMessage:       dm,
 		Description:              d,
 		ElementType:              a.ElementType,
-		PlanModifiersCustom:      pm,
+		PlanModifiers:            pm,
 		ElementTypeCollection:    et,
 		Sensitive:                s,
 		Validators:               v,
@@ -84,7 +84,7 @@ func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.DefaultCustom.Imports())
 
-	imports.Append(g.PlanModifiersCustom.Imports())
+	imports.Append(g.PlanModifiers.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -138,7 +138,7 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
@@ -163,7 +163,7 @@ func (g GeneratorMapAttribute) Schema(name generatorschema.FrameworkIdentifier) 
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
 	b.Write(g.DefaultCustom.Schema())
 	b.WriteString("},")

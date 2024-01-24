@@ -48,8 +48,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Bool: &specschema.BoolType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-string": {
@@ -72,8 +72,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-string": {
@@ -108,8 +108,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-map-string": {
@@ -144,8 +144,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-object-string": {
@@ -201,8 +201,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-string": {
@@ -246,8 +246,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-list-string": {
@@ -303,8 +303,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"computed": {
@@ -329,8 +329,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -355,8 +355,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -381,8 +381,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -407,8 +407,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -444,8 +444,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -470,8 +470,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -496,8 +496,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -521,9 +521,9 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Sensitive:     convert.NewSensitive(pointer(true)),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -558,7 +558,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
 				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -603,7 +603,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -654,8 +654,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -988,7 +988,7 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-nil": {
 			input: GeneratorMapAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, nil),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, nil),
 			},
 			expected: []code.Import{
 				{
@@ -998,7 +998,7 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorMapAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{},
 					},
@@ -1012,7 +1012,7 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorMapAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -1030,7 +1030,7 @@ func TestGeneratorMapAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorMapAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -1677,7 +1677,7 @@ my_other_validator.Validate(),
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						SchemaDefinition: "my_plan_modifier.Modify()",
 					},

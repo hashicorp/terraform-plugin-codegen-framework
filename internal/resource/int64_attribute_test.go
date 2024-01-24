@@ -35,7 +35,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -46,7 +46,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -57,7 +57,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -68,7 +68,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -90,8 +90,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, nil),
-				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, nil),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, nil),
+				Validators:    convert.NewValidators(convert.ValidatorTypeInt64, nil),
 			},
 		},
 		"deprecation_message": {
@@ -101,7 +101,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
 				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -112,7 +112,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Description:         convert.NewDescription(pointer("description")),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
 				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -123,7 +123,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Sensitive:           convert.NewSensitive(pointer(true)),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
 				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -144,7 +144,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, nil),
+				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeInt64, nil),
 				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -174,7 +174,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -214,8 +214,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 					},
 					Static: pointer(int64(1234)),
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -365,7 +365,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-nil": {
 			input: GeneratorInt64Attribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, nil),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, nil),
 			},
 			expected: []code.Import{
 				{
@@ -375,7 +375,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorInt64Attribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{},
 					},
@@ -389,7 +389,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorInt64Attribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -407,7 +407,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorInt64Attribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -780,7 +780,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorInt64Attribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, []*specschema.CustomPlanModifier{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, []*specschema.CustomPlanModifier{
 					{
 						SchemaDefinition: "my_plan_modifier.Modify()",
 					},

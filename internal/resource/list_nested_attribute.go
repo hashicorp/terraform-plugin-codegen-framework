@@ -23,7 +23,7 @@ type GeneratorListNestedAttribute struct {
 	Description                convert.Description
 	NestedObject               GeneratorNestedAttributeObject
 	NestedAttributeObject      NestedAttributeObject
-	PlanModifiersCustom        convert.PlanModifiersCustom
+	PlanModifiers              convert.PlanModifiers
 	Sensitive                  convert.Sensitive
 	Validators                 convert.Validators
 }
@@ -49,13 +49,13 @@ func NewGeneratorListNestedAttribute(name string, a *resource.ListNestedAttribut
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	pmo := convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, a.NestedObject.PlanModifiers.CustomPlanModifiers())
+	pmo := convert.NewPlanModifiers(convert.PlanModifierTypeObject, a.NestedObject.PlanModifiers.CustomPlanModifiers())
 
 	vo := convert.NewValidators(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
 
 	nat := NewNestedAttributeObject(attributes, a.NestedObject.CustomType, pmo, vo, name)
 
-	pml := convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, a.PlanModifiers.CustomPlanModifiers())
+	pml := convert.NewPlanModifiers(convert.PlanModifierTypeList, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
@@ -74,7 +74,7 @@ func NewGeneratorListNestedAttribute(name string, a *resource.ListNestedAttribut
 			Validators:             a.NestedObject.Validators,
 		},
 		NestedAttributeObject: nat,
-		PlanModifiersCustom:   pml,
+		PlanModifiers:         pml,
 		Sensitive:             s,
 		Validators:            vl,
 	}, nil
@@ -91,7 +91,7 @@ func (g GeneratorListNestedAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.DefaultCustom.Imports())
 
-	imports.Append(g.PlanModifiersCustom.Imports())
+	imports.Append(g.PlanModifiers.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -139,7 +139,7 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
@@ -166,7 +166,7 @@ func (g GeneratorListNestedAttribute) Schema(name generatorschema.FrameworkIdent
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
 	b.Write(g.DefaultCustom.Schema())
 	b.WriteString("},")

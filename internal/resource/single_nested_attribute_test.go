@@ -56,12 +56,12 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 					"bool_attribute": GeneratorBoolAttribute{
 						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 						CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
-						PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, specschema.CustomPlanModifiers{}),
+						PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeBool, specschema.CustomPlanModifiers{}),
 						Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 					},
 				},
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:             convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -96,12 +96,12 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 						ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 							Bool: &specschema.BoolType{},
 						}),
-						PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{}),
-						Validators:          convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
+						PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{}),
+						Validators:    convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 					},
 				},
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:             convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -135,7 +135,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 								"nested_bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
-									PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
+									PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeBool, nil),
 									Validators:               convert.NewValidators(convert.ValidatorTypeBool, nil),
 								},
 							},
@@ -145,21 +145,21 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 								"nested_bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
-									PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
+									PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeBool, nil),
 									Validators:               convert.NewValidators(convert.ValidatorTypeBool, nil),
 								},
 							},
 							nil,
-							convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+							convert.NewPlanModifiers(convert.PlanModifierTypeObject, nil),
 							convert.NewValidators(convert.ValidatorTypeObject, nil),
 							"nested_attribute",
 						),
-						PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, nil),
-						Validators:          convert.NewValidators(convert.ValidatorTypeList, nil),
+						PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeList, nil),
+						Validators:    convert.NewValidators(convert.ValidatorTypeList, nil),
 					},
 				},
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:             convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -197,12 +197,12 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 						}),
 						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 						CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "object_attribute"),
-						PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+						PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 						Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 					},
 				},
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:             convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -232,18 +232,18 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 							"nested_bool": GeneratorBoolAttribute{
 								ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 								CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
-								PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, nil),
+								PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeBool, nil),
 								Validators:               convert.NewValidators(convert.ValidatorTypeBool, nil),
 							},
 						},
 						ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 						CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
-						PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+						PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 						Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 					},
 				},
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:             convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -254,7 +254,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			expected: GeneratorSingleNestedAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 				CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -265,7 +265,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			expected: GeneratorSingleNestedAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
 				CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -276,7 +276,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			expected: GeneratorSingleNestedAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 				CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -287,7 +287,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			expected: GeneratorSingleNestedAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 				CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -309,8 +309,8 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -320,7 +320,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			expected: GeneratorSingleNestedAttribute{
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
 				DeprecationMessage:     convert.NewDeprecationMessage(pointer("deprecation message")),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:             convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -331,7 +331,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			expected: GeneratorSingleNestedAttribute{
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
 				Description:            convert.NewDescription(pointer("description")),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators:             convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
@@ -341,7 +341,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorSingleNestedAttribute{
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Sensitive:              convert.NewSensitive(pointer(true)),
 				Validators:             convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
@@ -363,7 +363,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorSingleNestedAttribute{
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom:    convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				PlanModifiers:          convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
 				Validators: convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -393,7 +393,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorSingleNestedAttribute{
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -429,8 +429,8 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 					},
 					SchemaDefinition: "my_default.Default()",
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -805,7 +805,7 @@ func TestGeneratorSingleNestedAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorSingleNestedAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(
+				PlanModifiers: convert.NewPlanModifiers(
 					convert.PlanModifierTypeObject,
 					specschema.CustomPlanModifiers{
 						&specschema.CustomPlanModifier{
@@ -929,7 +929,7 @@ AttrTypes: SingleNestedAttributeValue{}.AttributeTypes(ctx),
 								},
 							},
 							nil,
-							convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, nil),
+							convert.NewPlanModifiers(convert.PlanModifierTypeObject, nil),
 							convert.NewValidators(convert.ValidatorTypeObject, nil),
 							"nested_list_nested"),
 					},
@@ -1176,7 +1176,7 @@ my_other_validator.Validate(),
 		"plan-modifiers": {
 			input: GeneratorSingleNestedAttribute{
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "single_nested_attribute"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeObject, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						SchemaDefinition: "my_plan_modifier.Modify()",
 					},

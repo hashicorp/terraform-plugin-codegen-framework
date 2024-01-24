@@ -21,7 +21,7 @@ type GeneratorBoolAttribute struct {
 	DefaultBool              convert.DefaultBool
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
 	Validators               convert.Validators
 }
@@ -41,7 +41,7 @@ func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (Generato
 
 	d := convert.NewDescription(a.Description)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeBool, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
@@ -54,7 +54,7 @@ func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (Generato
 		DefaultBool:              db,
 		Description:              d,
 		DeprecationMessage:       dm,
-		PlanModifiersCustom:      pm,
+		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
 	}, nil
@@ -71,7 +71,7 @@ func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.DefaultBool.Imports())
 
-	imports.Append(g.PlanModifiersCustom.Imports())
+	imports.Append(g.PlanModifiers.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -115,7 +115,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
@@ -135,7 +135,7 @@ func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier)
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
 	b.Write(g.DefaultBool.Schema())
 	b.WriteString("},")

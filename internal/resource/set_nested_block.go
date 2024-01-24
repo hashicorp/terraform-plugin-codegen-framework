@@ -22,7 +22,7 @@ type GeneratorSetNestedBlock struct {
 	Description                convert.Description
 	NestedObject               GeneratorNestedBlockObject
 	NestedBlockObject          NestedBlockObject
-	PlanModifiersCustom        convert.PlanModifiersCustom
+	PlanModifiers              convert.PlanModifiers
 	Sensitive                  convert.Sensitive
 	Validators                 convert.Validators
 }
@@ -52,7 +52,7 @@ func NewGeneratorSetNestedBlock(name string, b *resource.SetNestedBlock) (Genera
 
 	dm := convert.NewDeprecationMessage(b.DeprecationMessage)
 
-	pmo := convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, b.NestedObject.PlanModifiers.CustomPlanModifiers())
+	pmo := convert.NewPlanModifiers(convert.PlanModifierTypeObject, b.NestedObject.PlanModifiers.CustomPlanModifiers())
 
 	vo := convert.NewValidators(convert.ValidatorTypeObject, b.NestedObject.Validators.CustomValidators())
 
@@ -60,7 +60,7 @@ func NewGeneratorSetNestedBlock(name string, b *resource.SetNestedBlock) (Genera
 
 	s := convert.NewSensitive(b.Sensitive)
 
-	pml := convert.NewPlanModifiersCustom(convert.PlanModifierTypeSet, b.PlanModifiers.CustomPlanModifiers())
+	pms := convert.NewPlanModifiers(convert.PlanModifierTypeSet, b.PlanModifiers.CustomPlanModifiers())
 
 	vs := convert.NewValidators(convert.ValidatorTypeSet, b.Validators.CustomValidators())
 
@@ -76,10 +76,10 @@ func NewGeneratorSetNestedBlock(name string, b *resource.SetNestedBlock) (Genera
 			CustomType:             b.NestedObject.CustomType,
 			Validators:             b.NestedObject.Validators,
 		},
-		NestedBlockObject:   nbo,
-		PlanModifiersCustom: pml,
-		Sensitive:           s,
-		Validators:          vs,
+		NestedBlockObject: nbo,
+		PlanModifiers:     pms,
+		Sensitive:         s,
+		Validators:        vs,
 	}, nil
 }
 
@@ -92,7 +92,7 @@ func (g GeneratorSetNestedBlock) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypeNestedCollection.Imports())
 
-	imports.Append(g.PlanModifiersCustom.Imports())
+	imports.Append(g.PlanModifiers.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -136,7 +136,7 @@ func (g GeneratorSetNestedBlock) Equal(ga generatorschema.GeneratorBlock) bool {
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
@@ -163,7 +163,7 @@ func (g GeneratorSetNestedBlock) Schema(name generatorschema.FrameworkIdentifier
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 

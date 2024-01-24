@@ -23,7 +23,7 @@ type GeneratorSingleNestedBlock struct {
 	CustomTypeNestedObject   convert.CustomTypeNestedObject
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
 	Validators               convert.Validators
 }
@@ -53,7 +53,7 @@ func NewGeneratorSingleNestedBlock(name string, b *resource.SingleNestedBlock) (
 
 	dm := convert.NewDeprecationMessage(b.DeprecationMessage)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, b.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeObject, b.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(b.Sensitive)
 
@@ -67,7 +67,7 @@ func NewGeneratorSingleNestedBlock(name string, b *resource.SingleNestedBlock) (
 		CustomTypeNestedObject:   ct,
 		DeprecationMessage:       dm,
 		Description:              d,
-		PlanModifiersCustom:      pm,
+		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
 	}, nil
@@ -82,7 +82,7 @@ func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypeNestedObject.Imports())
 
-	imports.Append(g.PlanModifiersCustom.Imports())
+	imports.Append(g.PlanModifiers.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -132,7 +132,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
@@ -174,7 +174,7 @@ func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentif
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 

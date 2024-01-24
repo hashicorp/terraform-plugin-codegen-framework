@@ -25,7 +25,7 @@ type GeneratorObjectAttribute struct {
 	DefaultCustom            convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
 	Validators               convert.Validators
 }
@@ -47,7 +47,7 @@ func NewGeneratorObjectAttribute(name string, a *resource.ObjectAttribute) (Gene
 
 	oat := convert.NewObjectAttributeTypes(a.AttributeTypes)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeObject, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeObject, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
@@ -62,7 +62,7 @@ func NewGeneratorObjectAttribute(name string, a *resource.ObjectAttribute) (Gene
 		DefaultCustom:            dc,
 		DeprecationMessage:       dm,
 		Description:              d,
-		PlanModifiersCustom:      pm,
+		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
 	}, nil
@@ -85,7 +85,7 @@ func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.DefaultCustom.Imports())
 
-	imports.Append(g.PlanModifiersCustom.Imports())
+	imports.Append(g.PlanModifiers.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -145,7 +145,7 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
@@ -170,7 +170,7 @@ func (g GeneratorObjectAttribute) Schema(name generatorschema.FrameworkIdentifie
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
 	b.Write(g.DefaultCustom.Schema())
 	b.WriteString("},")

@@ -21,7 +21,7 @@ type GeneratorFloat64Attribute struct {
 	DefaultFloat64           convert.DefaultFloat64
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
 	Validators               convert.Validators
 }
@@ -41,7 +41,7 @@ func NewGeneratorFloat64Attribute(name string, a *resource.Float64Attribute) (Ge
 
 	d := convert.NewDescription(a.Description)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeFloat64, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeFloat64, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
@@ -54,7 +54,7 @@ func NewGeneratorFloat64Attribute(name string, a *resource.Float64Attribute) (Ge
 		DefaultFloat64:           df,
 		Description:              d,
 		DeprecationMessage:       dm,
-		PlanModifiersCustom:      pm,
+		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
 	}, nil
@@ -71,7 +71,7 @@ func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.DefaultFloat64.Imports())
 
-	imports.Append(g.PlanModifiersCustom.Imports())
+	imports.Append(g.PlanModifiers.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -115,7 +115,7 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
+	if !g.PlanModifiers.Equal(h.PlanModifiers) {
 		return false
 	}
 
@@ -135,7 +135,7 @@ func (g GeneratorFloat64Attribute) Schema(name generatorschema.FrameworkIdentifi
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
 	b.Write(g.DefaultFloat64.Schema())
 	b.WriteString("},")

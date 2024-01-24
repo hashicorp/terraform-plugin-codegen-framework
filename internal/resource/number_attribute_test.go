@@ -35,7 +35,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
@@ -46,7 +46,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
@@ -57,7 +57,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
@@ -68,7 +68,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
 				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
@@ -90,8 +90,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
-				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, nil),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, nil),
+				Validators:    convert.NewValidators(convert.ValidatorTypeNumber, nil),
 			},
 		},
 		"deprecation_message": {
@@ -101,7 +101,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
@@ -112,7 +112,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Description:         convert.NewDescription(pointer("description")),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
@@ -123,7 +123,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Sensitive:           convert.NewSensitive(pointer(true)),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
@@ -144,7 +144,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
+				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeNumber, nil),
 				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -174,7 +174,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -210,8 +210,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 					},
 					SchemaDefinition: "my_default.Default()",
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -361,7 +361,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-nil": {
 			input: GeneratorNumberAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, nil),
 			},
 			expected: []code.Import{
 				{
@@ -371,7 +371,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import-nil": {
 			input: GeneratorNumberAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{},
 					},
@@ -385,7 +385,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifiers-custom-import-empty-string": {
 			input: GeneratorNumberAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -403,7 +403,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"plan-modifier-custom-import": {
 			input: GeneratorNumberAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -745,7 +745,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorNumberAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, []*specschema.CustomPlanModifier{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, []*specschema.CustomPlanModifier{
 					{
 						SchemaDefinition: "my_plan_modifier.Modify()",
 					},
