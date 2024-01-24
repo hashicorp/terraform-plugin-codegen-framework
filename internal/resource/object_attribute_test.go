@@ -460,7 +460,7 @@ func TestGeneratorObjectAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorObjectAttribute{
 				CustomTypeObject: convert.NewCustomTypeObject(nil, nil, "name"),
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/.../my_default",
@@ -854,7 +854,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-nil": {
 			input: GeneratorObjectAttribute{
-				DefaultCustom: convert.NewDefaultCustom(nil),
+				Default: convert.NewDefaultCustom(nil),
 			},
 			expected: []code.Import{
 				{
@@ -864,7 +864,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-nil": {
 			input: GeneratorObjectAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{}),
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{}),
 			},
 			expected: []code.Import{
 				{
@@ -874,7 +874,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorObjectAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "",
@@ -890,7 +890,7 @@ func TestGeneratorObjectAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import": {
 			input: GeneratorObjectAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/myproject/mydefaults/default",
@@ -1653,7 +1653,7 @@ my_other_plan_modifier.Modify(),
 						String: &specschema.StringType{},
 					},
 				}),
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					SchemaDefinition: "my_object_default.Default()",
 				}),
 			},

@@ -421,7 +421,7 @@ func TestGeneratorSingleNestedAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorSingleNestedAttribute{
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "name"),
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/.../my_default",
@@ -1203,7 +1203,7 @@ my_other_plan_modifier.Modify(),
 		"default-custom": {
 			input: GeneratorSingleNestedAttribute{
 				CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "single_nested_attribute"),
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					SchemaDefinition: "my_object_default.Default()",
 				}),
 			},

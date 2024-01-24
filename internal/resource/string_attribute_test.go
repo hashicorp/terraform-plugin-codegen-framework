@@ -203,7 +203,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorStringAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DefaultString: convert.NewDefaultString(&specschema.StringDefault{
+				Default: convert.NewDefaultString(&specschema.StringDefault{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -449,7 +449,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-and-static-nil": {
 			input: GeneratorStringAttribute{
-				DefaultString: convert.NewDefaultString(&specschema.StringDefault{}),
+				Default: convert.NewDefaultString(&specschema.StringDefault{}),
 			},
 			expected: []code.Import{
 				{
@@ -459,7 +459,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-nil": {
 			input: GeneratorStringAttribute{
-				DefaultString: convert.NewDefaultString(&specschema.StringDefault{
+				Default: convert.NewDefaultString(&specschema.StringDefault{
 					Custom: &specschema.CustomDefault{},
 				}),
 			},
@@ -471,7 +471,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorStringAttribute{
-				DefaultString: convert.NewDefaultString(&specschema.StringDefault{
+				Default: convert.NewDefaultString(&specschema.StringDefault{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -489,7 +489,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import": {
 			input: GeneratorStringAttribute{
-				DefaultString: convert.NewDefaultString(&specschema.StringDefault{
+				Default: convert.NewDefaultString(&specschema.StringDefault{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -510,7 +510,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		},
 		"default-static": {
 			input: GeneratorStringAttribute{
-				DefaultString: convert.NewDefaultString(&specschema.StringDefault{
+				Default: convert.NewDefaultString(&specschema.StringDefault{
 					Static: pointer("str"),
 				}),
 			},
@@ -799,7 +799,7 @@ my_other_plan_modifier.Modify(),
 
 		"default-static": {
 			input: GeneratorStringAttribute{
-				DefaultString: convert.NewDefaultString(&specschema.StringDefault{
+				Default: convert.NewDefaultString(&specschema.StringDefault{
 					Static: pointer("str"),
 				}),
 			},
@@ -810,7 +810,7 @@ Default: stringdefault.StaticString("str"),
 
 		"default-custom": {
 			input: GeneratorStringAttribute{
-				DefaultString: convert.NewDefaultString(&specschema.StringDefault{
+				Default: convert.NewDefaultString(&specschema.StringDefault{
 					Custom: &specschema.CustomDefault{
 						SchemaDefinition: "my_string_default.Default()",
 					},

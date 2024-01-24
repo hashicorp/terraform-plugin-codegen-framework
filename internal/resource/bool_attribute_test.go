@@ -203,7 +203,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorBoolAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DefaultBool: convert.NewDefaultBool(&specschema.BoolDefault{
+				Default: convert.NewDefaultBool(&specschema.BoolDefault{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -449,7 +449,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-and-static-nil": {
 			input: GeneratorBoolAttribute{
-				DefaultBool: convert.NewDefaultBool(&specschema.BoolDefault{}),
+				Default: convert.NewDefaultBool(&specschema.BoolDefault{}),
 			},
 			expected: []code.Import{
 				{
@@ -459,7 +459,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-nil": {
 			input: GeneratorBoolAttribute{
-				DefaultBool: convert.NewDefaultBool(&specschema.BoolDefault{
+				Default: convert.NewDefaultBool(&specschema.BoolDefault{
 					Custom: &specschema.CustomDefault{},
 				}),
 			},
@@ -471,7 +471,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorBoolAttribute{
-				DefaultBool: convert.NewDefaultBool(&specschema.BoolDefault{
+				Default: convert.NewDefaultBool(&specschema.BoolDefault{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -489,7 +489,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import": {
 			input: GeneratorBoolAttribute{
-				DefaultBool: convert.NewDefaultBool(&specschema.BoolDefault{
+				Default: convert.NewDefaultBool(&specschema.BoolDefault{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -510,7 +510,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"default-static": {
 			input: GeneratorBoolAttribute{
-				DefaultBool: convert.NewDefaultBool(&specschema.BoolDefault{
+				Default: convert.NewDefaultBool(&specschema.BoolDefault{
 					Static: pointer(true),
 				}),
 			},
@@ -799,7 +799,7 @@ my_other_plan_modifier.Modify(),
 
 		"default-static": {
 			input: GeneratorBoolAttribute{
-				DefaultBool: convert.NewDefaultBool(&specschema.BoolDefault{
+				Default: convert.NewDefaultBool(&specschema.BoolDefault{
 					Static: pointer(true),
 				}),
 			},
@@ -810,7 +810,7 @@ Default: booldefault.StaticBool(true),
 
 		"default-custom": {
 			input: GeneratorBoolAttribute{
-				DefaultBool: convert.NewDefaultBool(&specschema.BoolDefault{
+				Default: convert.NewDefaultBool(&specschema.BoolDefault{
 					Custom: &specschema.CustomDefault{
 						SchemaDefinition: "my_bool_default.Default()",
 					},

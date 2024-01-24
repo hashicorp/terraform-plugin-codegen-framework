@@ -20,7 +20,7 @@ type GeneratorSingleNestedAttribute struct {
 	Attributes               generatorschema.GeneratorAttributes
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypeNestedObject   convert.CustomTypeNestedObject
-	DefaultCustom            convert.DefaultCustom
+	Default                  convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
@@ -60,7 +60,7 @@ func NewGeneratorSingleNestedAttribute(name string, a *resource.SingleNestedAttr
 		Attributes:               attributes,
 		ComputedOptionalRequired: c,
 		CustomTypeNestedObject:   ct,
-		DefaultCustom:            dc,
+		Default:                  dc,
 		DeprecationMessage:       dm,
 		Description:              d,
 		PlanModifiers:            pm,
@@ -78,7 +78,7 @@ func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypeNestedObject.Imports())
 
-	imports.Append(g.DefaultCustom.Imports())
+	imports.Append(g.Default.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -116,7 +116,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	if !g.DefaultCustom.Equal(h.DefaultCustom) {
+	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -159,7 +159,7 @@ func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIde
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
-	b.Write(g.DefaultCustom.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

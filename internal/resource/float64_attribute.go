@@ -18,7 +18,7 @@ type GeneratorFloat64Attribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypePrimitive      convert.CustomTypePrimitive
-	DefaultFloat64           convert.DefaultFloat64
+	Default                  convert.DefaultFloat64
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
@@ -51,9 +51,9 @@ func NewGeneratorFloat64Attribute(name string, a *resource.Float64Attribute) (Ge
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomTypePrimitive:      ctp,
-		DefaultFloat64:           df,
-		Description:              d,
+		Default:                  df,
 		DeprecationMessage:       dm,
+		Description:              d,
 		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
@@ -69,7 +69,7 @@ func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
-	imports.Append(g.DefaultFloat64.Imports())
+	imports.Append(g.Default.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -103,7 +103,7 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 		return false
 	}
 
-	if !g.DefaultFloat64.Equal(h.DefaultFloat64) {
+	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -137,7 +137,7 @@ func (g GeneratorFloat64Attribute) Schema(name generatorschema.FrameworkIdentifi
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
-	b.Write(g.DefaultFloat64.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

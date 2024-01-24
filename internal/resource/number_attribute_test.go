@@ -202,7 +202,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/.../my_default",
@@ -445,7 +445,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-nil": {
 			input: GeneratorNumberAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{}),
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{}),
 			},
 			expected: []code.Import{
 				{
@@ -455,7 +455,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorNumberAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "",
@@ -471,7 +471,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import": {
 			input: GeneratorNumberAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/myproject/mydefaults/default",
@@ -764,7 +764,7 @@ my_other_plan_modifier.Modify(),
 
 		"default-custom": {
 			input: GeneratorNumberAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					SchemaDefinition: "my_number_default.Default()",
 				}),
 			},

@@ -18,7 +18,7 @@ type GeneratorNumberAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypePrimitive      convert.CustomTypePrimitive
-	DefaultCustom            convert.DefaultCustom
+	Default                  convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
@@ -51,7 +51,7 @@ func NewGeneratorNumberAttribute(name string, a *resource.NumberAttribute) (Gene
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomTypePrimitive:      ctp,
-		DefaultCustom:            dc,
+		Default:                  dc,
 		Description:              d,
 		DeprecationMessage:       dm,
 		PlanModifiers:            pm,
@@ -69,7 +69,7 @@ func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
-	imports.Append(g.DefaultCustom.Imports())
+	imports.Append(g.Default.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -103,7 +103,7 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.DefaultCustom.Equal(h.DefaultCustom) {
+	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -137,7 +137,7 @@ func (g GeneratorNumberAttribute) Schema(name generatorschema.FrameworkIdentifie
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
-	b.Write(g.DefaultCustom.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

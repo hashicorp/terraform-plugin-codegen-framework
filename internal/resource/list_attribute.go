@@ -19,7 +19,7 @@ type GeneratorListAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypeCollection     convert.CustomTypeCollection
-	DefaultCustom            convert.DefaultCustom
+	Default                  convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	ElementType              specschema.ElementType
@@ -56,7 +56,7 @@ func NewGeneratorListAttribute(name string, a *resource.ListAttribute) (Generato
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomTypeCollection:     ctc,
-		DefaultCustom:            dc,
+		Default:                  dc,
 		DeprecationMessage:       dm,
 		Description:              d,
 		ElementType:              a.ElementType,
@@ -82,7 +82,7 @@ func (g GeneratorListAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.ElementTypeCollection.Imports())
 
-	imports.Append(g.DefaultCustom.Imports())
+	imports.Append(g.Default.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -118,7 +118,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.DefaultCustom.Equal(h.DefaultCustom) {
+	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -165,7 +165,7 @@ func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier)
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
-	b.Write(g.DefaultCustom.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

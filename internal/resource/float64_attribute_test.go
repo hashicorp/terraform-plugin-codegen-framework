@@ -203,7 +203,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorFloat64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
+				Default: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -449,7 +449,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"default-custom-and-static-nil": {
 			input: GeneratorFloat64Attribute{
-				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{}),
+				Default: convert.NewDefaultFloat64(&specschema.Float64Default{}),
 			},
 			expected: []code.Import{
 				{
@@ -459,7 +459,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-nil": {
 			input: GeneratorFloat64Attribute{
-				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
+				Default: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Custom: &specschema.CustomDefault{},
 				}),
 			},
@@ -471,7 +471,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorFloat64Attribute{
-				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
+				Default: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -489,7 +489,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"default-custom-import": {
 			input: GeneratorFloat64Attribute{
-				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
+				Default: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -510,7 +510,7 @@ func TestGeneratorFloat64Attribute_Imports(t *testing.T) {
 		},
 		"default-static": {
 			input: GeneratorFloat64Attribute{
-				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
+				Default: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Static: pointer(1.234),
 				}),
 			},
@@ -799,7 +799,7 @@ my_other_plan_modifier.Modify(),
 
 		"default-static": {
 			input: GeneratorFloat64Attribute{
-				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
+				Default: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Static: pointer(1.234),
 				}),
 			},
@@ -810,7 +810,7 @@ Default: float64default.StaticFloat64(1.234),
 
 		"default-custom": {
 			input: GeneratorFloat64Attribute{
-				DefaultFloat64: convert.NewDefaultFloat64(&specschema.Float64Default{
+				Default: convert.NewDefaultFloat64(&specschema.Float64Default{
 					Custom: &specschema.CustomDefault{
 						SchemaDefinition: "my_float64_default.Default()",
 					},

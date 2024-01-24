@@ -640,7 +640,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 					"types.StringType",
 					"name",
 				),
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/.../my_default",
@@ -1072,7 +1072,7 @@ func TestGeneratorSetAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-nil": {
 			input: GeneratorSetAttribute{
-				DefaultCustom: convert.NewDefaultCustom(nil),
+				Default: convert.NewDefaultCustom(nil),
 			},
 			expected: []code.Import{
 				{
@@ -1082,7 +1082,7 @@ func TestGeneratorSetAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-nil": {
 			input: GeneratorSetAttribute{
-				DefaultCustom: convert.NewDefaultCustom(
+				Default: convert.NewDefaultCustom(
 					&specschema.CustomDefault{},
 				),
 			},
@@ -1094,7 +1094,7 @@ func TestGeneratorSetAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorSetAttribute{
-				DefaultCustom: convert.NewDefaultCustom(
+				Default: convert.NewDefaultCustom(
 					&specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -1112,7 +1112,7 @@ func TestGeneratorSetAttribute_Imports(t *testing.T) {
 		},
 		"default-custom-import": {
 			input: GeneratorSetAttribute{
-				DefaultCustom: convert.NewDefaultCustom(
+				Default: convert.NewDefaultCustom(
 					&specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -1697,7 +1697,7 @@ my_other_plan_modifier.Modify(),
 
 		"default-custom": {
 			input: GeneratorSetAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					SchemaDefinition: "my_set_default.Default()",
 				}),
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{

@@ -18,7 +18,7 @@ type GeneratorBoolAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypePrimitive      convert.CustomTypePrimitive
-	DefaultBool              convert.DefaultBool
+	Default                  convert.DefaultBool
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
@@ -51,9 +51,9 @@ func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (Generato
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomTypePrimitive:      ctp,
-		DefaultBool:              db,
-		Description:              d,
+		Default:                  db,
 		DeprecationMessage:       dm,
+		Description:              d,
 		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
@@ -69,7 +69,7 @@ func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
-	imports.Append(g.DefaultBool.Imports())
+	imports.Append(g.Default.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -103,7 +103,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.DefaultBool.Equal(h.DefaultBool) {
+	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -137,7 +137,7 @@ func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier)
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
-	b.Write(g.DefaultBool.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

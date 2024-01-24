@@ -22,7 +22,7 @@ type GeneratorObjectAttribute struct {
 	AttributeTypesObject     convert.ObjectAttributeTypes
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypeObject         convert.CustomTypeObject
-	DefaultCustom            convert.DefaultCustom
+	Default                  convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
@@ -59,7 +59,7 @@ func NewGeneratorObjectAttribute(name string, a *resource.ObjectAttribute) (Gene
 		AttributeTypesObject:     oat,
 		ComputedOptionalRequired: c,
 		CustomTypeObject:         cto,
-		DefaultCustom:            dc,
+		Default:                  dc,
 		DeprecationMessage:       dm,
 		Description:              d,
 		PlanModifiers:            pm,
@@ -83,7 +83,7 @@ func (g GeneratorObjectAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.AttributeTypesObject.Imports())
 
-	imports.Append(g.DefaultCustom.Imports())
+	imports.Append(g.Default.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -133,7 +133,7 @@ func (g GeneratorObjectAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.DefaultCustom.Equal(h.DefaultCustom) {
+	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -172,7 +172,7 @@ func (g GeneratorObjectAttribute) Schema(name generatorschema.FrameworkIdentifie
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
-	b.Write(g.DefaultCustom.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

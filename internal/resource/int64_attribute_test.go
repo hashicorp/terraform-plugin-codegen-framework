@@ -203,7 +203,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -449,7 +449,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"default-custom-and-static-nil": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{}),
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{}),
 			},
 			expected: []code.Import{
 				{
@@ -459,7 +459,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-nil": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Custom: &specschema.CustomDefault{},
 				}),
 			},
@@ -471,7 +471,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"default-custom-import-empty-string": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -489,7 +489,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"default-custom-import": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -510,7 +510,7 @@ func TestGeneratorInt64Attribute_Imports(t *testing.T) {
 		},
 		"default-static": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Static: pointer(int64(1234)),
 				}),
 			},
@@ -799,7 +799,7 @@ my_other_plan_modifier.Modify(),
 
 		"default-static": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Static: pointer(int64(1234)),
 				}),
 			},
@@ -810,7 +810,7 @@ Default: int64default.StaticInt64(1234),
 
 		"default-custom": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Custom: &specschema.CustomDefault{
 						SchemaDefinition: "my_int64_default.Default()",
 					},

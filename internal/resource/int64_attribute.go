@@ -18,7 +18,7 @@ type GeneratorInt64Attribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypePrimitive      convert.CustomTypePrimitive
-	DefaultInt64             convert.DefaultInt64
+	Default                  convert.DefaultInt64
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
@@ -35,7 +35,7 @@ func NewGeneratorInt64Attribute(name string, a *resource.Int64Attribute) (Genera
 
 	ctp := convert.NewCustomTypePrimitive(a.CustomType, a.AssociatedExternalType, name)
 
-	db := convert.NewDefaultInt64(a.Default)
+	di := convert.NewDefaultInt64(a.Default)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
@@ -51,9 +51,9 @@ func NewGeneratorInt64Attribute(name string, a *resource.Int64Attribute) (Genera
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomTypePrimitive:      ctp,
-		DefaultInt64:             db,
-		Description:              d,
+		Default:                  di,
 		DeprecationMessage:       dm,
+		Description:              d,
 		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
@@ -69,7 +69,7 @@ func (g GeneratorInt64Attribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
-	imports.Append(g.DefaultInt64.Imports())
+	imports.Append(g.Default.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -103,7 +103,7 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 		return false
 	}
 
-	if !g.DefaultInt64.Equal(h.DefaultInt64) {
+	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -137,7 +137,7 @@ func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
-	b.Write(g.DefaultInt64.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil

@@ -658,7 +658,7 @@ func TestGeneratorListNestedAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListNestedAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/.../my_default",
@@ -1891,7 +1891,7 @@ my_other_plan_modifier.Modify(),
 					convert.NewValidators(convert.ValidatorTypeObject, nil),
 					attributeName,
 				),
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					SchemaDefinition: "my_list_default.Default()",
 				}),
 			},

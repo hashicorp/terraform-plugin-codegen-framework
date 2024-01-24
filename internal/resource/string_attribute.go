@@ -18,7 +18,7 @@ type GeneratorStringAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomTypePrimitive      convert.CustomTypePrimitive
-	DefaultString            convert.DefaultString
+	Default                  convert.DefaultString
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
@@ -35,7 +35,7 @@ func NewGeneratorStringAttribute(name string, a *resource.StringAttribute) (Gene
 
 	ctp := convert.NewCustomTypePrimitive(a.CustomType, a.AssociatedExternalType, name)
 
-	db := convert.NewDefaultString(a.Default)
+	ds := convert.NewDefaultString(a.Default)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
@@ -51,9 +51,9 @@ func NewGeneratorStringAttribute(name string, a *resource.StringAttribute) (Gene
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
 		CustomTypePrimitive:      ctp,
-		DefaultString:            db,
-		Description:              d,
+		Default:                  ds,
 		DeprecationMessage:       dm,
+		Description:              d,
 		PlanModifiers:            pm,
 		Sensitive:                s,
 		Validators:               v,
@@ -69,7 +69,7 @@ func (g GeneratorStringAttribute) Imports() *generatorschema.Imports {
 
 	imports.Append(g.CustomTypePrimitive.Imports())
 
-	imports.Append(g.DefaultString.Imports())
+	imports.Append(g.Default.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -103,7 +103,7 @@ func (g GeneratorStringAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.DefaultString.Equal(h.DefaultString) {
+	if !g.Default.Equal(h.Default) {
 		return false
 	}
 
@@ -137,7 +137,7 @@ func (g GeneratorStringAttribute) Schema(name generatorschema.FrameworkIdentifie
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
 	b.Write(g.Validators.Schema())
-	b.Write(g.DefaultString.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
