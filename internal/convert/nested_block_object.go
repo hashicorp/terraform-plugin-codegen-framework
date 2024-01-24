@@ -12,20 +12,20 @@ import (
 )
 
 type NestedBlockObject struct {
-	attributes       schema.GeneratorAttributes
-	blocks           schema.GeneratorBlocks
-	customType       CustomTypeNestedObject
-	validatorsCustom Validators
+	attributes schema.GeneratorAttributes
+	blocks     schema.GeneratorBlocks
+	customType CustomTypeNestedObject
+	validators Validators
 }
 
 // NewNestedBlockObject constructs a NestedBlockObject which is used to generate a
 // nested attribute block in the schema.
 func NewNestedBlockObject(a schema.GeneratorAttributes, b schema.GeneratorBlocks, c *specschema.CustomType, v Validators, name string) NestedBlockObject {
 	return NestedBlockObject{
-		attributes:       a,
-		blocks:           b,
-		customType:       NewCustomTypeNestedObject(c, name),
-		validatorsCustom: v,
+		attributes: a,
+		blocks:     b,
+		customType: NewCustomTypeNestedObject(c, name),
+		validators: v,
 	}
 }
 
@@ -42,7 +42,7 @@ func (n NestedBlockObject) Equal(other NestedBlockObject) bool {
 		return false
 	}
 
-	return n.validatorsCustom.Equal(other.validatorsCustom)
+	return n.validators.Equal(other.validators)
 }
 
 func (n NestedBlockObject) Imports() *schema.Imports {
@@ -50,7 +50,7 @@ func (n NestedBlockObject) Imports() *schema.Imports {
 
 	imports.Append(n.customType.Imports())
 
-	imports.Append(n.validatorsCustom.Imports())
+	imports.Append(n.validators.Imports())
 
 	imports.Append(n.attributes.Imports())
 
@@ -86,7 +86,7 @@ func (n NestedBlockObject) Schema() ([]byte, error) {
 		b.WriteString("\n},\n")
 	}
 	b.Write(n.customType.Schema())
-	b.Write(n.validatorsCustom.Schema())
+	b.Write(n.validators.Schema())
 	b.WriteString("},\n")
 
 	return b.Bytes(), nil
