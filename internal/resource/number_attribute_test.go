@@ -34,7 +34,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
@@ -45,7 +45,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
@@ -56,7 +56,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
@@ -67,7 +67,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
@@ -83,7 +83,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
@@ -99,10 +99,10 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				PlanModifiers:      convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:         convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -110,10 +110,10 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description:   convert.NewDescription(pointer("description")),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -121,10 +121,10 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:     convert.NewSensitive(pointer(true)),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -143,8 +143,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeNumber, nil),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, nil),
 				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -173,7 +173,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
@@ -201,7 +201,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
@@ -251,13 +251,13 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-without-import": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
 			},
 			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "",
@@ -271,7 +271,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -562,7 +562,7 @@ func TestGeneratorNumberAttribute_Imports(t *testing.T) {
 						Type: "*api.NumberAttribute",
 					},
 				},
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -623,7 +623,7 @@ func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -638,7 +638,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtNumber",
@@ -653,7 +653,7 @@ CustomType: NumberAttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -810,7 +810,7 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},
@@ -826,7 +826,7 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.NumberAttribute",
@@ -842,7 +842,7 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

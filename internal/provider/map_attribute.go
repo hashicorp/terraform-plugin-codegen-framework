@@ -18,7 +18,7 @@ import (
 type GeneratorMapAttribute struct {
 	AssociatedExternalType *generatorschema.AssocExtType
 	OptionalRequired       convert.OptionalRequired
-	CustomTypeCollection   convert.CustomTypeCollection
+	CustomType             convert.CustomTypeCollection
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	ElementType            specschema.ElementType
@@ -49,7 +49,7 @@ func NewGeneratorMapAttribute(name string, a *provider.MapAttribute) (GeneratorM
 	return GeneratorMapAttribute{
 		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		OptionalRequired:       c,
-		CustomTypeCollection:   ctc,
+		CustomType:             ctc,
 		DeprecationMessage:     dm,
 		Description:            d,
 		ElementType:            a.ElementType,
@@ -70,7 +70,7 @@ func (g GeneratorMapAttribute) ElemType() specschema.ElementType {
 func (g GeneratorMapAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypeCollection.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.ElementTypeCollection.Imports())
 
@@ -102,7 +102,7 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !g.CustomTypeCollection.Equal(h.CustomTypeCollection) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -132,7 +132,7 @@ func (g GeneratorMapAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 func (g GeneratorMapAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
-	customTypeSchema := g.CustomTypeCollection.Schema()
+	customTypeSchema := g.CustomType.Schema()
 
 	b.WriteString(fmt.Sprintf("%q: schema.MapAttribute{\n", name))
 	b.Write(customTypeSchema)
@@ -156,7 +156,7 @@ func (g GeneratorMapAttribute) ModelField(name generatorschema.FrameworkIdentifi
 		ValueType: model.MapValueType,
 	}
 
-	customValueType := g.CustomTypeCollection.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		field.ValueType = customValueType

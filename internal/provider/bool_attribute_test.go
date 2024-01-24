@@ -33,9 +33,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				OptionalRequired: "computed_optional",
 			},
 			expected: GeneratorBoolAttribute{
-				OptionalRequired:    convert.NewOptionalRequired(specschema.ComputedOptional),
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				OptionalRequired: convert.NewOptionalRequired(specschema.ComputedOptional),
+				CustomType:       convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:       convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -43,9 +43,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				OptionalRequired: "optional",
 			},
 			expected: GeneratorBoolAttribute{
-				OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+				CustomType:       convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:       convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -53,9 +53,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				OptionalRequired: "required",
 			},
 			expected: GeneratorBoolAttribute{
-				OptionalRequired:    convert.NewOptionalRequired(specschema.Required),
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
+				CustomType:       convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:       convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -69,7 +69,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
@@ -84,9 +84,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				Validators:         convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -94,9 +94,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				CustomType:  convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description: convert.NewDescription(pointer("description")),
+				Validators:  convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -104,9 +104,9 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				Validators:          convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:  convert.NewSensitive(pointer(true)),
+				Validators: convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -125,7 +125,7 @@ func TestGeneratorBoolAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Validators: convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -175,13 +175,13 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-without-import": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
 			},
 			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "",
@@ -195,7 +195,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -357,7 +357,7 @@ func TestGeneratorBoolAttribute_Imports(t *testing.T) {
 						Type: "*api.BoolAttribute",
 					},
 				},
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -418,7 +418,7 @@ func TestGeneratorBoolAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -433,7 +433,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtBool",
@@ -448,7 +448,7 @@ CustomType: BoolAttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -573,7 +573,7 @@ func TestGeneratorBoolAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},
@@ -589,7 +589,7 @@ func TestGeneratorBoolAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.BoolAttribute",
@@ -605,7 +605,7 @@ func TestGeneratorBoolAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorBoolAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

@@ -18,7 +18,7 @@ import (
 type GeneratorListAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomTypeCollection     convert.CustomTypeCollection
+	CustomType               convert.CustomTypeCollection
 	Default                  convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
@@ -55,7 +55,7 @@ func NewGeneratorListAttribute(name string, a *resource.ListAttribute) (Generato
 	return GeneratorListAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomTypeCollection:     ctc,
+		CustomType:               ctc,
 		Default:                  dc,
 		DeprecationMessage:       dm,
 		Description:              d,
@@ -78,7 +78,7 @@ func (g GeneratorListAttribute) ElemType() specschema.ElementType {
 func (g GeneratorListAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypeCollection.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.ElementTypeCollection.Imports())
 
@@ -114,7 +114,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.CustomTypeCollection.Equal(h.CustomTypeCollection) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -152,7 +152,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
-	customTypeSchema := g.CustomTypeCollection.Schema()
+	customTypeSchema := g.CustomType.Schema()
 
 	b.WriteString(fmt.Sprintf("%q: schema.ListAttribute{\n", name))
 	b.Write(customTypeSchema)
@@ -178,7 +178,7 @@ func (g GeneratorListAttribute) ModelField(name generatorschema.FrameworkIdentif
 		ValueType: model.ListValueType,
 	}
 
-	customValueType := g.CustomTypeCollection.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		field.ValueType = customValueType

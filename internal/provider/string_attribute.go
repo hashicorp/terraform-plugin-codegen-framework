@@ -17,7 +17,7 @@ import (
 type GeneratorStringAttribute struct {
 	AssociatedExternalType *schema.AssocExtType
 	OptionalRequired       convert.OptionalRequired
-	CustomTypePrimitive    convert.CustomTypePrimitive
+	CustomType             convert.CustomTypePrimitive
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
@@ -44,7 +44,7 @@ func NewGeneratorStringAttribute(name string, a *provider.StringAttribute) (Gene
 	return GeneratorStringAttribute{
 		AssociatedExternalType: schema.NewAssocExtType(a.AssociatedExternalType),
 		OptionalRequired:       c,
-		CustomTypePrimitive:    ctp,
+		CustomType:             ctp,
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
@@ -59,7 +59,7 @@ func (g GeneratorStringAttribute) GeneratorSchemaType() schema.Type {
 func (g GeneratorStringAttribute) Imports() *schema.Imports {
 	imports := schema.NewImports()
 
-	imports.Append(g.CustomTypePrimitive.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -87,7 +87,7 @@ func (g GeneratorStringAttribute) Equal(ga schema.GeneratorAttribute) bool {
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -110,7 +110,7 @@ func (g GeneratorStringAttribute) Schema(name schema.FrameworkIdentifier) (strin
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.StringAttribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.OptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -128,7 +128,7 @@ func (g GeneratorStringAttribute) ModelField(name schema.FrameworkIdentifier) (m
 		ValueType: model.StringValueType,
 	}
 
-	customValueType := g.CustomTypePrimitive.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		field.ValueType = customValueType

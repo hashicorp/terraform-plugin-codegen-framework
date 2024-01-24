@@ -17,7 +17,7 @@ import (
 type GeneratorInt64Attribute struct {
 	AssociatedExternalType   *schema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomTypePrimitive      convert.CustomTypePrimitive
+	CustomType               convert.CustomTypePrimitive
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	Sensitive                convert.Sensitive
@@ -44,7 +44,7 @@ func NewGeneratorInt64Attribute(name string, a *datasource.Int64Attribute) (Gene
 	return GeneratorInt64Attribute{
 		AssociatedExternalType:   schema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomTypePrimitive:      ctp,
+		CustomType:               ctp,
 		DeprecationMessage:       dm,
 		Description:              d,
 		Sensitive:                s,
@@ -59,7 +59,7 @@ func (g GeneratorInt64Attribute) GeneratorSchemaType() schema.Type {
 func (g GeneratorInt64Attribute) Imports() *schema.Imports {
 	imports := schema.NewImports()
 
-	imports.Append(g.CustomTypePrimitive.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -87,7 +87,7 @@ func (g GeneratorInt64Attribute) Equal(ga schema.GeneratorAttribute) bool {
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -110,7 +110,7 @@ func (g GeneratorInt64Attribute) Schema(name schema.FrameworkIdentifier) (string
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.Int64Attribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -128,7 +128,7 @@ func (g GeneratorInt64Attribute) ModelField(name schema.FrameworkIdentifier) (mo
 		ValueType: model.Int64ValueType,
 	}
 
-	customValueType := g.CustomTypePrimitive.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		field.ValueType = customValueType

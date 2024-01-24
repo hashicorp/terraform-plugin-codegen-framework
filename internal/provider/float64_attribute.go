@@ -17,7 +17,7 @@ import (
 type GeneratorFloat64Attribute struct {
 	AssociatedExternalType *schema.AssocExtType
 	OptionalRequired       convert.OptionalRequired
-	CustomTypePrimitive    convert.CustomTypePrimitive
+	CustomType             convert.CustomTypePrimitive
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
@@ -44,7 +44,7 @@ func NewGeneratorFloat64Attribute(name string, a *provider.Float64Attribute) (Ge
 	return GeneratorFloat64Attribute{
 		AssociatedExternalType: schema.NewAssocExtType(a.AssociatedExternalType),
 		OptionalRequired:       c,
-		CustomTypePrimitive:    ctp,
+		CustomType:             ctp,
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
@@ -59,7 +59,7 @@ func (g GeneratorFloat64Attribute) GeneratorSchemaType() schema.Type {
 func (g GeneratorFloat64Attribute) Imports() *schema.Imports {
 	imports := schema.NewImports()
 
-	imports.Append(g.CustomTypePrimitive.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -87,7 +87,7 @@ func (g GeneratorFloat64Attribute) Equal(ga schema.GeneratorAttribute) bool {
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -110,7 +110,7 @@ func (g GeneratorFloat64Attribute) Schema(name schema.FrameworkIdentifier) (stri
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.Float64Attribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.OptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -128,7 +128,7 @@ func (g GeneratorFloat64Attribute) ModelField(name schema.FrameworkIdentifier) (
 		ValueType: model.Float64ValueType,
 	}
 
-	customValueType := g.CustomTypePrimitive.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		field.ValueType = customValueType

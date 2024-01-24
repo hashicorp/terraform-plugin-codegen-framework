@@ -35,7 +35,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -59,7 +59,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -87,7 +87,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -123,7 +123,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -166,7 +166,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -219,7 +219,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -268,7 +268,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -316,7 +316,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -342,7 +342,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -368,7 +368,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -394,7 +394,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -425,7 +425,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/",
@@ -456,7 +456,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -482,7 +482,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -508,7 +508,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -545,7 +545,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -590,7 +590,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -633,7 +633,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -695,7 +695,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-without-import": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{},
 					nil,
 					convert.CustomCollectionTypeList,
@@ -707,7 +707,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "",
@@ -723,7 +723,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -1205,7 +1205,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						Type: "*api.ListAttribute",
 					},
 				},
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -1514,7 +1514,7 @@ ElementType: types.StringType,
 
 		"custom-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -1531,7 +1531,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ListAttribute",
@@ -1552,7 +1552,7 @@ ElemType: types.StringType,
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -1893,7 +1893,7 @@ func TestGeneratorListAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},
@@ -1911,7 +1911,7 @@ func TestGeneratorListAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ListAttribute",
@@ -1929,7 +1929,7 @@ func TestGeneratorListAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

@@ -20,7 +20,7 @@ type GeneratorSingleNestedBlock struct {
 	Attributes               generatorschema.GeneratorAttributes
 	Blocks                   generatorschema.GeneratorBlocks
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomTypeNestedObject   convert.CustomTypeNestedObject
+	CustomType               convert.CustomTypeNestedObject
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
@@ -64,7 +64,7 @@ func NewGeneratorSingleNestedBlock(name string, b *resource.SingleNestedBlock) (
 		Attributes:               attributes,
 		Blocks:                   blocks,
 		ComputedOptionalRequired: c,
-		CustomTypeNestedObject:   ct,
+		CustomType:               ct,
 		DeprecationMessage:       dm,
 		Description:              d,
 		PlanModifiers:            pm,
@@ -80,7 +80,7 @@ func (g GeneratorSingleNestedBlock) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorSingleNestedBlock) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypeNestedObject.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.PlanModifiers.Imports())
 
@@ -120,7 +120,7 @@ func (g GeneratorSingleNestedBlock) Equal(ga generatorschema.GeneratorBlock) boo
 		return false
 	}
 
-	if !g.CustomTypeNestedObject.Equal(h.CustomTypeNestedObject) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -169,7 +169,7 @@ func (g GeneratorSingleNestedBlock) Schema(name generatorschema.FrameworkIdentif
 		b.WriteString(blocksSchema)
 		b.WriteString("\n},\n")
 	}
-	b.Write(g.CustomTypeNestedObject.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -188,7 +188,7 @@ func (g GeneratorSingleNestedBlock) ModelField(name generatorschema.FrameworkIde
 		ValueType: name.ToPascalCase() + "Value",
 	}
 
-	customValueType := g.CustomTypeNestedObject.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		f.ValueType = customValueType

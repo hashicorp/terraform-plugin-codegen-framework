@@ -34,7 +34,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorStringAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
@@ -45,7 +45,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorStringAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
@@ -56,7 +56,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorStringAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
@@ -67,7 +67,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorStringAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
 				Validators:               convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
@@ -83,7 +83,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
@@ -99,10 +99,10 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				PlanModifiers:      convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
+				Validators:         convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -110,10 +110,10 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description:   convert.NewDescription(pointer("description")),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -121,10 +121,10 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
-				Validators:          convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:     convert.NewSensitive(pointer(true)),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -143,8 +143,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiers:       convert.NewPlanModifiers(convert.PlanModifierTypeString, nil),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeString, nil),
 				Validators: convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -173,7 +173,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeString, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
@@ -202,7 +202,7 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Default: convert.NewDefaultString(&specschema.StringDefault{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
@@ -255,13 +255,13 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-without-import": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
 			},
 			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "",
@@ -275,7 +275,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -597,7 +597,7 @@ func TestGeneratorStringAttribute_Imports(t *testing.T) {
 						Type: "*api.StringAttribute",
 					},
 				},
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -658,7 +658,7 @@ func TestGeneratorStringAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -673,7 +673,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtString",
@@ -688,7 +688,7 @@ CustomType: StringAttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -858,7 +858,7 @@ func TestGeneratorStringAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},
@@ -874,7 +874,7 @@ func TestGeneratorStringAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.StringAttribute",
@@ -890,7 +890,7 @@ func TestGeneratorStringAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

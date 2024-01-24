@@ -18,7 +18,7 @@ import (
 type GeneratorSetAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomTypeCollection     convert.CustomTypeCollection
+	CustomType               convert.CustomTypeCollection
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	ElementType              specschema.ElementType
@@ -49,7 +49,7 @@ func NewGeneratorSetAttribute(name string, a *datasource.SetAttribute) (Generato
 	return GeneratorSetAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomTypeCollection:     ctc,
+		CustomType:               ctc,
 		DeprecationMessage:       dm,
 		Description:              d,
 		ElementType:              a.ElementType,
@@ -70,7 +70,7 @@ func (g GeneratorSetAttribute) ElemType() specschema.ElementType {
 func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypeCollection.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.ElementTypeCollection.Imports())
 
@@ -102,7 +102,7 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !g.CustomTypeCollection.Equal(h.CustomTypeCollection) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -132,7 +132,7 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 func (g GeneratorSetAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
-	customTypeSchema := g.CustomTypeCollection.Schema()
+	customTypeSchema := g.CustomType.Schema()
 
 	b.WriteString(fmt.Sprintf("%q: schema.SetAttribute{\n", name))
 	b.Write(customTypeSchema)
@@ -156,7 +156,7 @@ func (g GeneratorSetAttribute) ModelField(name generatorschema.FrameworkIdentifi
 		ValueType: model.SetValueType,
 	}
 
-	customValueType := g.CustomTypeCollection.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		field.ValueType = customValueType

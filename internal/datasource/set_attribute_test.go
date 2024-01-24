@@ -34,7 +34,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -57,7 +57,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -84,7 +84,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -119,7 +119,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -161,7 +161,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -213,7 +213,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -261,7 +261,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -308,7 +308,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorSetAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -333,7 +333,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorSetAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -358,7 +358,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorSetAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -383,7 +383,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorSetAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -413,7 +413,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/",
@@ -443,7 +443,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -468,7 +468,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -493,7 +493,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -529,7 +529,7 @@ func TestGeneratorSetAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeSet,
@@ -826,7 +826,7 @@ ElementType: types.StringType,
 
 		"custom-type": {
 			input: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -846,7 +846,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{Type: "*api.SetAttribute"},
 					convert.CustomCollectionTypeSet,
@@ -868,7 +868,7 @@ ElemType: types.StringType,
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{Type: "my_custom_type"},
 					&specschema.AssociatedExternalType{Type: "*api.SetAttribute"},
 					convert.CustomCollectionTypeSet,
@@ -1188,7 +1188,7 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},
@@ -1206,7 +1206,7 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.SetAttribute",
@@ -1224,7 +1224,7 @@ func TestGeneratorSetAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorSetAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

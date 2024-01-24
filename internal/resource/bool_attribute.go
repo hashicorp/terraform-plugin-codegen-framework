@@ -17,7 +17,7 @@ import (
 type GeneratorBoolAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomTypePrimitive      convert.CustomTypePrimitive
+	CustomType               convert.CustomTypePrimitive
 	Default                  convert.DefaultBool
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
@@ -50,7 +50,7 @@ func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (Generato
 	return GeneratorBoolAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomTypePrimitive:      ctp,
+		CustomType:               ctp,
 		Default:                  db,
 		DeprecationMessage:       dm,
 		Description:              d,
@@ -67,7 +67,7 @@ func (g GeneratorBoolAttribute) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypePrimitive.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.Default.Imports())
 
@@ -99,7 +99,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -130,7 +130,7 @@ func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier)
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.BoolAttribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -150,7 +150,7 @@ func (g GeneratorBoolAttribute) ModelField(name generatorschema.FrameworkIdentif
 		ValueType: model.BoolValueType,
 	}
 
-	customValueType := g.CustomTypePrimitive.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		field.ValueType = customValueType

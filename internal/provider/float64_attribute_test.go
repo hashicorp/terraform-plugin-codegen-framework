@@ -32,9 +32,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				OptionalRequired: "optional",
 			},
 			expected: GeneratorFloat64Attribute{
-				OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+				CustomType:       convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:       convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -42,9 +42,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				OptionalRequired: "required",
 			},
 			expected: GeneratorFloat64Attribute{
-				OptionalRequired:    convert.NewOptionalRequired(specschema.Required),
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
+				CustomType:       convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:       convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -58,7 +58,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
@@ -73,9 +73,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				Validators:         convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -83,9 +83,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				CustomType:  convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description: convert.NewDescription(pointer("description")),
+				Validators:  convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -93,9 +93,9 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				Validators:          convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:  convert.NewSensitive(pointer(true)),
+				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -114,7 +114,7 @@ func TestGeneratorFloat64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Validators: convert.NewValidators(convert.ValidatorTypeFloat64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -158,7 +158,7 @@ func TestGeneratorFloat64Attribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -173,7 +173,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtFloat64",
@@ -188,7 +188,7 @@ CustomType: Float64AttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -312,7 +312,7 @@ func TestGeneratorFloat64Attribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},
@@ -328,7 +328,7 @@ func TestGeneratorFloat64Attribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.Float64Attribute",
@@ -344,7 +344,7 @@ func TestGeneratorFloat64Attribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorFloat64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

@@ -16,14 +16,14 @@ import (
 )
 
 type GeneratorSetNestedAttribute struct {
-	OptionalRequired           convert.OptionalRequired
-	CustomTypeNestedCollection convert.CustomTypeNestedCollection
-	DeprecationMessage         convert.DeprecationMessage
-	Description                convert.Description
-	NestedObject               GeneratorNestedAttributeObject
-	NestedAttributeObject      convert.NestedAttributeObject
-	Sensitive                  convert.Sensitive
-	Validators                 convert.Validators
+	OptionalRequired      convert.OptionalRequired
+	CustomType            convert.CustomTypeNestedCollection
+	DeprecationMessage    convert.DeprecationMessage
+	Description           convert.Description
+	NestedObject          GeneratorNestedAttributeObject
+	NestedAttributeObject convert.NestedAttributeObject
+	Sensitive             convert.Sensitive
+	Validators            convert.Validators
 }
 
 func NewGeneratorSetNestedAttribute(name string, a *provider.SetNestedAttribute) (GeneratorSetNestedAttribute, error) {
@@ -54,10 +54,10 @@ func NewGeneratorSetNestedAttribute(name string, a *provider.SetNestedAttribute)
 	vs := convert.NewValidators(convert.ValidatorTypeSet, a.Validators.CustomValidators())
 
 	return GeneratorSetNestedAttribute{
-		OptionalRequired:           c,
-		CustomTypeNestedCollection: ct,
-		DeprecationMessage:         dm,
-		Description:                d,
+		OptionalRequired:   c,
+		CustomType:         ct,
+		DeprecationMessage: dm,
+		Description:        d,
 		NestedObject: GeneratorNestedAttributeObject{
 			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
@@ -77,7 +77,7 @@ func (g GeneratorSetNestedAttribute) GeneratorSchemaType() generatorschema.Type 
 func (g GeneratorSetNestedAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypeNestedCollection.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.Validators.Imports())
 
@@ -101,7 +101,7 @@ func (g GeneratorSetNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !g.CustomTypeNestedCollection.Equal(h.CustomTypeNestedCollection) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -139,7 +139,7 @@ func (g GeneratorSetNestedAttribute) Schema(name generatorschema.FrameworkIdenti
 
 	b.WriteString(fmt.Sprintf("%q: schema.SetNestedAttribute{\n", name))
 	b.Write(nestedObjectSchema)
-	b.Write(g.CustomTypeNestedCollection.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.OptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -157,7 +157,7 @@ func (g GeneratorSetNestedAttribute) ModelField(name generatorschema.FrameworkId
 		ValueType: model.SetValueType,
 	}
 
-	customValueType := g.CustomTypeNestedCollection.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		f.ValueType = customValueType

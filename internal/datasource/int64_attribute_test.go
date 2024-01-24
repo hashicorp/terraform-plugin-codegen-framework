@@ -33,7 +33,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -43,7 +43,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -53,7 +53,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -63,7 +63,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
@@ -78,7 +78,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
@@ -93,9 +93,9 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				Validators:         convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -103,9 +103,9 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:  convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description: convert.NewDescription(pointer("description")),
+				Validators:  convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -113,9 +113,9 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				Validators:          convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:  convert.NewSensitive(pointer(true)),
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -134,7 +134,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
 				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
@@ -178,7 +178,7 @@ func TestGeneratorInt64Attribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -193,7 +193,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtInt64",
@@ -208,7 +208,7 @@ CustomType: Int64AttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -342,7 +342,7 @@ func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},
@@ -358,7 +358,7 @@ func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.Int64Attribute",
@@ -374,7 +374,7 @@ func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

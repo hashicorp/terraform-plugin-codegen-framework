@@ -16,16 +16,16 @@ import (
 )
 
 type GeneratorMapNestedAttribute struct {
-	ComputedOptionalRequired   convert.ComputedOptionalRequired
-	CustomTypeNestedCollection convert.CustomTypeNestedCollection
-	Default                    convert.DefaultCustom
-	DeprecationMessage         convert.DeprecationMessage
-	Description                convert.Description
-	NestedObject               GeneratorNestedAttributeObject
-	NestedAttributeObject      NestedAttributeObject
-	PlanModifiers              convert.PlanModifiers
-	Sensitive                  convert.Sensitive
-	Validators                 convert.Validators
+	ComputedOptionalRequired convert.ComputedOptionalRequired
+	CustomType               convert.CustomTypeNestedCollection
+	Default                  convert.DefaultCustom
+	DeprecationMessage       convert.DeprecationMessage
+	Description              convert.Description
+	NestedObject             GeneratorNestedAttributeObject
+	NestedAttributeObject    NestedAttributeObject
+	PlanModifiers            convert.PlanModifiers
+	Sensitive                convert.Sensitive
+	Validators               convert.Validators
 }
 
 func NewGeneratorMapNestedAttribute(name string, a *resource.MapNestedAttribute) (GeneratorMapNestedAttribute, error) {
@@ -62,11 +62,11 @@ func NewGeneratorMapNestedAttribute(name string, a *resource.MapNestedAttribute)
 	vm := convert.NewValidators(convert.ValidatorTypeMap, a.Validators.CustomValidators())
 
 	return GeneratorMapNestedAttribute{
-		ComputedOptionalRequired:   c,
-		CustomTypeNestedCollection: ct,
-		Default:                    dc,
-		DeprecationMessage:         dm,
-		Description:                d,
+		ComputedOptionalRequired: c,
+		CustomType:               ct,
+		Default:                  dc,
+		DeprecationMessage:       dm,
+		Description:              d,
 		NestedObject: GeneratorNestedAttributeObject{
 			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
@@ -87,7 +87,7 @@ func (g GeneratorMapNestedAttribute) GeneratorSchemaType() generatorschema.Type 
 func (g GeneratorMapNestedAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypeNestedCollection.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.Default.Imports())
 
@@ -115,7 +115,7 @@ func (g GeneratorMapNestedAttribute) Equal(ga generatorschema.GeneratorAttribute
 		return false
 	}
 
-	if !g.CustomTypeNestedCollection.Equal(h.CustomTypeNestedCollection) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -161,7 +161,7 @@ func (g GeneratorMapNestedAttribute) Schema(name generatorschema.FrameworkIdenti
 
 	b.WriteString(fmt.Sprintf("%q: schema.MapNestedAttribute{\n", name))
 	b.Write(nestedObjectSchema)
-	b.Write(g.CustomTypeNestedCollection.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -181,7 +181,7 @@ func (g GeneratorMapNestedAttribute) ModelField(name generatorschema.FrameworkId
 		ValueType: model.MapValueType,
 	}
 
-	customValueType := g.CustomTypeNestedCollection.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		f.ValueType = customValueType

@@ -66,7 +66,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 					Attributes: generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+							CustomType:               convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
 							Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 						},
 					},
@@ -75,7 +75,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 					generatorschema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
+							CustomType:               convert.NewCustomTypePrimitive(nil, nil, "bool_attribute"),
 							Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 						},
 					},
@@ -107,7 +107,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 					Attributes: generatorschema.GeneratorAttributes{
 						"list_attribute": GeneratorListAttribute{
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypeCollection: convert.NewCustomTypeCollection(
+							CustomType: convert.NewCustomTypeCollection(
 								nil,
 								nil,
 								convert.CustomCollectionTypeList,
@@ -128,7 +128,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 					generatorschema.GeneratorAttributes{
 						"list_attribute": GeneratorListAttribute{
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypeCollection: convert.NewCustomTypeCollection(
+							CustomType: convert.NewCustomTypeCollection(
 								nil,
 								nil,
 								convert.CustomCollectionTypeList,
@@ -182,7 +182,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										CustomType:               convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
 										Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
@@ -192,7 +192,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 								generatorschema.GeneratorAttributes{
 									"nested_bool": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										CustomType:               convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
 										Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
@@ -211,7 +211,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 								Attributes: generatorschema.GeneratorAttributes{
 									"nested_bool": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										CustomType:               convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
 										Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
@@ -221,7 +221,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 								generatorschema.GeneratorAttributes{
 									"nested_bool": GeneratorBoolAttribute{
 										ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-										CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+										CustomType:               convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
 										Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 									},
 								},
@@ -275,7 +275,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 								},
 							}),
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "object_attribute"),
+							CustomType:               convert.NewCustomTypeObject(nil, nil, "object_attribute"),
 							Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
@@ -296,7 +296,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 								},
 							}),
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypeObject:         convert.NewCustomTypeObject(nil, nil, "object_attribute"),
+							CustomType:               convert.NewCustomTypeObject(nil, nil, "object_attribute"),
 							Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
@@ -335,12 +335,12 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+									CustomType:               convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
 									Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
+							CustomType:               convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
 							Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
@@ -351,12 +351,12 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 							Attributes: generatorschema.GeneratorAttributes{
 								"nested_bool": GeneratorBoolAttribute{
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-									CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
+									CustomType:               convert.NewCustomTypePrimitive(nil, nil, "nested_bool"),
 									Validators:               convert.NewValidators(convert.ValidatorTypeBool, specschema.CustomValidators{}),
 								},
 							},
 							ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-							CustomTypeNestedObject:   convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
+							CustomType:               convert.NewCustomTypeNestedObject(nil, "nested_attribute"),
 							Validators:               convert.NewValidators(convert.ValidatorTypeObject, specschema.CustomValidators{}),
 						},
 					},
@@ -449,7 +449,7 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
+				CustomType: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
@@ -599,7 +599,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-without-import": {
 			input: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+				CustomType: convert.NewCustomTypeNestedCollection(
 					&specschema.CustomType{},
 				)},
 			expected: []code.Import{
@@ -627,7 +627,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-and-nested-object-custom-type-without-import": {
 			input: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+				CustomType: convert.NewCustomTypeNestedCollection(
 					&specschema.CustomType{},
 				),
 				NestedAttributeObject: convert.NewNestedAttributeObject(
@@ -645,7 +645,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+				CustomType: convert.NewCustomTypeNestedCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "",
@@ -681,7 +681,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-and-nested-object-custom-type-with-import-empty-string": {
 			input: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+				CustomType: convert.NewCustomTypeNestedCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "",
@@ -707,7 +707,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import": {
 			input: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+				CustomType: convert.NewCustomTypeNestedCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -754,7 +754,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-with-import-with-nested-object-custom-type-with-import": {
 			input: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+				CustomType: convert.NewCustomTypeNestedCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/my_account/my_project/attribute",
@@ -808,7 +808,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 				NestedAttributeObject: convert.NewNestedAttributeObject(
 					generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
-							CustomTypeCollection: convert.NewCustomTypeCollection(
+							CustomType: convert.NewCustomTypeCollection(
 								&specschema.CustomType{
 									Import: &code.Import{
 										Path: "github.com/my_account/my_project/nested_list",
@@ -843,7 +843,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 				NestedAttributeObject: convert.NewNestedAttributeObject(
 					generatorschema.GeneratorAttributes{
 						"list": GeneratorListAttribute{
-							CustomTypeCollection: convert.NewCustomTypeCollection(
+							CustomType: convert.NewCustomTypeCollection(
 								&specschema.CustomType{
 									Import: &code.Import{
 										Path: "github.com/my_account/my_project/nested_list",
@@ -914,7 +914,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 				NestedAttributeObject: convert.NewNestedAttributeObject(
 					generatorschema.GeneratorAttributes{
 						"obj": GeneratorObjectAttribute{
-							CustomTypeObject: convert.NewCustomTypeObject(
+							CustomType: convert.NewCustomTypeObject(
 								&specschema.CustomType{
 									Import: &code.Import{
 										Path: "github.com/my_account/my_project/nested_object",
@@ -959,7 +959,7 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 									},
 								},
 							}),
-							CustomTypeObject: convert.NewCustomTypeObject(
+							CustomType: convert.NewCustomTypeObject(
 								&specschema.CustomType{
 									Import: &code.Import{
 										Path: "github.com/my_account/my_project/nested_object",
@@ -1367,7 +1367,7 @@ AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
 									ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
 								},
 							},
-							CustomTypeNestedObject: convert.NewCustomTypeNestedObject(nil, "nested_single_nested"),
+							CustomType: convert.NewCustomTypeNestedObject(nil, "nested_single_nested"),
 						},
 					},
 					nil,
@@ -1402,7 +1402,7 @@ AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
 
 		"custom-type": {
 			input: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
+				CustomType: convert.NewCustomTypeNestedCollection(&specschema.CustomType{
 					Type: "my_custom_type",
 				}),
 				NestedAttributeObject: convert.NewNestedAttributeObject(
@@ -1695,7 +1695,7 @@ func TestGeneratorSetNestedAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorSetNestedAttribute{
-				CustomTypeNestedCollection: convert.NewCustomTypeNestedCollection(
+				CustomType: convert.NewCustomTypeNestedCollection(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

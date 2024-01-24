@@ -17,7 +17,7 @@ import (
 type GeneratorFloat64Attribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomTypePrimitive      convert.CustomTypePrimitive
+	CustomType               convert.CustomTypePrimitive
 	Default                  convert.DefaultFloat64
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
@@ -50,7 +50,7 @@ func NewGeneratorFloat64Attribute(name string, a *resource.Float64Attribute) (Ge
 	return GeneratorFloat64Attribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomTypePrimitive:      ctp,
+		CustomType:               ctp,
 		Default:                  df,
 		DeprecationMessage:       dm,
 		Description:              d,
@@ -67,7 +67,7 @@ func (g GeneratorFloat64Attribute) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypePrimitive.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.Default.Imports())
 
@@ -99,7 +99,7 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -130,7 +130,7 @@ func (g GeneratorFloat64Attribute) Schema(name generatorschema.FrameworkIdentifi
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.Float64Attribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -150,7 +150,7 @@ func (g GeneratorFloat64Attribute) ModelField(name generatorschema.FrameworkIden
 		ValueType: model.Float64ValueType,
 	}
 
-	customValueType := g.CustomTypePrimitive.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		field.ValueType = customValueType

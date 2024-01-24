@@ -34,7 +34,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -57,7 +57,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -84,7 +84,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -119,7 +119,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -161,7 +161,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -213,7 +213,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -261,7 +261,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -308,7 +308,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -333,7 +333,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -358,7 +358,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -383,7 +383,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -413,7 +413,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/",
@@ -443,7 +443,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -468,7 +468,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -493,7 +493,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -529,7 +529,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -826,7 +826,7 @@ ElementType: types.StringType,
 
 		"custom-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -846,7 +846,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{Type: "*api.MapAttribute"},
 					convert.CustomCollectionTypeMap,
@@ -868,7 +868,7 @@ ElemType: types.StringType,
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{Type: "my_custom_type"},
 					&specschema.AssociatedExternalType{Type: "*api.MapAttribute"},
 					convert.CustomCollectionTypeMap,
@@ -1188,7 +1188,7 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},
@@ -1206,7 +1206,7 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.MapAttribute",
@@ -1224,7 +1224,7 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						ValueType: "my_custom_value_type",
 					},

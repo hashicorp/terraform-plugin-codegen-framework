@@ -19,7 +19,7 @@ type GeneratorSingleNestedAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	Attributes               generatorschema.GeneratorAttributes
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomTypeNestedObject   convert.CustomTypeNestedObject
+	CustomType               convert.CustomTypeNestedObject
 	Default                  convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
@@ -59,7 +59,7 @@ func NewGeneratorSingleNestedAttribute(name string, a *resource.SingleNestedAttr
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		Attributes:               attributes,
 		ComputedOptionalRequired: c,
-		CustomTypeNestedObject:   ct,
+		CustomType:               ct,
 		Default:                  dc,
 		DeprecationMessage:       dm,
 		Description:              d,
@@ -76,7 +76,7 @@ func (g GeneratorSingleNestedAttribute) GeneratorSchemaType() generatorschema.Ty
 func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	imports.Append(g.CustomTypeNestedObject.Imports())
+	imports.Append(g.CustomType.Imports())
 
 	imports.Append(g.Default.Imports())
 
@@ -112,7 +112,7 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	if !g.CustomTypeNestedObject.Equal(h.CustomTypeNestedObject) {
+	if !g.CustomType.Equal(h.CustomType) {
 		return false
 	}
 
@@ -152,7 +152,7 @@ func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIde
 	b.WriteString("Attributes: map[string]schema.Attribute{")
 	b.WriteString(attributesSchema)
 	b.WriteString("\n},\n")
-	b.Write(g.CustomTypeNestedObject.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
@@ -172,7 +172,7 @@ func (g GeneratorSingleNestedAttribute) ModelField(name generatorschema.Framewor
 		ValueType: name.ToPascalCase() + "Value",
 	}
 
-	customValueType := g.CustomTypeNestedObject.ValueType()
+	customValueType := g.CustomType.ValueType()
 
 	if customValueType != "" {
 		f.ValueType = customValueType
