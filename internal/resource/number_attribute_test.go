@@ -34,9 +34,9 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -45,9 +45,9 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -56,9 +56,9 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -67,9 +67,9 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -83,22 +83,15 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, nil),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, nil),
+				Validators:    convert.NewValidators(convert.ValidatorTypeNumber, nil),
 			},
 		},
 		"deprecation_message": {
@@ -106,10 +99,10 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				PlanModifiers:      convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:         convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -117,10 +110,10 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description:   convert.NewDescription(pointer("description")),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -128,10 +121,10 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:     convert.NewSensitive(pointer(true)),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -150,21 +143,9 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, nil),
-				Validators: specschema.NumberValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -192,20 +173,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiers: specschema.NumberPlanModifiers{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../my_planmodifier",
-								},
-							},
-							SchemaDefinition: "my_planmodifier.Modify()",
-						},
-					},
-				},
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -215,7 +184,7 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 						SchemaDefinition: "my_planmodifier.Modify()",
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"default": {
@@ -232,18 +201,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Default: &specschema.NumberDefault{
-					Custom: &specschema.CustomDefault{
-						Imports: []code.Import{
-							{
-								Path: "github.com/.../my_default",
-							},
-						},
-						SchemaDefinition: "my_default.Default()",
-					},
-				},
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/.../my_default",
@@ -251,8 +210,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 					},
 					SchemaDefinition: "my_default.Default()",
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -276,6 +235,384 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 	}
 }
 
+func TestGeneratorNumberAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorNumberAttribute
+		expected []code.Import
+	}{
+		"default": {
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorNumberAttribute{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorNumberAttribute{
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorNumberAttribute{
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorNumberAttribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorNumberAttribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
+					&specschema.CustomValidator{},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorNumberAttribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				})},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorNumberAttribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myvalidators/validator",
+							},
+						},
+					},
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myvalidators/validator",
+							},
+						},
+					},
+				})},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+			},
+		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorNumberAttribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorNumberAttribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorNumberAttribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorNumberAttribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.PlanModifierImport,
+				},
+				{
+					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+				},
+				{
+					Path: "github.com/myproject/myplanmodifiers/planmodifier",
+				},
+			},
+		},
+		"default-nil": {
+			input: GeneratorNumberAttribute{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorNumberAttribute{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorNumberAttribute{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
+					Imports: []code.Import{
+						{
+							Path: "",
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorNumberAttribute{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
+					Imports: []code.Import{
+						{
+							Path: "github.com/myproject/mydefaults/default",
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/myproject/mydefaults/default",
+				},
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.NumberAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+			},
+		},
+		"associated-external-type-with-import": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.NumberAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+		"associated-external-type-with-custom-type": {
+			input: GeneratorNumberAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.NumberAttribute",
+					},
+				},
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports().All()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 	t.Parallel()
 
@@ -286,7 +623,7 @@ func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -301,7 +638,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtNumber",
@@ -316,7 +653,7 @@ CustomType: NumberAttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -389,7 +726,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, []*specschema.CustomValidator{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, []*specschema.CustomValidator{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},
@@ -408,7 +745,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorNumberAttribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, []*specschema.CustomPlanModifier{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeNumber, []*specschema.CustomPlanModifier{
 					{
 						SchemaDefinition: "my_plan_modifier.Modify()",
 					},
@@ -427,7 +764,7 @@ my_other_plan_modifier.Modify(),
 
 		"default-custom": {
 			input: GeneratorNumberAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					SchemaDefinition: "my_number_default.Default()",
 				}),
 			},
@@ -473,9 +810,13 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",
@@ -485,11 +826,13 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorNumberAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomType: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
 						Type: "*api.NumberAttribute",
 					},
-				},
+					"number_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",
@@ -499,14 +842,15 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorNumberAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					&specschema.AssociatedExternalType{
 						Type: "*api.NumberAttribute",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",

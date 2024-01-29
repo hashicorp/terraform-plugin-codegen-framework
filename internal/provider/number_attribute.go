@@ -8,23 +8,20 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorNumberAttribute struct {
-	AssociatedExternalType *generatorschema.AssocExtType
+	AssociatedExternalType *schema.AssocExtType
 	OptionalRequired       convert.OptionalRequired
-	CustomType             *specschema.CustomType
-	CustomTypePrimitive    convert.CustomTypePrimitive
+	CustomType             convert.CustomTypePrimitive
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
-	Validators             specschema.NumberValidators
-	ValidatorsCustom       convert.ValidatorsCustom
+	Validators             convert.Validators
 }
 
 func NewGeneratorNumberAttribute(name string, a *provider.NumberAttribute) (GeneratorNumberAttribute, error) {
@@ -42,38 +39,32 @@ func NewGeneratorNumberAttribute(name string, a *provider.NumberAttribute) (Gene
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeNumber, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeNumber, a.Validators.CustomValidators())
 
 	return GeneratorNumberAttribute{
-		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AssociatedExternalType: schema.NewAssocExtType(a.AssociatedExternalType),
 		OptionalRequired:       c,
-		CustomType:             a.CustomType,
-		CustomTypePrimitive:    ctp,
+		CustomType:             ctp,
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
-		Validators:             a.Validators,
-		ValidatorsCustom:       vc,
+		Validators:             v,
 	}, nil
 }
 
-func (g GeneratorNumberAttribute) GeneratorSchemaType() generatorschema.Type {
-	return generatorschema.GeneratorNumberAttribute
+func (g GeneratorNumberAttribute) GeneratorSchemaType() schema.Type {
+	return schema.GeneratorNumberAttribute
 }
 
-func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
-	imports := generatorschema.NewImports()
+func (g GeneratorNumberAttribute) Imports() *schema.Imports {
+	imports := schema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
-		imports.Append(generatorschema.AssociatedExternalTypeImports())
+		imports.Append(schema.AssociatedExternalTypeImports())
 	}
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -81,7 +72,7 @@ func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
+func (g GeneratorNumberAttribute) Equal(ga schema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorNumberAttribute)
 
 	if !ok {
@@ -100,10 +91,6 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
-		return false
-	}
-
 	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
 		return false
 	}
@@ -116,40 +103,35 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
-func (g GeneratorNumberAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorNumberAttribute) Schema(name schema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.NumberAttribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.OptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
 }
 
-func (g GeneratorNumberAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
+func (g GeneratorNumberAttribute) ModelField(name schema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
 		ValueType: model.NumberValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil
@@ -162,7 +144,7 @@ func (g GeneratorNumberAttribute) CustomTypeAndValue(name string) ([]byte, error
 
 	var buf bytes.Buffer
 
-	numberType := generatorschema.NewCustomNumberType(name)
+	numberType := schema.NewCustomNumberType(name)
 
 	b, err := numberType.Render()
 
@@ -172,7 +154,7 @@ func (g GeneratorNumberAttribute) CustomTypeAndValue(name string) ([]byte, error
 
 	buf.Write(b)
 
-	numberValue := generatorschema.NewCustomNumberValue(name)
+	numberValue := schema.NewCustomNumberValue(name)
 
 	b, err = numberValue.Render()
 
@@ -190,7 +172,7 @@ func (g GeneratorNumberAttribute) ToFromFunctions(name string) ([]byte, error) {
 		return nil, nil
 	}
 
-	toFrom := generatorschema.NewToFromNumber(name, g.AssociatedExternalType)
+	toFrom := schema.NewToFromNumber(name, g.AssociatedExternalType)
 
 	b, err := toFrom.Render()
 
@@ -202,7 +184,7 @@ func (g GeneratorNumberAttribute) ToFromFunctions(name string) ([]byte, error) {
 }
 
 // AttrType returns a string representation of a basetypes.NumberTypable type.
-func (g GeneratorNumberAttribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorNumberAttribute) AttrType(name schema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
@@ -211,7 +193,7 @@ func (g GeneratorNumberAttribute) AttrType(name generatorschema.FrameworkIdentif
 }
 
 // AttrValue returns a string representation of a basetypes.NumberValuable type.
-func (g GeneratorNumberAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorNumberAttribute) AttrValue(name schema.FrameworkIdentifier) string {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
@@ -219,26 +201,26 @@ func (g GeneratorNumberAttribute) AttrValue(name generatorschema.FrameworkIdenti
 	return "basetypes.NumberValue"
 }
 
-func (g GeneratorNumberAttribute) To() (generatorschema.ToFromConversion, error) {
+func (g GeneratorNumberAttribute) To() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "ValueBigFloat",
 	}, nil
 }
 
-func (g GeneratorNumberAttribute) From() (generatorschema.ToFromConversion, error) {
+func (g GeneratorNumberAttribute) From() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "NumberValue",
 	}, nil
 }

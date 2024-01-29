@@ -35,7 +35,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -48,7 +48,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Bool: &specschema.BoolType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-string": {
@@ -58,7 +58,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -71,7 +71,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-string": {
@@ -85,7 +85,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -106,7 +106,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-map-string": {
@@ -120,7 +120,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -141,7 +141,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-object-string": {
@@ -162,7 +162,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -197,7 +197,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-string": {
@@ -214,7 +214,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -241,7 +241,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-list-string": {
@@ -262,7 +262,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -297,7 +297,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"computed": {
@@ -309,7 +309,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -322,7 +322,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -334,7 +334,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -347,7 +347,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -359,7 +359,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -372,7 +372,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -384,7 +384,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorListAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -397,7 +397,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -414,14 +414,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/",
@@ -440,7 +433,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -451,7 +444,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -465,7 +458,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -476,7 +469,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -490,7 +483,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -501,7 +494,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -514,8 +507,8 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Sensitive:        convert.NewSensitive(pointer(true)),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{}),
+				Sensitive:  convert.NewSensitive(pointer(true)),
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -537,7 +530,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeList,
@@ -550,19 +543,7 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Validators: specschema.ListValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -611,27 +592,45 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"custom-type-without-import": {
 			input: GeneratorListAttribute{
-				CustomType: &specschema.CustomType{},
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{},
+					nil,
+					convert.CustomCollectionTypeList,
+					"",
+					"",
+				),
 			},
 			expected: []code.Import{},
 		},
 		"custom-type-with-import-empty-string": {
 			input: GeneratorListAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "",
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
 					},
-				},
+					nil,
+					convert.CustomCollectionTypeList,
+					"",
+					"",
+				),
 			},
 			expected: []code.Import{},
 		},
 		"custom-type-with-import": {
 			input: GeneratorListAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/my_account/my_project/attribute",
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
 					},
-				},
+					nil,
+					convert.CustomCollectionTypeList,
+					"",
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -653,7 +652,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"elem-type-bool-with-import": {
 			input: GeneratorListAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Bool: &specschema.BoolType{
 						CustomType: &specschema.CustomType{
 							Import: &code.Import{
@@ -661,7 +660,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 							},
 						},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -690,7 +689,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"elem-type-list-bool-with-import": {
 			input: GeneratorListAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					List: &specschema.ListType{
 						ElementType: specschema.ElementType{
 							Bool: &specschema.BoolType{
@@ -702,7 +701,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 							},
 						},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -727,7 +726,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"elem-type-object-bool": {
 			input: GeneratorListAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -736,7 +735,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 							},
 						},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -749,7 +748,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"elem-type-object-bool-with-import": {
 			input: GeneratorListAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -764,7 +763,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 							},
 						},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -777,7 +776,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"elem-type-object-with-imports": {
 			input: GeneratorListAttribute{
-				ElementType: specschema.ElementType{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Object: &specschema.ObjectType{
 						AttributeTypes: specschema.ObjectAttributeTypes{
 							{
@@ -796,7 +795,7 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 							},
 						},
 					},
-				},
+				}),
 			},
 			expected: []code.Import{
 				{
@@ -812,11 +811,8 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-nil": {
 			input: GeneratorListAttribute{
-				Validators: specschema.ListValidators{
-					{
-						Custom: nil,
-					},
-				}},
+				Validators: convert.NewValidators(convert.ValidatorTypeList, nil),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -825,11 +821,10 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-nil": {
 			input: GeneratorListAttribute{
-				Validators: specschema.ListValidators{
-					{
-						Custom: &specschema.CustomValidator{},
-					},
-				}},
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -838,17 +833,16 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import-empty-string": {
 			input: GeneratorListAttribute{
-				Validators: specschema.ListValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "",
-								},
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "",
 							},
 						},
 					},
-				}},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -857,26 +851,23 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 		},
 		"validator-custom-import": {
 			input: GeneratorListAttribute{
-				Validators: specschema.ListValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/myotherproject/myvalidators/validator",
-								},
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myvalidators/validator",
 							},
 						},
 					},
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/myproject/myvalidators/validator",
-								},
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myvalidators/validator",
 							},
 						},
 					},
-				}},
+				}),
+			},
 			expected: []code.Import{
 				{
 					Path: generatorschema.TypesImport,
@@ -966,11 +957,22 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 						Type: "*api.ListAttribute",
 					},
 				},
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/my_account/my_project/attribute",
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
 					},
-				},
+					&specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.ListAttribute",
+					},
+					convert.CustomCollectionTypeList,
+					"",
+					"",
+				),
 			},
 			expected: []code.Import{
 				{
@@ -1264,7 +1266,7 @@ ElementType: types.StringType,
 
 		"custom-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -1284,7 +1286,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{Type: "*api.ListAttribute"},
 					convert.CustomCollectionTypeList,
@@ -1306,7 +1308,7 @@ ElemType: types.StringType,
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorListAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{Type: "my_custom_type"},
 					&specschema.AssociatedExternalType{Type: "*api.ListAttribute"},
 					convert.CustomCollectionTypeList,
@@ -1403,7 +1405,7 @@ DeprecationMessage: "deprecated",
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeList, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						SchemaDefinition: "my_validator.Validate()",
 					},
@@ -1626,9 +1628,15 @@ func TestGeneratorListAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorListAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					convert.CustomCollectionTypeList,
+					"",
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "ListAttribute",
@@ -1638,11 +1646,15 @@ func TestGeneratorListAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorListAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomType: convert.NewCustomTypeCollection(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
 					},
-				},
+					convert.CustomCollectionTypeList,
+					"",
+					"list_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "ListAttribute",
@@ -1652,14 +1664,17 @@ func TestGeneratorListAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorListAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
+					},
+					convert.CustomCollectionTypeList,
+					"",
+					"list_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "ListAttribute",

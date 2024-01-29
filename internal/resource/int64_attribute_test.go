@@ -34,9 +34,9 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -45,9 +45,9 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -56,9 +56,9 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -67,9 +67,9 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 			},
 			expected: GeneratorInt64Attribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom:      convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers:            convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:               convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -83,22 +83,15 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorInt64Attribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, nil),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, nil),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, nil),
+				Validators:    convert.NewValidators(convert.ValidatorTypeInt64, nil),
 			},
 		},
 		"deprecation_message": {
@@ -106,10 +99,10 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				PlanModifiers:      convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:         convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -117,10 +110,10 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description:   convert.NewDescription(pointer("description")),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -128,10 +121,10 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:     convert.NewSensitive(pointer(true)),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -150,21 +143,9 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, nil),
-				Validators: specschema.Int64Validators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -192,20 +173,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				PlanModifiers: specschema.Int64PlanModifiers{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../my_planmodifier",
-								},
-							},
-							SchemaDefinition: "my_planmodifier.Modify()",
-						},
-					},
-				},
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -215,7 +184,7 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 						SchemaDefinition: "my_planmodifier.Modify()",
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 		"default": {
@@ -233,19 +202,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Default: &specschema.Int64Default{
-					Custom: &specschema.CustomDefault{
-						Imports: []code.Import{
-							{
-								Path: "github.com/.../my_default",
-							},
-						},
-						SchemaDefinition: "my_default.Default()",
-					},
-					Static: pointer(int64(1234)),
-				},
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Custom: &specschema.CustomDefault{
 						Imports: []code.Import{
 							{
@@ -256,8 +214,8 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 					},
 					Static: pointer(int64(1234)),
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -281,6 +239,415 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 	}
 }
 
+func TestGeneratorInt64Attribute_Imports(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorInt64Attribute
+		expected []code.Import
+	}{
+		"default": {
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorInt64Attribute{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{}, nil, ""),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorInt64Attribute{
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorInt64Attribute{
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorInt64Attribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorInt64Attribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{
+					&specschema.CustomValidator{},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorInt64Attribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				})},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorInt64Attribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myvalidators/validator",
+							},
+						},
+					},
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myvalidators/validator",
+							},
+						},
+					},
+				})},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+			},
+		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorInt64Attribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorInt64Attribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorInt64Attribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorInt64Attribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.PlanModifierImport,
+				},
+				{
+					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+				},
+				{
+					Path: "github.com/myproject/myplanmodifiers/planmodifier",
+				},
+			},
+		},
+		"default-nil": {
+			input: GeneratorInt64Attribute{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-and-static-nil": {
+			input: GeneratorInt64Attribute{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorInt64Attribute{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
+					Custom: &specschema.CustomDefault{},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorInt64Attribute{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
+					Custom: &specschema.CustomDefault{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorInt64Attribute{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
+					Custom: &specschema.CustomDefault{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/mydefaults/default",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/myproject/mydefaults/default",
+				},
+			},
+		},
+		"default-static": {
+			input: GeneratorInt64Attribute{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
+					Static: pointer(int64(1234)),
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default",
+				},
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorInt64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.Int64Attribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+			},
+		},
+		"associated-external-type-with-import": {
+			input: GeneratorInt64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.Int64Attribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+		"associated-external-type-with-custom-type": {
+			input: GeneratorInt64Attribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.Int64Attribute",
+					},
+				},
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					nil,
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports().All()
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestGeneratorInt64Attribute_Schema(t *testing.T) {
 	t.Parallel()
 
@@ -291,7 +658,7 @@ func TestGeneratorInt64Attribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -306,7 +673,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtInt64",
@@ -321,7 +688,7 @@ CustomType: Int64AttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorInt64Attribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -394,7 +761,7 @@ DeprecationMessage: "deprecated",
 
 		"validators": {
 			input: GeneratorInt64Attribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeInt64, []*specschema.CustomValidator{
+				Validators: convert.NewValidators(convert.ValidatorTypeInt64, []*specschema.CustomValidator{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},
@@ -413,7 +780,7 @@ my_other_validator.Validate(),
 
 		"plan-modifiers": {
 			input: GeneratorInt64Attribute{
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeInt64, []*specschema.CustomPlanModifier{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, []*specschema.CustomPlanModifier{
 					{
 						SchemaDefinition: "my_plan_modifier.Modify()",
 					},
@@ -432,7 +799,7 @@ my_other_plan_modifier.Modify(),
 
 		"default-static": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Static: pointer(int64(1234)),
 				}),
 			},
@@ -443,7 +810,7 @@ Default: int64default.StaticInt64(1234),
 
 		"default-custom": {
 			input: GeneratorInt64Attribute{
-				DefaultInt64: convert.NewDefaultInt64(&specschema.Int64Default{
+				Default: convert.NewDefaultInt64(&specschema.Int64Default{
 					Custom: &specschema.CustomDefault{
 						SchemaDefinition: "my_int64_default.Default()",
 					},
@@ -491,9 +858,13 @@ func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorInt64Attribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "Int64Attribute",
@@ -503,11 +874,13 @@ func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorInt64Attribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomType: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
 						Type: "*api.Int64Attribute",
 					},
-				},
+					"int64_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "Int64Attribute",
@@ -517,14 +890,15 @@ func TestGeneratorInt64Attribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorInt64Attribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					&specschema.AssociatedExternalType{
 						Type: "*api.Int64Attribute",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "Int64Attribute",

@@ -9,24 +9,21 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorSingleNestedAttribute struct {
-	AssociatedExternalType *generatorschema.AssocExtType
-	Attributes             generatorschema.GeneratorAttributes
+	AssociatedExternalType *schema.AssocExtType
+	Attributes             schema.GeneratorAttributes
 	OptionalRequired       convert.OptionalRequired
-	CustomType             *specschema.CustomType
-	CustomTypeNestedObject convert.CustomTypeNestedObject
+	CustomType             convert.CustomTypeNestedObject
 	DeprecationMessage     convert.DeprecationMessage
 	Description            convert.Description
 	Sensitive              convert.Sensitive
-	Validators             specschema.ObjectValidators
-	ValidatorsCustom       convert.ValidatorsCustom
+	Validators             convert.Validators
 }
 
 func NewGeneratorSingleNestedAttribute(name string, a *provider.SingleNestedAttribute) (GeneratorSingleNestedAttribute, error) {
@@ -50,50 +47,41 @@ func NewGeneratorSingleNestedAttribute(name string, a *provider.SingleNestedAttr
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeObject, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeObject, a.Validators.CustomValidators())
 
 	return GeneratorSingleNestedAttribute{
-		AssociatedExternalType: generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AssociatedExternalType: schema.NewAssocExtType(a.AssociatedExternalType),
 		Attributes:             attributes,
 		OptionalRequired:       c,
-		CustomType:             a.CustomType,
-		CustomTypeNestedObject: ct,
+		CustomType:             ct,
 		DeprecationMessage:     dm,
 		Description:            d,
 		Sensitive:              s,
-		Validators:             a.Validators,
-		ValidatorsCustom:       vc,
+		Validators:             v,
 	}, nil
 }
 
-func (g GeneratorSingleNestedAttribute) GeneratorSchemaType() generatorschema.Type {
-	return generatorschema.GeneratorSingleNestedAttribute
+func (g GeneratorSingleNestedAttribute) GeneratorSchemaType() schema.Type {
+	return schema.GeneratorSingleNestedAttribute
 }
 
-func (g GeneratorSingleNestedAttribute) Imports() *generatorschema.Imports {
-	imports := generatorschema.NewImports()
+func (g GeneratorSingleNestedAttribute) Imports() *schema.Imports {
+	imports := schema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
-	for _, v := range g.Attributes {
-		imports.Append(v.Imports())
-	}
+	imports.Append(g.Attributes.Imports())
 
-	// TODO: This should only be added if custom types (models) are being generated.
-	imports.Append(generatorschema.AttrImports())
+	imports.Append(schema.AttrImports())
 
 	imports.Append(g.AssociatedExternalType.Imports())
 
 	return imports
 }
 
-func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
+func (g GeneratorSingleNestedAttribute) Equal(ga schema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorSingleNestedAttribute)
 
 	if !ok {
@@ -116,10 +104,6 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	if !g.CustomTypeNestedObject.Equal(h.CustomTypeNestedObject) {
-		return false
-	}
-
 	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
 		return false
 	}
@@ -132,14 +116,10 @@ func (g GeneratorSingleNestedAttribute) Equal(ga generatorschema.GeneratorAttrib
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
-func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorSingleNestedAttribute) Schema(name schema.FrameworkIdentifier) (string, error) {
 	attributesSchema, err := g.Attributes.Schema()
 
 	if err != nil {
@@ -152,32 +132,34 @@ func (g GeneratorSingleNestedAttribute) Schema(name generatorschema.FrameworkIde
 	b.WriteString("Attributes: map[string]schema.Attribute{")
 	b.WriteString(attributesSchema)
 	b.WriteString("\n},\n")
-	b.Write(g.CustomTypeNestedObject.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.OptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
 }
 
-func (g GeneratorSingleNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
-	field := model.Field{
+func (g GeneratorSingleNestedAttribute) ModelField(name schema.FrameworkIdentifier) (model.Field, error) {
+	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
 		ValueType: name.ToPascalCase() + "Value",
 	}
 
-	if g.CustomType != nil {
-		field.ValueType = g.CustomType.ValueType
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		f.ValueType = customValueType
 	}
 
-	return field, nil
+	return f, nil
 }
 
-func (g GeneratorSingleNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
+func (g GeneratorSingleNestedAttribute) GetAttributes() schema.GeneratorAttributes {
 	return g.Attributes
 }
 
@@ -190,7 +172,7 @@ func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte,
 		return nil, err
 	}
 
-	objectType := generatorschema.NewCustomNestedObjectType(name, attributeAttrValues)
+	objectType := schema.NewCustomNestedObjectType(name, attributeAttrValues)
 
 	b, err := objectType.Render()
 
@@ -218,7 +200,7 @@ func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte,
 		return nil, err
 	}
 
-	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues, attributeCollectionTypes)
+	objectValue := schema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues, attributeCollectionTypes)
 
 	b, err = objectValue.Render()
 
@@ -233,7 +215,7 @@ func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte,
 	// Recursively call CustomTypeAndValue() for each attribute that implements
 	// CustomTypeAndValue interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
-		if c, ok := g.Attributes[k].(generatorschema.CustomTypeAndValue); ok {
+		if c, ok := g.Attributes[k].(schema.CustomTypeAndValue); ok {
 			b, err := c.CustomTypeAndValue(k)
 
 			if err != nil {
@@ -262,7 +244,7 @@ func (g GeneratorSingleNestedAttribute) ToFromFunctions(name string) ([]byte, er
 
 	fromFuncs, _ := g.Attributes.FromFuncs()
 
-	toFrom := generatorschema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := schema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 
@@ -277,7 +259,7 @@ func (g GeneratorSingleNestedAttribute) ToFromFunctions(name string) ([]byte, er
 	// Recursively call ToFromFunctions() for each attribute that implements
 	// ToFrom interface.
 	for _, k := range attributeKeys {
-		if c, ok := g.Attributes[k].(generatorschema.ToFrom); ok {
+		if c, ok := g.Attributes[k].(schema.ToFrom); ok {
 			b, err := c.ToFromFunctions(k)
 
 			if err != nil {
@@ -291,10 +273,10 @@ func (g GeneratorSingleNestedAttribute) ToFromFunctions(name string) ([]byte, er
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorSingleNestedAttribute) To() (generatorschema.ToFromConversion, error) {
-	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
+func (g GeneratorSingleNestedAttribute) To() (schema.ToFromConversion, error) {
+	return schema.ToFromConversion{}, schema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
 }
 
-func (g GeneratorSingleNestedAttribute) From() (generatorschema.ToFromConversion, error) {
-	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
+func (g GeneratorSingleNestedAttribute) From() (schema.ToFromConversion, error) {
+	return schema.ToFromConversion{}, schema.NewUnimplementedError(errors.New("single nested type is not yet implemented"))
 }

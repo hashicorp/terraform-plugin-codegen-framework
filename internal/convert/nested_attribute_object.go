@@ -8,22 +8,22 @@ import (
 
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type NestedAttributeObject struct {
-	attributes       generatorschema.GeneratorAttributes
-	customType       CustomTypeNestedObject
-	validatorsCustom ValidatorsCustom
+	attributes schema.GeneratorAttributes
+	customType CustomTypeNestedObject
+	validators Validators
 }
 
 // NewNestedAttributeObject constructs a NestedAttributeObject which is used to generate a
 // nested attribute object in the schema.
-func NewNestedAttributeObject(a generatorschema.GeneratorAttributes, c *specschema.CustomType, v ValidatorsCustom, name string) NestedAttributeObject {
+func NewNestedAttributeObject(a schema.GeneratorAttributes, c *specschema.CustomType, v Validators, name string) NestedAttributeObject {
 	return NestedAttributeObject{
-		attributes:       a,
-		customType:       NewCustomTypeNestedObject(c, name),
-		validatorsCustom: v,
+		attributes: a,
+		customType: NewCustomTypeNestedObject(c, name),
+		validators: v,
 	}
 }
 
@@ -36,7 +36,19 @@ func (n NestedAttributeObject) Equal(other NestedAttributeObject) bool {
 		return false
 	}
 
-	return n.validatorsCustom.Equal(other.validatorsCustom)
+	return n.validators.Equal(other.validators)
+}
+
+func (n NestedAttributeObject) Imports() *schema.Imports {
+	imports := schema.NewImports()
+
+	imports.Append(n.customType.Imports())
+
+	imports.Append(n.validators.Imports())
+
+	imports.Append(n.attributes.Imports())
+
+	return imports
 }
 
 func (n NestedAttributeObject) Schema() ([]byte, error) {
@@ -53,7 +65,7 @@ func (n NestedAttributeObject) Schema() ([]byte, error) {
 	b.WriteString(attributesSchema)
 	b.WriteString("\n},\n")
 	b.Write(n.customType.Schema())
-	b.Write(n.validatorsCustom.Schema())
+	b.Write(n.validators.Schema())
 	b.WriteString("},\n")
 
 	return b.Bytes(), nil

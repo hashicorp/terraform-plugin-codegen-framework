@@ -35,7 +35,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -48,8 +48,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Bool: &specschema.BoolType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-string": {
@@ -59,7 +59,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -72,8 +72,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-string": {
@@ -87,7 +87,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -108,8 +108,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-map-string": {
@@ -123,7 +123,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -144,8 +144,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-object-string": {
@@ -166,7 +166,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -201,8 +201,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-string": {
@@ -219,7 +219,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -246,8 +246,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-list-string": {
@@ -268,7 +268,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -303,8 +303,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"computed": {
@@ -316,7 +316,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -329,8 +329,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -342,7 +342,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -355,8 +355,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -368,7 +368,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -381,8 +381,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -394,7 +394,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -407,8 +407,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -425,14 +425,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/",
@@ -451,8 +444,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -463,7 +456,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -477,8 +470,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -489,7 +482,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -503,8 +496,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -515,7 +508,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -528,9 +521,9 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Sensitive:     convert.NewSensitive(pointer(true)),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -552,7 +545,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -565,20 +558,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				Validators: specschema.MapValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -609,7 +590,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -622,19 +603,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiers: specschema.MapPlanModifiers{
-					{
-						Custom: &specschema.CustomPlanModifier{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../my_planmodifier",
-								},
-							},
-							SchemaDefinition: "my_planmodifier.Modify()",
-						},
-					},
-				},
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						Imports: []code.Import{
 							{
@@ -644,7 +613,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						SchemaDefinition: "my_planmodifier.Modify()",
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"default": {
@@ -664,24 +633,14 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
 					"types.StringType",
 					"name",
 				),
-				Default: &specschema.MapDefault{
-					Custom: &specschema.CustomDefault{
-						Imports: []code.Import{
-							{
-								Path: "github.com/.../my_default",
-							},
-						},
-						SchemaDefinition: "my_default.Default()",
-					},
-				},
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
 					Imports: []code.Import{
 						{
 							Path: "github.com/.../my_default",
@@ -695,8 +654,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 	}
@@ -712,6 +671,590 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			if diff := cmp.Diff(err, testCase.expectedError, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected error: %s", diff)
 			}
+
+			if diff := cmp.Diff(got, testCase.expected); diff != "" {
+				t.Errorf("unexpected difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestGeneratorMapAttribute_Imports(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input    GeneratorMapAttribute
+		expected []code.Import
+	}{
+		"default": {
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"custom-type-without-import": {
+			input: GeneratorMapAttribute{
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{},
+					nil,
+					convert.CustomCollectionTypeMap,
+					"",
+					"",
+				),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import-empty-string": {
+			input: GeneratorMapAttribute{
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "",
+						},
+					},
+					nil,
+					convert.CustomCollectionTypeMap,
+					"",
+					"",
+				),
+			},
+			expected: []code.Import{},
+		},
+		"custom-type-with-import": {
+			input: GeneratorMapAttribute{
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					nil,
+					convert.CustomCollectionTypeMap,
+					"",
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+			},
+		},
+		"elem-type-bool": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Bool: &specschema.BoolType{},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-bool-with-import": {
+			input: GeneratorMapAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Bool: &specschema.BoolType{
+						CustomType: &specschema.CustomType{
+							Import: &code.Import{
+								Path: "github.com/my_account/my_project/element",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-list-bool": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{},
+						},
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-list-bool-with-import": {
+			input: GeneratorMapAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					List: &specschema.ListType{
+						ElementType: specschema.ElementType{
+							Bool: &specschema.BoolType{
+								CustomType: &specschema.CustomType{
+									Import: &code.Import{
+										Path: "github.com/my_account/my_project/element",
+									},
+								},
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-object": {
+			input: GeneratorMapAttribute{
+				ElementType: specschema.ElementType{
+					Object: &specschema.ObjectType{},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"elem-type-object-bool": {
+			input: GeneratorMapAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
+							{
+								Name: "b",
+								Bool: &specschema.BoolType{},
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+			},
+		},
+		"elem-type-object-bool-with-import": {
+			input: GeneratorMapAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
+							{
+								Name: "bool",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/element",
+										},
+									},
+								},
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"elem-type-object-with-imports": {
+			input: GeneratorMapAttribute{
+				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
+					Object: &specschema.ObjectType{
+						AttributeTypes: specschema.ObjectAttributeTypes{
+							{
+								Name: "b",
+								Bool: &specschema.BoolType{},
+							},
+							{
+								Name: "c",
+								Bool: &specschema.BoolType{
+									CustomType: &specschema.CustomType{
+										Import: &code.Import{
+											Path: "github.com/my_account/my_project/element",
+										},
+									},
+								},
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.AttrImport,
+				},
+				{
+					Path: "github.com/my_account/my_project/element",
+				},
+			},
+		},
+		"validator-custom-nil": {
+			input: GeneratorMapAttribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-nil": {
+			input: GeneratorMapAttribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{
+					&specschema.CustomValidator{},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import-empty-string": {
+			input: GeneratorMapAttribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"validator-custom-import": {
+			input: GeneratorMapAttribute{
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myvalidators/validator",
+							},
+						},
+					},
+					&specschema.CustomValidator{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myvalidators/validator",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.ValidatorImport,
+				},
+				{
+					Path: "github.com/myotherproject/myvalidators/validator",
+				},
+				{
+					Path: "github.com/myproject/myvalidators/validator",
+				},
+			},
+		},
+		"plan-modifier-custom-nil": {
+			input: GeneratorMapAttribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import-nil": {
+			input: GeneratorMapAttribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifiers-custom-import-empty-string": {
+			input: GeneratorMapAttribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"plan-modifier-custom-import": {
+			input: GeneratorMapAttribute{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+					&specschema.CustomPlanModifier{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/myplanmodifiers/planmodifier",
+							},
+						},
+					},
+				}),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: generatorschema.PlanModifierImport,
+				},
+				{
+					Path: "github.com/myotherproject/myplanmodifiers/planmodifier",
+				},
+				{
+					Path: "github.com/myproject/myplanmodifiers/planmodifier",
+				},
+			},
+		},
+		"default-nil": {
+			input: GeneratorMapAttribute{},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-nil": {
+			input: GeneratorMapAttribute{
+				Default: convert.NewDefaultCustom(nil),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-nil": {
+			input: GeneratorMapAttribute{
+				Default: convert.NewDefaultCustom(
+					&specschema.CustomDefault{},
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import-empty-string": {
+			input: GeneratorMapAttribute{
+				Default: convert.NewDefaultCustom(
+					&specschema.CustomDefault{
+						Imports: []code.Import{
+							{
+								Path: "",
+							},
+						},
+					},
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+			},
+		},
+		"default-custom-import": {
+			input: GeneratorMapAttribute{
+				Default: convert.NewDefaultCustom(
+					&specschema.CustomDefault{
+						Imports: []code.Import{
+							{
+								Path: "github.com/myproject/mydefaults/default",
+							},
+						},
+					},
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: generatorschema.TypesImport,
+				},
+				{
+					Path: "github.com/myproject/mydefaults/default",
+				},
+			},
+		},
+		"associated-external-type": {
+			input: GeneratorMapAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Type: "*api.MapAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+			},
+		},
+		"associated-external-type-with-import": {
+			input: GeneratorMapAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.MapAttribute",
+					},
+				},
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+		"associated-external-type-with-custom-type": {
+			input: GeneratorMapAttribute{
+				AssociatedExternalType: &generatorschema.AssocExtType{
+					AssociatedExternalType: &specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.MapAttribute",
+					},
+				},
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						Import: &code.Import{
+							Path: "github.com/my_account/my_project/attribute",
+						},
+					},
+					&specschema.AssociatedExternalType{
+						Import: &code.Import{
+							Path: "github.com/api",
+						},
+						Type: "*api.MapAttribute",
+					},
+					convert.CustomCollectionTypeMap,
+					"",
+					"",
+				),
+			},
+			expected: []code.Import{
+				{
+					Path: "github.com/my_account/my_project/attribute",
+				},
+				{
+					Path: "fmt",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/diag",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/attr",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-go/tftypes",
+				},
+				{
+					Path: "github.com/hashicorp/terraform-plugin-framework/types/basetypes",
+				},
+				{
+					Path: "github.com/api",
+				},
+			},
+		},
+	}
+
+	for name, testCase := range testCases {
+		name, testCase := name, testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got := testCase.input.Imports().All()
 
 			if diff := cmp.Diff(got, testCase.expected); diff != "" {
 				t.Errorf("unexpected difference: %s", diff)
@@ -971,7 +1514,7 @@ ElementType: types.StringType,
 
 		"custom-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -988,7 +1531,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.MapAttribute",
@@ -1009,7 +1552,7 @@ ElemType: types.StringType,
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -1111,7 +1654,7 @@ DeprecationMessage: "deprecated",
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeList, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						SchemaDefinition: "my_validator.Validate()",
 					},
@@ -1122,7 +1665,7 @@ DeprecationMessage: "deprecated",
 			},
 			expected: `"map_attribute": schema.MapAttribute{
 ElementType: types.StringType,
-Validators: []validator.List{
+Validators: []validator.Map{
 my_validator.Validate(),
 my_other_validator.Validate(),
 },
@@ -1134,7 +1677,7 @@ my_other_validator.Validate(),
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				PlanModifiersCustom: convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, specschema.CustomPlanModifiers{
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeMap, specschema.CustomPlanModifiers{
 					&specschema.CustomPlanModifier{
 						SchemaDefinition: "my_plan_modifier.Modify()",
 					},
@@ -1145,7 +1688,7 @@ my_other_validator.Validate(),
 			},
 			expected: `"map_attribute": schema.MapAttribute{
 ElementType: types.StringType,
-PlanModifiers: []planmodifier.List{
+PlanModifiers: []planmodifier.Map{
 my_plan_modifier.Modify(),
 my_other_plan_modifier.Modify(),
 },
@@ -1154,8 +1697,8 @@ my_other_plan_modifier.Modify(),
 
 		"default-custom": {
 			input: GeneratorMapAttribute{
-				DefaultCustom: convert.NewDefaultCustom(&specschema.CustomDefault{
-					SchemaDefinition: "my_list_default.Default()",
+				Default: convert.NewDefaultCustom(&specschema.CustomDefault{
+					SchemaDefinition: "my_map_default.Default()",
 				}),
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
@@ -1163,7 +1706,7 @@ my_other_plan_modifier.Modify(),
 			},
 			expected: `"map_attribute": schema.MapAttribute{
 ElementType: types.StringType,
-Default: my_list_default.Default(),
+Default: my_map_default.Default(),
 },`,
 		},
 
@@ -1350,9 +1893,15 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorMapAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					convert.CustomCollectionTypeMap,
+					"",
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",
@@ -1362,11 +1911,15 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorMapAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomType: convert.NewCustomTypeCollection(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.MapAttribute",
 					},
-				},
+					convert.CustomCollectionTypeMap,
+					"",
+					"map_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",
@@ -1376,14 +1929,17 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorMapAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.MapAttribute",
+					},
+					convert.CustomCollectionTypeMap,
+					"",
+					"map_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",

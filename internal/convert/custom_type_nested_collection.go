@@ -6,7 +6,10 @@ package convert
 import (
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type CustomTypeNestedCollection struct {
@@ -27,14 +30,38 @@ func NewCustomTypeNestedCollection(c *specschema.CustomType) CustomTypeNestedCol
 	}
 }
 
-func (a CustomTypeNestedCollection) Equal(other CustomTypeNestedCollection) bool {
-	return a.customType.Equal(other.customType)
+func (c CustomTypeNestedCollection) Equal(other CustomTypeNestedCollection) bool {
+	return c.customType.Equal(other.customType)
 }
 
-func (a CustomTypeNestedCollection) Schema() []byte {
-	if a.customType != nil && a.customType.Type != "" {
-		return []byte(fmt.Sprintf("CustomType: %s,\n", a.customType.Type))
+func (c CustomTypeNestedCollection) Imports() *schema.Imports {
+	imports := schema.NewImports()
+
+	if c.customType != nil {
+		if c.customType.HasImport() {
+			imports.Add(*c.customType.Import)
+		}
+	} else {
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+	}
+
+	return imports
+}
+
+func (c CustomTypeNestedCollection) Schema() []byte {
+	if c.customType != nil && c.customType.Type != "" {
+		return []byte(fmt.Sprintf("CustomType: %s,\n", c.customType.Type))
 	}
 
 	return nil
+}
+
+func (c CustomTypeNestedCollection) ValueType() string {
+	if c.customType != nil {
+		return c.customType.ValueType
+	}
+
+	return ""
 }

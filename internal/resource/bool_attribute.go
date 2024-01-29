@@ -7,9 +7,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -19,17 +17,13 @@ import (
 type GeneratorBoolAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
-	CustomTypePrimitive      convert.CustomTypePrimitive
-	Default                  *specschema.BoolDefault
-	DefaultBool              convert.DefaultBool
+	CustomType               convert.CustomTypePrimitive
+	Default                  convert.DefaultBool
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiers            specschema.BoolPlanModifiers
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
-	Validators               specschema.BoolValidators
-	ValidatorsCustom         convert.ValidatorsCustom
+	Validators               convert.Validators
 }
 
 func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (GeneratorBoolAttribute, error) {
@@ -47,26 +41,22 @@ func NewGeneratorBoolAttribute(name string, a *resource.BoolAttribute) (Generato
 
 	d := convert.NewDescription(a.Description)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeBool, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeBool, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeBool, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeBool, a.Validators.CustomValidators())
 
 	return GeneratorBoolAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
-		CustomTypePrimitive:      ctp,
-		Default:                  a.Default,
-		DefaultBool:              db,
-		Description:              d,
+		CustomType:               ctp,
+		Default:                  db,
 		DeprecationMessage:       dm,
-		PlanModifiers:            a.PlanModifiers,
-		PlanModifiersCustom:      pm,
+		Description:              d,
+		PlanModifiers:            pm,
 		Sensitive:                s,
-		Validators:               a.Validators,
-		ValidatorsCustom:         vc,
+		Validators:               v,
 	}, nil
 }
 
@@ -77,29 +67,13 @@ func (g GeneratorBoolAttribute) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorBoolAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	if g.Default != nil {
-		if g.Default.Static != nil {
-			imports.Add(code.Import{
-				Path: defaultBoolImport,
-			})
-		} else {
-			customDefaultImports := generatorschema.CustomDefaultImports(g.Default.Custom)
-			imports.Append(customDefaultImports)
-		}
-	}
+	imports.Append(g.Default.Imports())
 
-	for _, v := range g.PlanModifiers {
-		customPlanModifierImports := generatorschema.CustomPlanModifierImports(v.Custom)
-		imports.Append(customPlanModifierImports)
-	}
+	imports.Append(g.PlanModifiers.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -129,15 +103,7 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
-		return false
-	}
-
 	if !g.Default.Equal(h.Default) {
-		return false
-	}
-
-	if !g.DefaultBool.Equal(h.DefaultBool) {
 		return false
 	}
 
@@ -153,33 +119,25 @@ func (g GeneratorBoolAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
-		return false
-	}
-
 	if !g.Sensitive.Equal(h.Sensitive) {
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorBoolAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.BoolAttribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
-	b.Write(g.DefaultBool.Schema())
+	b.Write(g.PlanModifiers.Schema())
+	b.Write(g.Validators.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
@@ -192,11 +150,10 @@ func (g GeneratorBoolAttribute) ModelField(name generatorschema.FrameworkIdentif
 		ValueType: model.BoolValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil

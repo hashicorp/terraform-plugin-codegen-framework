@@ -6,9 +6,11 @@ package convert
 import (
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type CustomTypeNestedObject struct {
@@ -39,6 +41,22 @@ func (c CustomTypeNestedObject) Equal(other CustomTypeNestedObject) bool {
 	return c.name == other.name
 }
 
+func (c CustomTypeNestedObject) Imports() *schema.Imports {
+	imports := schema.NewImports()
+
+	if c.customType != nil {
+		if c.customType.HasImport() {
+			imports.Add(*c.customType.Import)
+		}
+	} else {
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+	}
+
+	return imports
+}
+
 func (c CustomTypeNestedObject) Schema() []byte {
 	var customTypeType string
 
@@ -54,4 +72,12 @@ func (c CustomTypeNestedObject) Schema() []byte {
 	}
 
 	return nil
+}
+
+func (c CustomTypeNestedObject) ValueType() string {
+	if c.customType != nil {
+		return c.customType.ValueType
+	}
+
+	return ""
 }

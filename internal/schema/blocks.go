@@ -121,6 +121,16 @@ func (g GeneratorBlocks) FromFuncs() map[string]string {
 	return fromFuncs
 }
 
+func (g GeneratorBlocks) Imports() *Imports {
+	imports := NewImports()
+
+	for _, v := range g {
+		imports.Append(v.Imports())
+	}
+
+	return imports
+}
+
 func (g GeneratorBlocks) Schema() (string, error) {
 	var s strings.Builder
 

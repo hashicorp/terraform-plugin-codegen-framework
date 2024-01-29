@@ -18,15 +18,13 @@ import (
 type GeneratorSetAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
-	CustomTypeCollection     convert.CustomTypeCollection
+	CustomType               convert.CustomTypeCollection
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	ElementType              specschema.ElementType
 	ElementTypeCollection    convert.ElementType
 	Sensitive                convert.Sensitive
-	Validators               specschema.SetValidators
-	ValidatorsCustom         convert.ValidatorsCustom
+	Validators               convert.Validators
 }
 
 func NewGeneratorSetAttribute(name string, a *datasource.SetAttribute) (GeneratorSetAttribute, error) {
@@ -46,20 +44,18 @@ func NewGeneratorSetAttribute(name string, a *datasource.SetAttribute) (Generato
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeSet, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeSet, a.Validators.CustomValidators())
 
 	return GeneratorSetAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
-		CustomTypeCollection:     ctc,
+		CustomType:               ctc,
 		DeprecationMessage:       dm,
 		Description:              d,
 		ElementType:              a.ElementType,
 		ElementTypeCollection:    et,
 		Sensitive:                s,
-		Validators:               a.Validators,
-		ValidatorsCustom:         vc,
+		Validators:               v,
 	}, nil
 }
 
@@ -74,16 +70,11 @@ func (g GeneratorSetAttribute) ElemType() specschema.ElementType {
 func (g GeneratorSetAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType)
-	imports.Append(elemTypeImports)
+	imports.Append(g.ElementTypeCollection.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -115,10 +106,6 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !g.CustomTypeCollection.Equal(h.CustomTypeCollection) {
-		return false
-	}
-
 	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
 		return false
 	}
@@ -139,17 +126,13 @@ func (g GeneratorSetAttribute) Equal(ga generatorschema.GeneratorAttribute) bool
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorSetAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
-	customTypeSchema := g.CustomTypeCollection.Schema()
+	customTypeSchema := g.CustomType.Schema()
 
 	b.WriteString(fmt.Sprintf("%q: schema.SetAttribute{\n", name))
 	b.Write(customTypeSchema)
@@ -160,7 +143,7 @@ func (g GeneratorSetAttribute) Schema(name generatorschema.FrameworkIdentifier) 
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
@@ -173,11 +156,10 @@ func (g GeneratorSetAttribute) ModelField(name generatorschema.FrameworkIdentifi
 		ValueType: model.SetValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil

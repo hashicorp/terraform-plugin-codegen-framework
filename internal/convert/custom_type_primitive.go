@@ -6,9 +6,11 @@ package convert
 import (
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/format"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type CustomTypePrimitive struct {
@@ -46,6 +48,22 @@ func (c CustomTypePrimitive) Equal(other CustomTypePrimitive) bool {
 	return c.name == other.name
 }
 
+func (c CustomTypePrimitive) Imports() *schema.Imports {
+	imports := schema.NewImports()
+
+	if c.customType != nil {
+		if c.customType.HasImport() {
+			imports.Add(*c.customType.Import)
+		}
+	} else {
+		imports.Add(code.Import{
+			Path: schema.TypesImport,
+		})
+	}
+
+	return imports
+}
+
 func (c CustomTypePrimitive) Schema() []byte {
 	var customType string
 
@@ -61,4 +79,15 @@ func (c CustomTypePrimitive) Schema() []byte {
 	}
 
 	return nil
+}
+
+func (c CustomTypePrimitive) ValueType() string {
+	switch {
+	case c.customType != nil:
+		return c.customType.ValueType
+	case c.associatedExternalType != nil:
+		return fmt.Sprintf("%sValue", format.ToPascalCase(c.name))
+	}
+
+	return ""
 }
