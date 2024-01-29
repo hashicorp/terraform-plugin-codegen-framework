@@ -18,19 +18,15 @@ import (
 type GeneratorListAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
-	CustomTypeCollection     convert.CustomTypeCollection
-	Default                  *specschema.ListDefault
-	DefaultCustom            convert.DefaultCustom
+	CustomType               convert.CustomTypeCollection
+	Default                  convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	ElementType              specschema.ElementType
 	ElementTypeCollection    convert.ElementType
-	PlanModifiers            specschema.ListPlanModifiers
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
-	Validators               specschema.ListValidators
-	ValidatorsCustom         convert.ValidatorsCustom
+	Validators               convert.Validators
 }
 
 func NewGeneratorListAttribute(name string, a *resource.ListAttribute) (GeneratorListAttribute, error) {
@@ -50,28 +46,24 @@ func NewGeneratorListAttribute(name string, a *resource.ListAttribute) (Generato
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeList, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeList, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeList, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeList, a.Validators.CustomValidators())
 
 	return GeneratorListAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
-		CustomTypeCollection:     ctc,
-		Default:                  a.Default,
-		DefaultCustom:            dc,
+		CustomType:               ctc,
+		Default:                  dc,
 		DeprecationMessage:       dm,
 		Description:              d,
 		ElementType:              a.ElementType,
-		PlanModifiers:            a.PlanModifiers,
-		PlanModifiersCustom:      pm,
+		PlanModifiers:            pm,
 		ElementTypeCollection:    et,
 		Sensitive:                s,
-		Validators:               a.Validators,
-		ValidatorsCustom:         vc,
+		Validators:               v,
 	}, nil
 }
 
@@ -86,26 +78,15 @@ func (g GeneratorListAttribute) ElemType() specschema.ElementType {
 func (g GeneratorListAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	elemTypeImports := generatorschema.GetElementTypeImports(g.ElementType)
-	imports.Append(elemTypeImports)
+	imports.Append(g.ElementTypeCollection.Imports())
 
-	if g.Default != nil {
-		customDefaultImports := generatorschema.CustomDefaultImports(g.Default.Custom)
-		imports.Append(customDefaultImports)
-	}
+	imports.Append(g.Default.Imports())
 
-	for _, v := range g.PlanModifiers {
-		customPlanModifierImports := generatorschema.CustomPlanModifierImports(v.Custom)
-		imports.Append(customPlanModifierImports)
-	}
+	imports.Append(g.PlanModifiers.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -137,15 +118,7 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.CustomTypeCollection.Equal(h.CustomTypeCollection) {
-		return false
-	}
-
 	if !g.Default.Equal(h.Default) {
-		return false
-	}
-
-	if !g.DefaultCustom.Equal(h.DefaultCustom) {
 		return false
 	}
 
@@ -169,25 +142,17 @@ func (g GeneratorListAttribute) Equal(ga generatorschema.GeneratorAttribute) boo
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
-		return false
-	}
-
 	if !g.Sensitive.Equal(h.Sensitive) {
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
-	customTypeSchema := g.CustomTypeCollection.Schema()
+	customTypeSchema := g.CustomType.Schema()
 
 	b.WriteString(fmt.Sprintf("%q: schema.ListAttribute{\n", name))
 	b.Write(customTypeSchema)
@@ -198,9 +163,9 @@ func (g GeneratorListAttribute) Schema(name generatorschema.FrameworkIdentifier)
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
-	b.Write(g.DefaultCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
+	b.Write(g.Validators.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
@@ -213,11 +178,10 @@ func (g GeneratorListAttribute) ModelField(name generatorschema.FrameworkIdentif
 		ValueType: model.ListValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil

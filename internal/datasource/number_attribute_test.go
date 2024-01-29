@@ -14,7 +14,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorNumberAttribute_New(t *testing.T) {
@@ -34,8 +33,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Computed),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"computed_optional": {
@@ -44,8 +43,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.ComputedOptional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -54,8 +53,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Optional),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -64,8 +63,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorNumberAttribute{
 				ComputedOptionalRequired: convert.NewComputedOptionalRequired(specschema.Required),
-				CustomTypePrimitive:      convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:         convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:               convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:               convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -79,21 +78,14 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, nil),
 			},
 		},
 		"deprecation_message": {
@@ -101,9 +93,9 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				Validators:         convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -111,9 +103,9 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType:  convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description: convert.NewDescription(pointer("description")),
+				Validators:  convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -121,9 +113,9 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:  convert.NewSensitive(pointer(true)),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -142,20 +134,8 @@ func TestGeneratorNumberAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Validators: specschema.NumberValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, specschema.CustomValidators{
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -198,7 +178,7 @@ func TestGeneratorNumberAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -213,7 +193,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtNumber",
@@ -228,7 +208,7 @@ CustomType: NumberAttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorNumberAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -301,14 +281,14 @@ DeprecationMessage: "deprecated",
 
 		"validators-empty": {
 			input: GeneratorNumberAttribute{
-				Validators: specschema.NumberValidators{},
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{}),
 			},
 			expected: `"number_attribute": schema.NumberAttribute{
 },`,
 		},
 		"validators": {
 			input: GeneratorNumberAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeNumber, []*specschema.CustomValidator{
+				Validators: convert.NewValidators(convert.ValidatorTypeNumber, specschema.CustomValidators{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},
@@ -362,9 +342,13 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorNumberAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",
@@ -374,11 +358,13 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorNumberAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomType: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
 						Type: "*api.NumberAttribute",
 					},
-				},
+					"number_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",
@@ -388,14 +374,15 @@ func TestGeneratorNumberAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorNumberAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					&specschema.AssociatedExternalType{
 						Type: "*api.NumberAttribute",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "NumberAttribute",

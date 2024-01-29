@@ -14,7 +14,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorMapAttribute_New(t *testing.T) {
@@ -35,7 +34,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -48,7 +47,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					Bool: &specschema.BoolType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-string": {
@@ -58,7 +57,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -71,7 +70,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-string": {
@@ -85,7 +84,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -106,7 +105,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-map-string": {
@@ -120,7 +119,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -141,7 +140,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-list-object-string": {
@@ -162,7 +161,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -197,7 +196,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-string": {
@@ -214,7 +213,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -241,7 +240,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"element-type-object-list-string": {
@@ -262,7 +261,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -297,7 +296,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 						},
 					},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"optional": {
@@ -309,7 +308,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -322,7 +321,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -334,7 +333,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 			},
 			expected: GeneratorMapAttribute{
 				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -347,7 +346,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -364,14 +363,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Import: &code.Import{
 							Path: "github.com/",
@@ -390,7 +382,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"deprecation_message": {
@@ -401,7 +393,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -415,7 +407,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -426,7 +418,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -440,7 +432,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -451,7 +443,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -464,8 +456,8 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Sensitive:        convert.NewSensitive(pointer(true)),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{}),
+				Sensitive:  convert.NewSensitive(pointer(true)),
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -487,7 +479,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					nil,
 					convert.CustomCollectionTypeMap,
@@ -500,19 +492,7 @@ func TestGeneratorMapAttribute_New(t *testing.T) {
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				Validators: specschema.MapValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -796,7 +776,7 @@ ElementType: types.StringType,
 
 		"custom-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -816,7 +796,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					nil,
 					&specschema.AssociatedExternalType{Type: "*api.MapAttribute"},
 					convert.CustomCollectionTypeMap,
@@ -838,7 +818,7 @@ ElemType: types.StringType,
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorMapAttribute{
-				CustomTypeCollection: convert.NewCustomTypeCollection(
+				CustomType: convert.NewCustomTypeCollection(
 					&specschema.CustomType{Type: "my_custom_type"},
 					&specschema.AssociatedExternalType{Type: "*api.MapAttribute"},
 					convert.CustomCollectionTypeMap,
@@ -922,7 +902,7 @@ DeprecationMessage: "deprecated",
 				ElementTypeCollection: convert.NewElementType(specschema.ElementType{
 					String: &specschema.StringType{},
 				}),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeMap, specschema.CustomValidators{
+				Validators: convert.NewValidators(convert.ValidatorTypeMap, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						SchemaDefinition: "my_validator.Validate()",
 					},
@@ -1145,9 +1125,15 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorMapAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					convert.CustomCollectionTypeMap,
+					"",
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",
@@ -1157,11 +1143,15 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorMapAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomType: convert.NewCustomTypeCollection(
+					nil,
+					&specschema.AssociatedExternalType{
+						Type: "*api.MapAttribute",
 					},
-				},
+					convert.CustomCollectionTypeMap,
+					"",
+					"map_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",
@@ -1171,14 +1161,17 @@ func TestGeneratorMapAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorMapAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
-						Type: "*api.BoolAttribute",
+				CustomType: convert.NewCustomTypeCollection(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					&specschema.AssociatedExternalType{
+						Type: "*api.ListAttribute",
+					},
+					convert.CustomCollectionTypeMap,
+					"",
+					"map_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "MapAttribute",

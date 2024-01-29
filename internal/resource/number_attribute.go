@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -18,17 +17,13 @@ import (
 type GeneratorNumberAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
-	CustomTypePrimitive      convert.CustomTypePrimitive
-	Default                  *specschema.NumberDefault
-	DefaultCustom            convert.DefaultCustom
+	CustomType               convert.CustomTypePrimitive
+	Default                  convert.DefaultCustom
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiers            specschema.NumberPlanModifiers
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
-	Validators               specschema.NumberValidators
-	ValidatorsCustom         convert.ValidatorsCustom
+	Validators               convert.Validators
 }
 
 func NewGeneratorNumberAttribute(name string, a *resource.NumberAttribute) (GeneratorNumberAttribute, error) {
@@ -46,26 +41,22 @@ func NewGeneratorNumberAttribute(name string, a *resource.NumberAttribute) (Gene
 
 	d := convert.NewDescription(a.Description)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeNumber, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeNumber, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeNumber, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeNumber, a.Validators.CustomValidators())
 
 	return GeneratorNumberAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
-		CustomTypePrimitive:      ctp,
-		Default:                  a.Default,
-		DefaultCustom:            dc,
+		CustomType:               ctp,
+		Default:                  dc,
 		Description:              d,
 		DeprecationMessage:       dm,
-		PlanModifiers:            a.PlanModifiers,
-		PlanModifiersCustom:      pm,
+		PlanModifiers:            pm,
 		Sensitive:                s,
-		Validators:               a.Validators,
-		ValidatorsCustom:         vc,
+		Validators:               v,
 	}, nil
 }
 
@@ -76,23 +67,13 @@ func (g GeneratorNumberAttribute) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorNumberAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	if g.Default != nil {
-		customDefaultImports := generatorschema.CustomDefaultImports(g.Default.Custom)
-		imports.Append(customDefaultImports)
-	}
+	imports.Append(g.Default.Imports())
 
-	for _, v := range g.PlanModifiers {
-		customPlanModifierImports := generatorschema.CustomPlanModifierImports(v.Custom)
-		imports.Append(customPlanModifierImports)
-	}
+	imports.Append(g.PlanModifiers.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -122,15 +103,7 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
-		return false
-	}
-
 	if !g.Default.Equal(h.Default) {
-		return false
-	}
-
-	if !g.DefaultCustom.Equal(h.DefaultCustom) {
 		return false
 	}
 
@@ -146,33 +119,25 @@ func (g GeneratorNumberAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
-		return false
-	}
-
 	if !g.Sensitive.Equal(h.Sensitive) {
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorNumberAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.NumberAttribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
-	b.Write(g.DefaultCustom.Schema())
+	b.Write(g.PlanModifiers.Schema())
+	b.Write(g.Validators.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
@@ -185,11 +150,10 @@ func (g GeneratorNumberAttribute) ModelField(name generatorschema.FrameworkIdent
 		ValueType: model.NumberValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil

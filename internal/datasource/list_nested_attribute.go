@@ -9,24 +9,21 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorListNestedAttribute struct {
-	ComputedOptionalRequired   convert.ComputedOptionalRequired
-	CustomType                 *specschema.CustomType
-	CustomTypeNestedCollection convert.CustomTypeNestedCollection
-	DeprecationMessage         convert.DeprecationMessage
-	Description                convert.Description
-	NestedObject               GeneratorNestedAttributeObject
-	NestedAttributeObject      convert.NestedAttributeObject
-	Sensitive                  convert.Sensitive
-	Validators                 specschema.ListValidators
-	ValidatorsCustom           convert.ValidatorsCustom
+	ComputedOptionalRequired convert.ComputedOptionalRequired
+	CustomType               convert.CustomTypeNestedCollection
+	DeprecationMessage       convert.DeprecationMessage
+	Description              convert.Description
+	NestedObject             GeneratorNestedAttributeObject
+	NestedAttributeObject    convert.NestedAttributeObject
+	Sensitive                convert.Sensitive
+	Validators               convert.Validators
 }
 
 func NewGeneratorListNestedAttribute(name string, a *datasource.ListNestedAttribute) (GeneratorListNestedAttribute, error) {
@@ -48,69 +45,52 @@ func NewGeneratorListNestedAttribute(name string, a *datasource.ListNestedAttrib
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
-	vco := convert.NewValidatorsCustom(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
+	vo := convert.NewValidators(convert.ValidatorTypeObject, a.NestedObject.Validators.CustomValidators())
 
-	nat := convert.NewNestedAttributeObject(attributes, a.NestedObject.CustomType, vco, name)
+	nat := convert.NewNestedAttributeObject(attributes, a.NestedObject.CustomType, vo, name)
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vcl := convert.NewValidatorsCustom(convert.ValidatorTypeList, a.Validators.CustomValidators())
+	vl := convert.NewValidators(convert.ValidatorTypeList, a.Validators.CustomValidators())
 
 	return GeneratorListNestedAttribute{
-		ComputedOptionalRequired:   c,
-		CustomType:                 a.CustomType,
-		CustomTypeNestedCollection: ct,
-		DeprecationMessage:         dm,
-		Description:                d,
+		ComputedOptionalRequired: c,
+		CustomType:               ct,
+		DeprecationMessage:       dm,
+		Description:              d,
 		NestedObject: GeneratorNestedAttributeObject{
-			AssociatedExternalType: generatorschema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
+			AssociatedExternalType: schema.NewAssocExtType(a.NestedObject.AssociatedExternalType),
 			Attributes:             attributes,
 			CustomType:             a.NestedObject.CustomType,
 			Validators:             a.NestedObject.Validators,
 		},
 		NestedAttributeObject: nat,
 		Sensitive:             s,
-		Validators:            a.Validators,
-		ValidatorsCustom:      vcl,
+		Validators:            vl,
 	}, nil
 }
 
-func (g GeneratorListNestedAttribute) GeneratorSchemaType() generatorschema.Type {
-	return generatorschema.GeneratorListNestedAttribute
+func (g GeneratorListNestedAttribute) GeneratorSchemaType() schema.Type {
+	return schema.GeneratorListNestedAttribute
 }
 
-func (g GeneratorListNestedAttribute) Imports() *generatorschema.Imports {
-	imports := generatorschema.NewImports()
+func (g GeneratorListNestedAttribute) Imports() *schema.Imports {
+	imports := schema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
-	customTypeImports = generatorschema.CustomTypeImports(g.NestedObject.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.NestedAttributeObject.Imports())
 
-	for _, v := range g.NestedObject.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
-
-	for _, v := range g.NestedObject.Attributes {
-		imports.Append(v.Imports())
-	}
-
-	// TODO: This should only be added if custom types (models) are being generated.
-	imports.Append(generatorschema.AttrImports())
+	imports.Append(schema.AttrImports())
 
 	imports.Append(g.NestedObject.AssociatedExternalType.Imports())
 
 	return imports
 }
 
-func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribute) bool {
+func (g GeneratorListNestedAttribute) Equal(ga schema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorListNestedAttribute)
 
 	if !ok {
@@ -122,10 +102,6 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 	}
 
 	if !g.CustomType.Equal(h.CustomType) {
-		return false
-	}
-
-	if !g.CustomTypeNestedCollection.Equal(h.CustomTypeNestedCollection) {
 		return false
 	}
 
@@ -149,14 +125,10 @@ func (g GeneratorListNestedAttribute) Equal(ga generatorschema.GeneratorAttribut
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
-func (g GeneratorListNestedAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorListNestedAttribute) Schema(name schema.FrameworkIdentifier) (string, error) {
 	nestedObjectSchema, err := g.NestedAttributeObject.Schema()
 
 	if err != nil {
@@ -167,32 +139,34 @@ func (g GeneratorListNestedAttribute) Schema(name generatorschema.FrameworkIdent
 
 	b.WriteString(fmt.Sprintf("%q: schema.ListNestedAttribute{\n", name))
 	b.Write(nestedObjectSchema)
-	b.Write(g.CustomTypeNestedCollection.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
 }
 
-func (g GeneratorListNestedAttribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
+func (g GeneratorListNestedAttribute) ModelField(name schema.FrameworkIdentifier) (model.Field, error) {
 	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
 		ValueType: model.ListValueType,
 	}
 
-	if g.CustomType != nil {
-		f.ValueType = g.CustomType.ValueType
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		f.ValueType = customValueType
 	}
 
 	return f, nil
 }
 
-func (g GeneratorListNestedAttribute) GetAttributes() generatorschema.GeneratorAttributes {
+func (g GeneratorListNestedAttribute) GetAttributes() schema.GeneratorAttributes {
 	return g.NestedObject.Attributes
 }
 
@@ -205,7 +179,7 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 		return nil, err
 	}
 
-	objectType := generatorschema.NewCustomNestedObjectType(name, attributeAttrValues)
+	objectType := schema.NewCustomNestedObjectType(name, attributeAttrValues)
 
 	b, err := objectType.Render()
 
@@ -233,7 +207,7 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 		return nil, err
 	}
 
-	objectValue := generatorschema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues, attributeCollectionTypes)
+	objectValue := schema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues, attributeCollectionTypes)
 
 	b, err = objectValue.Render()
 
@@ -248,7 +222,7 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 	// Recursively call CustomTypeAndValue() for each attribute that implements
 	// CustomTypeAndValue interface.
 	for _, k := range attributeKeys {
-		if c, ok := g.NestedObject.Attributes[k].(generatorschema.CustomTypeAndValue); ok {
+		if c, ok := g.NestedObject.Attributes[k].(schema.CustomTypeAndValue); ok {
 			b, err := c.CustomTypeAndValue(k)
 
 			if err != nil {
@@ -281,7 +255,7 @@ func (g GeneratorListNestedAttribute) ToFromFunctions(name string) ([]byte, erro
 		return nil, err
 	}
 
-	toFrom := generatorschema.NewToFromNestedObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := schema.NewToFromNestedObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 
@@ -296,7 +270,7 @@ func (g GeneratorListNestedAttribute) ToFromFunctions(name string) ([]byte, erro
 	// Recursively call ToFromFunctions() for each attribute that implements
 	// ToFrom interface.
 	for _, k := range attributeKeys {
-		if c, ok := g.NestedObject.Attributes[k].(generatorschema.ToFrom); ok {
+		if c, ok := g.NestedObject.Attributes[k].(schema.ToFrom); ok {
 			b, err := c.ToFromFunctions(k)
 
 			if err != nil {
@@ -310,10 +284,10 @@ func (g GeneratorListNestedAttribute) ToFromFunctions(name string) ([]byte, erro
 	return buf.Bytes(), nil
 }
 
-func (g GeneratorListNestedAttribute) To() (generatorschema.ToFromConversion, error) {
-	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
+func (g GeneratorListNestedAttribute) To() (schema.ToFromConversion, error) {
+	return schema.ToFromConversion{}, schema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
 }
 
-func (g GeneratorListNestedAttribute) From() (generatorschema.ToFromConversion, error) {
-	return generatorschema.ToFromConversion{}, generatorschema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
+func (g GeneratorListNestedAttribute) From() (schema.ToFromConversion, error) {
+	return schema.ToFromConversion{}, schema.NewUnimplementedError(errors.New("list nested type is not yet implemented"))
 }

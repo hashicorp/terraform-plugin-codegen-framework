@@ -10,10 +10,11 @@ import (
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
-func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
+func TestGeneratorDataSourceSchemas_ModelsBytes(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -27,27 +28,45 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 					Attributes: schema.GeneratorAttributes{
 						"bool_attribute": GeneratorBoolAttribute{},
 						"bool_attribute_custom": GeneratorBoolAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_bool_value_type",
-							},
+							CustomType: convert.NewCustomTypePrimitive(
+								&specschema.CustomType{
+									ValueType: "my_bool_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"float64_attribute": GeneratorFloat64Attribute{},
 						"float64_attribute_custom": GeneratorFloat64Attribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_float64_value_type",
-							},
+							CustomType: convert.NewCustomTypePrimitive(
+								&specschema.CustomType{
+									ValueType: "my_float64_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"int64_attribute": GeneratorInt64Attribute{},
 						"int64_attribute_custom": GeneratorInt64Attribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_int64_value_type",
-							},
+							CustomType: convert.NewCustomTypePrimitive(
+								&specschema.CustomType{
+									ValueType: "my_int64_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"list_attribute": GeneratorListAttribute{},
 						"list_attribute_custom": GeneratorListAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_list_value_type",
-							},
+							CustomType: convert.NewCustomTypeCollection(
+								&specschema.CustomType{
+									ValueType: "my_list_value_type",
+								},
+								nil,
+								convert.CustomCollectionTypeList,
+								"",
+								"",
+							),
 						},
 						"list_nested_attribute": GeneratorListNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
@@ -57,9 +76,11 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"list_nested_attribute_custom": GeneratorListNestedAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_list_nested_value_type",
-							},
+							CustomType: convert.NewCustomTypeNestedCollection(
+								&specschema.CustomType{
+									ValueType: "my_list_nested_value_type",
+								},
+							),
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: schema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
@@ -68,9 +89,15 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 						},
 						"map_attribute": GeneratorMapAttribute{},
 						"map_attribute_custom": GeneratorMapAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_map_value_type",
-							},
+							CustomType: convert.NewCustomTypeCollection(
+								&specschema.CustomType{
+									ValueType: "my_map_value_type",
+								},
+								nil,
+								convert.CustomCollectionTypeList,
+								"",
+								"",
+							),
 						},
 						"map_nested_attribute": GeneratorMapNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
@@ -80,9 +107,11 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"map_nested_attribute_custom": GeneratorMapNestedAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_map_nested_value_type",
-							},
+							CustomType: convert.NewCustomTypeNestedCollection(
+								&specschema.CustomType{
+									ValueType: "my_map_nested_value_type",
+								},
+							),
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: schema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
@@ -91,21 +120,35 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 						},
 						"number_attribute": GeneratorNumberAttribute{},
 						"number_attribute_custom": GeneratorNumberAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_number_value_type",
-							},
+							CustomType: convert.NewCustomTypePrimitive(
+								&specschema.CustomType{
+									ValueType: "my_number_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"object_attribute": GeneratorObjectAttribute{},
 						"object_attribute_custom": GeneratorObjectAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_object_value_type",
-							},
+							CustomType: convert.NewCustomTypeObject(
+								&specschema.CustomType{
+									ValueType: "my_object_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 						"set_attribute": GeneratorSetAttribute{},
 						"set_attribute_custom": GeneratorSetAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_set_value_type",
-							},
+							CustomType: convert.NewCustomTypeCollection(
+								&specschema.CustomType{
+									ValueType: "my_set_value_type",
+								},
+								nil,
+								convert.CustomCollectionTypeList,
+								"",
+								"",
+							),
 						},
 						"set_nested_attribute": GeneratorSetNestedAttribute{
 							NestedObject: GeneratorNestedAttributeObject{
@@ -115,9 +158,11 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"set_nested_attribute_custom": GeneratorSetNestedAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_set_nested_value_type",
-							},
+							CustomType: convert.NewCustomTypeNestedCollection(
+								&specschema.CustomType{
+									ValueType: "my_set_nested_value_type",
+								},
+							),
 							NestedObject: GeneratorNestedAttributeObject{
 								Attributes: schema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
@@ -130,18 +175,25 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"single_nested_attribute_custom": GeneratorSingleNestedAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_single_nested_value_type",
-							},
+							CustomType: convert.NewCustomTypeNestedObject(
+								&specschema.CustomType{
+									ValueType: "my_single_nested_value_type",
+								},
+								"",
+							),
 							Attributes: schema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},
 						},
 						"string_attribute": GeneratorStringAttribute{},
 						"string_attribute_custom": GeneratorStringAttribute{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_string_value_type",
-							},
+							CustomType: convert.NewCustomTypePrimitive(
+								&specschema.CustomType{
+									ValueType: "my_string_value_type",
+								},
+								nil,
+								"",
+							),
 						},
 					},
 					Blocks: schema.GeneratorBlocks{
@@ -153,9 +205,11 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"list_nested_block_custom": GeneratorListNestedBlock{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_list_nested_value_type",
-							},
+							CustomType: convert.NewCustomTypeNestedCollection(
+								&specschema.CustomType{
+									ValueType: "my_list_nested_value_type",
+								},
+							),
 							NestedObject: GeneratorNestedBlockObject{
 								Attributes: schema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
@@ -170,9 +224,11 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"set_nested_block_custom": GeneratorSetNestedBlock{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_set_nested_value_type",
-							},
+							CustomType: convert.NewCustomTypeNestedCollection(
+								&specschema.CustomType{
+									ValueType: "my_set_nested_value_type",
+								},
+							),
 							NestedObject: GeneratorNestedBlockObject{
 								Attributes: schema.GeneratorAttributes{
 									"bool_attribute": GeneratorBoolAttribute{},
@@ -185,9 +241,12 @@ func TestGeneratorproviderSchemas_ModelsBytes(t *testing.T) {
 							},
 						},
 						"single_nested_block_custom": GeneratorSingleNestedBlock{
-							CustomType: &specschema.CustomType{
-								ValueType: "my_single_nested_value_type",
-							},
+							CustomType: convert.NewCustomTypeNestedObject(
+								&specschema.CustomType{
+									ValueType: "my_single_nested_value_type",
+								},
+								"",
+							),
 							Attributes: schema.GeneratorAttributes{
 								"bool_attribute": GeneratorBoolAttribute{},
 							},

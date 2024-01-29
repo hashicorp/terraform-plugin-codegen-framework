@@ -13,20 +13,20 @@ import (
 )
 
 type NestedAttributeObject struct {
-	attributes          generatorschema.GeneratorAttributes
-	customType          convert.CustomTypeNestedObject
-	planModifiersCustom convert.PlanModifiersCustom
-	validatorsCustom    convert.ValidatorsCustom
+	attributes    generatorschema.GeneratorAttributes
+	customType    convert.CustomTypeNestedObject
+	planModifiers convert.PlanModifiers
+	validators    convert.Validators
 }
 
 // NewNestedAttributeObject constructs a NestedAttributeObject which is used to generate a
 // nested attribute object in the schema.
-func NewNestedAttributeObject(a generatorschema.GeneratorAttributes, c *specschema.CustomType, p convert.PlanModifiersCustom, v convert.ValidatorsCustom, name string) NestedAttributeObject {
+func NewNestedAttributeObject(a generatorschema.GeneratorAttributes, c *specschema.CustomType, p convert.PlanModifiers, v convert.Validators, name string) NestedAttributeObject {
 	return NestedAttributeObject{
-		attributes:          a,
-		customType:          convert.NewCustomTypeNestedObject(c, name),
-		planModifiersCustom: p,
-		validatorsCustom:    v,
+		attributes:    a,
+		customType:    convert.NewCustomTypeNestedObject(c, name),
+		planModifiers: p,
+		validators:    v,
 	}
 }
 
@@ -39,11 +39,25 @@ func (n NestedAttributeObject) Equal(other NestedAttributeObject) bool {
 		return false
 	}
 
-	if !n.planModifiersCustom.Equal(other.planModifiersCustom) {
+	if !n.planModifiers.Equal(other.planModifiers) {
 		return false
 	}
 
-	return n.validatorsCustom.Equal(other.validatorsCustom)
+	return n.validators.Equal(other.validators)
+}
+
+func (n NestedAttributeObject) Imports() *generatorschema.Imports {
+	imports := generatorschema.NewImports()
+
+	imports.Append(n.customType.Imports())
+
+	imports.Append(n.planModifiers.Imports())
+
+	imports.Append(n.validators.Imports())
+
+	imports.Append(n.attributes.Imports())
+
+	return imports
 }
 
 func (n NestedAttributeObject) Schema() ([]byte, error) {
@@ -60,8 +74,8 @@ func (n NestedAttributeObject) Schema() ([]byte, error) {
 	b.WriteString(attributesSchema)
 	b.WriteString("\n},\n")
 	b.Write(n.customType.Schema())
-	b.Write(n.planModifiersCustom.Schema())
-	b.Write(n.validatorsCustom.Schema())
+	b.Write(n.planModifiers.Schema())
+	b.Write(n.validators.Schema())
 	b.WriteString("},\n")
 
 	return b.Bytes(), nil

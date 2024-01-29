@@ -8,23 +8,20 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorFloat64Attribute struct {
-	AssociatedExternalType   *generatorschema.AssocExtType
+	AssociatedExternalType   *schema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
-	CustomTypePrimitive      convert.CustomTypePrimitive
+	CustomType               convert.CustomTypePrimitive
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
 	Sensitive                convert.Sensitive
-	Validators               specschema.Float64Validators
-	ValidatorsCustom         convert.ValidatorsCustom
+	Validators               convert.Validators
 }
 
 func NewGeneratorFloat64Attribute(name string, a *datasource.Float64Attribute) (GeneratorFloat64Attribute, error) {
@@ -42,38 +39,32 @@ func NewGeneratorFloat64Attribute(name string, a *datasource.Float64Attribute) (
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeFloat64, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeFloat64, a.Validators.CustomValidators())
 
 	return GeneratorFloat64Attribute{
-		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
+		AssociatedExternalType:   schema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
-		CustomTypePrimitive:      ctp,
+		CustomType:               ctp,
 		DeprecationMessage:       dm,
 		Description:              d,
 		Sensitive:                s,
-		Validators:               a.Validators,
-		ValidatorsCustom:         vc,
+		Validators:               v,
 	}, nil
 }
 
-func (g GeneratorFloat64Attribute) GeneratorSchemaType() generatorschema.Type {
-	return generatorschema.GeneratorFloat64Attribute
+func (g GeneratorFloat64Attribute) GeneratorSchemaType() schema.Type {
+	return schema.GeneratorFloat64Attribute
 }
 
-func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {
-	imports := generatorschema.NewImports()
+func (g GeneratorFloat64Attribute) Imports() *schema.Imports {
+	imports := schema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
-		imports.Append(generatorschema.AssociatedExternalTypeImports())
+		imports.Append(schema.AssociatedExternalTypeImports())
 	}
 
 	imports.Append(g.AssociatedExternalType.Imports())
@@ -81,7 +72,7 @@ func (g GeneratorFloat64Attribute) Imports() *generatorschema.Imports {
 	return imports
 }
 
-func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) bool {
+func (g GeneratorFloat64Attribute) Equal(ga schema.GeneratorAttribute) bool {
 	h, ok := ga.(GeneratorFloat64Attribute)
 
 	if !ok {
@@ -100,10 +91,6 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
-		return false
-	}
-
 	if !g.DeprecationMessage.Equal(h.DeprecationMessage) {
 		return false
 	}
@@ -116,40 +103,35 @@ func (g GeneratorFloat64Attribute) Equal(ga generatorschema.GeneratorAttribute) 
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
-func (g GeneratorFloat64Attribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorFloat64Attribute) Schema(name schema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.Float64Attribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
+	b.Write(g.Validators.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
 }
 
-func (g GeneratorFloat64Attribute) ModelField(name generatorschema.FrameworkIdentifier) (model.Field, error) {
+func (g GeneratorFloat64Attribute) ModelField(name schema.FrameworkIdentifier) (model.Field, error) {
 	field := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
 		ValueType: model.Float64ValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil
@@ -162,7 +144,7 @@ func (g GeneratorFloat64Attribute) CustomTypeAndValue(name string) ([]byte, erro
 
 	var buf bytes.Buffer
 
-	float64Type := generatorschema.NewCustomFloat64Type(name)
+	float64Type := schema.NewCustomFloat64Type(name)
 
 	b, err := float64Type.Render()
 
@@ -172,7 +154,7 @@ func (g GeneratorFloat64Attribute) CustomTypeAndValue(name string) ([]byte, erro
 
 	buf.Write(b)
 
-	float64Value := generatorschema.NewCustomFloat64Value(name)
+	float64Value := schema.NewCustomFloat64Value(name)
 
 	b, err = float64Value.Render()
 
@@ -190,7 +172,7 @@ func (g GeneratorFloat64Attribute) ToFromFunctions(name string) ([]byte, error) 
 		return nil, nil
 	}
 
-	toFrom := generatorschema.NewToFromFloat64(name, g.AssociatedExternalType)
+	toFrom := schema.NewToFromFloat64(name, g.AssociatedExternalType)
 
 	b, err := toFrom.Render()
 
@@ -202,7 +184,7 @@ func (g GeneratorFloat64Attribute) ToFromFunctions(name string) ([]byte, error) 
 }
 
 // AttrType returns a string representation of a basetypes.Float64Typable type.
-func (g GeneratorFloat64Attribute) AttrType(name generatorschema.FrameworkIdentifier) (string, error) {
+func (g GeneratorFloat64Attribute) AttrType(name schema.FrameworkIdentifier) (string, error) {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
@@ -211,7 +193,7 @@ func (g GeneratorFloat64Attribute) AttrType(name generatorschema.FrameworkIdenti
 }
 
 // AttrValue returns a string representation of a basetypes.Float64Valuable type.
-func (g GeneratorFloat64Attribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
+func (g GeneratorFloat64Attribute) AttrValue(name schema.FrameworkIdentifier) string {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sValue", name.ToPascalCase())
 	}
@@ -219,26 +201,26 @@ func (g GeneratorFloat64Attribute) AttrValue(name generatorschema.FrameworkIdent
 	return "basetypes.Float64Value"
 }
 
-func (g GeneratorFloat64Attribute) To() (generatorschema.ToFromConversion, error) {
+func (g GeneratorFloat64Attribute) To() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "ValueFloat64Pointer",
 	}, nil
 }
 
-func (g GeneratorFloat64Attribute) From() (generatorschema.ToFromConversion, error) {
+func (g GeneratorFloat64Attribute) From() (schema.ToFromConversion, error) {
 	if g.AssociatedExternalType != nil {
-		return generatorschema.ToFromConversion{
+		return schema.ToFromConversion{
 			AssocExtType: g.AssociatedExternalType,
 		}, nil
 	}
 
-	return generatorschema.ToFromConversion{
+	return schema.ToFromConversion{
 		Default: "Float64PointerValue",
 	}, nil
 }

@@ -7,7 +7,10 @@ import (
 	"bytes"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 const (
@@ -24,19 +27,19 @@ const (
 
 type ValidatorType string
 
-type ValidatorsCustom struct {
+type Validators struct {
 	validatorType ValidatorType
 	custom        specschema.CustomValidators
 }
 
-func NewValidatorsCustom(t ValidatorType, c specschema.CustomValidators) ValidatorsCustom {
-	return ValidatorsCustom{
+func NewValidators(t ValidatorType, c specschema.CustomValidators) Validators {
+	return Validators{
 		validatorType: t,
 		custom:        c,
 	}
 }
 
-func (v ValidatorsCustom) Equal(other ValidatorsCustom) bool {
+func (v Validators) Equal(other Validators) bool {
 	if v.validatorType != other.validatorType {
 		return false
 	}
@@ -62,7 +65,29 @@ func (v ValidatorsCustom) Equal(other ValidatorsCustom) bool {
 	return true
 }
 
-func (v ValidatorsCustom) Schema() []byte {
+func (v Validators) Imports() *schema.Imports {
+	imports := schema.NewImports()
+
+	if v.custom == nil {
+		return imports
+	}
+
+	for _, c := range v.custom {
+		for _, i := range c.Imports {
+			if len(i.Path) > 0 {
+				imports.Add(code.Import{
+					Path: schema.ValidatorImport,
+				})
+
+				imports.Add(i)
+			}
+		}
+	}
+
+	return imports
+}
+
+func (v Validators) Schema() []byte {
 	var b, cb bytes.Buffer
 
 	for _, c := range v.custom {

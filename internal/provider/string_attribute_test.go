@@ -14,7 +14,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorStringAttribute_New(t *testing.T) {
@@ -33,9 +32,9 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				OptionalRequired: "optional",
 			},
 			expected: GeneratorStringAttribute{
-				OptionalRequired:    convert.NewOptionalRequired(specschema.Optional),
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
+				OptionalRequired: convert.NewOptionalRequired(specschema.Optional),
+				CustomType:       convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:       convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"required": {
@@ -43,9 +42,9 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				OptionalRequired: "required",
 			},
 			expected: GeneratorStringAttribute{
-				OptionalRequired:    convert.NewOptionalRequired(specschema.Required),
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
+				OptionalRequired: convert.NewOptionalRequired(specschema.Required),
+				CustomType:       convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators:       convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"custom_type": {
@@ -59,21 +58,14 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorStringAttribute{
-				CustomType: &specschema.CustomType{
-					Import: &code.Import{
-						Path: "github.com/",
-					},
-					Type:      "my_type",
-					ValueType: "myvalue_type",
-				},
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(&specschema.CustomType{
+				CustomType: convert.NewCustomTypePrimitive(&specschema.CustomType{
 					Import: &code.Import{
 						Path: "github.com/",
 					},
 					Type:      "my_type",
 					ValueType: "myvalue_type",
 				}, nil, "name"),
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeString, nil),
+				Validators: convert.NewValidators(convert.ValidatorTypeString, nil),
 			},
 		},
 		"deprecation_message": {
@@ -81,9 +73,9 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				DeprecationMessage: pointer("deprecation message"),
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				DeprecationMessage:  convert.NewDeprecationMessage(pointer("deprecation message")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
+				CustomType:         convert.NewCustomTypePrimitive(nil, nil, "name"),
+				DeprecationMessage: convert.NewDeprecationMessage(pointer("deprecation message")),
+				Validators:         convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"description": {
@@ -91,9 +83,9 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				Description: pointer("description"),
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Description:         convert.NewDescription(pointer("description")),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
+				CustomType:  convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Description: convert.NewDescription(pointer("description")),
+				Validators:  convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"sensitive": {
@@ -101,9 +93,9 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				Sensitive: pointer(true),
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Sensitive:           convert.NewSensitive(pointer(true)),
-				ValidatorsCustom:    convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{}),
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Sensitive:  convert.NewSensitive(pointer(true)),
+				Validators: convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{}),
 			},
 		},
 		"validators": {
@@ -122,20 +114,8 @@ func TestGeneratorStringAttribute_New(t *testing.T) {
 				},
 			},
 			expected: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(nil, nil, "name"),
-				Validators: specschema.StringValidators{
-					{
-						Custom: &specschema.CustomValidator{
-							Imports: []code.Import{
-								{
-									Path: "github.com/.../myvalidator",
-								},
-							},
-							SchemaDefinition: "myvalidator.Validate()",
-						},
-					},
-				},
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeString, specschema.CustomValidators{
+				CustomType: convert.NewCustomTypePrimitive(nil, nil, "name"),
+				Validators: convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{
 					&specschema.CustomValidator{
 						Imports: []code.Import{
 							{
@@ -178,7 +158,7 @@ func TestGeneratorStringAttribute_Schema(t *testing.T) {
 	}{
 		"custom-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -193,7 +173,7 @@ CustomType: my_custom_type,
 
 		"associated-external-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					nil,
 					&specschema.AssociatedExternalType{
 						Type: "*api.ExtString",
@@ -208,7 +188,7 @@ CustomType: StringAttributeType{},
 
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorStringAttribute{
-				CustomTypePrimitive: convert.NewCustomTypePrimitive(
+				CustomType: convert.NewCustomTypePrimitive(
 					&specschema.CustomType{
 						Type: "my_custom_type",
 					},
@@ -272,14 +252,13 @@ DeprecationMessage: "deprecated",
 
 		"validators-empty": {
 			input: GeneratorStringAttribute{
-				Validators: specschema.StringValidators{},
-			},
+				Validators: convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{})},
 			expected: `"string_attribute": schema.StringAttribute{
 },`,
 		},
 		"validators": {
 			input: GeneratorStringAttribute{
-				ValidatorsCustom: convert.NewValidatorsCustom(convert.ValidatorTypeString, []*specschema.CustomValidator{
+				Validators: convert.NewValidators(convert.ValidatorTypeString, specschema.CustomValidators{
 					{
 						SchemaDefinition: "my_validator.Validate()",
 					},
@@ -333,9 +312,13 @@ func TestGeneratorStringAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type": {
 			input: GeneratorStringAttribute{
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					nil,
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "StringAttribute",
@@ -345,11 +328,13 @@ func TestGeneratorStringAttribute_ModelField(t *testing.T) {
 		},
 		"associated-external-type": {
 			input: GeneratorStringAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomType: convert.NewCustomTypePrimitive(
+					nil,
+					&specschema.AssociatedExternalType{
 						Type: "*api.StringAttribute",
 					},
-				},
+					"string_attribute",
+				),
 			},
 			expected: model.Field{
 				Name:      "StringAttribute",
@@ -359,14 +344,15 @@ func TestGeneratorStringAttribute_ModelField(t *testing.T) {
 		},
 		"custom-type-overriding-associated-external-type": {
 			input: GeneratorStringAttribute{
-				AssociatedExternalType: &generatorschema.AssocExtType{
-					AssociatedExternalType: &specschema.AssociatedExternalType{
+				CustomType: convert.NewCustomTypePrimitive(
+					&specschema.CustomType{
+						ValueType: "my_custom_value_type",
+					},
+					&specschema.AssociatedExternalType{
 						Type: "*api.StringAttribute",
 					},
-				},
-				CustomType: &specschema.CustomType{
-					ValueType: "my_custom_value_type",
-				},
+					"",
+				),
 			},
 			expected: model.Field{
 				Name:      "StringAttribute",

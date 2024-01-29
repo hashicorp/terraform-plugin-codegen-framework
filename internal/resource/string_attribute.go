@@ -7,9 +7,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/resource"
-	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
 	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
@@ -19,17 +17,13 @@ import (
 type GeneratorStringAttribute struct {
 	AssociatedExternalType   *generatorschema.AssocExtType
 	ComputedOptionalRequired convert.ComputedOptionalRequired
-	CustomType               *specschema.CustomType
-	CustomTypePrimitive      convert.CustomTypePrimitive
-	Default                  *specschema.StringDefault
-	DefaultString            convert.DefaultString
+	CustomType               convert.CustomTypePrimitive
+	Default                  convert.DefaultString
 	DeprecationMessage       convert.DeprecationMessage
 	Description              convert.Description
-	PlanModifiers            specschema.StringPlanModifiers
-	PlanModifiersCustom      convert.PlanModifiersCustom
+	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
-	Validators               specschema.StringValidators
-	ValidatorsCustom         convert.ValidatorsCustom
+	Validators               convert.Validators
 }
 
 func NewGeneratorStringAttribute(name string, a *resource.StringAttribute) (GeneratorStringAttribute, error) {
@@ -41,32 +35,28 @@ func NewGeneratorStringAttribute(name string, a *resource.StringAttribute) (Gene
 
 	ctp := convert.NewCustomTypePrimitive(a.CustomType, a.AssociatedExternalType, name)
 
-	db := convert.NewDefaultString(a.Default)
+	ds := convert.NewDefaultString(a.Default)
 
 	dm := convert.NewDeprecationMessage(a.DeprecationMessage)
 
 	d := convert.NewDescription(a.Description)
 
-	pm := convert.NewPlanModifiersCustom(convert.PlanModifierTypeString, a.PlanModifiers.CustomPlanModifiers())
+	pm := convert.NewPlanModifiers(convert.PlanModifierTypeString, a.PlanModifiers.CustomPlanModifiers())
 
 	s := convert.NewSensitive(a.Sensitive)
 
-	vc := convert.NewValidatorsCustom(convert.ValidatorTypeString, a.Validators.CustomValidators())
+	v := convert.NewValidators(convert.ValidatorTypeString, a.Validators.CustomValidators())
 
 	return GeneratorStringAttribute{
 		AssociatedExternalType:   generatorschema.NewAssocExtType(a.AssociatedExternalType),
 		ComputedOptionalRequired: c,
-		CustomType:               a.CustomType,
-		CustomTypePrimitive:      ctp,
-		Default:                  a.Default,
-		DefaultString:            db,
-		Description:              d,
+		CustomType:               ctp,
+		Default:                  ds,
 		DeprecationMessage:       dm,
-		PlanModifiers:            a.PlanModifiers,
-		PlanModifiersCustom:      pm,
+		Description:              d,
+		PlanModifiers:            pm,
 		Sensitive:                s,
-		Validators:               a.Validators,
-		ValidatorsCustom:         vc,
+		Validators:               v,
 	}, nil
 }
 
@@ -77,29 +67,13 @@ func (g GeneratorStringAttribute) GeneratorSchemaType() generatorschema.Type {
 func (g GeneratorStringAttribute) Imports() *generatorschema.Imports {
 	imports := generatorschema.NewImports()
 
-	customTypeImports := generatorschema.CustomTypeImports(g.CustomType)
-	imports.Append(customTypeImports)
+	imports.Append(g.CustomType.Imports())
 
-	if g.Default != nil {
-		if g.Default.Static != nil {
-			imports.Add(code.Import{
-				Path: defaultStringImport,
-			})
-		} else {
-			customDefaultImports := generatorschema.CustomDefaultImports(g.Default.Custom)
-			imports.Append(customDefaultImports)
-		}
-	}
+	imports.Append(g.Default.Imports())
 
-	for _, v := range g.PlanModifiers {
-		customPlanModifierImports := generatorschema.CustomPlanModifierImports(v.Custom)
-		imports.Append(customPlanModifierImports)
-	}
+	imports.Append(g.PlanModifiers.Imports())
 
-	for _, v := range g.Validators {
-		customValidatorImports := generatorschema.CustomValidatorImports(v.Custom)
-		imports.Append(customValidatorImports)
-	}
+	imports.Append(g.Validators.Imports())
 
 	if g.AssociatedExternalType != nil {
 		imports.Append(generatorschema.AssociatedExternalTypeImports())
@@ -129,15 +103,7 @@ func (g GeneratorStringAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.CustomTypePrimitive.Equal(h.CustomTypePrimitive) {
-		return false
-	}
-
 	if !g.Default.Equal(h.Default) {
-		return false
-	}
-
-	if !g.DefaultString.Equal(h.DefaultString) {
 		return false
 	}
 
@@ -153,33 +119,25 @@ func (g GeneratorStringAttribute) Equal(ga generatorschema.GeneratorAttribute) b
 		return false
 	}
 
-	if !g.PlanModifiersCustom.Equal(h.PlanModifiersCustom) {
-		return false
-	}
-
 	if !g.Sensitive.Equal(h.Sensitive) {
 		return false
 	}
 
-	if !g.Validators.Equal(h.Validators) {
-		return false
-	}
-
-	return g.ValidatorsCustom.Equal(h.ValidatorsCustom)
+	return g.Validators.Equal(h.Validators)
 }
 
 func (g GeneratorStringAttribute) Schema(name generatorschema.FrameworkIdentifier) (string, error) {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("%q: schema.StringAttribute{\n", name))
-	b.Write(g.CustomTypePrimitive.Schema())
+	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
-	b.Write(g.PlanModifiersCustom.Schema())
-	b.Write(g.ValidatorsCustom.Schema())
-	b.Write(g.DefaultString.Schema())
+	b.Write(g.PlanModifiers.Schema())
+	b.Write(g.Validators.Schema())
+	b.Write(g.Default.Schema())
 	b.WriteString("},")
 
 	return b.String(), nil
@@ -192,11 +150,10 @@ func (g GeneratorStringAttribute) ModelField(name generatorschema.FrameworkIdent
 		ValueType: model.StringValueType,
 	}
 
-	switch {
-	case g.CustomType != nil:
-		field.ValueType = g.CustomType.ValueType
-	case g.AssociatedExternalType != nil:
-		field.ValueType = fmt.Sprintf("%sValue", name.ToPascalCase())
+	customValueType := g.CustomType.ValueType()
+
+	if customValueType != "" {
+		field.ValueType = customValueType
 	}
 
 	return field, nil
