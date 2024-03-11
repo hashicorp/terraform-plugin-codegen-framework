@@ -1030,7 +1030,7 @@ map[string]attr.Value{
 return objVal, diags
 }`),
 		},
-		"nested": {
+		"list-nested": {
 			name: "Example",
 			attributeTypes: map[string]string{
 				"list_nested_attribute": "ListNested",
@@ -1078,6 +1078,112 @@ map[string]attr.Type{
 },
 map[string]attr.Value{
 "list_nested_attribute": listNestedAttribute,
+})
+
+return objVal, diags
+}`),
+		},
+		"map-nested": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"map_nested_attribute": "MapNested",
+			},
+			attrTypes: map[string]string{
+				"map_nested_attribute": "basetypes.MapType{}",
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+mapNestedAttribute := types.MapValueMust(
+MapNestedAttributeType{
+basetypes.ObjectType{
+AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
+v.MapNestedAttribute.Elements(),
+)
+
+if v.MapNestedAttribute.IsNull() {
+mapNestedAttribute = types.MapNull(
+MapNestedAttributeType{
+basetypes.ObjectType{
+AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+if v.MapNestedAttribute.IsUnknown() {
+mapNestedAttribute = types.MapUnknown(
+MapNestedAttributeType{
+basetypes.ObjectType{
+AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+"map_nested_attribute": basetypes.MapType{},
+},
+map[string]attr.Value{
+"map_nested_attribute": mapNestedAttribute,
+})
+
+return objVal, diags
+}`),
+		},
+		"set-nested": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"set_nested_attribute": "SetNested",
+			},
+			attrTypes: map[string]string{
+				"set_nested_attribute": "basetypes.SetType{}",
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+setNestedAttribute := types.SetValueMust(
+SetNestedAttributeType{
+basetypes.ObjectType{
+AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
+v.SetNestedAttribute.Elements(),
+)
+
+if v.SetNestedAttribute.IsNull() {
+setNestedAttribute = types.SetNull(
+SetNestedAttributeType{
+basetypes.ObjectType{
+AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+if v.SetNestedAttribute.IsUnknown() {
+setNestedAttribute = types.SetUnknown(
+SetNestedAttributeType{
+basetypes.ObjectType{
+AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
+},
+},
+)
+}
+
+
+objVal, diags := types.ObjectValue(
+map[string]attr.Type{
+"set_nested_attribute": basetypes.SetType{},
+},
+map[string]attr.Value{
+"set_nested_attribute": setNestedAttribute,
 })
 
 return objVal, diags
