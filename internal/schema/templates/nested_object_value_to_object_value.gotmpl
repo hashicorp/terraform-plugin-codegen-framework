@@ -5,9 +5,9 @@ var diags diag.Diagnostics
 {{- if eq $value "ListNested" "MapNested" "SetNested"}}
 {{- $typesType := "List"}}
 {{- if eq $value "MapNested"}}
-{{- $typesType := "Map"}}
+{{- $typesType = "Map"}}
 {{- else if eq $value "SetNested"}}
-{{- $typesType := "Set"}}
+{{- $typesType = "Set"}}
 {{- end}}
 
 {{$key.ToPrefixCamelCase $.Name}} := types.{{$typesType}}ValueMust(

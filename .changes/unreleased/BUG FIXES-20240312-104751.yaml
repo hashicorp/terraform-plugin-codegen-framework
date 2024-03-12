@@ -1,0 +1,5 @@
+kind: BUG FIXES
+body: 'schema: Fixed the generated object value method for map_nested and set_nested'
+time: 2024-03-12T10:47:51.204718+05:30
+custom:
+  Issue: "125"
