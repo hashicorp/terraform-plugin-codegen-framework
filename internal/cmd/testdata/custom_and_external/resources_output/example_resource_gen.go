@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -29,6 +30,7 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 				CustomType: my_bool_type,
 				Computed:   true,
 				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.RequiresReplace(),
 					myboolplanmodifier.Modify(),
 				},
 				Validators: []validator.Bool{
