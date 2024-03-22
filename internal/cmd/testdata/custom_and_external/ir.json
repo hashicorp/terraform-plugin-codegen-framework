@@ -1077,7 +1077,14 @@
               },
               "plan_modifiers": [
                 {
-                  "requires_replace": {}
+                  "custom": {
+                    "imports": [
+                      {
+                        "path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+                      }
+                    ],
+                    "schema_definition": "boolplanmodifier.RequiresReplace()"
+                  }
                 },
                 {
                   "custom": {
