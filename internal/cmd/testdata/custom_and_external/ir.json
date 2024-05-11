@@ -727,7 +727,9 @@
               ]
             }
           }
-        ]
+        ],
+        "description": "\"Example\" datasource",
+        "markdown_description": "\"Example\" _datasource_"
       }
     }
   ],
@@ -1052,7 +1054,9 @@
             ]
           }
         }
-      ]
+      ],
+      "description": "\"Example\" provider",
+      "markdown_description": "\"Example\" _provider_"
     }
   },
   "resources": [
@@ -1430,7 +1434,9 @@
               ]
             }
           }
-        ]
+        ],
+        "description": "\"Example\" resource",
+        "markdown_description": "\"Example\" _resource_"
       }
     }
   ],

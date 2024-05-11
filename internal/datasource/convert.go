@@ -57,6 +57,10 @@ func NewSchema(d datasource.DataSource) (generatorschema.GeneratorSchema, error)
 
 	s.Blocks = blocks
 
+	s.Description = d.Schema.Description
+
+	s.MarkdownDescription = d.Schema.MarkdownDescription
+
 	return s, nil
 }
 
