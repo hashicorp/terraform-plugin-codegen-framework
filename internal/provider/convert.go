@@ -60,6 +60,10 @@ func NewSchema(p *provider.Provider) (generatorschema.GeneratorSchema, error) {
 
 	s.Blocks = blocks
 
+	s.Description = p.Schema.Description
+
+	s.MarkdownDescription = p.Schema.MarkdownDescription
+
 	return s, nil
 }
 
