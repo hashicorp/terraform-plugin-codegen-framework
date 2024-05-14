@@ -112,11 +112,11 @@ AttrTypes: v.{{$key.ToPrefixPascalCase $.Name}}.AttributeTypes(ctx),
 {{- end}}
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 

@@ -1023,11 +1023,11 @@ attributeTypes := map[string]attr.Type{
 "bool_attribute": basetypes.BoolType{},
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1086,11 +1086,11 @@ attributeTypes := map[string]attr.Type{
 "list_nested_attribute": basetypes.ListType{},
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1149,11 +1149,11 @@ attributeTypes := map[string]attr.Type{
 "map_nested_attribute": basetypes.MapType{},
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1212,11 +1212,11 @@ attributeTypes := map[string]attr.Type{
 "set_nested_attribute": basetypes.SetType{},
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1245,11 +1245,11 @@ attributeTypes := map[string]attr.Type{
 "type": basetypes.BoolType{},
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1308,11 +1308,11 @@ attributeTypes := map[string]attr.Type{
 "type": basetypes.ListType{},
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1361,11 +1361,11 @@ ElemType: types.BoolType,
 },
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1414,11 +1414,11 @@ ElemType: types.BoolType,
 },
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1461,11 +1461,11 @@ AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
 },
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 
@@ -1508,11 +1508,11 @@ AttrTypes: v.ExampleType.AttributeTypes(ctx),
 },
 }
 
-if v.state == attr.ValueStateNull {
+if v.IsNull() {
 return types.ObjectNull(attributeTypes), diags
 }
 
-if v.state == attr.ValueStateUnknown {
+if v.IsUnknown() {
 return types.ObjectUnknown(attributeTypes), diags
 }
 

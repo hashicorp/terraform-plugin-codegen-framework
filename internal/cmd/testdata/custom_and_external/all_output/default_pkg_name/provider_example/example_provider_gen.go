@@ -686,11 +686,11 @@ func (v ListNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context)
 		"string_attribute":  basetypes.StringType{},
 	}
 
-	if v.state == attr.ValueStateNull {
+	if v.IsNull() {
 		return types.ObjectNull(attributeTypes), diags
 	}
 
-	if v.state == attr.ValueStateUnknown {
+	if v.IsUnknown() {
 		return types.ObjectUnknown(attributeTypes), diags
 	}
 
@@ -1230,11 +1230,11 @@ func (v MapNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) 
 		"string_attribute":  basetypes.StringType{},
 	}
 
-	if v.state == attr.ValueStateNull {
+	if v.IsNull() {
 		return types.ObjectNull(attributeTypes), diags
 	}
 
-	if v.state == attr.ValueStateUnknown {
+	if v.IsUnknown() {
 		return types.ObjectUnknown(attributeTypes), diags
 	}
 
@@ -1774,11 +1774,11 @@ func (v SetNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) 
 		"string_attribute":  basetypes.StringType{},
 	}
 
-	if v.state == attr.ValueStateNull {
+	if v.IsNull() {
 		return types.ObjectNull(attributeTypes), diags
 	}
 
-	if v.state == attr.ValueStateUnknown {
+	if v.IsUnknown() {
 		return types.ObjectUnknown(attributeTypes), diags
 	}
 
@@ -2318,11 +2318,11 @@ func (v SingleNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Contex
 		"string_attribute":  basetypes.StringType{},
 	}
 
-	if v.state == attr.ValueStateNull {
+	if v.IsNull() {
 		return types.ObjectNull(attributeTypes), diags
 	}
 
-	if v.state == attr.ValueStateUnknown {
+	if v.IsUnknown() {
 		return types.ObjectUnknown(attributeTypes), diags
 	}
 
@@ -2862,11 +2862,11 @@ func (v ListNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (ba
 		"string_attribute":  basetypes.StringType{},
 	}
 
-	if v.state == attr.ValueStateNull {
+	if v.IsNull() {
 		return types.ObjectNull(attributeTypes), diags
 	}
 
-	if v.state == attr.ValueStateUnknown {
+	if v.IsUnknown() {
 		return types.ObjectUnknown(attributeTypes), diags
 	}
 
@@ -3406,11 +3406,11 @@ func (v SetNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (bas
 		"string_attribute":  basetypes.StringType{},
 	}
 
-	if v.state == attr.ValueStateNull {
+	if v.IsNull() {
 		return types.ObjectNull(attributeTypes), diags
 	}
 
-	if v.state == attr.ValueStateUnknown {
+	if v.IsUnknown() {
 		return types.ObjectUnknown(attributeTypes), diags
 	}
 
@@ -3950,11 +3950,11 @@ func (v SingleNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (
 		"string_attribute":  basetypes.StringType{},
 	}
 
-	if v.state == attr.ValueStateNull {
+	if v.IsNull() {
 		return types.ObjectNull(attributeTypes), diags
 	}
 
-	if v.state == attr.ValueStateUnknown {
+	if v.IsUnknown() {
 		return types.ObjectUnknown(attributeTypes), diags
 	}
 
