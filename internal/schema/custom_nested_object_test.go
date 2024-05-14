@@ -1019,10 +1019,20 @@ func TestCustomNestedObjectValue_renderToObjectValue(t *testing.T) {
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "bool_attribute": basetypes.BoolType{},
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "bool_attribute": v.BoolAttribute,
 })
@@ -1072,10 +1082,20 @@ AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
 }
 
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "list_nested_attribute": basetypes.ListType{},
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "list_nested_attribute": listNestedAttribute,
 })
@@ -1125,10 +1145,20 @@ AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
 }
 
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "map_nested_attribute": basetypes.MapType{},
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "map_nested_attribute": mapNestedAttribute,
 })
@@ -1178,10 +1208,20 @@ AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
 }
 
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "set_nested_attribute": basetypes.SetType{},
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "set_nested_attribute": setNestedAttribute,
 })
@@ -1201,10 +1241,20 @@ return objVal, diags
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "type": basetypes.BoolType{},
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "type": v.ExampleType,
 })
@@ -1254,10 +1304,20 @@ AttrTypes: TypeValue{}.AttributeTypes(ctx),
 }
 
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "type": basetypes.ListType{},
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "type": exampleType,
 })
@@ -1295,12 +1355,22 @@ ElemType: types.BoolType,
 }), diags
 }
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "list_attribute": basetypes.ListType{
 ElemType: types.BoolType,
 },
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "list_attribute": listAttributeVal,
 })
@@ -1338,12 +1408,22 @@ ElemType: types.BoolType,
 }), diags
 }
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "type": basetypes.ListType{
 ElemType: types.BoolType,
 },
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "type": typeVal,
 })
@@ -1375,12 +1455,22 @@ AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
 }), diags
 }
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "object_attribute": basetypes.ObjectType{
 AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
 },
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "object_attribute": objectAttributeVal,
 })
@@ -1412,12 +1502,22 @@ AttrTypes: v.ExampleType.AttributeTypes(ctx),
 }), diags
 }
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 "type": basetypes.ObjectType{
 AttrTypes: v.ExampleType.AttributeTypes(ctx),
 },
-},
+}
+
+if v.state == attr.ValueStateNull {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.state == attr.ValueStateUnknown {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 "type": typeVal,
 })

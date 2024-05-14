@@ -1055,14 +1055,24 @@ func (v ListNestedAttributeAssocExtTypeValue) String() string {
 func (v ListNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -1397,10 +1407,20 @@ func (v ListNestedAttributeOneValue) String() string {
 func (v ListNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute": basetypes.BoolType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute": basetypes.BoolType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute": v.BoolAttribute,
 		})
@@ -1742,12 +1762,22 @@ func (v ListNestedAttributeThreeValue) ToObjectValue(ctx context.Context) (baset
 		)
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"list_nested_attribute_three_list_nested_attribute_one": basetypes.ListType{
-				ElemType: ListNestedAttributeThreeListNestedAttributeOneValue{}.Type(ctx),
-			},
+	attributeTypes := map[string]attr.Type{
+		"list_nested_attribute_three_list_nested_attribute_one": basetypes.ListType{
+			ElemType: ListNestedAttributeThreeListNestedAttributeOneValue{}.Type(ctx),
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"list_nested_attribute_three_list_nested_attribute_one": listNestedAttributeThreeListNestedAttributeOne,
 		})
@@ -2074,12 +2104,22 @@ func (v ListNestedAttributeThreeListNestedAttributeOneValue) ToObjectValue(ctx c
 		}), diags
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"list_attribute": basetypes.ListType{
-				ElemType: types.StringType,
-			},
+	attributeTypes := map[string]attr.Type{
+		"list_attribute": basetypes.ListType{
+			ElemType: types.StringType,
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"list_attribute": listAttributeVal,
 		})
@@ -2423,12 +2463,22 @@ func (v ListNestedAttributeTwoValue) ToObjectValue(ctx context.Context) (basetyp
 		)
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"list_nested_attribute_two_list_nested_attribute_one": basetypes.ListType{
-				ElemType: ListNestedAttributeTwoListNestedAttributeOneValue{}.Type(ctx),
-			},
+	attributeTypes := map[string]attr.Type{
+		"list_nested_attribute_two_list_nested_attribute_one": basetypes.ListType{
+			ElemType: ListNestedAttributeTwoListNestedAttributeOneValue{}.Type(ctx),
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"list_nested_attribute_two_list_nested_attribute_one": listNestedAttributeTwoListNestedAttributeOne,
 		})
@@ -2741,10 +2791,20 @@ func (v ListNestedAttributeTwoListNestedAttributeOneValue) String() string {
 func (v ListNestedAttributeTwoListNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute": basetypes.BoolType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute": basetypes.BoolType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute": v.BoolAttribute,
 		})
@@ -3247,14 +3307,24 @@ func (v MapNestedAttributeAssocExtTypeValue) String() string {
 func (v MapNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -3781,14 +3851,24 @@ func (v SetNestedAttributeAssocExtTypeValue) String() string {
 func (v SetNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -4315,14 +4395,24 @@ func (v SingleNestedAttributeAssocExtTypeValue) String() string {
 func (v SingleNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -4657,10 +4747,20 @@ func (v SingleNestedAttributeOneValue) String() string {
 func (v SingleNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute": basetypes.BoolType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute": basetypes.BoolType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute": v.BoolAttribute,
 		})
@@ -4994,12 +5094,22 @@ func (v SingleNestedAttributeThreeValue) ToObjectValue(ctx context.Context) (bas
 		)
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"single_nested_attribute_three_single_nested_attribute_one": basetypes.ObjectType{
-				AttrTypes: SingleNestedAttributeThreeSingleNestedAttributeOneValue{}.AttributeTypes(ctx),
-			},
+	attributeTypes := map[string]attr.Type{
+		"single_nested_attribute_three_single_nested_attribute_one": basetypes.ObjectType{
+			AttrTypes: SingleNestedAttributeThreeSingleNestedAttributeOneValue{}.AttributeTypes(ctx),
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"single_nested_attribute_three_single_nested_attribute_one": singleNestedAttributeThreeSingleNestedAttributeOne,
 		})
@@ -5326,12 +5436,22 @@ func (v SingleNestedAttributeThreeSingleNestedAttributeOneValue) ToObjectValue(c
 		}), diags
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"list_attribute": basetypes.ListType{
-				ElemType: types.StringType,
-			},
+	attributeTypes := map[string]attr.Type{
+		"list_attribute": basetypes.ListType{
+			ElemType: types.StringType,
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"list_attribute": listAttributeVal,
 		})
@@ -5667,12 +5787,22 @@ func (v SingleNestedAttributeTwoValue) ToObjectValue(ctx context.Context) (baset
 		)
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"single_nested_attribute_two_single_nested_attribute_one": basetypes.ObjectType{
-				AttrTypes: SingleNestedAttributeTwoSingleNestedAttributeOneValue{}.AttributeTypes(ctx),
-			},
+	attributeTypes := map[string]attr.Type{
+		"single_nested_attribute_two_single_nested_attribute_one": basetypes.ObjectType{
+			AttrTypes: SingleNestedAttributeTwoSingleNestedAttributeOneValue{}.AttributeTypes(ctx),
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"single_nested_attribute_two_single_nested_attribute_one": singleNestedAttributeTwoSingleNestedAttributeOne,
 		})
@@ -5985,10 +6115,20 @@ func (v SingleNestedAttributeTwoSingleNestedAttributeOneValue) String() string {
 func (v SingleNestedAttributeTwoSingleNestedAttributeOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute": basetypes.BoolType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute": basetypes.BoolType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute": v.BoolAttribute,
 		})
@@ -6491,14 +6631,24 @@ func (v ListNestedBlockAssocExtTypeValue) String() string {
 func (v ListNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -6833,10 +6983,20 @@ func (v ListNestedBlockOneValue) String() string {
 func (v ListNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute": basetypes.BoolType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute": basetypes.BoolType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute": v.BoolAttribute,
 		})
@@ -7245,15 +7405,25 @@ func (v ListNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetypes
 		}), diags
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"list_nested_block_three_list_nested_block_one": basetypes.ListType{
-				ElemType: ListNestedBlockThreeListNestedBlockOneValue{}.Type(ctx),
-			},
-			"object_attribute": basetypes.ObjectType{
-				AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
-			},
+	attributeTypes := map[string]attr.Type{
+		"list_nested_block_three_list_nested_block_one": basetypes.ListType{
+			ElemType: ListNestedBlockThreeListNestedBlockOneValue{}.Type(ctx),
 		},
+		"object_attribute": basetypes.ObjectType{
+			AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
+		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"list_nested_block_three_list_nested_block_one": listNestedBlockThreeListNestedBlockOne,
 			"object_attribute": objectAttributeVal,
@@ -7590,12 +7760,22 @@ func (v ListNestedBlockThreeListNestedBlockOneValue) ToObjectValue(ctx context.C
 		}), diags
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"list_attribute": basetypes.ListType{
-				ElemType: types.StringType,
-			},
+	attributeTypes := map[string]attr.Type{
+		"list_attribute": basetypes.ListType{
+			ElemType: types.StringType,
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"list_attribute": listAttributeVal,
 		})
@@ -7939,12 +8119,22 @@ func (v ListNestedBlockTwoValue) ToObjectValue(ctx context.Context) (basetypes.O
 		)
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"list_nested_block_two_list_nested_block_one": basetypes.ListType{
-				ElemType: ListNestedBlockTwoListNestedBlockOneValue{}.Type(ctx),
-			},
+	attributeTypes := map[string]attr.Type{
+		"list_nested_block_two_list_nested_block_one": basetypes.ListType{
+			ElemType: ListNestedBlockTwoListNestedBlockOneValue{}.Type(ctx),
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"list_nested_block_two_list_nested_block_one": listNestedBlockTwoListNestedBlockOne,
 		})
@@ -8257,10 +8447,20 @@ func (v ListNestedBlockTwoListNestedBlockOneValue) String() string {
 func (v ListNestedBlockTwoListNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute": basetypes.BoolType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute": basetypes.BoolType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute": v.BoolAttribute,
 		})
@@ -8763,14 +8963,24 @@ func (v SetNestedBlockAssocExtTypeValue) String() string {
 func (v SetNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -9297,14 +9507,24 @@ func (v SingleNestedBlockAssocExtTypeValue) String() string {
 func (v SingleNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -9639,10 +9859,20 @@ func (v SingleNestedBlockOneValue) String() string {
 func (v SingleNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute": basetypes.BoolType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute": basetypes.BoolType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute": v.BoolAttribute,
 		})
@@ -10051,15 +10281,25 @@ func (v SingleNestedBlockThreeValue) ToObjectValue(ctx context.Context) (basetyp
 		}), diags
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"object_attribute": basetypes.ObjectType{
-				AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
-			},
-			"single_nested_block_three_list_nested_block_one": basetypes.ListType{
-				ElemType: SingleNestedBlockThreeListNestedBlockOneValue{}.Type(ctx),
-			},
+	attributeTypes := map[string]attr.Type{
+		"object_attribute": basetypes.ObjectType{
+			AttrTypes: v.ObjectAttribute.AttributeTypes(ctx),
 		},
+		"single_nested_block_three_list_nested_block_one": basetypes.ListType{
+			ElemType: SingleNestedBlockThreeListNestedBlockOneValue{}.Type(ctx),
+		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"object_attribute": objectAttributeVal,
 			"single_nested_block_three_list_nested_block_one": singleNestedBlockThreeListNestedBlockOne,
@@ -10396,12 +10636,22 @@ func (v SingleNestedBlockThreeListNestedBlockOneValue) ToObjectValue(ctx context
 		}), diags
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"list_attribute": basetypes.ListType{
-				ElemType: types.StringType,
-			},
+	attributeTypes := map[string]attr.Type{
+		"list_attribute": basetypes.ListType{
+			ElemType: types.StringType,
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"list_attribute": listAttributeVal,
 		})
@@ -10737,12 +10987,22 @@ func (v SingleNestedBlockTwoValue) ToObjectValue(ctx context.Context) (basetypes
 		)
 	}
 
-	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"single_nested_block_two_single_nested_block_one": basetypes.ObjectType{
-				AttrTypes: SingleNestedBlockTwoSingleNestedBlockOneValue{}.AttributeTypes(ctx),
-			},
+	attributeTypes := map[string]attr.Type{
+		"single_nested_block_two_single_nested_block_one": basetypes.ObjectType{
+			AttrTypes: SingleNestedBlockTwoSingleNestedBlockOneValue{}.AttributeTypes(ctx),
 		},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
 		map[string]attr.Value{
 			"single_nested_block_two_single_nested_block_one": singleNestedBlockTwoSingleNestedBlockOne,
 		})
@@ -11055,10 +11315,20 @@ func (v SingleNestedBlockTwoSingleNestedBlockOneValue) String() string {
 func (v SingleNestedBlockTwoSingleNestedBlockOneValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute": basetypes.BoolType{},
+	}
+
+	if v.state == attr.ValueStateNull {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.state == attr.ValueStateUnknown {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute": basetypes.BoolType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute": v.BoolAttribute,
 		})
