@@ -1,0 +1,6 @@
+kind: ENHANCEMENTS
+body: 'schema: Added `Description`, `MarkdownDescription` and `DeprecationMessage`
+  fields to resource, data source and provider schemas'
+time: 2024-05-15T10:04:22.078016-04:00
+custom:
+  Issue: "112"

@@ -225,6 +225,7 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 		},
 		Description:         "\"Example\" resource",
 		MarkdownDescription: "\"Example\" _resource_",
+		DeprecationMessage:  "This resource is deprecated!",
 	}
 }
 

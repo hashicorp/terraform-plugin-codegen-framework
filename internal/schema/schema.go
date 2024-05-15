@@ -24,6 +24,7 @@ type GeneratorSchema struct {
 	Blocks              GeneratorBlocks
 	Description         *string
 	MarkdownDescription *string
+	DeprecationMessage  *string
 }
 
 func (g GeneratorSchema) Imports() (string, error) {
@@ -151,6 +152,11 @@ func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte
 		markdownDescription = *g.MarkdownDescription
 	}
 
+	deprecationMessage := ""
+	if g.DeprecationMessage != nil {
+		deprecationMessage = *g.DeprecationMessage
+	}
+
 	templateData := struct {
 		Name                string
 		PackageName         string
@@ -160,6 +166,7 @@ func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte
 		Description         string
 		Imports             string
 		MarkdownDescription string
+		DeprecationMessage  string
 	}{
 		Name:                FrameworkIdentifier(name).ToPascalCase(),
 		PackageName:         packageName,
@@ -169,6 +176,7 @@ func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte
 		Description:         description,
 		Imports:             imports,
 		MarkdownDescription: markdownDescription,
+		DeprecationMessage:  deprecationMessage,
 	}
 
 	t, err := template.New("schema").Parse(SchemaGoTemplate)

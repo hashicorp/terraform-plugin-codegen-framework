@@ -57,6 +57,7 @@ func (g GeneratorSchemas) Models() (map[string][]byte, error) {
 			Blocks:              schema.Blocks,
 			Description:         schema.Description,
 			MarkdownDescription: schema.MarkdownDescription,
+			DeprecationMessage:  schema.DeprecationMessage,
 		}
 
 		models, err := generatorSchema.Models(name)
