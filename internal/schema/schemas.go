@@ -53,8 +53,10 @@ func (g GeneratorSchemas) Models() (map[string][]byte, error) {
 		var buf bytes.Buffer
 
 		generatorSchema := GeneratorSchema{
-			Attributes: schema.Attributes,
-			Blocks:     schema.Blocks,
+			Attributes:          schema.Attributes,
+			Blocks:              schema.Blocks,
+			Description:         schema.Description,
+			MarkdownDescription: schema.MarkdownDescription,
 		}
 
 		models, err := generatorSchema.Models(name)

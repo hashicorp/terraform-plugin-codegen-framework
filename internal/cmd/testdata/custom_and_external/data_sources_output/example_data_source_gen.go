@@ -561,6 +561,8 @@ func ExampleDataSourceSchema(ctx context.Context) schema.Schema {
 				},
 			},
 		},
+		Description:         "\"Example\" datasource",
+		MarkdownDescription: "\"Example\" _datasource_",
 	}
 }
 

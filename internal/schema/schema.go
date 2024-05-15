@@ -20,8 +20,10 @@ import (
 )
 
 type GeneratorSchema struct {
-	Attributes GeneratorAttributes
-	Blocks     GeneratorBlocks
+	Attributes          GeneratorAttributes
+	Blocks              GeneratorBlocks
+	Description         *string
+	MarkdownDescription *string
 }
 
 func (g GeneratorSchema) Imports() (string, error) {
@@ -139,20 +141,34 @@ func (g GeneratorSchema) Schema(name, packageName, generatorType string) ([]byte
 		return nil, err
 	}
 
+	description := ""
+	if g.Description != nil {
+		description = *g.Description
+	}
+
+	markdownDescription := ""
+	if g.MarkdownDescription != nil {
+		markdownDescription = *g.MarkdownDescription
+	}
+
 	templateData := struct {
-		Name          string
-		PackageName   string
-		GeneratorType string
-		Attributes    string
-		Blocks        string
-		Imports       string
+		Name                string
+		PackageName         string
+		GeneratorType       string
+		Attributes          string
+		Blocks              string
+		Description         string
+		Imports             string
+		MarkdownDescription string
 	}{
-		Name:          FrameworkIdentifier(name).ToPascalCase(),
-		PackageName:   packageName,
-		GeneratorType: generatorType,
-		Attributes:    attributes,
-		Blocks:        blocks,
-		Imports:       imports,
+		Name:                FrameworkIdentifier(name).ToPascalCase(),
+		PackageName:         packageName,
+		GeneratorType:       generatorType,
+		Attributes:          attributes,
+		Blocks:              blocks,
+		Description:         description,
+		Imports:             imports,
+		MarkdownDescription: markdownDescription,
 	}
 
 	t, err := template.New("schema").Parse(SchemaGoTemplate)

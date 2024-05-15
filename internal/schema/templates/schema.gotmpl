@@ -25,5 +25,11 @@ return schema.Schema{
         {{- .Blocks}}
 	},
     {{- end}}
+    {{- if .Description }}
+	Description: {{printf "%q" .Description}},
+    {{- end}}
+    {{- if .MarkdownDescription }}
+	MarkdownDescription: {{printf "%q" .MarkdownDescription}},
+    {{- end}}
     }
 }

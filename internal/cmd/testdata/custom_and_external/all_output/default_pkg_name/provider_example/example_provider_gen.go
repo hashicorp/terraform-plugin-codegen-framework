@@ -204,6 +204,8 @@ func ExampleProviderSchema(ctx context.Context) schema.Schema {
 				},
 			},
 		},
+		Description:         "\"Example\" provider",
+		MarkdownDescription: "\"Example\" _provider_",
 	}
 }
 
