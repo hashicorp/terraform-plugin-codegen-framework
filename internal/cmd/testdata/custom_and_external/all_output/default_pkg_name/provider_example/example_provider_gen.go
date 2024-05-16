@@ -679,14 +679,24 @@ func (v ListNestedAttributeAssocExtTypeValue) String() string {
 func (v ListNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -1213,14 +1223,24 @@ func (v MapNestedAttributeAssocExtTypeValue) String() string {
 func (v MapNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -1747,14 +1767,24 @@ func (v SetNestedAttributeAssocExtTypeValue) String() string {
 func (v SetNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -2281,14 +2311,24 @@ func (v SingleNestedAttributeAssocExtTypeValue) String() string {
 func (v SingleNestedAttributeAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -2815,14 +2855,24 @@ func (v ListNestedBlockAssocExtTypeValue) String() string {
 func (v ListNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -3349,14 +3399,24 @@ func (v SetNestedBlockAssocExtTypeValue) String() string {
 func (v SetNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,
@@ -3883,14 +3943,24 @@ func (v SingleNestedBlockAssocExtTypeValue) String() string {
 func (v SingleNestedBlockAssocExtTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	attributeTypes := map[string]attr.Type{
+		"bool_attribute":    basetypes.BoolType{},
+		"float64_attribute": basetypes.Float64Type{},
+		"int64_attribute":   basetypes.Int64Type{},
+		"number_attribute":  basetypes.NumberType{},
+		"string_attribute":  basetypes.StringType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
 	objVal, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"bool_attribute":    basetypes.BoolType{},
-			"float64_attribute": basetypes.Float64Type{},
-			"int64_attribute":   basetypes.Int64Type{},
-			"number_attribute":  basetypes.NumberType{},
-			"string_attribute":  basetypes.StringType{},
-		},
+		attributeTypes,
 		map[string]attr.Value{
 			"bool_attribute":    v.BoolAttribute,
 			"float64_attribute": v.Float64Attribute,

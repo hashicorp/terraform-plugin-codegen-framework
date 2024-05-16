@@ -100,8 +100,7 @@ AttrTypes: v.{{$key.ToPrefixPascalCase $.Name}}.AttributeTypes(ctx),
 {{- end}}
 {{- end}}
 
-objVal, diags := types.ObjectValue(
-map[string]attr.Type{
+attributeTypes := map[string]attr.Type{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "Object"}}
 "{{$key}}": basetypes.ObjectType{
@@ -111,7 +110,18 @@ AttrTypes: v.{{$key.ToPrefixPascalCase $.Name}}.AttributeTypes(ctx),
 "{{$key}}": {{index $.AttrTypes $key}},
 {{- end}}
 {{- end}}
-},
+}
+
+if v.IsNull() {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.IsUnknown() {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
 map[string]attr.Value{
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested" "SingleNested"}}
