@@ -31,5 +31,8 @@ return schema.Schema{
     {{- if .MarkdownDescription }}
 	MarkdownDescription: {{printf "%q" .MarkdownDescription}},
     {{- end}}
+    {{- if .DeprecationMessage }}
+	DeprecationMessage: {{printf "%q" .DeprecationMessage}},
+    {{- end}}
     }
 }

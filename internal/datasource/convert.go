@@ -61,6 +61,8 @@ func NewSchema(d datasource.DataSource) (generatorschema.GeneratorSchema, error)
 
 	s.MarkdownDescription = d.Schema.MarkdownDescription
 
+	s.DeprecationMessage = d.Schema.DeprecationMessage
+
 	return s, nil
 }
 
