@@ -1,3 +1,4 @@
+version: 2
 project_name: tfplugingen-framework
 builds:
 - main: ./cmd/tfplugingen-framework
