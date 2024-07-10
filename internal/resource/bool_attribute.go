@@ -211,6 +211,10 @@ func (g GeneratorBoolAttribute) AttrType(name generatorschema.FrameworkIdentifie
 		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
 
+	if customType := g.CustomType.Type(); customType != "" {
+		return customType, nil
+	}
+
 	return "basetypes.BoolType{}", nil
 }
 
@@ -218,6 +222,10 @@ func (g GeneratorBoolAttribute) AttrType(name generatorschema.FrameworkIdentifie
 func (g GeneratorBoolAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sValue", name.ToPascalCase())
+	}
+
+	if customValueType := g.CustomType.ValueType(); customValueType != "" {
+		return customValueType
 	}
 
 	return "basetypes.BoolValue"
