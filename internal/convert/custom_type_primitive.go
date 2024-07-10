@@ -81,6 +81,17 @@ func (c CustomTypePrimitive) Schema() []byte {
 	return nil
 }
 
+func (c CustomTypePrimitive) Type() string {
+	switch {
+	case c.customType != nil:
+		return c.customType.Type
+	case c.associatedExternalType != nil:
+		return fmt.Sprintf("%sType{}", format.ToPascalCase(c.name))
+	}
+
+	return ""
+}
+
 func (c CustomTypePrimitive) ValueType() string {
 	switch {
 	case c.customType != nil:

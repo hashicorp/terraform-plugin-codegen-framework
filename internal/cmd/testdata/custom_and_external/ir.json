@@ -1300,6 +1300,62 @@
               ],
               "computed_optional_required": "optional"
             }
+          },
+          {
+            "name": "list_nested_nested_object_attribute_custom_type",
+            "list_nested": {
+              "computed_optional_required": "optional",
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "string_attribute",
+                    "string": {
+                      "computed_optional_required": "optional",
+                      "custom_type": {
+                        "import": {
+                          "alias": "stringalias",
+                          "path": "github.com/my_account_my_project/string"
+                        },
+                        "type": "my_string_type",
+                        "value_type": "my_string_value"
+                      }
+                    }
+                  },
+                  {
+                    "name": "string_attribute_assoc_ext_type",
+                    "string": {
+                      "computed_optional_required": "optional",
+                      "associated_external_type": {
+                        "import": {
+                          "path": "example.com/apisdk"
+                        },
+                        "type": "*apisdk.Type"
+                      }
+                    }
+                  },
+                  {
+                    "name": "string_attribute_custom_type_assoc_ext_type",
+                    "string": {
+                      "computed_optional_required": "optional",
+                      "custom_type": {
+                        "import": {
+                          "alias": "stringalias",
+                          "path": "github.com/my_account_my_project/string"
+                        },
+                        "type": "my_string_type",
+                        "value_type": "my_string_value"
+                      },
+                      "associated_external_type": {
+                        "import": {
+                          "path": "example.com/apisdk"
+                        },
+                        "type": "*apisdk.Type"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
           }
         ],
         "blocks": [
