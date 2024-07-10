@@ -1439,9 +1439,10 @@
         ],
         "deprecation_message": "This resource is deprecated!",
         "description": "\"Example\" resource",
-        "markdown_description": "\"Example\" _resource_"
+        "markdown_description": "\"Example\" _resource_",
+        "version": 123
       }
     }
   ],
-	"version": "0.1"
+  "version": "0.1"
 }

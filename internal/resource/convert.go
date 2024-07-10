@@ -63,6 +63,8 @@ func NewSchema(d resource.Resource) (generatorschema.GeneratorSchema, error) {
 
 	s.DeprecationMessage = d.Schema.DeprecationMessage
 
+	s.Version = d.Schema.Version
+
 	return s, nil
 }
 
