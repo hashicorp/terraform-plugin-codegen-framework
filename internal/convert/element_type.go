@@ -53,7 +53,7 @@ func (e ElementType) ElementType() []byte {
 		}
 	case e.elementType.Map != nil:
 		if e.elementType.Map.CustomType != nil {
-			b.WriteString(fmt.Sprintf(e.elementType.Map.CustomType.Type))
+			b.WriteString(e.elementType.Map.CustomType.Type)
 		} else {
 			b.WriteString(fmt.Sprintf("types.MapType{\nElemType: %s,\n}", NewElementType(e.elementType.Map.ElementType).ElementType()))
 		}
@@ -65,13 +65,13 @@ func (e ElementType) ElementType() []byte {
 		}
 	case e.elementType.Object != nil:
 		if e.elementType.Object.CustomType != nil {
-			b.WriteString(fmt.Sprintf(e.elementType.Object.CustomType.Type))
+			b.WriteString(e.elementType.Object.CustomType.Type)
 		} else {
 			b.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", NewObjectAttributeTypes(e.elementType.Object.AttributeTypes).AttributeTypes()))
 		}
 	case e.elementType.Set != nil:
 		if e.elementType.Set.CustomType != nil {
-			b.WriteString(fmt.Sprintf(e.elementType.Set.CustomType.Type))
+			b.WriteString(e.elementType.Set.CustomType.Type)
 		} else {
 			b.WriteString(fmt.Sprintf("types.SetType{\nElemType: %s,\n}", NewElementType(e.elementType.Set.ElementType).ElementType()))
 		}
