@@ -1,6 +1,6 @@
 module github.com/hashicorp/terraform-plugin-codegen-framework
 
-go 1.21
+go 1.22.7
 
 require (
 	github.com/google/go-cmp v0.6.0

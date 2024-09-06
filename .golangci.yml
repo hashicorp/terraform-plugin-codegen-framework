@@ -1,6 +1,8 @@
 issues:
   max-per-linter: 0
   max-same-issues: 0
+  exclude-dirs:
+    - output
 
 linters:
   disable-all: true
@@ -27,5 +29,3 @@ linters:
 run:
   # Prevent false positive timeouts in CI
   timeout: 5m
-  skip-dirs:
-    - output
