@@ -188,6 +188,15 @@
                                 "string": {}
                               }
                             }
+                          },
+                          {
+                            "name": "map_attribute",
+                            "map": {
+                              "computed_optional_required": "computed",
+                              "element_type": {
+                                "int64": {}
+                              }
+                            }
                           }
                         ]
                       }
