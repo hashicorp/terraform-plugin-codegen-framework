@@ -1325,7 +1325,7 @@ map[string]attr.Value{
 return objVal, diags
 }`),
 		},
-		"collection-type": {
+		"collection-type-list": {
 			name: "Example",
 			attributeTypes: map[string]string{
 				"list_attribute": "List",
@@ -1343,11 +1343,19 @@ return objVal, diags
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-listAttributeVal, d := types.ListValue(types.BoolType, v.ListAttribute.Elements())
-
+var listAttributeVal basetypes.ListValue
+switch {
+case v.ListAttribute.IsUnknown():
+listAttributeVal = types.ListUnknown(types.BoolType)
+case v.ListAttribute.IsNull():
+listAttributeVal = types.ListNull(types.BoolType)
+default:
+var d diag.Diagnostics
+listAttributeVal, d = types.ListValue(types.BoolType, v.ListAttribute.Elements())
 diags.Append(d...)
+}
 
-if d.HasError() {
+if diags.HasError() {
 return types.ObjectUnknown(map[string]attr.Type{
 "list_attribute": basetypes.ListType{
 ElemType: types.BoolType,
@@ -1378,6 +1386,128 @@ map[string]attr.Value{
 return objVal, diags
 }`),
 		},
+		"collection-type-map": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"map_attribute": "Map",
+			},
+			attrTypes: map[string]string{
+				"map_attribute": "basetypes.MapType{\nElemType: types.StringType,\n}",
+			},
+			collectionTypes: map[string]map[string]string{
+				"map_attribute": {
+					"ElementType":   "types.StringType",
+					"TypeValueFunc": "types.MapValue",
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+var mapAttributeVal basetypes.MapValue
+switch {
+case v.MapAttribute.IsUnknown():
+mapAttributeVal = types.MapUnknown(types.StringType)
+case v.MapAttribute.IsNull():
+mapAttributeVal = types.MapNull(types.StringType)
+default:
+var d diag.Diagnostics
+mapAttributeVal, d = types.MapValue(types.StringType, v.MapAttribute.Elements())
+diags.Append(d...)
+}
+
+if diags.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"map_attribute": basetypes.MapType{
+ElemType: types.StringType,
+},
+}), diags
+}
+
+attributeTypes := map[string]attr.Type{
+"map_attribute": basetypes.MapType{
+ElemType: types.StringType,
+},
+}
+
+if v.IsNull() {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.IsUnknown() {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
+map[string]attr.Value{
+"map_attribute": mapAttributeVal,
+})
+
+return objVal, diags
+}`),
+		},
+		"collection-type-set": {
+			name: "Example",
+			attributeTypes: map[string]string{
+				"set_attribute": "Set",
+			},
+			attrTypes: map[string]string{
+				"set_attribute": "basetypes.SetType{\nElemType: types.Int64Type,\n}",
+			},
+			collectionTypes: map[string]map[string]string{
+				"set_attribute": {
+					"ElementType":   "types.Int64Type",
+					"TypeValueFunc": "types.SetValue",
+				},
+			},
+			expected: []byte(`
+func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+var diags diag.Diagnostics
+
+var setAttributeVal basetypes.SetValue
+switch {
+case v.SetAttribute.IsUnknown():
+setAttributeVal = types.SetUnknown(types.Int64Type)
+case v.SetAttribute.IsNull():
+setAttributeVal = types.SetNull(types.Int64Type)
+default:
+var d diag.Diagnostics
+setAttributeVal, d = types.SetValue(types.Int64Type, v.SetAttribute.Elements())
+diags.Append(d...)
+}
+
+if diags.HasError() {
+return types.ObjectUnknown(map[string]attr.Type{
+"set_attribute": basetypes.SetType{
+ElemType: types.Int64Type,
+},
+}), diags
+}
+
+attributeTypes := map[string]attr.Type{
+"set_attribute": basetypes.SetType{
+ElemType: types.Int64Type,
+},
+}
+
+if v.IsNull() {
+return types.ObjectNull(attributeTypes), diags
+}
+
+if v.IsUnknown() {
+return types.ObjectUnknown(attributeTypes), diags
+}
+
+objVal, diags := types.ObjectValue(
+attributeTypes,
+map[string]attr.Value{
+"set_attribute": setAttributeVal,
+})
+
+return objVal, diags
+}`),
+		},
 		"collection-type-attribute-name-same-as-generated-method-name": {
 			name: "Example",
 			attributeTypes: map[string]string{
@@ -1396,11 +1526,19 @@ return objVal, diags
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-typeVal, d := types.ListValue(types.BoolType, v.ExampleType.Elements())
-
+var typeVal basetypes.ListValue
+switch {
+case v.ExampleType.IsUnknown():
+typeVal = types.ListUnknown(types.BoolType)
+case v.ExampleType.IsNull():
+typeVal = types.ListNull(types.BoolType)
+default:
+var d diag.Diagnostics
+typeVal, d = types.ListValue(types.BoolType, v.ExampleType.Elements())
 diags.Append(d...)
+}
 
-if d.HasError() {
+if diags.HasError() {
 return types.ObjectUnknown(map[string]attr.Type{
 "type": basetypes.ListType{
 ElemType: types.BoolType,

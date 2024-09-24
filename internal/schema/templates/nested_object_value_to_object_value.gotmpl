@@ -64,11 +64,26 @@ v.{{$key.ToPascalCase}}.Attributes(),
 {{- end}}
 {{- range $key, $value := .CollectionTypes }}
 
-{{$key.ToCamelCase}}Val, d := {{$value.TypeValueFunc}}({{$value.ElementType}}, v.{{$key.ToPrefixPascalCase $.Name}}.Elements())
+{{- $typesType := "List"}}
+{{- if eq $value.TypeValueFunc "types.MapValue"}}
+{{- $typesType = "Map"}}
+{{- else if eq $value.TypeValueFunc "types.SetValue"}}
+{{- $typesType = "Set"}}
+{{- end}}
 
+var {{$key.ToCamelCase}}Val basetypes.{{$typesType}}Value
+switch {
+case v.{{$key.ToPrefixPascalCase $.Name}}.IsUnknown():
+{{$key.ToCamelCase}}Val = types.{{$typesType}}Unknown({{$value.ElementType}})
+case v.{{$key.ToPrefixPascalCase $.Name}}.IsNull():
+{{$key.ToCamelCase}}Val = types.{{$typesType}}Null({{$value.ElementType}})
+default:
+var d diag.Diagnostics
+{{$key.ToCamelCase}}Val, d = {{$value.TypeValueFunc}}({{$value.ElementType}}, v.{{$key.ToPrefixPascalCase $.Name}}.Elements())
 diags.Append(d...)
+}
 
-if d.HasError() {
+if diags.HasError() {
 return types.ObjectUnknown(map[string]attr.Type{
 {{- range $attrTypeKey, $attrTypeValue := $.AttrTypes}}
 "{{$attrTypeKey}}": {{$attrTypeValue}},
