@@ -1,5 +1,0 @@
-kind: BUG FIXES
-body: Fix conversion of unknown or null collections to empty in nested objects
-time: 2024-09-21T11:39:38.074042155+03:00
-custom:
-    Issue: "161"

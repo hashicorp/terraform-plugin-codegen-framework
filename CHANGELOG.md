@@ -1,3 +1,9 @@
+## 0.4.1 (September 24, 2024)
+
+BUG FIXES:
+
+* Fix conversion of unknown or null collections to empty in nested objects ([#161](https://github.com/hashicorp/terraform-plugin-codegen-framework/issues/161))
+
 ## 0.4.0 (May 16, 2024)
 
 ENHANCEMENTS:
