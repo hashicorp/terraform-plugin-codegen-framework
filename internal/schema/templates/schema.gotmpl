@@ -34,5 +34,8 @@ return schema.Schema{
     {{- if .DeprecationMessage }}
 	DeprecationMessage: {{printf "%q" .DeprecationMessage}},
     {{- end}}
+    {{- if .Version }}
+	Version: {{.Version}},
+    {{- end}}
     }
 }
