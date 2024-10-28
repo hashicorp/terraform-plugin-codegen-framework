@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/utils"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/utils"
 )
 
 // WriteDataSources uses the packageName to determine whether to create a directory and package per data source.
