@@ -9,6 +9,8 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/utils"
 )
 
 // WriteDataSources uses the packageName to determine whether to create a directory and package per data source.
@@ -54,6 +56,10 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, customTypeValue, dat
 		if err != nil {
 			return err
 		}
+
+		filePath := f.Name()
+
+		utils.RemoveDuplicates(filePath)
 	}
 
 	return nil
@@ -102,6 +108,10 @@ func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resources
 		if err != nil {
 			return err
 		}
+
+		filePath := f.Name()
+
+		utils.RemoveDuplicates(filePath)
 	}
 
 	return nil
@@ -150,6 +160,10 @@ func WriteProviders(providersSchema, providerModels, customTypeValue, providerTo
 		if err != nil {
 			return err
 		}
+
+		filePath := f.Name()
+
+		utils.RemoveDuplicates(filePath)
 	}
 
 	return nil
@@ -170,6 +184,10 @@ func WriteBytes(outputFilePath string, outputBytes []byte, forceOverwrite bool) 
 	if err != nil {
 		return err
 	}
+
+	filePath := f.Name()
+
+	utils.RemoveDuplicates(filePath)
 
 	return nil
 }
