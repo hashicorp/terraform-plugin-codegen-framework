@@ -10,8 +10,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/convert"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func TestGeneratorDataSourceSchemas_ModelsBytes(t *testing.T) {

@@ -10,9 +10,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-codegen-spec/datasource"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/convert"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/model"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type GeneratorSingleNestedBlock struct {

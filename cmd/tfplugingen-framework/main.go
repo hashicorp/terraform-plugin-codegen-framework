@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/cli"
 	"github.com/mattn/go-colorable"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/cmd"
 )
 
 func main() {

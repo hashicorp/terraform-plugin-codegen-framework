@@ -10,7 +10,7 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/logging"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/logging"
 )
 
 // TODO: Field(s) could be added to handle end-user supplying their own templates to allow overriding.

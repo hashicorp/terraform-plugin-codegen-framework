@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/cli"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/cmd"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/cmd"
 )
 
 func TestGenerateResourcesCommand(t *testing.T) {

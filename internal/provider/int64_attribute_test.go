@@ -12,8 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/model"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/convert"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/model"
 )
 
 func TestGeneratorInt64Attribute_New(t *testing.T) {
