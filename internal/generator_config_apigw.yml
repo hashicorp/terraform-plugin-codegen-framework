@@ -1,0 +1,31 @@
+provider:
+  name: apigw
+  endpoint: "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"
+resources:
+  product:
+    dto_name: PostProductResponse
+    create:
+      path: /products
+      method: POST
+    read:
+      path: /products/{product-id}
+      method: GET
+    update:
+      - path: /products/{product-id}
+        method: PATCH
+    delete:
+      path: /products/{product-id}
+      method: DELETE
+    schema:
+      attributes:
+        overrides:
+          managed_rule:
+            description: test
+            computed_optional_required: optional
+data_sources:
+  api_key:
+    dto_name: ApiKeyDto
+    read:
+      path: /api-keys/{api-key-id}
+      method: GET
+      endpoint: PostApiKeys
