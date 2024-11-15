@@ -1,0 +1,321 @@
+{
+  "version": "0.1",
+  "provider": {
+    "name": "apigw",
+    "endpoint": "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"
+  },
+  "requests": [
+    {
+      "create": {
+        "request_body": {
+          "name": "",
+          "required": ["productName", "subscriptionCode"]
+        }
+      },
+      "read": {
+        "parameters": ["product-id"]
+      },
+      "update": [
+        {
+          "parameters": ["product-id"],
+          "request_body": {
+            "name": "",
+            "required": ["productName", "subscriptionCode"]
+          }
+        }
+      ],
+      "delete": {
+        "parameters": ["product-id"]
+      },
+      "name": "product"
+    }
+  ],
+  "resources": [
+    {
+      "name": "product",
+      "schema": {
+        "attributes": [
+          {
+            "name": "description",
+            "string": {
+              "computed_optional_required": "computed_optional",
+              "description": "Description\u003cbr\u003eLength(Min/Max): 0/300"
+            }
+          },
+          {
+            "name": "product_name",
+            "string": {
+              "computed_optional_required": "required",
+              "description": "Product Name\u003cbr\u003eLength(Min/Max): 0/100"
+            }
+          },
+          {
+            "name": "subscription_code",
+            "string": {
+              "computed_optional_required": "required",
+              "description": "Subscription Code\u003cbr\u003eAllowable values: PROTECTED, PUBLIC",
+              "validators": [
+                {
+                  "custom": {
+                    "imports": [
+                      {
+                        "path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+                      }
+                    ],
+                    "schema_definition": "stringvalidator.OneOf(\n\"PROTECTED\",\n\"PUBLIC\",\n)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "product",
+            "single_nested": {
+              "computed_optional_required": "computed",
+              "attributes": [
+                {
+                  "name": "action_name",
+                  "int64": {
+                    "computed_optional_required": "computed",
+                    "description": "Action Name"
+                  }
+                },
+                {
+                  "name": "disabled",
+                  "bool": {
+                    "computed_optional_required": "computed",
+                    "description": "Disabled"
+                  }
+                },
+                {
+                  "name": "domain_code",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Domain Code"
+                  }
+                },
+                {
+                  "name": "invoke_id",
+                  "list": {
+                    "computed_optional_required": "computed",
+                    "element_type": {
+                      "string": {}
+                    },
+                    "description": "Invoke Id"
+                  }
+                },
+                {
+                  "name": "is_deleted",
+                  "bool": {
+                    "computed_optional_required": "computed",
+                    "description": "Is Deleted"
+                  }
+                },
+                {
+                  "name": "is_published",
+                  "bool": {
+                    "computed_optional_required": "computed",
+                    "description": "Is Published"
+                  }
+                },
+                {
+                  "name": "mod_time",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Mod Time"
+                  }
+                },
+                {
+                  "name": "modifier",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Modifier"
+                  }
+                },
+                {
+                  "name": "permission",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Permission"
+                  }
+                },
+                {
+                  "name": "product_description",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Product Description"
+                  }
+                },
+                {
+                  "name": "product_id",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Product Id"
+                  }
+                },
+                {
+                  "name": "product_name",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Product Name"
+                  }
+                },
+                {
+                  "name": "subscription_code",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Subscription Code\u003cbr\u003eAllowable values: PROTECTED, PUBLIC"
+                  }
+                },
+                {
+                  "name": "tenant_id",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Tenant Id"
+                  }
+                },
+                {
+                  "name": "test_nested_array",
+                  "list_nested": {
+                    "computed_optional_required": "computed",
+                    "nested_object": {
+                      "attributes": [
+                        {
+                          "name": "kek",
+                          "single_nested": {
+                            "computed_optional_required": "computed",
+                            "attributes": [
+                              {
+                                "name": "arrrr",
+                                "list": {
+                                  "computed_optional_required": "computed",
+                                  "element_type": {
+                                    "string": {}
+                                  }
+                                }
+                              },
+                              {
+                                "name": "kkkkk",
+                                "string": {
+                                  "computed_optional_required": "computed",
+                                  "description": "kkk"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "newnew",
+                          "string": {
+                            "computed_optional_required": "computed",
+                            "description": "newenw"
+                          }
+                        }
+                      ]
+                    },
+                    "description": "test"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "productid",
+            "string": {
+              "computed_optional_required": "computed_optional",
+              "description": "product-id"
+            }
+          }
+        ]
+      },
+      "dto_name": "PostProductResponse"
+    }
+  ],
+  "datasources": [
+    {
+      "name": "api_key",
+      "schema": {
+        "attributes": [
+          {
+            "name": "apikeyid",
+            "string": {
+              "computed_optional_required": "required",
+              "description": "api-key-id"
+            }
+          },
+          {
+            "name": "api_key_description",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Api Key Description"
+            }
+          },
+          {
+            "name": "api_key_id",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Api Key Id"
+            }
+          },
+          {
+            "name": "api_key_name",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Api Key Name"
+            }
+          },
+          {
+            "name": "domain_code",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Domain Code"
+            }
+          },
+          {
+            "name": "is_enabled",
+            "bool": {
+              "computed_optional_required": "computed",
+              "description": "Is Enabled"
+            }
+          },
+          {
+            "name": "mod_time",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Mod Time"
+            }
+          },
+          {
+            "name": "modifier",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Modifier"
+            }
+          },
+          {
+            "name": "primary_key",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Primary Key"
+            }
+          },
+          {
+            "name": "secondary_key",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Secondary Key"
+            }
+          },
+          {
+            "name": "tenant_id",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Tenant Id"
+            }
+          }
+        ]
+      },
+      "dto_name": "ApiKeyDto"
+    }
+  ]
+}
