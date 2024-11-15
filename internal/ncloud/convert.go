@@ -10,17 +10,10 @@ import (
 
 // generate converter that convert openapi.json schema to terraform type
 func Gen_ConvertOAStoTFTypes(data resource.Attributes) (string, string, error) {
-	// var data resource.Attributes
 	var s string
 	var m string
-	// err := json.Unmarshal(jsonData, &data)
-	// if err != nil {
-	// return "", "", fmt.Errorf("error numb 1: %v", err)
-	// }
 
 	for _, val := range data {
-		// field := fieldValue.(map[string]interface{})
-		// fieldType := field["type"].(string)
 		n := val.Name
 		fmt.Println(n)
 
@@ -141,39 +134,5 @@ func GenObject(d resource.Attributes, pName string) string {
 			}},`, n, GenObject(val.SingleNested.Attributes, n)) + "\n"
 		}
 	}
-
-	// switch p.(type) {
-	// case string:
-	// 	for _, fieldValue := range p.(map[string]interface{}) {
-	// 		field := fieldValue.(map[string]interface{})
-	// 		fieldType := field["type"].(string)
-
-	// 		switch fieldType {
-	// 		case "string":
-	// 			s = s + fmt.Sprintf(`"%[1]s": types.StringType,`, pName) + "\n"
-	// 		case "boolean":
-	// 			s = s + fmt.Sprintf(`"%[1]s": types.BoolType,`, pName) + "\n"
-	// 		}
-	// 	}
-	// default:
-	// 	for n, fieldValue := range p.(map[string]interface{}) {
-	// 		field := fieldValue.(map[string]interface{})
-	// 		fieldType := field["type"].(string)
-
-	// 		switch fieldType {
-	// 		case "array":
-	// 			s = s + fmt.Sprintf(`
-	// 				"%[1]s": types.ListType{ElemType:
-	// 					%[2]s
-	// 				},`, pName, GenArray(fieldValue.(map[string]interface{})["items"].(map[string]interface{}), n)) + "\n"
-	// 		case "object":
-	// 			s = s + fmt.Sprintf(`
-	// 			"%[1]s": types.ObjectType{AttrTypes: map[string]attr.Type{
-	// 				%[2]s
-	// 			}},`, n, GenObject(fieldValue.(map[string]interface{})["properties"].(map[string]interface{}), n)) + "\n"
-	// 		}
-	// 	}
-	// }
-
 	return s
 }
