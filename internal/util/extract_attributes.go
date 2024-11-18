@@ -15,6 +15,7 @@ type RequestWithDTOName struct {
 	Read   RequestTypeWithDTOName `json:"read"`
 	Update []*spec.RequestType    `json:"update"`
 	Delete spec.RequestType       `json:"delete"`
+	Name   string                 `json:"name"`
 }
 
 type RequestTypeWithDTOName struct {
@@ -75,26 +76,26 @@ type NestedObjectType struct {
 	Attributes []resource.Attribute `json:"attributes"`
 }
 
-func ExtractAttribute(file string) (resource.Attributes, string, string) {
+func ExtractAttribute(file string) (resource.Attributes, string, string, error) {
 	jsonFile, err := os.Open(file)
 	if err != nil {
-		log.Fatalf("Failed to open JSON file: %v", err)
+		return nil, "", "", err
 	}
 	defer jsonFile.Close()
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
-		log.Fatalf("Failed to read JSON file: %v", err)
+		return nil, "", "", err
 	}
 
 	var result CodeSpec
 	if err := json.Unmarshal(byteValue, &result); err != nil {
-		log.Fatalf("Failed to unmarshal JSON: %v", err)
+		return nil, "", "", err
 	}
 
 	resources := result.Resources
 	if len(resources) == 0 {
-		log.Fatal("'resources' slice is empty")
+		return nil, "", "", err
 	}
 
 	// TODO - 여러 리소스 처리하기
@@ -102,10 +103,11 @@ func ExtractAttribute(file string) (resource.Attributes, string, string) {
 	dataSourceName := result.DataSources[0].Name
 	rawAttributes := resources[0].Schema.Attributes
 
-	return rawAttributes, resourceName, dataSourceName
+	return rawAttributes, resourceName, dataSourceName, nil
 }
 
-func ExtractRequest(file string) RequestWithDTOName {
+func ExtractRequest(file, resourceName string) RequestWithDTOName {
+
 	jsonFile, err := os.Open(file)
 	if err != nil {
 		log.Fatalf("Failed to open JSON req file: %v", err)
@@ -124,6 +126,12 @@ func ExtractRequest(file string) RequestWithDTOName {
 
 	if len(result.Requests) == 0 {
 		log.Fatalf("No requests found in the JSON file")
+	}
+
+	for _, val := range result.Requests {
+		if val.Name == resourceName {
+			return val
+		}
 	}
 
 	return result.Requests[0]
