@@ -88,6 +88,8 @@ func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resources
 
 		configPath := util.MustAbs("./internal/generator_config_apigw.yml")
 		codeSpecPath := util.MustAbs("./internal/example-code-spec.json")
+
+		// 추후 다중 자원 생성을 진행할 때 이곳에서 반복문을 수행해야하므로 resourceName을 이곳에서 선언한다.
 		resourceName := "product"
 
 		n := ncloud.New(configPath, codeSpecPath, resourceName)
@@ -143,11 +145,13 @@ func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resources
 			return err
 		}
 
+		// 기존 terraform에서 제공한 schema를 생성하는 부분
 		_, err = f.Write(customTypeValue[k])
 		if err != nil {
 			return err
 		}
 
+		// 현재 불필요
 		// _, err = f.Write(resourcesModels[k])
 		// if err != nil {
 		// 	return err

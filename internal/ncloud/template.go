@@ -10,6 +10,7 @@ import (
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/util"
 )
 
+// 필요 데이터들을 초기화 시 계산하고, 각 메서드 별 렌더링을 수행한다.
 type Template struct {
 	configPath       string
 	codeSpecPath     string
@@ -253,6 +254,7 @@ func (t *Template) RenderWait() []byte {
 	return b.Bytes()
 }
 
+// 초기화를 통해 필요한 데이터들을 미리 계산한다.
 func New(configPath, codeSpecPath, resourceName string) *Template {
 	t := &Template{
 		configPath:   configPath,
