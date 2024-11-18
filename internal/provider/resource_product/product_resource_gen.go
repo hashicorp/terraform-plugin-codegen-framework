@@ -2,7 +2,9 @@ package resource_product
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"log"
 	"os/exec"
 	"strings"
 	"time"
@@ -208,8 +210,127 @@ func (a *productResource) ImportState(ctx context.Context, req resource.ImportSt
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
+func (a *productResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "product"
+}
+
+func (a *productResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = ProductResourceSchema(ctx)
+}
+
+func (a *productResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan PostproductresponseModel
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	reqBody, err := json.Marshal(map[string]string{
+		"ProductName":      plan.ProductName.String(),
+		"SubscriptionCode": plan.SubscriptionCode.String(),
+	})
+	if err != nil {
+		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
+		return
+	}
+
+	tflog.Info(ctx, "CreateProduct reqParams="+string(reqBody))
+
+	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
+		return exec.Command("curl", "-X", "POST", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/",
+			"-H", "Content-Type: application/json",
+			"-H", "x-ncp-apigw-timestamp: "+timestamp,
+			"-H", "x-ncp-iam-access-key: "+accessKey,
+			"-H", "x-ncp-apigw-signature-v2: "+signature,
+			"-d", string(reqBody),
+		)
+	}
+
+	response, err := util.Request(execFunc, string(reqBody))
+	if err != nil {
+		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
+		return
+	}
+	if response == nil {
+		resp.Diagnostics.AddError("CREATING ERROR", "response invalid")
+		return
+	}
+
+	err = waitResourceCreated(ctx, plan)
+	if err != nil {
+		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
+		return
+	}
+
+	tflog.Info(ctx, "CreateProduct response="+common.MarshalUncheckedString(response))
+
+	plan = *getAndRefresh(resp.Diagnostics, plan)
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
+}
+
+func (a *productResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var plan PostproductresponseModel
+
+	resp.Diagnostics.Append(req.State.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	plan = *getAndRefresh(resp.Diagnostics, plan)
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
+}
+
+func (a *productResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan PostproductresponseModel
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	reqBody, err := json.Marshal(map[string]string{
+		"ProductName":      plan.ProductName.String(),
+		"SubscriptionCode": plan.SubscriptionCode.String(),
+	})
+	if err != nil {
+		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
+		return
+	}
+
+	tflog.Info(ctx, "UpdateProduct reqParams="+string(reqBody))
+
+	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
+		return exec.Command("curl", "-X", "PATCH", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"+plan.ProductId.String(),
+			"-H", "Content-Type: application/json",
+			"-H", "x-ncp-apigw-timestamp: "+timestamp,
+			"-H", "x-ncp-iam-access-key: "+accessKey,
+			"-H", "x-ncp-apigw-signature-v2: "+signature,
+			"-d", string(reqBody),
+		)
+	}
+
+	response, err := util.Request(execFunc, string(reqBody))
+	if err != nil {
+		resp.Diagnostics.AddError("UPDATING ERROR", err.Error())
+		return
+	}
+	if response == nil {
+		resp.Diagnostics.AddError("UPDATING ERROR", "response invalid")
+		return
+	}
+
+	tflog.Info(ctx, "UpdateProduct response="+common.MarshalUncheckedString(response))
+
+	plan = *getAndRefresh(resp.Diagnostics, plan)
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
+}
+
 func (a *productResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var plan Model
+	var plan PostproductresponseModel
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
@@ -217,7 +338,7 @@ func (a *productResource) Delete(ctx context.Context, req resource.DeleteRequest
 	}
 
 	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-X", "POST", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"+plan.Productid.String(),
+		return exec.Command("curl", "-X", "DELETE", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"+plan.ProductId.String(),
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -235,7 +356,7 @@ func (a *productResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	err = waitResourceDeleted(ctx)
+	err = waitResourceDeleted(ctx, plan)
 	if err != nil {
 		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
 		return
@@ -243,156 +364,49 @@ func (a *productResource) Delete(ctx context.Context, req resource.DeleteRequest
 
 	tflog.Info(ctx, "DeleteProduct response="+common.MarshalUncheckedString(response))
 
-	plan = *getAndRefresh(resp.Diagnostics)
+	plan = *getAndRefresh(resp.Diagnostics, plan)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 }
 
-func (a *productResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_api_key" //임의로 space 넣어줘야 함 (_)가 필요하기 때문
+type PostproductresponseModel struct {
+	Description      types.String `json:"description"`
+	ProductName      types.String `json:"product_name"`
+	SubscriptionCode types.String `json:"subscription_code"`
+	Product          types.Object `json:"product"`
+	Productid        types.String `json:"productid"`
 }
 
-func (a *productResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var plan Model
-
-	resp.Diagnostics.Append(req.State.Get(ctx, &plan)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	plan = *getAndRefresh(resp.Diagnostics)
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
-}
-
-func (a *productResource) Schema(context.Context, resource.SchemaRequest, *resource.SchemaResponse) {
-	panic("unimplemented") // WIP
-}
-
-func (a *productResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan Model
-
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	reqBody := fmt.Sprintf(`{
-		"isEnabled": %[1]s,
-		"apiKeyDescription": %[2]s,
-		"apiKeyName": %[3]s
-	}`, plan.Description, plan.Description, plan.Description) // request에만 들어가있는 애들의 경우 dto에 없으므로 추가 수정 필요.
-
-	tflog.Info(ctx, "UpdateProduct reqParams="+reqBody)
-
-	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-X", "PATCH", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"+plan.Productid.String(),
-			"-H", "Content-Type: application/json",
-			"-H", "x-ncp-apigw-timestamp: "+timestamp,
-			"-H", "x-ncp-iam-access-key: "+accessKey,
-			"-H", "x-ncp-apigw-signature-v2: "+signature,
-			"-d", reqBody,
-		)
-	}
-
-	response, err := util.Request(execFunc, reqBody)
-	if err != nil {
-		resp.Diagnostics.AddError("UPDATING ERROR", err.Error())
-		return
-	}
-	if response == nil {
-		resp.Diagnostics.AddError("UPDATING ERROR", "response invalid")
-		return
-	}
-
-	tflog.Info(ctx, "UpdateProduct response="+common.MarshalUncheckedString(response))
-
-	plan = *getAndRefresh(resp.Diagnostics)
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
-}
-
-func (a *productResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan Model
-
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	reqBody := fmt.Sprintf(`{
-			"apiKeyDescription": %[1]s,
-			"apiKeyName": %[2]s
-		}`, plan.Description, plan.Description) // 마찬가지로 수기 필요.
-
-	tflog.Info(ctx, "CreateProduct reqParams="+reqBody)
-
-	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-X", "POST", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/",
-			"-H", "Content-Type: application/json",
-			"-H", "x-ncp-apigw-timestamp: "+timestamp,
-			"-H", "x-ncp-iam-access-key: "+accessKey,
-			"-H", "x-ncp-apigw-signature-v2: "+signature,
-			"-d", reqBody,
-		)
-	}
-
-	response, err := util.Request(execFunc, reqBody)
-	if err != nil {
-		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
-		return
-	}
-	if response == nil {
-		resp.Diagnostics.AddError("CREATING ERROR", "response invalid")
-		return
-	}
-
-	err = waitResourceCreated(ctx)
-	if err != nil {
-		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
-		return
-	}
-
-	tflog.Info(ctx, "CreateProduct response="+common.MarshalUncheckedString(response))
-
-	plan = *getAndRefresh(resp.Diagnostics)
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
-}
-
-type Model struct {
-	Description       types.String `json:"description"`
-	Product_name      types.String `json:"product_name"`
-	Subscription_code types.String `json:"subscription_code"`
-	Product           types.Object `json:"product"`
-	Productid         types.String `json:"productid"`
-}
-
-func ConvertToFrameworkTypes(data map[string]interface{}) (*Model, error) {
-	var dto Model
+func ConvertToFrameworkTypes(data map[string]interface{}) (*PostproductresponseModel, error) {
+	var dto PostproductresponseModel
 
 	dto.Description = types.StringValue(data["description"].(string))
-	dto.Product_name = types.StringValue(data["product_name"].(string))
-	dto.Subscription_code = types.StringValue(data["subscription_code"].(string))
+	dto.ProductName = types.StringValue(data["product_name"].(string))
+	dto.SubscriptionCode = types.StringValue(data["subscription_code"].(string))
 
-	tempProduct := data["product"].([]interface{})
+	tempProduct := data["product"].(map[string]interface{})
+	convertedTempProduct, err := util.ConvertMapToObject(context.TODO(), tempProduct)
+	if err != nil {
+		log.Fatalf("ConvertMapToObject err: product", err)
+	}
+
 	dto.Product = diagOff(types.ObjectValueFrom, context.TODO(), types.ObjectType{AttrTypes: map[string]attr.Type{
-		"action_name":         types.Int64Type,
-		"disabled":            types.BoolType,
-		"domain_code":         types.StringType,
-		"invoke_id":           types.ListType{ElemType: types.StringType},
-		"is_deleted":          types.BoolType,
-		"is_published":        types.BoolType,
-		"mod_time":            types.StringType,
-		"modifier":            types.StringType,
-		"permission":          types.StringType,
-		"product_description": types.StringType,
-		"product_id":          types.StringType,
-		"product_name":        types.StringType,
-		"subscription_code":   types.StringType,
-		"tenant_id":           types.StringType,
+		"actionName":         types.Int64Type,
+		"disabled":           types.BoolType,
+		"domainCode":         types.StringType,
+		"invokeId":           types.ListType{ElemType: types.StringType},
+		"isDeleted":          types.BoolType,
+		"isPublished":        types.BoolType,
+		"modTime":            types.StringType,
+		"modifier":           types.StringType,
+		"permission":         types.StringType,
+		"productDescription": types.StringType,
+		"productId":          types.StringType,
+		"productName":        types.StringType,
+		"subscriptionCode":   types.StringType,
+		"tenantId":           types.StringType,
 
-		"test_nested_array": types.ListType{ElemType: types.ObjectType{AttrTypes: map[string]attr.Type{
+		"testNestedArray": types.ListType{ElemType: types.ObjectType{AttrTypes: map[string]attr.Type{
 
 			"kek": types.ObjectType{AttrTypes: map[string]attr.Type{
 				"arrrr": types.ListType{ElemType: types.StringType},
@@ -402,19 +416,61 @@ func ConvertToFrameworkTypes(data map[string]interface{}) (*Model, error) {
 			"newnew": types.StringType,
 		},
 		},
-		}}}.AttributeTypes(), tempProduct)
+		}}}.AttributeTypes(), convertedTempProduct)
 	dto.Productid = types.StringValue(data["productid"].(string))
 
 	return &dto, nil
 }
 
-func waitResourceCreated(ctx context.Context) error {
+func diagOff[V, T interface{}](input func(ctx context.Context, elementType T, elements any) (V, diag.Diagnostics), ctx context.Context, elementType T, elements any) V {
+	var emptyReturn V
+
+	v, diags := input(ctx, elementType, elements)
+
+	if diags.HasError() {
+		diags.AddError("REFRESHING ERROR", "invalid diagOff operation")
+		return emptyReturn
+	}
+
+	return v
+}
+
+func getAndRefresh(diagnostics diag.Diagnostics, plan PostproductresponseModel) *PostproductresponseModel {
+	getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
+		return exec.Command("curl", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"+plan.ProductId.String(),
+			"-H", "Content-Type: application/json",
+			"-H", "x-ncp-apigw-timestamp: "+timestamp,
+			"-H", "x-ncp-iam-access-key: "+accessKey,
+			"-H", "x-ncp-apigw-signature-v2: "+signature,
+		)
+	}
+
+	response, err := util.Request(getExecFunc, "")
+	if err != nil {
+		diagnostics.AddError("UPDATING ERROR", err.Error())
+		return nil
+	}
+	if response == nil {
+		diagnostics.AddError("UPDATING ERROR", "response invalid")
+		return nil
+	}
+
+	newPlan, err := ConvertToFrameworkTypes(response)
+	if err != nil {
+		diagnostics.AddError("CREATING ERROR", err.Error())
+		return nil
+	}
+
+	return newPlan
+}
+
+func waitResourceCreated(ctx context.Context, plan PostproductresponseModel) error {
 	stateConf := &retry.StateChangeConf{
 		Pending: []string{"CREATING"},
 		Target:  []string{"CREATED"},
 		Refresh: func() (interface{}, string, error) {
 			getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-				return exec.Command("curl", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/",
+				return exec.Command("curl", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"+plan.ProductId.String(),
 					"-H", "Content-Type: application/json",
 					"-H", "x-ncp-apigw-timestamp: "+timestamp,
 					"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -443,13 +499,13 @@ func waitResourceCreated(ctx context.Context) error {
 	return nil
 }
 
-func waitResourceDeleted(ctx context.Context) error {
+func waitResourceDeleted(ctx context.Context, plan PostproductresponseModel) error {
 	stateConf := &retry.StateChangeConf{
 		Pending: []string{"DELETING"},
 		Target:  []string{"DELETED"},
 		Refresh: func() (interface{}, string, error) {
 			getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-				return exec.Command("curl", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/",
+				return exec.Command("curl", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"+plan.ProductId.String(),
 					"-H", "Content-Type: application/json",
 					"-H", "x-ncp-apigw-timestamp: "+timestamp,
 					"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -477,61 +533,6 @@ func waitResourceDeleted(ctx context.Context) error {
 		return fmt.Errorf("error occured while waiting for resource to be deleted: %s", err)
 	}
 	return nil
-}
-
-func diagOff[V, T interface{}](input func(ctx context.Context, elementType T, elements any) (V, diag.Diagnostics), ctx context.Context, elementType T, elements any) V {
-	var emptyReturn V
-
-	v, diags := input(ctx, elementType, elements)
-
-	if diags.HasError() {
-		diags.AddError("REFRESING ERROR", "invalid diagOff operation")
-		return emptyReturn
-	}
-
-	return v
-}
-
-func getAndRefresh(diagnostics diag.Diagnostics) *Model {
-	getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys/",
-			"-H", "Content-Type: application/json",
-			"-H", "x-ncp-apigw-timestamp: "+timestamp,
-			"-H", "x-ncp-iam-access-key: "+accessKey,
-			"-H", "x-ncp-apigw-signature-v2: "+signature,
-		)
-	}
-
-	response, err := util.Request(getExecFunc, "")
-	if err != nil {
-		diagnostics.AddError("UPDATING ERROR", err.Error())
-		return nil
-	}
-	if response == nil {
-		diagnostics.AddError("UPDATING ERROR", "response invalid")
-		return nil
-	}
-	// WIP
-	// err = waitBucketCreated(ctx, o.config, plan.BucketName.String())
-	// if err != nil {
-	// 	resp.Diagnostics.AddError("CREATING ERROR", err.Error())
-	// 	return
-	// }
-	newPlan, err := ConvertToFrameworkTypes(response)
-	if err != nil {
-		diagnostics.AddError("CREATING ERROR", err.Error())
-		return nil
-	}
-
-	return newPlan
-}
-
-type ProductModel struct {
-	Description      types.String `tfsdk:"description"`
-	Product          ProductValue `tfsdk:"product"`
-	ProductName      types.String `tfsdk:"product_name"`
-	Productid        types.String `tfsdk:"productid"`
-	SubscriptionCode types.String `tfsdk:"subscription_code"`
 }
 
 type ProductType struct {

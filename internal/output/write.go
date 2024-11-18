@@ -86,6 +86,12 @@ func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resources
 
 		filename := fmt.Sprintf("%s_resource_gen.go", k)
 
+		configPath := util.MustAbs("./internal/generator_config_apigw.yml")
+		codeSpecPath := util.MustAbs("./internal/example-code-spec.json")
+		resourceName := "product"
+
+		n := ncloud.New(configPath, codeSpecPath, resourceName)
+
 		f, err := os.Create(filepath.Join(outputDir, dirName, filename))
 		if err != nil {
 			return err
@@ -97,12 +103,42 @@ func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resources
 		}
 
 		// CORE - 이곳에 코드를 추가한다.
-		_, err = f.Write(ncloud.Gen_Template())
+		_, err = f.Write(n.RenderInitial())
 		if err != nil {
 			return err
 		}
 
-		_, err = f.Write(resourcesModels[k])
+		_, err = f.Write(n.RenderCreate())
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(n.RenderRead())
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(n.RenderUpdate())
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(n.RenderDelete())
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(n.RenderModel())
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(n.RenderRefresh())
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(n.RenderWait())
 		if err != nil {
 			return err
 		}
@@ -111,6 +147,11 @@ func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resources
 		if err != nil {
 			return err
 		}
+
+		// _, err = f.Write(resourcesModels[k])
+		// if err != nil {
+		// 	return err
+		// }
 
 		// _, err = f.Write(resourcesToFrom[k])
 		// if err != nil {
