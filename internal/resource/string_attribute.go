@@ -211,6 +211,10 @@ func (g GeneratorStringAttribute) AttrType(name generatorschema.FrameworkIdentif
 		return fmt.Sprintf("%sType{}", name.ToPascalCase()), nil
 	}
 
+	if customType := g.CustomType.Type(); customType != "" {
+		return customType, nil
+	}
+
 	return "basetypes.StringType{}", nil
 }
 
@@ -218,6 +222,10 @@ func (g GeneratorStringAttribute) AttrType(name generatorschema.FrameworkIdentif
 func (g GeneratorStringAttribute) AttrValue(name generatorschema.FrameworkIdentifier) string {
 	if g.AssociatedExternalType != nil {
 		return fmt.Sprintf("%sValue", name.ToPascalCase())
+	}
+
+	if customValueType := g.CustomType.ValueType(); customValueType != "" {
+		return customValueType
 	}
 
 	return "basetypes.StringValue"
