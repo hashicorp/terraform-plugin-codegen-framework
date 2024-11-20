@@ -146,10 +146,10 @@ func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resources
 		}
 
 		// 기존 terraform에서 제공한 schema를 생성하는 부분
-		_, err = f.Write(customTypeValue[k])
-		if err != nil {
-			return err
-		}
+		// _, err = f.Write(customTypeValue[k])
+		// if err != nil {
+		// 	return err
+		// }
 
 		// 현재 불필요
 		// _, err = f.Write(resourcesModels[k])
