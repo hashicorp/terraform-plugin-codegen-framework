@@ -1,9 +1,11 @@
 provider:
   name: apigw
-  endpoint: "https://apigateway.apigw.ntruss.com/api/v1/api-keys/"
+  endpoint: "https://apigateway.apigw.ntruss.com/api/v1/api-keys"
 resources:
   product:
     dto_name: PostProductResponse
+    # 고유 식별자이자 추후 다른 요청에서 사용하게 되는 id를 응답의 어디에서 가져올 수 있는지 알려줌.
+    id: product.product_id
     create:
       path: /products
       method: POST
@@ -19,8 +21,20 @@ resources:
     schema:
       attributes:
         overrides:
-          managed_rule:
-            description: test
+          product.action_name:
+            description: action name
+          computed_optional_required: optional
+          disabled:
+            description: disabled
+            computed_optional_required: optional
+          permission:
+            description: permission
+            computed_optional_required: optional
+          product_description:
+            description: product description
+            computed_optional_required: optional
+          zone_code:
+            description: zone code
             computed_optional_required: optional
 data_sources:
   api_key:
