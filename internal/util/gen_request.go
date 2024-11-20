@@ -1,20 +1,15 @@
 package util
 
 import (
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os/exec"
 	"time"
 )
 
-func Request(command func(timestamp, accessKey, signature string) *exec.Cmd, requestBody string) (map[string]interface{}, error) {
-	timestamp := fmt.Sprint(time.Now().UnixNano() / int64(time.Millisecond))
-	accessKey := "hello world"
-	secretKey := "bye world"
-	signature := generateSignature(requestBody, secretKey)
+func Request(command func(timestamp, accessKey, signature string) *exec.Cmd, method, url, accessKey, secretKey, requestBody string) (map[string]interface{}, error) {
+	timestamp := fmt.Sprintf("%d", time.Now().UnixMilli())
+	signature := makeSignature(method, url, timestamp, accessKey, secretKey)
 
 	cmd := command(timestamp, accessKey, signature)
 
@@ -28,12 +23,10 @@ func Request(command func(timestamp, accessKey, signature string) *exec.Cmd, req
 		return nil, err
 	}
 
-	return result, nil
-}
+	// code 200 but error occurs
+	if result["error"] != nil {
+		return result, fmt.Errorf("error with code 200: %s", result["error"])
+	}
 
-// generateSignature creates a HMAC-SHA256 signature for the given data
-func generateSignature(data, secretKey string) string {
-	h := hmac.New(sha256.New, []byte(secretKey))
-	h.Write([]byte(data))
-	return base64.StdEncoding.EncodeToString(h.Sum(nil))
+	return result, nil
 }

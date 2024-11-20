@@ -1,6 +1,7 @@
 package util
 
 import (
+	"net/url"
 	"strings"
 	"text/template"
 	"unicode"
@@ -63,6 +64,15 @@ func FirstAlphabetToUpperCase(s string) string {
 	return s
 }
 
+func ExtractPath(s string) string {
+	parsedUrl, err := url.Parse(s)
+	if err != nil {
+		return ""
+	}
+
+	return parsedUrl.Path
+}
+
 func JoinStrings(sep string, items []string) string {
 	return strings.Join(items, sep)
 }
@@ -76,5 +86,6 @@ func CreateFuncMap() template.FuncMap {
 		"FirstAlphabet":            FirstAlphabet,
 		"FirstAlphabetToUpperCase": FirstAlphabetToUpperCase,
 		"JoinStrings":              JoinStrings,
+		"ExtractPath":              ExtractPath,
 	}
 }

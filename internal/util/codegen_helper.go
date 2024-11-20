@@ -2,12 +2,32 @@ package util
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
+	"strings"
+	"unicode"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
+
+// For curl request
+func makeSignature(method, url, timestamp, accessKey, secretKey string) string {
+	message := fmt.Sprintf("%s %s\n%s\n%s",
+		method,
+		url,
+		timestamp,
+		accessKey,
+	)
+
+	h := hmac.New(sha256.New, []byte(secretKey))
+	h.Write([]byte(message))
+
+	return base64.StdEncoding.EncodeToString(h.Sum(nil))
+}
 
 // Convert nested map structured json into terraform object
 func ConvertMapToObject(ctx context.Context, data map[string]interface{}) (types.Object, error) {
@@ -34,13 +54,10 @@ func convertInterfaceToAttr(ctx context.Context, value interface{}) (attr.Type, 
 	switch v := value.(type) {
 	case string:
 		return types.StringType, types.StringValue(v), nil
-
 	case float64:
 		return types.Int64Type, types.Int64Value(int64(v)), nil
-
 	case bool:
 		return types.BoolType, types.BoolValue(v), nil
-
 	case []interface{}:
 		if len(v) == 0 {
 			// Treat as array list in case of empty
@@ -48,7 +65,6 @@ func convertInterfaceToAttr(ctx context.Context, value interface{}) (attr.Type, 
 				types.ListValueMust(types.StringType, []attr.Value{}),
 				nil
 		}
-
 		// Determine type based on first element
 		elemType, _, err := convertInterfaceToAttr(ctx, v[0])
 		if err != nil {
@@ -78,10 +94,8 @@ func convertInterfaceToAttr(ctx context.Context, value interface{}) (attr.Type, 
 			return nil, nil, err
 		}
 		return objValue.Type(ctx), objValue, nil
-
 	case nil:
 		return types.StringType, types.StringNull(), nil
-
 	default:
 		return nil, nil, fmt.Errorf("unsupported type: %T", value)
 	}
@@ -91,11 +105,61 @@ func DiagOff[V, T interface{}](input func(ctx context.Context, elementType T, el
 	var emptyReturn V
 
 	v, diags := input(ctx, elementType, elements)
-	fmt.Println(diags)
+
 	if diags.HasError() {
 		diags.AddError("REFRESING ERROR", "invalid diagOff operation")
 		return emptyReturn
 	}
 
 	return v
+}
+
+// convertKeys recursively converts all keys in a map from camelCase to snake_case
+func ConvertKeys(input interface{}) interface{} {
+	switch v := input.(type) {
+	case map[string]interface{}:
+		newMap := make(map[string]interface{})
+		for key, value := range v {
+			// Convert the key to snake_case
+			newKey := camelToSnake(key)
+			// Recursively convert nested values
+			newMap[newKey] = ConvertKeys(value)
+		}
+		return newMap
+	case []interface{}:
+		newSlice := make([]interface{}, len(v))
+		for i, value := range v {
+			newSlice[i] = ConvertKeys(value)
+		}
+		return newSlice
+	default:
+		return v
+	}
+}
+
+func camelToSnake(s string) string {
+	var result strings.Builder
+	for i, r := range s {
+		if i > 0 && unicode.IsUpper(r) {
+			result.WriteRune('_')
+		}
+		result.WriteRune(unicode.ToLower(r))
+	}
+	return result.String()
+}
+
+func MakeIdGetter(target string) string {
+	s := "response"
+	parts := strings.Split(target, ".")
+
+	for idx, val := range parts {
+		if idx == len(parts)-1 {
+			s = s + fmt.Sprintf(`["%s"].(string)`, ToCamelCase(val))
+			continue
+		}
+
+		s = s + fmt.Sprintf(`["%s"].(map[string]interface{})`, ToCamelCase(val))
+	}
+
+	return s
 }
