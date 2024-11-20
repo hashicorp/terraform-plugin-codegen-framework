@@ -16,6 +16,7 @@ type RequestWithDTOName struct {
 	Update []*spec.RequestType    `json:"update"`
 	Delete spec.RequestType       `json:"delete"`
 	Name   string                 `json:"name"`
+	Id     string                 `json:"id"`
 }
 
 type RequestTypeWithDTOName struct {
@@ -76,34 +77,24 @@ type NestedObjectType struct {
 	Attributes []resource.Attribute `json:"attributes"`
 }
 
-func ExtractAttribute(file string) (resource.Attributes, string, string, error) {
+func ExtractAttribute(file string) *CodeSpec {
 	jsonFile, err := os.Open(file)
 	if err != nil {
-		return nil, "", "", err
+		return nil
 	}
 	defer jsonFile.Close()
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
-		return nil, "", "", err
+		return nil
 	}
 
 	var result CodeSpec
 	if err := json.Unmarshal(byteValue, &result); err != nil {
-		return nil, "", "", err
+		return nil
 	}
 
-	resources := result.Resources
-	if len(resources) == 0 {
-		return nil, "", "", err
-	}
-
-	// TODO - 여러 리소스 처리하기
-	resourceName := resources[0].Name
-	dataSourceName := result.DataSources[0].Name
-	rawAttributes := resources[0].Schema.Attributes
-
-	return rawAttributes, resourceName, dataSourceName, nil
+	return &result
 }
 
 func ExtractRequest(file, resourceName string) RequestWithDTOName {

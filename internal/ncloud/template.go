@@ -14,6 +14,7 @@ import (
 type Template struct {
 	configPath       string
 	codeSpecPath     string
+	providerName     string
 	resourceName     string
 	dtoName          string
 	model            string
@@ -29,6 +30,7 @@ type Template struct {
 	createMethod     string
 	createReqBody    string
 	updateReqBody    string
+	idGetter         string
 	funcMap          template.FuncMap
 }
 
@@ -41,8 +43,10 @@ func (t *Template) RenderInitial() []byte {
 	}
 
 	data := struct {
+		ProviderName string
 		ResourceName string
 	}{
+		ProviderName: t.providerName,
 		ResourceName: t.resourceName,
 	}
 
@@ -69,6 +73,8 @@ func (t *Template) RenderCreate() []byte {
 		CreateMethod     string
 		Endpoint         string
 		CreatePathParams string
+		// TODO - should derive it from yml
+		IdGetter string
 	}{
 		ResourceName:     t.resourceName,
 		DtoName:          t.dtoName,
@@ -76,6 +82,7 @@ func (t *Template) RenderCreate() []byte {
 		CreateMethod:     t.createMethod,
 		Endpoint:         t.endpoint,
 		CreatePathParams: t.createPathParams,
+		IdGetter:         t.idGetter,
 	}
 
 	err = createTemplate.ExecuteTemplate(&b, "Create", data)
@@ -95,11 +102,13 @@ func (t *Template) RenderRead() []byte {
 	}
 
 	data := struct {
-		ResourceName string
-		DtoName      string
+		ResourceName   string
+		DtoName        string
+		ReadPathParams string
 	}{
-		ResourceName: t.resourceName,
-		DtoName:      t.dtoName,
+		ResourceName:   t.resourceName,
+		DtoName:        t.dtoName,
+		ReadPathParams: t.readPathParams,
 	}
 
 	err = readTemplate.ExecuteTemplate(&b, "Read", data)
@@ -125,6 +134,7 @@ func (t *Template) RenderUpdate() []byte {
 		UpdateMethod     string
 		Endpoint         string
 		UpdatePathParams string
+		ReadPathParams   string
 	}{
 		ResourceName:     t.resourceName,
 		DtoName:          t.dtoName,
@@ -132,6 +142,7 @@ func (t *Template) RenderUpdate() []byte {
 		UpdateMethod:     t.updateMethod,
 		Endpoint:         t.endpoint,
 		UpdatePathParams: t.updatePathParams,
+		ReadPathParams:   t.readPathParams,
 	}
 
 	err = updateTemplate.ExecuteTemplate(&b, "Update", data)
@@ -156,12 +167,14 @@ func (t *Template) RenderDelete() []byte {
 		DeleteMethod     string
 		Endpoint         string
 		DeletePathParams string
+		IdGetter         string
 	}{
 		ResourceName:     t.resourceName,
 		DtoName:          t.dtoName,
 		DeleteMethod:     t.deleteMethod,
 		Endpoint:         t.endpoint,
 		DeletePathParams: t.deletePathParams,
+		IdGetter:         t.idGetter,
 	}
 
 	err = deleteTemplate.ExecuteTemplate(&b, "Delete", data)
@@ -266,10 +279,7 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 
 	t.funcMap = funcMap
 
-	attributes, _, _, err := util.ExtractAttribute(codeSpecPath)
-	if err != nil {
-		log.Fatalf("error occurred with ExtractAttribute: %v", err)
-	}
+	codeSpec := util.ExtractAttribute(codeSpecPath)
 
 	// Extract needed information
 	APIConfig, _, endpoint, err := util.ExtractConfig(configPath, resourceName)
@@ -277,7 +287,7 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 		log.Fatalf("error occurred with ExtractConfig: %v", err)
 	}
 
-	refreshLogic, model, err := Gen_ConvertOAStoTFTypes(attributes)
+	refreshLogic, model, err := Gen_ConvertOAStoTFTypes(codeSpec.Resources[0].Schema.Attributes)
 	if err != nil {
 		log.Fatalf("error occurred with Gen_ConvertOAStoTFTypes: %v", err)
 	}
@@ -286,14 +296,15 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 
 	var createReqBody string
 	for _, val := range targetResource.Create.RequestBody.Required {
-		createReqBody = createReqBody + fmt.Sprintf(`"%[1]s": plan.%[2]s.String(),`, util.FirstAlphabetToUpperCase(val), util.FirstAlphabetToUpperCase(val)) + "\n"
+		createReqBody = createReqBody + fmt.Sprintf(`"%[1]s": plan.%[2]s.String(),`, util.ToCamelCase(val), util.FirstAlphabetToUpperCase(val)) + "\n"
 	}
 
 	var updateReqBody string
 	for _, val := range targetResource.Update[0].RequestBody.Required {
-		updateReqBody = updateReqBody + fmt.Sprintf(`"%[1]s": plan.%[2]s.String(),`, util.FirstAlphabetToUpperCase(val), util.FirstAlphabetToUpperCase(val)) + "\n"
+		updateReqBody = updateReqBody + fmt.Sprintf(`"%[1]s": plan.%[2]s.String(),`, util.ToCamelCase(val), util.FirstAlphabetToUpperCase(val)) + "\n"
 	}
 
+	t.providerName = codeSpec.Provider["name"].(string)
 	t.dtoName = APIConfig.DtoName
 	t.model = model
 	t.refreshLogic = refreshLogic
@@ -307,6 +318,7 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 	t.createMethod = APIConfig.Create.Method
 	t.createReqBody = createReqBody
 	t.updateReqBody = updateReqBody
+	t.idGetter = util.MakeIdGetter(targetResource.Id)
 
 	return t
 }

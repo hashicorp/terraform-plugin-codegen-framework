@@ -40,7 +40,7 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) ImportState(ctx context.Contex
 }
 
 func (a *{{.ResourceName | ToCamelCase}}Resource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "{{.ResourceName}}"
+	resp.TypeName = req.ProviderTypeName + "_{{.ProviderName}}_{{.ResourceName}}"
 }
 
 func (a *{{.ResourceName | ToCamelCase}}Resource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
