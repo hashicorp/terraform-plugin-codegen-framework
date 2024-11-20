@@ -11,7 +11,7 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Read(ctx context.Context, req 
 		return
 	}
 
-	plan = *getAndRefresh(resp.Diagnostics, plan)
+	plan = *getAndRefresh(resp.Diagnostics, plan.{{.ReadPathParams | ToPascalCase}}.String())
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 }

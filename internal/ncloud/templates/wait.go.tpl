@@ -6,25 +6,28 @@
 // Endpoint string
 // ReadPathParams string, optional
 
-func waitResourceCreated(ctx context.Context, plan {{.DtoName | ToPascalCase}}Model) error {
+func waitResourceCreated(ctx context.Context, id string) error {
 	stateConf := &retry.StateChangeConf{
 		Pending: []string{"CREATING"},
 		Target:  []string{"CREATED"},
 		Refresh: func() (interface{}, string, error) {
 			getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-				return exec.Command("curl", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+plan.{{.ReadPathParams | ToPascalCase}}.String(){{end}},
+			return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+"/"+id{{end}},
+					"-H", "accept: application/json;charset=UTF-8",
 					"-H", "Content-Type: application/json",
 					"-H", "x-ncp-apigw-timestamp: "+timestamp,
 					"-H", "x-ncp-iam-access-key: "+accessKey,
 					"-H", "x-ncp-apigw-signature-v2: "+signature,
+					"-H", "cache-control: no-cache",
+					"-H", "pragma: no-cache",
 				)
 			}
 
-			response, err := util.Request(getExecFunc, "")
+			response, err := util.Request(getExecFunc, "{{.ReadMethod}}", "{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}+"/"+id{{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 			if err != nil {
 				return response, "CREATING", nil
 			}
-			if response == nil {
+			if response != nil {
 				return response, "CREATED", nil
 			}
 
@@ -41,21 +44,24 @@ func waitResourceCreated(ctx context.Context, plan {{.DtoName | ToPascalCase}}Mo
 	return nil
 }
 
-func waitResourceDeleted(ctx context.Context, plan {{.DtoName | ToPascalCase}}Model) error {
+func waitResourceDeleted(ctx context.Context, id string) error {
 	stateConf := &retry.StateChangeConf{
 		Pending: []string{"DELETING"},
 		Target:  []string{"DELETED"},
 		Refresh: func() (interface{}, string, error) {
 			getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-				return exec.Command("curl", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+plan.{{.ReadPathParams | ToPascalCase}}.String(){{end}},
+			return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+"/"+id{{end}},
+					"-H", "accept: application/json;charset=UTF-8",
 					"-H", "Content-Type: application/json",
 					"-H", "x-ncp-apigw-timestamp: "+timestamp,
 					"-H", "x-ncp-iam-access-key: "+accessKey,
 					"-H", "x-ncp-apigw-signature-v2: "+signature,
+					"-H", "cache-control: no-cache",
+					"-H", "pragma: no-cache",
 				)
 			}
 
-			response, err := util.Request(getExecFunc, "")
+			response, err := util.Request(getExecFunc, "{{.ReadMethod}}", "{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}+"/"+id{{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 			if response != nil {
 				return response, "DELETING", nil
 			}

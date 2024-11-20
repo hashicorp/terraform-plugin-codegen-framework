@@ -7,7 +7,7 @@
 // Endpoint string
 // ReadPathParams string, optional
 
-func ConvertToFrameworkTypes(data map[string]interface{}) (*{{.DtoName | ToPascalCase}}Model, error) {
+func ConvertToFrameworkTypes(data map[string]interface{}, rest []interface{}) (*{{.DtoName | ToPascalCase}}Model, error) {
 	var dto {{.DtoName | ToPascalCase}}Model
 
     {{.RefreshLogic}}
@@ -28,17 +28,19 @@ func diagOff[V, T interface{}](input func(ctx context.Context, elementType T, el
 	return v
 }
 
-func getAndRefresh(diagnostics diag.Diagnostics, plan {{.DtoName | ToPascalCase}}Model) *{{.DtoName | ToPascalCase}}Model {
+func getAndRefresh(diagnostics diag.Diagnostics, id string, rest ...interface{}) *{{.DtoName | ToPascalCase}}Model {
 	getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+plan.{{.ReadPathParams | ToPascalCase}}.String(){{end}},
+		return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+"/"+id{{end}},
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
 			"-H", "x-ncp-apigw-signature-v2: "+signature,
+			"-H", "cache-control: no-cache",
+			"-H", "pragma: no-cache",
 		)
 	}
 
-	response, err := util.Request(getExecFunc, "")
+	response, err := util.Request(getExecFunc, "{{.ReadMethod}}", "{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}+"/"+id{{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 	if err != nil {
 		diagnostics.AddError("UPDATING ERROR", err.Error())
 		return nil
@@ -48,7 +50,7 @@ func getAndRefresh(diagnostics diag.Diagnostics, plan {{.DtoName | ToPascalCase}
 		return nil
 	}
 
-	newPlan, err := ConvertToFrameworkTypes(response)
+	newPlan, err := ConvertToFrameworkTypes(util.ConvertKeys(response).(map[string]interface{}), rest)
 	if err != nil {
 		diagnostics.AddError("CREATING ERROR", err.Error())
 		return nil

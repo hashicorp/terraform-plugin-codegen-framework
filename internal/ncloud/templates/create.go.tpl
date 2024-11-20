@@ -24,19 +24,21 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Create(ctx context.Context, re
 		return
 	}
 
-	tflog.Info(ctx, "Create{{.ResourceName | ToPascalCase}} reqParams="+string(reqBody))
+	tflog.Info(ctx, "Create{{.ResourceName | ToPascalCase}} reqParams="+strings.Replace(string(reqBody), `\"`, "", -1))
 
 	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-X", "{{.CreateMethod}}", "{{.Endpoint}}"{{if .CreatePathParams}}+plan.{{.CreatePathParams | ToPascalCase}}.String(){{end}},
+		return exec.Command("curl", "-s", "-X", "{{.CreateMethod}}", "{{.Endpoint}}"{{if .CreatePathParams}}+plan.{{.CreatePathParams | ToPascalCase}}.String(){{end}},
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
 			"-H", "x-ncp-apigw-signature-v2: "+signature,
-			"-d", string(reqBody),
+			"-H", "cache-control: no-cache",
+			"-H", "pragma: no-cache",
+			"-d", strings.Replace(string(reqBody), `\"`, "", -1),
 		)
 	}
 
-	response, err := util.Request(execFunc, string(reqBody))
+	response, err := util.Request(execFunc, "{{.CreateMethod}}", "{{.Endpoint | ExtractPath}}"{{if .CreatePathParams}}+plan.{{.CreatePathParams | ToPascalCase}}.String(){{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), strings.Replace(string(reqBody), `\"`, "", -1))
 	if err != nil {
 		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
 		return
@@ -46,7 +48,7 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Create(ctx context.Context, re
 		return
 	}
 
-	err = waitResourceCreated(ctx, plan)
+	err = waitResourceCreated(ctx, {{.IdGetter}})
 	if err != nil {
 		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
 		return
@@ -54,7 +56,7 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Create(ctx context.Context, re
 
 	tflog.Info(ctx, "Create{{.ResourceName | ToPascalCase}} response="+common.MarshalUncheckedString(response))
 
-	plan = *getAndRefresh(resp.Diagnostics, plan)
+	plan = *getAndRefresh(resp.Diagnostics, {{.IdGetter}})
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 }
