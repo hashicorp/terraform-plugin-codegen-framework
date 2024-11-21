@@ -44,7 +44,7 @@ func Gen_ConvertOAStoTFTypes(data resource.Attributes) (string, string, error) {
 			temp%[1]s := data["%[2]s"].(map[string]interface{})
 			convertedTemp%[1]s, err := util.ConvertMapToObject(context.TODO(), temp%[1]s)
 			if err != nil {
-				log.Fatalf("ConvertMapToObject err: %v", err)
+				fmt.Println("ConvertMapToObject Error")
 			}
 
 			dto.%[1]s = diagOff(types.ObjectValueFrom, context.TODO(), types.ObjectType{AttrTypes: map[string]attr.Type{
