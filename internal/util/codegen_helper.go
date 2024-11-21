@@ -163,3 +163,7 @@ func MakeIdGetter(target string) string {
 
 	return s
 }
+
+func ClearDoubleQuote(s string) string {
+	return strings.Replace(strings.Replace(strings.Replace(s, "\\", "", -1), "\"", "", -1), `"`, "", -1)
+}
