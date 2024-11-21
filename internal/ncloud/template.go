@@ -296,12 +296,12 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 
 	var createReqBody string
 	for _, val := range targetResource.Create.RequestBody.Required {
-		createReqBody = createReqBody + fmt.Sprintf(`"%[1]s": plan.%[2]s.String(),`, util.ToCamelCase(val), util.FirstAlphabetToUpperCase(val)) + "\n"
+		createReqBody = createReqBody + fmt.Sprintf(`"%[1]s": util.ClearDoubleQuote(plan.%[2]s.String()),`, val, util.FirstAlphabetToUpperCase(val)) + "\n"
 	}
 
 	var updateReqBody string
 	for _, val := range targetResource.Update[0].RequestBody.Required {
-		updateReqBody = updateReqBody + fmt.Sprintf(`"%[1]s": plan.%[2]s.String(),`, util.ToCamelCase(val), util.FirstAlphabetToUpperCase(val)) + "\n"
+		updateReqBody = updateReqBody + fmt.Sprintf(`"%[1]s": util.ClearDoubleQuote(plan.%[2]s.String()),`, val, util.FirstAlphabetToUpperCase(val)) + "\n"
 	}
 
 	t.providerName = codeSpec.Provider["name"].(string)
@@ -311,7 +311,8 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 	t.endpoint = endpoint
 	t.deletePathParams = extractPathParams(APIConfig.Delete.Path)
 	t.updatePathParams = extractPathParams(APIConfig.Update[0].Path)
-	t.readPathParams = extractPathParams(APIConfig.Read.Path)
+	t.readPathParams = extractReadPathParams(APIConfig.Read.Path)
+	t.createPathParams = extractCreatePathParams(APIConfig.Create.Path)
 	t.deleteMethod = APIConfig.Delete.Method
 	t.updateMethod = APIConfig.Update[0].Method
 	t.readMethod = APIConfig.Read.Method
@@ -324,18 +325,83 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 }
 
 func extractPathParams(path string) string {
-	start := strings.Index(path, "{")
-	if start == -1 {
-		return ""
+	parts := strings.Split(path, "/")
+	s := ``
+
+	for _, val := range parts {
+
+		if len(val) < 1 {
+			continue
+		}
+
+		s = s + `+"/"+`
+
+		start := strings.Index(val, "{")
+
+		// if val doesn't wrapped with curly brace
+		if start == -1 {
+			s = s + fmt.Sprintf(`"%s"`, val)
+		} else {
+			s = s + fmt.Sprintf(`util.ClearDoubleQuote(plan.%s.String())`, util.PathToPascal(val))
+		}
 	}
-	end := strings.Index(path, "}")
-	if end == -1 {
-		return ""
+
+	return s
+}
+
+func extractCreatePathParams(path string) string {
+	parts := strings.Split(path, "/")
+	s := ``
+
+	for idx, val := range parts {
+
+		if len(val) < 1 {
+			continue
+		}
+
+		s = s + `+"/"+`
+
+		start := strings.Index(val, "{")
+
+		// if val doesn't wrapped with curly brace
+		if start == -1 {
+			s = s + fmt.Sprintf(`"%s"`, val)
+		} else {
+			if idx == len(parts)-1 {
+				s = s + `util.ClearDoubleQuote(plan.ID.String())`
+			} else {
+				s = s + fmt.Sprintf(`util.ClearDoubleQuote(plan.%s.String())`, util.PathToPascal(val))
+			}
+		}
 	}
 
-	param := path[start+1 : end]
+	return s
+}
 
-	param = strings.ReplaceAll(param, "-", "_")
+func extractReadPathParams(path string) string {
+	parts := strings.Split(path, "/")
+	s := ``
 
-	return param
+	for idx, val := range parts {
+		if len(val) < 1 {
+			continue
+		}
+
+		if idx == len(parts)-1 {
+			continue
+		}
+
+		s = s + `+"/"+`
+
+		start := strings.Index(val, "{")
+
+		// if val doesn't wrapped with curly brace
+		if start == -1 {
+			s = s + fmt.Sprintf(`"%s"`, val)
+		} else {
+			s = s + fmt.Sprintf(`util.ClearDoubleQuote(plan.%s.String())`, util.PathToPascal(val))
+		}
+	}
+
+	return s
 }
