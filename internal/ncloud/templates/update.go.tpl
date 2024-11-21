@@ -27,7 +27,7 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Update(ctx context.Context, re
 	tflog.Info(ctx, "Update{{.ResourceName | ToPascalCase}} reqParams="+strings.Replace(string(reqBody), `\"`, "", -1))
 
 	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-s", "-X", "{{.UpdateMethod}}", "{{.Endpoint}}"{{if .UpdatePathParams}}+plan.{{.UpdatePathParams | ToPascalCase}}.String(){{end}},
+		return exec.Command("curl", "-s", "-X", "{{.UpdateMethod}}", "{{.Endpoint}}"{{if .UpdatePathParams}}{{.UpdatePathParams}}{{end}},
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -38,7 +38,7 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Update(ctx context.Context, re
 		)
 	}
 
-	response, err := util.Request(execFunc, "{{.UpdateMethod}}", "{{.Endpoint | ExtractPath}}"{{if .UpdatePathParams}}+plan.{{.UpdatePathParams | ToPascalCase}}.String(){{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), strings.Replace(string(reqBody), `\"`, "", -1))
+	response, err := util.Request(execFunc, "{{.UpdateMethod}}", "{{.Endpoint | ExtractPath}}"{{if .UpdatePathParams}}{{.UpdatePathParams}}{{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), strings.Replace(string(reqBody), `\"`, "", -1))
 	if err != nil {
 		resp.Diagnostics.AddError("UPDATING ERROR", err.Error())
 		return
@@ -50,7 +50,7 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Update(ctx context.Context, re
 
 	tflog.Info(ctx, "Update{{.ResourceName | ToPascalCase}} response="+common.MarshalUncheckedString(response))
 
-	plan = *getAndRefresh(resp.Diagnostics, plan.{{.ReadPathParams | ToPascalCase}}.String())
+	plan = *getAndRefresh(resp.Diagnostics, plan.ID.String())
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 }

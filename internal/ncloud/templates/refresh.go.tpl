@@ -7,8 +7,10 @@
 // Endpoint string
 // ReadPathParams string, optional
 
-func ConvertToFrameworkTypes(data map[string]interface{}, rest []interface{}) (*{{.DtoName | ToPascalCase}}Model, error) {
+func ConvertToFrameworkTypes(data map[string]interface{}, id string, rest []interface{}) (*{{.DtoName | ToPascalCase}}Model, error) {
 	var dto {{.DtoName | ToPascalCase}}Model
+
+	dto.ID = types.StringValue(id)
 
     {{.RefreshLogic}}
 
@@ -30,7 +32,7 @@ func diagOff[V, T interface{}](input func(ctx context.Context, elementType T, el
 
 func getAndRefresh(diagnostics diag.Diagnostics, id string, rest ...interface{}) *{{.DtoName | ToPascalCase}}Model {
 	getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+"/"+id{{end}},
+		return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}{{.ReadPathParams}}+"/"+util.ClearDoubleQuote(id){{end}},
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -40,17 +42,13 @@ func getAndRefresh(diagnostics diag.Diagnostics, id string, rest ...interface{})
 		)
 	}
 
-	response, err := util.Request(getExecFunc, "{{.ReadMethod}}", "{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}+"/"+id{{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
-	if err != nil {
-		diagnostics.AddError("UPDATING ERROR", err.Error())
-		return nil
-	}
+	response, _ := util.Request(getExecFunc, "{{.ReadMethod}}", "{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}{{.ReadPathParams}}+"/"+util.ClearDoubleQuote(id){{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 	if response == nil {
 		diagnostics.AddError("UPDATING ERROR", "response invalid")
 		return nil
 	}
 
-	newPlan, err := ConvertToFrameworkTypes(util.ConvertKeys(response).(map[string]interface{}), rest)
+	newPlan, err := ConvertToFrameworkTypes(util.ConvertKeys(response).(map[string]interface{}), id, rest)
 	if err != nil {
 		diagnostics.AddError("CREATING ERROR", err.Error())
 		return nil

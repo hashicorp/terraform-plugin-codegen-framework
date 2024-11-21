@@ -15,7 +15,7 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Delete(ctx context.Context, re
 	}
 
 	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-s", "-X", "{{.DeleteMethod}}", "{{.Endpoint}}"{{if .DeletePathParams}}+plan.{{.DeletePathParams | ToPascalCase}}.String(){{end}},
+		return exec.Command("curl", "-s", "-X", "{{.DeleteMethod}}", "{{.Endpoint}}"{{.DeletePathParams}},
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -25,27 +25,17 @@ func (a *{{.ResourceName | ToCamelCase}}Resource) Delete(ctx context.Context, re
 		)
 	}
 
-	response, err := util.Request(execFunc, "{{.DeleteMethod}}", "{{.Endpoint | ExtractPath}}"{{if .DeletePathParams}}+plan.{{.DeletePathParams | ToPascalCase}}.String(){{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
+	_, err := util.Request(execFunc, "{{.DeleteMethod}}", "{{.Endpoint | ExtractPath}}"{{.DeletePathParams}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 	if err != nil {
 		resp.Diagnostics.AddError("DELETING ERROR", err.Error())
 		return
 	}
-	if response == nil {
-		resp.Diagnostics.AddError("DELETING ERROR", "response invalid")
-		return
-	}
 
-	err = waitResourceDeleted(ctx, {{.IdGetter}})
+	err = waitResourceDeleted(ctx, util.ClearDoubleQuote(plan.ID.String()))
 	if err != nil {
-		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
+		resp.Diagnostics.AddError("DELETING ERROR", err.Error())
 		return
 	}
-
-	tflog.Info(ctx, "Delete{{.ResourceName | ToPascalCase}} response="+common.MarshalUncheckedString(response))
-
-	plan = *getAndRefresh(resp.Diagnostics, {{.IdGetter}})
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 }
 
 {{ end }}

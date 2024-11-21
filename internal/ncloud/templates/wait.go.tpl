@@ -12,7 +12,7 @@ func waitResourceCreated(ctx context.Context, id string) error {
 		Target:  []string{"CREATED"},
 		Refresh: func() (interface{}, string, error) {
 			getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-			return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+"/"+id{{end}},
+			return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}",  "{{.Endpoint}}"{{if .ReadPathParams}}{{.ReadPathParams}}+"/"+util.ClearDoubleQuote(id){{end}},
 					"-H", "accept: application/json;charset=UTF-8",
 					"-H", "Content-Type: application/json",
 					"-H", "x-ncp-apigw-timestamp: "+timestamp,
@@ -23,7 +23,7 @@ func waitResourceCreated(ctx context.Context, id string) error {
 				)
 			}
 
-			response, err := util.Request(getExecFunc, "{{.ReadMethod}}", "{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}+"/"+id{{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
+			response, err := util.Request(getExecFunc, "{{.ReadMethod}}","{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}{{.ReadPathParams}}+"/"+util.ClearDoubleQuote(id){{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 			if err != nil {
 				return response, "CREATING", nil
 			}
@@ -50,7 +50,7 @@ func waitResourceDeleted(ctx context.Context, id string) error {
 		Target:  []string{"DELETED"},
 		Refresh: func() (interface{}, string, error) {
 			getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-			return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}+"/"+id{{end}},
+			return exec.Command("curl", "-s", "-X", "{{.ReadMethod}}", "{{.Endpoint}}"{{if .ReadPathParams}}{{.ReadPathParams}}+"/"+util.ClearDoubleQuote(id){{end}},
 					"-H", "accept: application/json;charset=UTF-8",
 					"-H", "Content-Type: application/json",
 					"-H", "x-ncp-apigw-timestamp: "+timestamp,
@@ -61,16 +61,12 @@ func waitResourceDeleted(ctx context.Context, id string) error {
 				)
 			}
 
-			response, err := util.Request(getExecFunc, "{{.ReadMethod}}", "{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}+"/"+id{{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
-			if response != nil {
-				return response, "DELETING", nil
-			}
-
-			if err != nil {
+			response, err := util.Request(getExecFunc, "{{.ReadMethod}}", "{{.Endpoint | ExtractPath}}"{{if .ReadPathParams}}{{.ReadPathParams}}+"/"+util.ClearDoubleQuote(id){{end}}, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
+			if response["error"] != nil {
 				return response, "DELETED", nil
 			}
 
-			return response, "DELETED", nil
+			return response, "DELETING", nil
 		},
 		Timeout:    conn.DefaultTimeout,
 		Delay:      5 * time.Second,
