@@ -37,8 +37,10 @@ type CodeSpec struct {
 }
 
 type Resource struct {
-	Name   string `json:"name"`
-	Schema Schema `json:"schema"`
+	Name    string `json:"name"`
+	Schema  Schema `json:"schema"`
+	DtoName string `json:"dto_name"`
+	Id      string `json:"id"`
 }
 
 type Schema struct {
