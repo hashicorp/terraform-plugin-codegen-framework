@@ -304,8 +304,17 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 		updateReqBody = updateReqBody + fmt.Sprintf(`"%[1]s": util.ClearDoubleQuote(plan.%[2]s.String()),`, val, util.FirstAlphabetToUpperCase(val)) + "\n"
 	}
 
+	var dtoName string
+	var id string
+	for _, resource := range codeSpec.Resources {
+		if resource.Name == resourceName {
+			dtoName = resource.DtoName
+			id = resource.Id
+		}
+	}
+
 	t.providerName = codeSpec.Provider["name"].(string)
-	t.dtoName = APIConfig.DtoName
+	t.dtoName = dtoName
 	t.model = model
 	t.refreshLogic = refreshLogic
 	t.endpoint = endpoint
@@ -319,7 +328,7 @@ func New(configPath, codeSpecPath, resourceName string) *Template {
 	t.createMethod = APIConfig.Create.Method
 	t.createReqBody = createReqBody
 	t.updateReqBody = updateReqBody
-	t.idGetter = util.MakeIdGetter(targetResource.Id)
+	t.idGetter = util.MakeIdGetter(id)
 
 	return t
 }
