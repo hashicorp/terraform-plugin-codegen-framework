@@ -5,6 +5,7 @@
 // Model string
 
 type {{.DtoName | ToPascalCase}}Model struct {
+    ID types.String `tfsdk:"id"`
     {{.Model}}
 }
 
