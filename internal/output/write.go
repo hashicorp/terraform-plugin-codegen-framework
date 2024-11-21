@@ -33,6 +33,11 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, customTypeValue, dat
 
 		filename := fmt.Sprintf("%s_data_source_gen.go", k)
 
+		configPath := util.MustAbs("./internal/generator_config_apigw.yml")
+		codeSpecPath := util.MustAbs("./internal/example-code-spec.json")
+
+		n := ncloud.New(configPath, codeSpecPath, k)
+
 		f, err := os.Create(filepath.Join(outputDir, dirName, filename))
 		if err != nil {
 			return err
@@ -43,20 +48,46 @@ func WriteDataSources(dataSourcesSchema, dataSourcesModels, customTypeValue, dat
 			return err
 		}
 
-		_, err = f.Write(dataSourcesModels[k])
+		// CORE - 이곳에 코드를 추가한다.
+		_, err = f.Write(n.RenderInitial())
 		if err != nil {
 			return err
 		}
 
-		_, err = f.Write(customTypeValue[k])
+		_, err = f.Write(n.RenderRead())
 		if err != nil {
 			return err
 		}
 
-		_, err = f.Write(dataSourcesToFrom[k])
+		_, err = f.Write(n.RenderModel())
 		if err != nil {
 			return err
 		}
+
+		_, err = f.Write(n.RenderRefresh())
+		if err != nil {
+			return err
+		}
+
+		_, err = f.Write(n.RenderWait())
+		if err != nil {
+			return err
+		}
+
+		// _, err = f.Write(dataSourcesModels[k])
+		// if err != nil {
+		// 	return err
+		// }
+
+		// _, err = f.Write(customTypeValue[k])
+		// if err != nil {
+		// 	return err
+		// }
+
+		// _, err = f.Write(dataSourcesToFrom[k])
+		// if err != nil {
+		// 	return err
+		// }
 
 		filePath := f.Name()
 
@@ -90,9 +121,8 @@ func WriteResources(resourcesSchema, resourcesModels, customTypeValue, resources
 		codeSpecPath := util.MustAbs("./internal/example-code-spec.json")
 
 		// 추후 다중 자원 생성을 진행할 때 이곳에서 반복문을 수행해야하므로 resourceName을 이곳에서 선언한다.
-		resourceName := "product"
 
-		n := ncloud.New(configPath, codeSpecPath, resourceName)
+		n := ncloud.New(configPath, codeSpecPath, k)
 
 		f, err := os.Create(filepath.Join(outputDir, dirName, filename))
 		if err != nil {
