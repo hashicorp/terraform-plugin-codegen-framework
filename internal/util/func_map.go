@@ -4,7 +4,6 @@ import (
 	"net/url"
 	"strings"
 	"text/template"
-	"unicode"
 
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -47,7 +46,12 @@ func ToLowerCase(s string) string {
 }
 
 func PathToPascal(s string) string {
-	return string(unicode.ToUpper(rune(s[0]))) + s[1:]
+	s = strings.Trim(s, "{}") // Remove curly braces if present
+	s = strings.ReplaceAll(s, "-", "")
+	if len(s) > 0 {
+		return strings.ToUpper(string(s[0])) + s[1:]
+	}
+	return s
 }
 
 func FirstAlphabet(s string) string {
