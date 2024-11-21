@@ -18,28 +18,44 @@ resources:
     delete:
       path: /products/{product-id}
       method: DELETE
-    schema:
-      attributes:
-        overrides:
-          product.action_name:
-            description: action name
-          computed_optional_required: optional
-          disabled:
-            description: disabled
-            computed_optional_required: optional
-          permission:
-            description: permission
-            computed_optional_required: optional
-          product_description:
-            description: product description
-            computed_optional_required: optional
-          zone_code:
-            description: zone code
-            computed_optional_required: optional
-data_sources:
-  api_key:
+  api_keys:
     dto_name: ApiKeyDto
+    # 고유 식별자이자 추후 다른 요청에서 사용하게 되는 id를 응답의 어디에서 가져올 수 있는지 알려줌.
+    id: api_key.api_key_id
+    create:
+      path: /api-keys
+      method: POST
     read:
       path: /api-keys/{api-key-id}
       method: GET
-      endpoint: PostApiKeys
+    update:
+      - path: /api-keys/{api-key-id}
+        method: PUT
+    delete:
+      path: /api-keys/{api-key-id}
+      method: DELETE
+    # schema:
+    #   attributes:
+    #     overrides:
+    #       product.action_name:
+    #         description: action name
+    #         computed_optional_required: computed_optional
+    #       disabled:
+    #         description: disabled
+    #         computed_optional_required: computed_optional
+    #       permission:
+    #         description: permission
+    #         computed_optional_required: computed_optional
+    #       product_description:
+    #         description: product description
+    #         computed_optional_required: computed_optional
+    #       zone_code:
+    #         description: zone code
+    #         computed_optional_required: computed_optional
+data_sources:
+  product:
+    dto_name: PostProductResponse
+    id: product.product_id
+    read:
+      path: /products/{product-id}
+      method: GET
