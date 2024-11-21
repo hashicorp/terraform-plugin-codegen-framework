@@ -1,6 +1,6 @@
 provider:
   name: apigw
-  endpoint: "https://apigateway.apigw.ntruss.com/api/v1/api-keys"
+  endpoint: "https://apigateway.apigw.ntruss.com/api/v1"
 resources:
   product:
     dto_name: PostProductResponse
