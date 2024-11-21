@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -28,6 +27,10 @@ import (
 func ProductResourceSchema(ctx context.Context) schema.Schema {
 	return schema.Schema{
 		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Optional: true,
+				Computed: true,
+			},
 			"description": schema.StringAttribute{
 				Optional:            true,
 				Computed:            true,
@@ -115,7 +118,8 @@ func ProductResourceSchema(ctx context.Context) schema.Schema {
 				Computed: true,
 			},
 			"product_name": schema.StringAttribute{
-				Required:            true,
+				Computed:            true,
+				Optional:            true,
 				Description:         "Product Name<br>Length(Min/Max): 0/100",
 				MarkdownDescription: "Product Name<br>Length(Min/Max): 0/100",
 			},
@@ -126,7 +130,8 @@ func ProductResourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "product-id",
 			},
 			"subscription_code": schema.StringAttribute{
-				Required:            true,
+				Computed:            true,
+				Optional:            true,
 				Description:         "Subscription Code<br>Allowable values: PROTECTED, PUBLIC",
 				MarkdownDescription: "Subscription Code<br>Allowable values: PROTECTED, PUBLIC",
 				Validators: []validator.String{
@@ -187,8 +192,8 @@ func (a *productResource) Create(ctx context.Context, req resource.CreateRequest
 	}
 
 	reqBody, err := json.Marshal(map[string]string{
-		"productname":      plan.ProductName.String(),
-		"subscriptioncode": plan.SubscriptionCode.String(),
+		"productName":      util.ClearDoubleQuote(plan.ProductName.String()),
+		"subscriptionCode": util.ClearDoubleQuote(plan.SubscriptionCode.String()),
 	})
 	if err != nil {
 		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
@@ -198,7 +203,7 @@ func (a *productResource) Create(ctx context.Context, req resource.CreateRequest
 	tflog.Info(ctx, "CreateProduct reqParams="+strings.Replace(string(reqBody), `\"`, "", -1))
 
 	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-s", "-X", "POST", "https://apigateway.apigw.ntruss.com/api/v1/api-keys",
+		return exec.Command("curl", "-s", "-X", "POST", "https://apigateway.apigw.ntruss.com/api/v1"+"/"+"products",
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -209,7 +214,7 @@ func (a *productResource) Create(ctx context.Context, req resource.CreateRequest
 		)
 	}
 
-	response, err := util.Request(execFunc, "POST", "/api/v1/api-keys", os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), strings.Replace(string(reqBody), `\"`, "", -1))
+	response, err := util.Request(execFunc, "POST", "/api/v1"+"/"+"products", os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), strings.Replace(string(reqBody), `\"`, "", -1))
 	if err != nil {
 		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
 		return
@@ -240,7 +245,7 @@ func (a *productResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
-	plan = *getAndRefresh(resp.Diagnostics, plan.ProductId.String())
+	plan = *getAndRefresh(resp.Diagnostics, plan.ID.String())
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 }
@@ -254,8 +259,8 @@ func (a *productResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 
 	reqBody, err := json.Marshal(map[string]string{
-		"productname":      plan.ProductName.String(),
-		"subscriptioncode": plan.SubscriptionCode.String(),
+		"productName":      util.ClearDoubleQuote(plan.ProductName.String()),
+		"subscriptionCode": util.ClearDoubleQuote(plan.SubscriptionCode.String()),
 	})
 	if err != nil {
 		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
@@ -265,7 +270,7 @@ func (a *productResource) Update(ctx context.Context, req resource.UpdateRequest
 	tflog.Info(ctx, "UpdateProduct reqParams="+strings.Replace(string(reqBody), `\"`, "", -1))
 
 	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-s", "-X", "PATCH", "https://apigateway.apigw.ntruss.com/api/v1/api-keys"+plan.ProductId.String(),
+		return exec.Command("curl", "-s", "-X", "PATCH", "https://apigateway.apigw.ntruss.com/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(plan.Productid.String()),
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -276,7 +281,7 @@ func (a *productResource) Update(ctx context.Context, req resource.UpdateRequest
 		)
 	}
 
-	response, err := util.Request(execFunc, "PATCH", "/api/v1/api-keys"+plan.ProductId.String(), os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), strings.Replace(string(reqBody), `\"`, "", -1))
+	response, err := util.Request(execFunc, "PATCH", "/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(plan.Productid.String()), os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), strings.Replace(string(reqBody), `\"`, "", -1))
 	if err != nil {
 		resp.Diagnostics.AddError("UPDATING ERROR", err.Error())
 		return
@@ -288,7 +293,7 @@ func (a *productResource) Update(ctx context.Context, req resource.UpdateRequest
 
 	tflog.Info(ctx, "UpdateProduct response="+common.MarshalUncheckedString(response))
 
-	plan = *getAndRefresh(resp.Diagnostics, plan.ProductId.String())
+	plan = *getAndRefresh(resp.Diagnostics, plan.ID.String())
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 }
@@ -302,7 +307,7 @@ func (a *productResource) Delete(ctx context.Context, req resource.DeleteRequest
 	}
 
 	execFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-s", "-X", "DELETE", "https://apigateway.apigw.ntruss.com/api/v1/api-keys"+plan.ProductId.String(),
+		return exec.Command("curl", "-s", "-X", "DELETE", "https://apigateway.apigw.ntruss.com/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(plan.Productid.String()),
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -312,30 +317,21 @@ func (a *productResource) Delete(ctx context.Context, req resource.DeleteRequest
 		)
 	}
 
-	response, err := util.Request(execFunc, "DELETE", "/api/v1/api-keys"+plan.ProductId.String(), os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
+	_, err := util.Request(execFunc, "DELETE", "/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(plan.Productid.String()), os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 	if err != nil {
 		resp.Diagnostics.AddError("DELETING ERROR", err.Error())
 		return
 	}
-	if response == nil {
-		resp.Diagnostics.AddError("DELETING ERROR", "response invalid")
-		return
-	}
 
-	err = waitResourceDeleted(ctx, response["product"].(map[string]interface{})["productId"].(string))
+	err = waitResourceDeleted(ctx, util.ClearDoubleQuote(plan.ID.String()))
 	if err != nil {
-		resp.Diagnostics.AddError("CREATING ERROR", err.Error())
+		resp.Diagnostics.AddError("DELETING ERROR", err.Error())
 		return
 	}
-
-	tflog.Info(ctx, "DeleteProduct response="+common.MarshalUncheckedString(response))
-
-	plan = *getAndRefresh(resp.Diagnostics, response["product"].(map[string]interface{})["productId"].(string))
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 }
 
 type PostproductresponseModel struct {
+	ID               types.String `tfsdk:"id"`
 	Description      types.String `tfsdk:"description"`
 	ProductName      types.String `tfsdk:"product_name"`
 	SubscriptionCode types.String `tfsdk:"subscription_code"`
@@ -343,8 +339,10 @@ type PostproductresponseModel struct {
 	Productid        types.String `tfsdk:"productid"`
 }
 
-func ConvertToFrameworkTypes(data map[string]interface{}, rest []interface{}) (*PostproductresponseModel, error) {
+func ConvertToFrameworkTypes(data map[string]interface{}, id string, rest []interface{}) (*PostproductresponseModel, error) {
 	var dto PostproductresponseModel
+
+	dto.ID = types.StringValue(id)
 
 	dto.Description = types.StringValue(data["description"].(string))
 	dto.ProductName = types.StringValue(data["product_name"].(string))
@@ -353,7 +351,7 @@ func ConvertToFrameworkTypes(data map[string]interface{}, rest []interface{}) (*
 	tempProduct := data["product"].(map[string]interface{})
 	convertedTempProduct, err := util.ConvertMapToObject(context.TODO(), tempProduct)
 	if err != nil {
-		log.Fatalf("ConvertMapToObject err: product", err)
+		fmt.Println("ConvertMapToObject Error")
 	}
 
 	dto.Product = diagOff(types.ObjectValueFrom, context.TODO(), types.ObjectType{AttrTypes: map[string]attr.Type{
@@ -392,7 +390,7 @@ func diagOff[V, T interface{}](input func(ctx context.Context, elementType T, el
 
 func getAndRefresh(diagnostics diag.Diagnostics, id string, rest ...interface{}) *PostproductresponseModel {
 	getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-		return exec.Command("curl", "-s", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys"+"/"+id,
+		return exec.Command("curl", "-s", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(id),
 			"-H", "Content-Type: application/json",
 			"-H", "x-ncp-apigw-timestamp: "+timestamp,
 			"-H", "x-ncp-iam-access-key: "+accessKey,
@@ -402,17 +400,13 @@ func getAndRefresh(diagnostics diag.Diagnostics, id string, rest ...interface{})
 		)
 	}
 
-	response, err := util.Request(getExecFunc, "GET", "/api/v1/api-keys"+"/"+id, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
-	if err != nil {
-		diagnostics.AddError("UPDATING ERROR", err.Error())
-		return nil
-	}
+	response, _ := util.Request(getExecFunc, "GET", "/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(id), os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 	if response == nil {
 		diagnostics.AddError("UPDATING ERROR", "response invalid")
 		return nil
 	}
 
-	newPlan, err := ConvertToFrameworkTypes(util.ConvertKeys(response).(map[string]interface{}), rest)
+	newPlan, err := ConvertToFrameworkTypes(util.ConvertKeys(response).(map[string]interface{}), id, rest)
 	if err != nil {
 		diagnostics.AddError("CREATING ERROR", err.Error())
 		return nil
@@ -427,7 +421,7 @@ func waitResourceCreated(ctx context.Context, id string) error {
 		Target:  []string{"CREATED"},
 		Refresh: func() (interface{}, string, error) {
 			getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-				return exec.Command("curl", "-s", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys"+"/"+id,
+				return exec.Command("curl", "-s", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(id),
 					"-H", "accept: application/json;charset=UTF-8",
 					"-H", "Content-Type: application/json",
 					"-H", "x-ncp-apigw-timestamp: "+timestamp,
@@ -438,7 +432,7 @@ func waitResourceCreated(ctx context.Context, id string) error {
 				)
 			}
 
-			response, err := util.Request(getExecFunc, "GET", "/api/v1/api-keys"+"/"+id, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
+			response, err := util.Request(getExecFunc, "GET", "/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(id), os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
 			if err != nil {
 				return response, "CREATING", nil
 			}
@@ -465,7 +459,7 @@ func waitResourceDeleted(ctx context.Context, id string) error {
 		Target:  []string{"DELETED"},
 		Refresh: func() (interface{}, string, error) {
 			getExecFunc := func(timestamp, accessKey, signature string) *exec.Cmd {
-				return exec.Command("curl", "-s", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1/api-keys"+"/"+id,
+				return exec.Command("curl", "-s", "-X", "GET", "https://apigateway.apigw.ntruss.com/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(id),
 					"-H", "accept: application/json;charset=UTF-8",
 					"-H", "Content-Type: application/json",
 					"-H", "x-ncp-apigw-timestamp: "+timestamp,
@@ -476,16 +470,12 @@ func waitResourceDeleted(ctx context.Context, id string) error {
 				)
 			}
 
-			response, err := util.Request(getExecFunc, "GET", "/api/v1/api-keys"+"/"+id, os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
-			if response != nil {
-				return response, "DELETING", nil
-			}
-
-			if err != nil {
+			response, err := util.Request(getExecFunc, "GET", "/api/v1"+"/"+"products"+"/"+util.ClearDoubleQuote(id), os.Getenv("NCLOUD_ACCESS_KEY"), os.Getenv("NCLOUD_SECRET_KEY"), "")
+			if response["error"] != nil {
 				return response, "DELETED", nil
 			}
 
-			return response, "DELETED", nil
+			return response, "DELETING", nil
 		},
 		Timeout:    conn.DefaultTimeout,
 		Delay:      5 * time.Second,
