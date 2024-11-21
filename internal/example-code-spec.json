@@ -2,9 +2,33 @@
   "version": "0.1",
   "provider": {
     "name": "apigw",
-    "endpoint": "https://apigateway.apigw.ntruss.com/api/v1/api-keys"
+    "endpoint": "https://apigateway.apigw.ntruss.com/api/v1"
   },
   "requests": [
+    {
+      "create": {
+        "request_body": {
+          "name": "",
+          "required": ["apiKeyName"]
+        }
+      },
+      "read": {
+        "parameters": ["api-key-id"]
+      },
+      "update": [
+        {
+          "parameters": ["api-key-id"],
+          "request_body": {
+            "name": "",
+            "required": ["apiKeyName", "isEnabled"]
+          }
+        }
+      ],
+      "delete": {
+        "parameters": ["api-key-id"]
+      },
+      "name": "api_keys"
+    },
     {
       "create": {
         "request_body": {
@@ -27,11 +51,174 @@
       "delete": {
         "parameters": ["product-id"]
       },
-      "name": "product",
-      "id": "product.product_id"
+      "name": "product"
     }
   ],
   "resources": [
+    {
+      "name": "api_keys",
+      "schema": {
+        "attributes": [
+          {
+            "name": "api_key_description",
+            "string": {
+              "computed_optional_required": "computed_optional",
+              "description": "Api Key Description\u003cbr\u003eLength(Min/Max): 0/50"
+            }
+          },
+          {
+            "name": "api_key_name",
+            "string": {
+              "computed_optional_required": "required",
+              "description": "Api Key Name\u003cbr\u003eLength(Min/Max): 0/20"
+            }
+          },
+          {
+            "name": "api_key",
+            "single_nested": {
+              "computed_optional_required": "computed",
+              "attributes": [
+                {
+                  "name": "api_key_description",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Api Key Description"
+                  }
+                },
+                {
+                  "name": "api_key_id",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Api Key Id"
+                  }
+                },
+                {
+                  "name": "api_key_name",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Api Key Name"
+                  }
+                },
+                {
+                  "name": "domain_code",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Domain Code"
+                  }
+                },
+                {
+                  "name": "is_enabled",
+                  "bool": {
+                    "computed_optional_required": "computed",
+                    "description": "Is Enabled"
+                  }
+                },
+                {
+                  "name": "mod_time",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Mod Time"
+                  }
+                },
+                {
+                  "name": "modifier",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Modifier"
+                  }
+                },
+                {
+                  "name": "primary_key",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Primary Key"
+                  }
+                },
+                {
+                  "name": "secondary_key",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Secondary Key"
+                  }
+                },
+                {
+                  "name": "tenant_id",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Tenant Id"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "api_key_id",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Api Key Id"
+            }
+          },
+          {
+            "name": "domain_code",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Domain Code"
+            }
+          },
+          {
+            "name": "is_enabled",
+            "bool": {
+              "computed_optional_required": "computed",
+              "description": "Is Enabled"
+            }
+          },
+          {
+            "name": "mod_time",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Mod Time"
+            }
+          },
+          {
+            "name": "modifier",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Modifier"
+            }
+          },
+          {
+            "name": "primary_key",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Primary Key"
+            }
+          },
+          {
+            "name": "secondary_key",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Secondary Key"
+            }
+          },
+          {
+            "name": "tenant_id",
+            "string": {
+              "computed_optional_required": "computed",
+              "description": "Tenant Id"
+            }
+          },
+          {
+            "name": "apikeyid",
+            "string": {
+              "computed_optional_required": "computed_optional",
+              "description": "api-key-id"
+            }
+          }
+        ]
+      },
+      "dto_name": "ApiKeyDto",
+      "id": "api_key.api_key_id"
+    },
     {
       "name": "product",
       "schema": {
@@ -184,94 +371,132 @@
           }
         ]
       },
-      "dto_name": "PostProductResponse"
+      "dto_name": "PostProductResponse",
+      "id": "product.product_id"
     }
   ],
   "datasources": [
     {
-      "name": "api_key",
+      "name": "product",
       "schema": {
         "attributes": [
           {
-            "name": "apikeyid",
+            "name": "productid",
             "string": {
               "computed_optional_required": "required",
-              "description": "api-key-id"
+              "description": "product-id"
             }
           },
           {
-            "name": "api_key_description",
-            "string": {
+            "name": "product",
+            "single_nested": {
               "computed_optional_required": "computed",
-              "description": "Api Key Description"
-            }
-          },
-          {
-            "name": "api_key_id",
-            "string": {
-              "computed_optional_required": "computed",
-              "description": "Api Key Id"
-            }
-          },
-          {
-            "name": "api_key_name",
-            "string": {
-              "computed_optional_required": "computed",
-              "description": "Api Key Name"
-            }
-          },
-          {
-            "name": "domain_code",
-            "string": {
-              "computed_optional_required": "computed",
-              "description": "Domain Code"
-            }
-          },
-          {
-            "name": "is_enabled",
-            "bool": {
-              "computed_optional_required": "computed",
-              "description": "Is Enabled"
-            }
-          },
-          {
-            "name": "mod_time",
-            "string": {
-              "computed_optional_required": "computed",
-              "description": "Mod Time"
-            }
-          },
-          {
-            "name": "modifier",
-            "string": {
-              "computed_optional_required": "computed",
-              "description": "Modifier"
-            }
-          },
-          {
-            "name": "primary_key",
-            "string": {
-              "computed_optional_required": "computed",
-              "description": "Primary Key"
-            }
-          },
-          {
-            "name": "secondary_key",
-            "string": {
-              "computed_optional_required": "computed",
-              "description": "Secondary Key"
-            }
-          },
-          {
-            "name": "tenant_id",
-            "string": {
-              "computed_optional_required": "computed",
-              "description": "Tenant Id"
+              "attributes": [
+                {
+                  "name": "action_name",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Action Name"
+                  }
+                },
+                {
+                  "name": "disabled",
+                  "bool": {
+                    "computed_optional_required": "computed",
+                    "description": "Disabled"
+                  }
+                },
+                {
+                  "name": "domain_code",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Domain Code"
+                  }
+                },
+                {
+                  "name": "invoke_id",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Invoke Id"
+                  }
+                },
+                {
+                  "name": "is_deleted",
+                  "bool": {
+                    "computed_optional_required": "computed",
+                    "description": "Is Deleted"
+                  }
+                },
+                {
+                  "name": "is_published",
+                  "bool": {
+                    "computed_optional_required": "computed",
+                    "description": "Is Published"
+                  }
+                },
+                {
+                  "name": "mod_time",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Mod Time"
+                  }
+                },
+                {
+                  "name": "modifier",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Modifier"
+                  }
+                },
+                {
+                  "name": "permission",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Permission"
+                  }
+                },
+                {
+                  "name": "product_description",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Product Description"
+                  }
+                },
+                {
+                  "name": "product_id",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Product Id"
+                  }
+                },
+                {
+                  "name": "product_name",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Product Name"
+                  }
+                },
+                {
+                  "name": "subscription_code",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Subscription Code\u003cbr\u003eAllowable values: PROTECTED, PUBLIC"
+                  }
+                },
+                {
+                  "name": "tenant_id",
+                  "string": {
+                    "computed_optional_required": "computed",
+                    "description": "Tenant Id"
+                  }
+                }
+              ]
             }
           }
         ]
       },
-      "dto_name": "ApiKeyDto"
+      "dto_name": "PostProductResponse",
+      "id": "product.product_id"
     }
   ]
 }
