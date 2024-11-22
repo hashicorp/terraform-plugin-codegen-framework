@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/provider"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	generatorschema "github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func NewSchemas(spec spec.Specification) (map[string]generatorschema.GeneratorSchema, error) {

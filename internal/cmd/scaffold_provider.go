@@ -14,9 +14,9 @@ import (
 
 	"github.com/hashicorp/cli"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/output"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/scaffold"
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/output"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/scaffold"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
 )
 
 type ScaffoldProviderCommand struct {

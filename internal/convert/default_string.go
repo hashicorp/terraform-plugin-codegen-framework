@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-codegen-spec/code"
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	generatorschema "github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
 )
 
 const defaultStringImport = "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"

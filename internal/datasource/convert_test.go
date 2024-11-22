@@ -11,8 +11,8 @@ import (
 	specschema "github.com/hashicorp/terraform-plugin-codegen-spec/schema"
 	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/convert"
-	generatorschema "github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/convert"
+	generatorschema "github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
 )
 
 func Test_NewSchemas(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"bytes"
 	"text/template"
 
-	"github.com/hashicorp/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
 )
 
 // DataSourceBytes will create scaffolding Go code bytes for a Terraform Plugin Framework data source
