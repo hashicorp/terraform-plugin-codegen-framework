@@ -7,20 +7,19 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 	"strings"
 
 	"github.com/hashicorp/cli"
-	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/format"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/input"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/logging"
-	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/output"
-	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/resource"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/ncloud"
+	ncloud_resource "github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/ncloud/resource"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/util"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/validate"
 )
 
@@ -119,7 +118,7 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context, logger *sl
 	}
 
 	// parse and validate IR against specification
-	spec, err := spec.Parse(ctx, src)
+	spec, err := ncloud.NcloudParse(ctx, src)
 	if err != nil {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
@@ -132,11 +131,11 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context, logger *sl
 	return nil
 }
 
-func generateResourceCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+func generateResourceCode(ctx context.Context, spec util.NcloudSpecification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
 	ctx = logging.SetPathInContext(ctx, "resource")
 
 	// convert IR to framework schema
-	s, err := resource.NewSchemas(spec)
+	s, err := ncloud_resource.NewSchemas(spec)
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
@@ -149,22 +148,22 @@ func generateResourceCode(ctx context.Context, spec spec.Specification, outputPa
 	}
 
 	// generate model code
-	models, err := g.Models()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// models, err := g.Models()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// generate custom type and value types code
-	customTypeValue, err := g.CustomTypeValue()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // generate custom type and value types code
+	// customTypeValue, err := g.CustomTypeValue()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// generate "expand" and "flatten" code
-	toFromFunctions, err := g.ToFromFunctions(ctx, logger)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // generate "expand" and "flatten" code
+	// toFromFunctions, err := g.ToFromFunctions(ctx, logger)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// format schema code
 	formattedSchemas, err := format.Format(schemas)
@@ -173,25 +172,38 @@ func generateResourceCode(ctx context.Context, spec spec.Specification, outputPa
 	}
 
 	// format model code
-	formattedModels, err := format.Format(models)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// formattedModels, err := format.Format(models)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// format custom type and value types code
-	formattedCustomTypeValue, err := format.Format(customTypeValue)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // format custom type and value types code
+	// formattedCustomTypeValue, err := format.Format(customTypeValue)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// format "expand" and "flatten" code
-	formattedToFromFunctions, err := format.Format(toFromFunctions)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // format "expand" and "flatten" code
+	// formattedToFromFunctions, err := format.Format(toFromFunctions)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// hashicorp's logic, commented
+	// err = output.WriteResources(formattedSchemas, formattedModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	// if err != nil {
+	// 	return fmt.Errorf("error writing Go code to output: %w", err)
+	// }
+
+	// --- NCLOUD Logic ---
 
 	// write code
-	err = output.WriteResources(formattedSchemas, formattedModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	err = ncloud.WriteNcloudResources(formattedSchemas, spec, outputPath, packageName)
+	if err != nil {
+		return fmt.Errorf("error writing Go code to output: %w", err)
+	}
+
+	err = ncloud.WriteNcloudResourceTests(formattedSchemas, spec, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}

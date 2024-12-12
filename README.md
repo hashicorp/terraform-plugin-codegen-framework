@@ -63,3 +63,88 @@ Refer to [Mozilla Public License v2.0](./LICENSE).
 ## Experimental Status
 
 By using the software in this repository (the "Software"), you acknowledge that: (1) the Software is still in development, may change, and has not been released as a commercial product by HashiCorp and is not currently supported in any way by HashiCorp; (2) the Software is provided on an "as-is" basis, and may include bugs, errors, or other issues; (3) the Software is NOT INTENDED FOR PRODUCTION USE, use of the Software may result in unexpected results, loss of data, or other unexpected results, and HashiCorp disclaims any and all liability resulting from use of the Software; and (4) HashiCorp reserves all rights to make all decisions about the features, functionality and commercial release (or non-release) of the Software, at any time and without any obligation or liability whatsoever.
+
+---
+
+## How to write down config.yaml (Ncloud Specific)
+
+### Provider
+
+* `name` (`string`): (Required) Name of service. will be set as an package name.
+* `endpoint` (`string`): (Required) Default endpoint of service.
+
+### Resources
+
+* `refresh_object_name` (`string`): (Optional) Name of schema object that represents resource. Will be used in refreshing logic. If not provided, default value is **READ response object**.
+  
+* `id` (`string`): (Required) How to access unique id of resource from **CREATE response object**.
+  
+* `import_state_override` (`string`): (Optional) Required attribute information to get state from import operation(READ).
+  
+* `Create, Read, Delete`: Commonly required attributes are as belows.
+  * `path` (`string`): (Required) Path of CREATE operation.
+  * `method` (`string`): (Required) Method of CREATE operation.
+  
+* `Update`: Update is type of array with objects. Need to write down path, method information in first element.
+
+### Example
+
+```yaml
+provider:
+  name: apigw
+  endpoint: "https://apigateway.apigw.ntruss.com/api/v1"
+resources:
+  product:
+    refresh_object_name: PostProductResponse
+    id: product.product_id
+    create:
+      path: /products
+      method: POST
+    read:
+      path: /products/{product-id}
+      method: GET
+    update:
+      - path: /products/{product-id}
+        method: PATCH
+    delete:
+      path: /products/{product-id}
+      method: DELETE
+  api_keys:
+    refresh_object_name: ApiKeyDto
+    id: api_key.api_key_id
+    create:
+      path: /api-keys
+      method: POST
+    read:
+      path: /api-keys/{api-key-id}
+      method: GET
+    update:
+      - path: /api-keys/{api-key-id}
+        method: PUT
+    delete:
+      path: /api-keys/{api-key-id}
+      method: DELETE
+  resource:
+    refresh_object_name: ResourceDto
+    id: resource.resourceId
+    import_state_override: product-id.api-id.resource-id
+    create:
+      path: /products/{product-id}/apis/{api-id}/resources
+      method: POST
+    read:
+      path: /products/{product-id}/apis/{api-id}/resources
+      method: GET
+    update:
+      - path: /products/{product-id}/apis/{api-id}/resources/{resource-id}
+        method: PATCH
+    delete:
+      path: /products/{product-id}/apis/{api-id}/resources/{resource-id}
+      method: DELETE
+data_sources:
+  product:
+    refresh_object_name: PostProductResponse
+    id: product.product_id
+    read:
+      path: /products/{product-id}
+      method: GET
+```

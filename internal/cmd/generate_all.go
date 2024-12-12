@@ -12,9 +12,9 @@ import (
 	"strings"
 
 	"github.com/hashicorp/cli"
-	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/input"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/ncloud"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/validate"
 )
 
@@ -113,7 +113,7 @@ func (cmd *GenerateAllCommand) runInternal(ctx context.Context, logger *slog.Log
 	}
 
 	// parse and validate IR against specification
-	spec, err := spec.Parse(ctx, src)
+	spec, err := ncloud.NcloudParse(ctx, src)
 	if err != nil {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}

@@ -13,14 +13,15 @@ import (
 	"strings"
 
 	"github.com/hashicorp/cli"
-	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/format"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/input"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/logging"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/ncloud"
+	ncloud_provider "github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/ncloud/provider"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/output"
-	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/provider"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/util"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/validate"
 )
 
@@ -119,7 +120,7 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context, logger *slo
 	}
 
 	// parse and validate IR against specification
-	spec, err := spec.Parse(ctx, src)
+	spec, err := ncloud.NcloudParse(ctx, src)
 	if err != nil {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
@@ -132,11 +133,11 @@ func (cmd *GenerateProviderCommand) runInternal(ctx context.Context, logger *slo
 	return nil
 }
 
-func generateProviderCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+func generateProviderCode(ctx context.Context, spec util.NcloudSpecification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
 	ctx = logging.SetPathInContext(ctx, "provider")
 
 	// convert IR to framework schema
-	s, err := provider.NewSchemas(spec)
+	s, err := ncloud_provider.NewSchemas(spec)
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}

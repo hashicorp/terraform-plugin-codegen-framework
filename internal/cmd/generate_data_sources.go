@@ -7,20 +7,19 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 	"strings"
 
 	"github.com/hashicorp/cli"
-	"github.com/hashicorp/terraform-plugin-codegen-spec/spec"
 
-	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/datasource"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/format"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/input"
-	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/logging"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/ncloud"
+	ncloud_datasource "github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/ncloud/datasource"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/output"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/schema"
+	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/util"
 	"github.com/NaverCloudPlatform/terraform-plugin-codegen-framework/internal/validate"
 )
 
@@ -119,7 +118,7 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *
 	}
 
 	// parse and validate IR against specification
-	spec, err := spec.Parse(ctx, src)
+	spec, err := ncloud.NcloudParse(ctx, src)
 	if err != nil {
 		return fmt.Errorf("error parsing IR JSON: %w", err)
 	}
@@ -132,11 +131,11 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *
 	return nil
 }
 
-func generateDataSourceCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
-	ctxWithPath := logging.SetPathInContext(ctx, "data_source")
+func generateDataSourceCode(ctx context.Context, spec util.NcloudSpecification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+	// ctxWithPath := logging.SetPathInContext(ctx, "data_source")
 
-	// convert IR to framework schema
-	s, err := datasource.NewSchemas(spec)
+	// convert IR to framework schemas
+	s, err := ncloud_datasource.NewSchemas(spec)
 	if err != nil {
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
@@ -148,23 +147,23 @@ func generateDataSourceCode(ctx context.Context, spec spec.Specification, output
 		return fmt.Errorf("error converting Plugin Framework schema to Go code: %w", err)
 	}
 
-	// generate model code
-	models, err := g.Models()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // generate model code
+	// models, err := g.Models()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// generate custom type and value types code
-	customTypeValue, err := g.CustomTypeValue()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // generate custom type and value types code
+	// customTypeValue, err := g.CustomTypeValue()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// generate "expand" and "flatten" code
-	toFromFunctions, err := g.ToFromFunctions(ctxWithPath, logger)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // generate "expand" and "flatten" code
+	// toFromFunctions, err := g.ToFromFunctions(ctxWithPath, logger)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// format schema code
 	formattedSchemas, err := format.Format(schemas)
@@ -172,26 +171,33 @@ func generateDataSourceCode(ctx context.Context, spec spec.Specification, output
 		return fmt.Errorf("error formatting Go code: %w", err)
 	}
 
-	// format model code
-	formattedModels, err := format.Format(models)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // format model code
+	// formattedModels, err := format.Format(models)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// format custom type and value types code
-	formattedCustomTypeValue, err := format.Format(customTypeValue)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // format custom type and value types code
+	// formattedCustomTypeValue, err := format.Format(customTypeValue)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// format "expand" and "flatten" code
-	formattedToFromFunctions, err := format.Format(toFromFunctions)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // format "expand" and "flatten" code
+	// formattedToFromFunctions, err := format.Format(toFromFunctions)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// --- NCLOUD Logic ---
 
 	// write code
-	err = output.WriteDataSources(formattedSchemas, formattedModels, formattedCustomTypeValue, formattedToFromFunctions, outputPath, packageName)
+	err = ncloud.WriteNcloudDataSources(formattedSchemas, spec, outputPath, packageName)
+	if err != nil {
+		return fmt.Errorf("error writing Go code to output: %w", err)
+	}
+
+	err = output.WriteDataSourceTests(formattedSchemas, spec, outputPath, packageName)
 	if err != nil {
 		return fmt.Errorf("error writing Go code to output: %w", err)
 	}
