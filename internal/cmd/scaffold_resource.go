@@ -80,7 +80,7 @@ func (cmd *ScaffoldResourceCommand) Help() string {
 	return strBuilder.String()
 }
 
-func (a *ScaffoldResourceCommand) Synopsis() string {
+func (cmd *ScaffoldResourceCommand) Synopsis() string {
 	return "Create scaffolding code for a Terraform Plugin Framework resource."
 }
 

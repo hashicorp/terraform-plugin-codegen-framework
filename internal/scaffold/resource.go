@@ -36,11 +36,13 @@ func ResourceBytes(resourceIdentifier schema.FrameworkIdentifier, packageName, t
 		NameSnake   string
 		NameCamel   string
 		NamePascal  string
+		NameKebab   string
 	}{
 		PackageName: packageName,
 		NameSnake:   string(resourceIdentifier),
 		NameCamel:   resourceIdentifier.ToCamelCase(),
 		NamePascal:  resourceIdentifier.ToPascalCase(),
+		NameKebab:   resourceIdentifier.ToKebabCase(),
 	}
 
 	err = t.Execute(&buf, templateData)
