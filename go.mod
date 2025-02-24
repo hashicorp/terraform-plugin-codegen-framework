@@ -3,7 +3,7 @@ module github.com/hashicorp/terraform-plugin-codegen-framework
 go 1.22.7
 
 require (
-	github.com/google/go-cmp v0.6.0
+	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/cli v1.1.7
 	github.com/hashicorp/terraform-plugin-codegen-spec v0.2.0
 	github.com/mattn/go-colorable v0.1.14
