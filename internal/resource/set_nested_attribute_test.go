@@ -683,7 +683,6 @@ func TestGeneratorSetNestedAttribute_New(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -1357,7 +1356,6 @@ func TestGeneratorSetNestedAttribute_Imports(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -1911,7 +1909,6 @@ Default: my_set_default.Default(),
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -1961,7 +1958,6 @@ func TestGeneratorSetNestedAttribute_ModelField(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()

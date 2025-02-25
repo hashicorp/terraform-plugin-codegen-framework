@@ -32,7 +32,6 @@ return t.Float64Type.Equal(other.Float64Type)
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -70,7 +69,6 @@ return "ExampleType"
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -105,7 +103,6 @@ func TestCustomFloat64Type_renderTypable(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -142,7 +139,6 @@ basetypes.Float64Type
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -186,7 +182,6 @@ Float64Value: in,
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -242,7 +237,6 @@ return boolValuable, nil
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -280,7 +274,6 @@ return ExampleValue{}
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -328,7 +321,6 @@ return v.Float64Value.Equal(other.Float64Value)
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -367,7 +359,6 @@ return ExampleType{
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -402,7 +393,6 @@ func TestCustomFloat64Value_renderValuable(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -439,7 +429,6 @@ basetypes.Float64Value
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()

@@ -1,5 +1,5 @@
 issues:
-  max-per-linter: 0
+  max-issues-per-linter: 0
   max-same-issues: 0
   exclude-dirs:
     - output
@@ -7,9 +7,9 @@ issues:
 linters:
   disable-all: true
   enable:
+    - copyloopvar
     - durationcheck
     - errcheck
-    - exportloopref
     - forcetypeassert
     - gofmt
     - gosimple
@@ -20,11 +20,11 @@ linters:
     - paralleltest
     - predeclared
     - staticcheck
-    - tenv
     - unconvert
     - unparam
     - unused
     - govet
+    - usetesting
 
 run:
   # Prevent false positive timeouts in CI

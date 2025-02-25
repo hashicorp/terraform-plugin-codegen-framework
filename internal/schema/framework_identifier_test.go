@@ -54,7 +54,7 @@ func TestFrameworkIdentifier_Valid(t *testing.T) {
 		},
 	}
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -95,7 +95,7 @@ func TestFrameworkIdentifier_ToCamelCase(t *testing.T) {
 		},
 	}
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -168,7 +168,7 @@ func TestFrameworkIdentifier_ToPrefixCamelCase(t *testing.T) {
 		},
 	}
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -209,7 +209,7 @@ func TestFrameworkIdentifier_ToPascalCase(t *testing.T) {
 		},
 	}
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -282,7 +282,7 @@ func TestFrameworkIdentifier_ToPrefixPascalCase(t *testing.T) {
 		},
 	}
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 

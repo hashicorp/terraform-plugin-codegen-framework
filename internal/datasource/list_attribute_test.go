@@ -558,7 +558,6 @@ func TestGeneratorListAttribute_New(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -1001,7 +1000,6 @@ func TestGeneratorListAttribute_Imports(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -1593,7 +1591,6 @@ ElementType: stringCustomType,
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -1685,7 +1682,6 @@ func TestGeneratorListAttribute_ModelField(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()

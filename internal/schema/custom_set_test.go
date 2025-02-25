@@ -32,7 +32,6 @@ return t.SetType.Equal(other.SetType)
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -70,7 +69,6 @@ return "ExampleType"
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -105,7 +103,6 @@ func TestCustomSetType_renderTypable(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -142,7 +139,6 @@ basetypes.SetType
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -186,7 +182,6 @@ SetValue: in,
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -242,7 +237,6 @@ return listValuable, nil
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -280,7 +274,6 @@ return ExampleValue{}
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -326,7 +319,6 @@ return v.SetValue.Equal(other.SetValue)
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -370,7 +362,6 @@ ElemType: types.BoolType,
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -407,7 +398,6 @@ func TestCustomSetValue_renderValuable(t *testing.T) {
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -446,7 +436,6 @@ basetypes.SetValue
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
