@@ -370,7 +370,6 @@ state: attr.ValueStateKnown,
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -929,7 +928,6 @@ String: typeFieldString.ValueStringPointer(),
 	}
 
 	for name, testCase := range testCases {
-		name, testCase := name, testCase
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
