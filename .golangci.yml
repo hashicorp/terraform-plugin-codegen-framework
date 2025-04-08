@@ -1,18 +1,12 @@
-issues:
-  max-issues-per-linter: 0
-  max-same-issues: 0
-  exclude-dirs:
-    - output
-
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
     - copyloopvar
     - durationcheck
     - errcheck
     - forcetypeassert
-    - gofmt
-    - gosimple
+    - govet
     - ineffassign
     - makezero
     - misspell
@@ -23,9 +17,39 @@ linters:
     - unconvert
     - unparam
     - unused
-    - govet
     - usetesting
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - output
+      - third_party$
+      - builtin$
+      - examples$
+  settings:
+    staticcheck:
+      checks:
+        - all
+        - '-QF1004' # "could use strings.ReplaceAll instead" -- https://staticcheck.dev/docs/checks/#QF1004
+        - '-QF1008' # "could remove embedded field "Block" from selector" -- https://staticcheck.dev/docs/checks/#QF1008
+        - '-QF1012' # "Use fmt.Fprintf(...) instead of WriteString(fmt.Sprintf(...))" -- https://staticcheck.dev/docs/checks/#QF1012
+        - '-ST1003' # example: "const autoTFVarsJson should be autoTFVarsJSON" -- https://staticcheck.dev/docs/checks/#ST1003
+        - '-ST1016' # example: "methods on the same type should have the same receiver name (seen 2x "r", 2x "s")" -- https://staticcheck.dev/docs/checks/#ST1016
 
-run:
-  # Prevent false positive timeouts in CI
-  timeout: 5m
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: lax
+    paths:
+      - output
+      - third_party$
+      - builtin$
+      - examples$
