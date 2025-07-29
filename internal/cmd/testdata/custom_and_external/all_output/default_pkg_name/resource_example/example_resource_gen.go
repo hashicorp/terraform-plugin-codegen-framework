@@ -38,6 +38,10 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 				},
 				Default: booldefault.StaticBool(true),
 			},
+			"int64_attribute_write_only": schema.Int64Attribute{
+				Optional:  true,
+				WriteOnly: true,
+			},
 			"list_nested_attribute_assoc_ext_type": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -231,6 +235,7 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 
 type ExampleModel struct {
 	BoolAttribute                     my_bool_value                          `tfsdk:"bool_attribute"`
+	Int64AttributeWriteOnly           types.Int64                            `tfsdk:"int64_attribute_write_only"`
 	ListNestedAttributeAssocExtType   types.List                             `tfsdk:"list_nested_attribute_assoc_ext_type"`
 	MapNestedAttributeAssocExtType    types.Map                              `tfsdk:"map_nested_attribute_assoc_ext_type"`
 	SetNestedAttributeAssocExtType    types.Set                              `tfsdk:"set_nested_attribute_assoc_ext_type"`

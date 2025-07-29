@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+tfplugingen-framework
 
 # Test binary, built with `go test -c`
 *.test
@@ -20,6 +21,10 @@
 
 # VSCode files
 .vscode/
+
+# Vim files
+*~
+*.swp
 
 # Ignore any manual testing output from running codegen tool at root
 output/

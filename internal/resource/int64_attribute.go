@@ -23,6 +23,7 @@ type GeneratorInt64Attribute struct {
 	Description              convert.Description
 	PlanModifiers            convert.PlanModifiers
 	Sensitive                convert.Sensitive
+	WriteOnly                convert.WriteOnly
 	Validators               convert.Validators
 }
 
@@ -45,6 +46,8 @@ func NewGeneratorInt64Attribute(name string, a *resource.Int64Attribute) (Genera
 
 	s := convert.NewSensitive(a.Sensitive)
 
+	wo := convert.NewWriteOnly(a.WriteOnly)
+
 	v := convert.NewValidators(convert.ValidatorTypeInt64, a.Validators.CustomValidators())
 
 	return GeneratorInt64Attribute{
@@ -56,6 +59,7 @@ func NewGeneratorInt64Attribute(name string, a *resource.Int64Attribute) (Genera
 		Description:              d,
 		PlanModifiers:            pm,
 		Sensitive:                s,
+		WriteOnly:                wo,
 		Validators:               v,
 	}, nil
 }
@@ -123,6 +127,10 @@ func (g GeneratorInt64Attribute) Equal(ga generatorschema.GeneratorAttribute) bo
 		return false
 	}
 
+	if !g.WriteOnly.Equal(h.WriteOnly) {
+		return false
+	}
+
 	return g.Validators.Equal(h.Validators)
 }
 
@@ -133,6 +141,7 @@ func (g GeneratorInt64Attribute) Schema(name generatorschema.FrameworkIdentifier
 	b.Write(g.CustomType.Schema())
 	b.Write(g.ComputedOptionalRequired.Schema())
 	b.Write(g.Sensitive.Schema())
+	b.Write(g.WriteOnly.Schema())
 	b.Write(g.Description.Schema())
 	b.Write(g.DeprecationMessage.Schema())
 	b.Write(g.PlanModifiers.Schema())
