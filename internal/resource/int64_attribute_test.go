@@ -127,6 +127,17 @@ func TestGeneratorInt64Attribute_New(t *testing.T) {
 				Validators:    convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
 			},
 		},
+		"write_only": {
+			input: &resource.Int64Attribute{
+				WriteOnly: pointer(true),
+			},
+			expected: GeneratorInt64Attribute{
+				CustomType:    convert.NewCustomTypePrimitive(nil, nil, "name"),
+				WriteOnly:     convert.NewWriteOnly(pointer(true)),
+				PlanModifiers: convert.NewPlanModifiers(convert.PlanModifierTypeInt64, specschema.CustomPlanModifiers{}),
+				Validators:    convert.NewValidators(convert.ValidatorTypeInt64, specschema.CustomValidators{}),
+			},
+		},
 		"validators": {
 			input: &resource.Int64Attribute{
 				Validators: specschema.Int64Validators{

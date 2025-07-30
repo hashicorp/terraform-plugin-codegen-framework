@@ -1309,6 +1309,13 @@
               ],
               "computed_optional_required": "optional"
             }
+          },
+          {
+            "name": "int64_attribute_write_only",
+            "int64": {
+              "computed_optional_required": "optional",
+              "write_only": true
+            }
           }
         ],
         "blocks": [
