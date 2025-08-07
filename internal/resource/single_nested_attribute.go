@@ -185,7 +185,7 @@ func (g GeneratorSingleNestedAttribute) GetAttributes() schema.GeneratorAttribut
 	return g.Attributes
 }
 
-func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string, renderstate *schema.RenderState) ([]byte, error) {
 	var buf bytes.Buffer
 
 	attributeAttrValues, err := g.Attributes.AttrValues()
@@ -196,7 +196,7 @@ func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte,
 
 	objectType := schema.NewCustomNestedObjectType(name, attributeAttrValues)
 
-	b, err := objectType.Render()
+	b, err := objectType.Render(renderstate)
 
 	if err != nil {
 		return nil, err
@@ -224,7 +224,7 @@ func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte,
 
 	objectValue := schema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues, attributeCollectionTypes)
 
-	b, err = objectValue.Render()
+	b, err = objectValue.Render(renderstate)
 
 	if err != nil {
 		return nil, err
@@ -238,7 +238,7 @@ func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte,
 	// CustomTypeAndValue interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
 		if c, ok := g.Attributes[k].(schema.CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, renderstate)
 
 			if err != nil {
 				return nil, err

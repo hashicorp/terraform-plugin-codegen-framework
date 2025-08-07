@@ -205,7 +205,7 @@ func (g GeneratorSingleNestedBlock) GetBlocks() schema.GeneratorBlocks {
 	return g.Blocks
 }
 
-func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, error) {
+func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string, renderstate *schema.RenderState) ([]byte, error) {
 	var buf bytes.Buffer
 
 	attributeAttrValues, err := g.Attributes.AttrValues()
@@ -232,7 +232,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 
 	objectType := schema.NewCustomNestedObjectType(name, attributesBlocksAttrValues)
 
-	b, err := objectType.Render()
+	b, err := objectType.Render(renderstate)
 
 	if err != nil {
 		return nil, err
@@ -293,7 +293,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 
 	objectValue := schema.NewCustomNestedObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues, attributeCollectionTypes)
 
-	b, err = objectValue.Render()
+	b, err = objectValue.Render(renderstate)
 
 	if err != nil {
 		return nil, err
@@ -309,7 +309,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 	// CustomTypeAndValue interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
 		if c, ok := g.Attributes[k].(schema.CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, renderstate)
 
 			if err != nil {
 				return nil, err
@@ -321,7 +321,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 
 	for _, k := range blockKeys {
 		if c, ok := g.Blocks[k].(schema.CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, renderstate)
 
 			if err != nil {
 				return nil, err

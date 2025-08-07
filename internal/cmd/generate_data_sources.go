@@ -106,6 +106,7 @@ func (cmd *GenerateDataSourcesCommand) Run(args []string) int {
 }
 
 func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *slog.Logger) error {
+
 	// read input file
 	src, err := input.Read(cmd.flagIRInputPath)
 	if err != nil {
@@ -133,6 +134,8 @@ func (cmd *GenerateDataSourcesCommand) runInternal(ctx context.Context, logger *
 }
 
 func generateDataSourceCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+    renderstate := schema.NewRenderState()
+
 	ctxWithPath := logging.SetPathInContext(ctx, "data_source")
 
 	// convert IR to framework schema
@@ -155,7 +158,7 @@ func generateDataSourceCode(ctx context.Context, spec spec.Specification, output
 	}
 
 	// generate custom type and value types code
-	customTypeValue, err := g.CustomTypeValue()
+	customTypeValue, err := g.CustomTypeValue(&renderstate)
 	if err != nil {
 		log.Fatal(err)
 	}

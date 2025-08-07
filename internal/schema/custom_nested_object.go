@@ -42,8 +42,50 @@ func NewCustomNestedObjectType(name string, attrValues map[string]string) Custom
 	}
 }
 
-func (c CustomNestedObjectType) Render() ([]byte, error) {
+// Holds sets of already rendered custom type elements that are used
+// to prevent rendering them more than once per run.
+type RenderState struct {
+    CustomNestedObjectTypeRendered map[FrameworkIdentifier]struct{}
+    CustomNestedObjectValueRendered map[FrameworkIdentifier]struct{}
+}
+
+// Creates a new RenderState
+func NewRenderState() RenderState {
+    return RenderState{
+        CustomNestedObjectTypeRendered: make(map[FrameworkIdentifier]struct{}),
+        CustomNestedObjectValueRendered: make(map[FrameworkIdentifier]struct{}),
+    }
+}
+
+// Returns true if the given 'name' has already been rendered
+func (rs *RenderState) CheckCustomNestedObjectType(name FrameworkIdentifier) bool {
+    if _, ok := rs.CustomNestedObjectTypeRendered[name]; ok {
+        return true
+    } else {
+        rs.CustomNestedObjectTypeRendered[name] = struct{}{}
+        return false
+    }
+}
+
+// Returns true if the given 'name' has already been rendered
+func (rs *RenderState) CheckCustomNestedObjectValue(name FrameworkIdentifier) bool {
+    if _, ok := rs.CustomNestedObjectValueRendered[name]; ok {
+        return true
+
+    } else {
+        rs.CustomNestedObjectValueRendered[name] = struct{}{}
+        return false
+    }
+}
+
+func (c CustomNestedObjectType) Render(state *RenderState) ([]byte, error) {
 	var buf bytes.Buffer
+
+	// only render things 1x
+    if (state.CheckCustomNestedObjectType(c.Name)) {
+        buf.Write([]byte("\n// already written CustomNestedObjectType: " + c.Name + "\n"))
+        return buf.Bytes(), nil
+    }
 
 	renderFuncs := []func() ([]byte, error){
 		c.renderTypable,
@@ -377,8 +419,13 @@ func NewCustomNestedObjectValue(name string, attributeTypes, attrTypes, attrValu
 	}
 }
 
-func (c CustomNestedObjectValue) Render() ([]byte, error) {
+func (c CustomNestedObjectValue) Render(state *RenderState) ([]byte, error) {
 	var buf bytes.Buffer
+
+    if state.CheckCustomNestedObjectValue(c.Name) {
+        buf.Write([]byte("// already written CustomNestedObjectValue: " + c.Name + "\n"))
+        return buf.Bytes(), nil
+    }
 
 	renderFuncs := []func() ([]byte, error){
 		c.renderValuable,

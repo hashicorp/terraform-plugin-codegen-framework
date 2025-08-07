@@ -23,7 +23,7 @@ type Blocks interface {
 }
 
 type CustomTypeAndValue interface {
-	CustomTypeAndValue(name string) ([]byte, error)
+	CustomTypeAndValue(name string, renderstate *RenderState) ([]byte, error)
 }
 
 type Elements interface {

@@ -1316,6 +1316,50 @@
               "computed_optional_required": "optional",
               "write_only": true
             }
+          },
+          {
+            "name": "duplicated_custom_type1",
+            "single_nested": {
+              "computed_optional_required": "optional",
+              "attributes": [
+                {
+                  "name": "duplicated",
+                  "single_nested": {
+                    "computed_optional_required": "required",
+                    "attributes": [
+                      {
+                        "name": "something",
+                        "string": {
+                          "computed_optional_required": "required"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "duplicated_custom_type2",
+            "single_nested": {
+              "computed_optional_required": "optional",
+              "attributes": [
+                {
+                  "name": "duplicated",
+                  "single_nested": {
+                    "computed_optional_required": "required",
+                    "attributes": [
+                      {
+                        "name": "something",
+                        "string": {
+                          "computed_optional_required": "required"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
           }
         ],
         "blocks": [

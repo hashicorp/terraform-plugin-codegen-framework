@@ -244,7 +244,7 @@ func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 
 // CustomTypeValueBytes iterates over all the attributes and blocks to generate code
 // for custom type and value types for use in the schema and data models.
-func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
+func (g GeneratorSchema) CustomTypeValueBytes(renderstate *RenderState) ([]byte, error) {
 	var buf bytes.Buffer
 
 	attributeKeys := g.Attributes.SortedKeys()
@@ -255,7 +255,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 		}
 
 		if c, ok := g.Attributes[k].(CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, renderstate)
 
 			if err != nil {
 				return nil, err
@@ -273,7 +273,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 		}
 
 		if c, ok := g.Blocks[k].(CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, renderstate)
 
 			if err != nil {
 				return nil, err

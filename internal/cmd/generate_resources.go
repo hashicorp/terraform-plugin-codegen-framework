@@ -106,6 +106,7 @@ func (cmd *GenerateResourcesCommand) Run(args []string) int {
 }
 
 func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context, logger *slog.Logger) error {
+
 	// read input file
 	src, err := input.Read(cmd.flagIRInputPath)
 	if err != nil {
@@ -133,6 +134,8 @@ func (cmd *GenerateResourcesCommand) runInternal(ctx context.Context, logger *sl
 }
 
 func generateResourceCode(ctx context.Context, spec spec.Specification, outputPath, packageName, generatorType string, logger *slog.Logger) error {
+    renderstate := schema.NewRenderState()
+
 	ctx = logging.SetPathInContext(ctx, "resource")
 
 	// convert IR to framework schema
@@ -155,7 +158,7 @@ func generateResourceCode(ctx context.Context, spec spec.Specification, outputPa
 	}
 
 	// generate custom type and value types code
-	customTypeValue, err := g.CustomTypeValue()
+	customTypeValue, err := g.CustomTypeValue(&renderstate)
 	if err != nil {
 		log.Fatal(err)
 	}

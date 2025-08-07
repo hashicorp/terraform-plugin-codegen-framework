@@ -38,6 +38,52 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 				},
 				Default: booldefault.StaticBool(true),
 			},
+			"duplicated_custom_type1": schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"duplicated": schema.SingleNestedAttribute{
+						Attributes: map[string]schema.Attribute{
+							"something": schema.StringAttribute{
+								Required: true,
+							},
+						},
+						CustomType: DuplicatedType{
+							ObjectType: types.ObjectType{
+								AttrTypes: DuplicatedValue{}.AttributeTypes(ctx),
+							},
+						},
+						Required: true,
+					},
+				},
+				CustomType: DuplicatedCustomType1Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: DuplicatedCustomType1Value{}.AttributeTypes(ctx),
+					},
+				},
+				Optional: true,
+			},
+			"duplicated_custom_type2": schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"duplicated": schema.SingleNestedAttribute{
+						Attributes: map[string]schema.Attribute{
+							"something": schema.StringAttribute{
+								Required: true,
+							},
+						},
+						CustomType: DuplicatedType{
+							ObjectType: types.ObjectType{
+								AttrTypes: DuplicatedValue{}.AttributeTypes(ctx),
+							},
+						},
+						Required: true,
+					},
+				},
+				CustomType: DuplicatedCustomType2Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: DuplicatedCustomType2Value{}.AttributeTypes(ctx),
+					},
+				},
+				Optional: true,
+			},
 			"int64_attribute_write_only": schema.Int64Attribute{
 				Optional:  true,
 				WriteOnly: true,
@@ -235,6 +281,8 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 
 type ExampleModel struct {
 	BoolAttribute                     my_bool_value                          `tfsdk:"bool_attribute"`
+	DuplicatedCustomType1             DuplicatedCustomType1Value             `tfsdk:"duplicated_custom_type1"`
+	DuplicatedCustomType2             DuplicatedCustomType2Value             `tfsdk:"duplicated_custom_type2"`
 	Int64AttributeWriteOnly           types.Int64                            `tfsdk:"int64_attribute_write_only"`
 	ListNestedAttributeAssocExtType   types.List                             `tfsdk:"list_nested_attribute_assoc_ext_type"`
 	MapNestedAttributeAssocExtType    types.Map                              `tfsdk:"map_nested_attribute_assoc_ext_type"`
@@ -244,6 +292,1035 @@ type ExampleModel struct {
 	SetNestedBlockAssocExtType        types.Set                              `tfsdk:"set_nested_block_assoc_ext_type"`
 	SingleNestedBlockAssocExtType     SingleNestedBlockAssocExtTypeValue     `tfsdk:"single_nested_block_assoc_ext_type"`
 }
+
+var _ basetypes.ObjectTypable = DuplicatedCustomType1Type{}
+
+type DuplicatedCustomType1Type struct {
+	basetypes.ObjectType
+}
+
+func (t DuplicatedCustomType1Type) Equal(o attr.Type) bool {
+	other, ok := o.(DuplicatedCustomType1Type)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t DuplicatedCustomType1Type) String() string {
+	return "DuplicatedCustomType1Type"
+}
+
+func (t DuplicatedCustomType1Type) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	attributes := in.Attributes()
+
+	duplicatedAttribute, ok := attributes["duplicated"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`duplicated is missing from object`)
+
+		return nil, diags
+	}
+
+	duplicatedVal, ok := duplicatedAttribute.(basetypes.ObjectValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`duplicated expected to be basetypes.ObjectValue, was: %T`, duplicatedAttribute))
+	}
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	return DuplicatedCustomType1Value{
+		Duplicated: duplicatedVal,
+		state:      attr.ValueStateKnown,
+	}, diags
+}
+
+func NewDuplicatedCustomType1ValueNull() DuplicatedCustomType1Value {
+	return DuplicatedCustomType1Value{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewDuplicatedCustomType1ValueUnknown() DuplicatedCustomType1Value {
+	return DuplicatedCustomType1Value{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewDuplicatedCustomType1Value(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (DuplicatedCustomType1Value, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing DuplicatedCustomType1Value Attribute Value",
+				"While creating a DuplicatedCustomType1Value value, a missing attribute value was detected. "+
+					"A DuplicatedCustomType1Value must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("DuplicatedCustomType1Value Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid DuplicatedCustomType1Value Attribute Type",
+				"While creating a DuplicatedCustomType1Value value, an invalid attribute value was detected. "+
+					"A DuplicatedCustomType1Value must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("DuplicatedCustomType1Value Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("DuplicatedCustomType1Value Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra DuplicatedCustomType1Value Attribute Value",
+				"While creating a DuplicatedCustomType1Value value, an extra attribute value was detected. "+
+					"A DuplicatedCustomType1Value must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra DuplicatedCustomType1Value Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewDuplicatedCustomType1ValueUnknown(), diags
+	}
+
+	duplicatedAttribute, ok := attributes["duplicated"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`duplicated is missing from object`)
+
+		return NewDuplicatedCustomType1ValueUnknown(), diags
+	}
+
+	duplicatedVal, ok := duplicatedAttribute.(basetypes.ObjectValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`duplicated expected to be basetypes.ObjectValue, was: %T`, duplicatedAttribute))
+	}
+
+	if diags.HasError() {
+		return NewDuplicatedCustomType1ValueUnknown(), diags
+	}
+
+	return DuplicatedCustomType1Value{
+		Duplicated: duplicatedVal,
+		state:      attr.ValueStateKnown,
+	}, diags
+}
+
+func NewDuplicatedCustomType1ValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) DuplicatedCustomType1Value {
+	object, diags := NewDuplicatedCustomType1Value(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewDuplicatedCustomType1ValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t DuplicatedCustomType1Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewDuplicatedCustomType1ValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewDuplicatedCustomType1ValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewDuplicatedCustomType1ValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewDuplicatedCustomType1ValueMust(DuplicatedCustomType1Value{}.AttributeTypes(ctx), attributes), nil
+}
+
+func (t DuplicatedCustomType1Type) ValueType(ctx context.Context) attr.Value {
+	return DuplicatedCustomType1Value{}
+}
+
+var _ basetypes.ObjectValuable = DuplicatedCustomType1Value{}
+
+type DuplicatedCustomType1Value struct {
+	Duplicated basetypes.ObjectValue `tfsdk:"duplicated"`
+	state      attr.ValueState
+}
+
+func (v DuplicatedCustomType1Value) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 1)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["duplicated"] = basetypes.ObjectType{
+		AttrTypes: DuplicatedValue{}.AttributeTypes(ctx),
+	}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 1)
+
+		val, err = v.Duplicated.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["duplicated"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v DuplicatedCustomType1Value) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v DuplicatedCustomType1Value) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v DuplicatedCustomType1Value) String() string {
+	return "DuplicatedCustomType1Value"
+}
+
+func (v DuplicatedCustomType1Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var duplicated basetypes.ObjectValue
+
+	if v.Duplicated.IsNull() {
+		duplicated = types.ObjectNull(
+			DuplicatedValue{}.AttributeTypes(ctx),
+		)
+	}
+
+	if v.Duplicated.IsUnknown() {
+		duplicated = types.ObjectUnknown(
+			DuplicatedValue{}.AttributeTypes(ctx),
+		)
+	}
+
+	if !v.Duplicated.IsNull() && !v.Duplicated.IsUnknown() {
+		duplicated = types.ObjectValueMust(
+			DuplicatedValue{}.AttributeTypes(ctx),
+			v.Duplicated.Attributes(),
+		)
+	}
+
+	attributeTypes := map[string]attr.Type{
+		"duplicated": basetypes.ObjectType{
+			AttrTypes: DuplicatedValue{}.AttributeTypes(ctx),
+		},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
+		map[string]attr.Value{
+			"duplicated": duplicated,
+		})
+
+	return objVal, diags
+}
+
+func (v DuplicatedCustomType1Value) Equal(o attr.Value) bool {
+	other, ok := o.(DuplicatedCustomType1Value)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.Duplicated.Equal(other.Duplicated) {
+		return false
+	}
+
+	return true
+}
+
+func (v DuplicatedCustomType1Value) Type(ctx context.Context) attr.Type {
+	return DuplicatedCustomType1Type{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v DuplicatedCustomType1Value) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"duplicated": basetypes.ObjectType{
+			AttrTypes: DuplicatedValue{}.AttributeTypes(ctx),
+		},
+	}
+}
+
+var _ basetypes.ObjectTypable = DuplicatedType{}
+
+type DuplicatedType struct {
+	basetypes.ObjectType
+}
+
+func (t DuplicatedType) Equal(o attr.Type) bool {
+	other, ok := o.(DuplicatedType)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t DuplicatedType) String() string {
+	return "DuplicatedType"
+}
+
+func (t DuplicatedType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	attributes := in.Attributes()
+
+	somethingAttribute, ok := attributes["something"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`something is missing from object`)
+
+		return nil, diags
+	}
+
+	somethingVal, ok := somethingAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`something expected to be basetypes.StringValue, was: %T`, somethingAttribute))
+	}
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	return DuplicatedValue{
+		Something: somethingVal,
+		state:     attr.ValueStateKnown,
+	}, diags
+}
+
+func NewDuplicatedValueNull() DuplicatedValue {
+	return DuplicatedValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewDuplicatedValueUnknown() DuplicatedValue {
+	return DuplicatedValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewDuplicatedValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (DuplicatedValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing DuplicatedValue Attribute Value",
+				"While creating a DuplicatedValue value, a missing attribute value was detected. "+
+					"A DuplicatedValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("DuplicatedValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid DuplicatedValue Attribute Type",
+				"While creating a DuplicatedValue value, an invalid attribute value was detected. "+
+					"A DuplicatedValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("DuplicatedValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("DuplicatedValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra DuplicatedValue Attribute Value",
+				"While creating a DuplicatedValue value, an extra attribute value was detected. "+
+					"A DuplicatedValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra DuplicatedValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewDuplicatedValueUnknown(), diags
+	}
+
+	somethingAttribute, ok := attributes["something"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`something is missing from object`)
+
+		return NewDuplicatedValueUnknown(), diags
+	}
+
+	somethingVal, ok := somethingAttribute.(basetypes.StringValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`something expected to be basetypes.StringValue, was: %T`, somethingAttribute))
+	}
+
+	if diags.HasError() {
+		return NewDuplicatedValueUnknown(), diags
+	}
+
+	return DuplicatedValue{
+		Something: somethingVal,
+		state:     attr.ValueStateKnown,
+	}, diags
+}
+
+func NewDuplicatedValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) DuplicatedValue {
+	object, diags := NewDuplicatedValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewDuplicatedValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t DuplicatedType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewDuplicatedValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewDuplicatedValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewDuplicatedValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewDuplicatedValueMust(DuplicatedValue{}.AttributeTypes(ctx), attributes), nil
+}
+
+func (t DuplicatedType) ValueType(ctx context.Context) attr.Value {
+	return DuplicatedValue{}
+}
+
+var _ basetypes.ObjectValuable = DuplicatedValue{}
+
+type DuplicatedValue struct {
+	Something basetypes.StringValue `tfsdk:"something"`
+	state     attr.ValueState
+}
+
+func (v DuplicatedValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 1)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["something"] = basetypes.StringType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 1)
+
+		val, err = v.Something.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["something"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v DuplicatedValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v DuplicatedValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v DuplicatedValue) String() string {
+	return "DuplicatedValue"
+}
+
+func (v DuplicatedValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	attributeTypes := map[string]attr.Type{
+		"something": basetypes.StringType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
+		map[string]attr.Value{
+			"something": v.Something,
+		})
+
+	return objVal, diags
+}
+
+func (v DuplicatedValue) Equal(o attr.Value) bool {
+	other, ok := o.(DuplicatedValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.Something.Equal(other.Something) {
+		return false
+	}
+
+	return true
+}
+
+func (v DuplicatedValue) Type(ctx context.Context) attr.Type {
+	return DuplicatedType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v DuplicatedValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"something": basetypes.StringType{},
+	}
+}
+
+var _ basetypes.ObjectTypable = DuplicatedCustomType2Type{}
+
+type DuplicatedCustomType2Type struct {
+	basetypes.ObjectType
+}
+
+func (t DuplicatedCustomType2Type) Equal(o attr.Type) bool {
+	other, ok := o.(DuplicatedCustomType2Type)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t DuplicatedCustomType2Type) String() string {
+	return "DuplicatedCustomType2Type"
+}
+
+func (t DuplicatedCustomType2Type) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	attributes := in.Attributes()
+
+	duplicatedAttribute, ok := attributes["duplicated"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`duplicated is missing from object`)
+
+		return nil, diags
+	}
+
+	duplicatedVal, ok := duplicatedAttribute.(basetypes.ObjectValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`duplicated expected to be basetypes.ObjectValue, was: %T`, duplicatedAttribute))
+	}
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	return DuplicatedCustomType2Value{
+		Duplicated: duplicatedVal,
+		state:      attr.ValueStateKnown,
+	}, diags
+}
+
+func NewDuplicatedCustomType2ValueNull() DuplicatedCustomType2Value {
+	return DuplicatedCustomType2Value{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewDuplicatedCustomType2ValueUnknown() DuplicatedCustomType2Value {
+	return DuplicatedCustomType2Value{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewDuplicatedCustomType2Value(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (DuplicatedCustomType2Value, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing DuplicatedCustomType2Value Attribute Value",
+				"While creating a DuplicatedCustomType2Value value, a missing attribute value was detected. "+
+					"A DuplicatedCustomType2Value must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("DuplicatedCustomType2Value Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid DuplicatedCustomType2Value Attribute Type",
+				"While creating a DuplicatedCustomType2Value value, an invalid attribute value was detected. "+
+					"A DuplicatedCustomType2Value must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("DuplicatedCustomType2Value Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("DuplicatedCustomType2Value Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra DuplicatedCustomType2Value Attribute Value",
+				"While creating a DuplicatedCustomType2Value value, an extra attribute value was detected. "+
+					"A DuplicatedCustomType2Value must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra DuplicatedCustomType2Value Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewDuplicatedCustomType2ValueUnknown(), diags
+	}
+
+	duplicatedAttribute, ok := attributes["duplicated"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`duplicated is missing from object`)
+
+		return NewDuplicatedCustomType2ValueUnknown(), diags
+	}
+
+	duplicatedVal, ok := duplicatedAttribute.(basetypes.ObjectValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`duplicated expected to be basetypes.ObjectValue, was: %T`, duplicatedAttribute))
+	}
+
+	if diags.HasError() {
+		return NewDuplicatedCustomType2ValueUnknown(), diags
+	}
+
+	return DuplicatedCustomType2Value{
+		Duplicated: duplicatedVal,
+		state:      attr.ValueStateKnown,
+	}, diags
+}
+
+func NewDuplicatedCustomType2ValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) DuplicatedCustomType2Value {
+	object, diags := NewDuplicatedCustomType2Value(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewDuplicatedCustomType2ValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t DuplicatedCustomType2Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewDuplicatedCustomType2ValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewDuplicatedCustomType2ValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewDuplicatedCustomType2ValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewDuplicatedCustomType2ValueMust(DuplicatedCustomType2Value{}.AttributeTypes(ctx), attributes), nil
+}
+
+func (t DuplicatedCustomType2Type) ValueType(ctx context.Context) attr.Value {
+	return DuplicatedCustomType2Value{}
+}
+
+var _ basetypes.ObjectValuable = DuplicatedCustomType2Value{}
+
+type DuplicatedCustomType2Value struct {
+	Duplicated basetypes.ObjectValue `tfsdk:"duplicated"`
+	state      attr.ValueState
+}
+
+func (v DuplicatedCustomType2Value) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 1)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["duplicated"] = basetypes.ObjectType{
+		AttrTypes: DuplicatedValue{}.AttributeTypes(ctx),
+	}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 1)
+
+		val, err = v.Duplicated.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["duplicated"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v DuplicatedCustomType2Value) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v DuplicatedCustomType2Value) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v DuplicatedCustomType2Value) String() string {
+	return "DuplicatedCustomType2Value"
+}
+
+func (v DuplicatedCustomType2Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var duplicated basetypes.ObjectValue
+
+	if v.Duplicated.IsNull() {
+		duplicated = types.ObjectNull(
+			DuplicatedValue{}.AttributeTypes(ctx),
+		)
+	}
+
+	if v.Duplicated.IsUnknown() {
+		duplicated = types.ObjectUnknown(
+			DuplicatedValue{}.AttributeTypes(ctx),
+		)
+	}
+
+	if !v.Duplicated.IsNull() && !v.Duplicated.IsUnknown() {
+		duplicated = types.ObjectValueMust(
+			DuplicatedValue{}.AttributeTypes(ctx),
+			v.Duplicated.Attributes(),
+		)
+	}
+
+	attributeTypes := map[string]attr.Type{
+		"duplicated": basetypes.ObjectType{
+			AttrTypes: DuplicatedValue{}.AttributeTypes(ctx),
+		},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
+		map[string]attr.Value{
+			"duplicated": duplicated,
+		})
+
+	return objVal, diags
+}
+
+func (v DuplicatedCustomType2Value) Equal(o attr.Value) bool {
+	other, ok := o.(DuplicatedCustomType2Value)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.Duplicated.Equal(other.Duplicated) {
+		return false
+	}
+
+	return true
+}
+
+func (v DuplicatedCustomType2Value) Type(ctx context.Context) attr.Type {
+	return DuplicatedCustomType2Type{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v DuplicatedCustomType2Value) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"duplicated": basetypes.ObjectType{
+			AttrTypes: DuplicatedValue{}.AttributeTypes(ctx),
+		},
+	}
+}
+
+// already written CustomNestedObjectType: duplicated
+// already written CustomNestedObjectValue: duplicated
 
 var _ basetypes.ObjectTypable = ListNestedAttributeAssocExtTypeType{}
 
