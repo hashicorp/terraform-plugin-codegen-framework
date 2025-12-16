@@ -18,6 +18,7 @@ import (
 	planmodifieralias "github.com/my_account/my_project/myboolplanmodifier"
 	validatoralias "github.com/my_account/my_project/myboolvalidator"
 	boolalias "github.com/my_account_my_project/bool"
+	stringalias "github.com/my_account_my_project/string"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -60,6 +61,30 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 					CustomType: ListNestedAttributeAssocExtTypeType{
 						ObjectType: types.ObjectType{
 							AttrTypes: ListNestedAttributeAssocExtTypeValue{}.AttributeTypes(ctx),
+						},
+					},
+				},
+				Optional: true,
+			},
+			"list_nested_nested_object_attribute_custom_type": schema.ListNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"string_attribute": schema.StringAttribute{
+							CustomType: my_string_type,
+							Optional:   true,
+						},
+						"string_attribute_assoc_ext_type": schema.StringAttribute{
+							CustomType: StringAttributeAssocExtTypeType{},
+							Optional:   true,
+						},
+						"string_attribute_custom_type_assoc_ext_type": schema.StringAttribute{
+							CustomType: my_string_type,
+							Optional:   true,
+						},
+					},
+					CustomType: ListNestedNestedObjectAttributeCustomTypeType{
+						ObjectType: types.ObjectType{
+							AttrTypes: ListNestedNestedObjectAttributeCustomTypeValue{}.AttributeTypes(ctx),
 						},
 					},
 				},
@@ -230,14 +255,15 @@ func ExampleResourceSchema(ctx context.Context) schema.Schema {
 }
 
 type ExampleModel struct {
-	BoolAttribute                     my_bool_value                          `tfsdk:"bool_attribute"`
-	ListNestedAttributeAssocExtType   types.List                             `tfsdk:"list_nested_attribute_assoc_ext_type"`
-	MapNestedAttributeAssocExtType    types.Map                              `tfsdk:"map_nested_attribute_assoc_ext_type"`
-	SetNestedAttributeAssocExtType    types.Set                              `tfsdk:"set_nested_attribute_assoc_ext_type"`
-	SingleNestedAttributeAssocExtType SingleNestedAttributeAssocExtTypeValue `tfsdk:"single_nested_attribute_assoc_ext_type"`
-	ListNestedBlockAssocExtType       types.List                             `tfsdk:"list_nested_block_assoc_ext_type"`
-	SetNestedBlockAssocExtType        types.Set                              `tfsdk:"set_nested_block_assoc_ext_type"`
-	SingleNestedBlockAssocExtType     SingleNestedBlockAssocExtTypeValue     `tfsdk:"single_nested_block_assoc_ext_type"`
+	BoolAttribute                             my_bool_value                          `tfsdk:"bool_attribute"`
+	ListNestedAttributeAssocExtType           types.List                             `tfsdk:"list_nested_attribute_assoc_ext_type"`
+	ListNestedNestedObjectAttributeCustomType types.List                             `tfsdk:"list_nested_nested_object_attribute_custom_type"`
+	MapNestedAttributeAssocExtType            types.Map                              `tfsdk:"map_nested_attribute_assoc_ext_type"`
+	SetNestedAttributeAssocExtType            types.Set                              `tfsdk:"set_nested_attribute_assoc_ext_type"`
+	SingleNestedAttributeAssocExtType         SingleNestedAttributeAssocExtTypeValue `tfsdk:"single_nested_attribute_assoc_ext_type"`
+	ListNestedBlockAssocExtType               types.List                             `tfsdk:"list_nested_block_assoc_ext_type"`
+	SetNestedBlockAssocExtType                types.Set                              `tfsdk:"set_nested_block_assoc_ext_type"`
+	SingleNestedBlockAssocExtType             SingleNestedBlockAssocExtTypeValue     `tfsdk:"single_nested_block_assoc_ext_type"`
 }
 
 var _ basetypes.ObjectTypable = ListNestedAttributeAssocExtTypeType{}
@@ -782,6 +808,584 @@ func (v ListNestedAttributeAssocExtTypeValue) AttributeTypes(ctx context.Context
 		"number_attribute":  basetypes.NumberType{},
 		"string_attribute":  basetypes.StringType{},
 	}
+}
+
+var _ basetypes.ObjectTypable = ListNestedNestedObjectAttributeCustomTypeType{}
+
+type ListNestedNestedObjectAttributeCustomTypeType struct {
+	basetypes.ObjectType
+}
+
+func (t ListNestedNestedObjectAttributeCustomTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(ListNestedNestedObjectAttributeCustomTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.ObjectType.Equal(other.ObjectType)
+}
+
+func (t ListNestedNestedObjectAttributeCustomTypeType) String() string {
+	return "ListNestedNestedObjectAttributeCustomTypeType"
+}
+
+func (t ListNestedNestedObjectAttributeCustomTypeType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	attributes := in.Attributes()
+
+	stringAttributeAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeVal, ok := stringAttributeAttribute.(my_string_value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be my_string_value, was: %T`, stringAttributeAttribute))
+	}
+
+	stringAttributeAssocExtTypeAttribute, ok := attributes["string_attribute_assoc_ext_type"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute_assoc_ext_type is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeAssocExtTypeVal, ok := stringAttributeAssocExtTypeAttribute.(StringAttributeAssocExtTypeValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute_assoc_ext_type expected to be StringAttributeAssocExtTypeValue, was: %T`, stringAttributeAssocExtTypeAttribute))
+	}
+
+	stringAttributeCustomTypeAssocExtTypeAttribute, ok := attributes["string_attribute_custom_type_assoc_ext_type"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute_custom_type_assoc_ext_type is missing from object`)
+
+		return nil, diags
+	}
+
+	stringAttributeCustomTypeAssocExtTypeVal, ok := stringAttributeCustomTypeAssocExtTypeAttribute.(StringAttributeCustomTypeAssocExtTypeValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute_custom_type_assoc_ext_type expected to be StringAttributeCustomTypeAssocExtTypeValue, was: %T`, stringAttributeCustomTypeAssocExtTypeAttribute))
+	}
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	return ListNestedNestedObjectAttributeCustomTypeValue{
+		StringAttribute:                       stringAttributeVal,
+		StringAttributeAssocExtType:           stringAttributeAssocExtTypeVal,
+		StringAttributeCustomTypeAssocExtType: stringAttributeCustomTypeAssocExtTypeVal,
+		state:                                 attr.ValueStateKnown,
+	}, diags
+}
+
+func NewListNestedNestedObjectAttributeCustomTypeValueNull() ListNestedNestedObjectAttributeCustomTypeValue {
+	return ListNestedNestedObjectAttributeCustomTypeValue{
+		state: attr.ValueStateNull,
+	}
+}
+
+func NewListNestedNestedObjectAttributeCustomTypeValueUnknown() ListNestedNestedObjectAttributeCustomTypeValue {
+	return ListNestedNestedObjectAttributeCustomTypeValue{
+		state: attr.ValueStateUnknown,
+	}
+}
+
+func NewListNestedNestedObjectAttributeCustomTypeValue(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) (ListNestedNestedObjectAttributeCustomTypeValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/521
+	ctx := context.Background()
+
+	for name, attributeType := range attributeTypes {
+		attribute, ok := attributes[name]
+
+		if !ok {
+			diags.AddError(
+				"Missing ListNestedNestedObjectAttributeCustomTypeValue Attribute Value",
+				"While creating a ListNestedNestedObjectAttributeCustomTypeValue value, a missing attribute value was detected. "+
+					"A ListNestedNestedObjectAttributeCustomTypeValue must contain values for all attributes, even if null or unknown. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("ListNestedNestedObjectAttributeCustomTypeValue Attribute Name (%s) Expected Type: %s", name, attributeType.String()),
+			)
+
+			continue
+		}
+
+		if !attributeType.Equal(attribute.Type(ctx)) {
+			diags.AddError(
+				"Invalid ListNestedNestedObjectAttributeCustomTypeValue Attribute Type",
+				"While creating a ListNestedNestedObjectAttributeCustomTypeValue value, an invalid attribute value was detected. "+
+					"A ListNestedNestedObjectAttributeCustomTypeValue must use a matching attribute type for the value. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("ListNestedNestedObjectAttributeCustomTypeValue Attribute Name (%s) Expected Type: %s\n", name, attributeType.String())+
+					fmt.Sprintf("ListNestedNestedObjectAttributeCustomTypeValue Attribute Name (%s) Given Type: %s", name, attribute.Type(ctx)),
+			)
+		}
+	}
+
+	for name := range attributes {
+		_, ok := attributeTypes[name]
+
+		if !ok {
+			diags.AddError(
+				"Extra ListNestedNestedObjectAttributeCustomTypeValue Attribute Value",
+				"While creating a ListNestedNestedObjectAttributeCustomTypeValue value, an extra attribute value was detected. "+
+					"A ListNestedNestedObjectAttributeCustomTypeValue must not contain values beyond the expected attribute types. "+
+					"This is always an issue with the provider and should be reported to the provider developers.\n\n"+
+					fmt.Sprintf("Extra ListNestedNestedObjectAttributeCustomTypeValue Attribute Name: %s", name),
+			)
+		}
+	}
+
+	if diags.HasError() {
+		return NewListNestedNestedObjectAttributeCustomTypeValueUnknown(), diags
+	}
+
+	stringAttributeAttribute, ok := attributes["string_attribute"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute is missing from object`)
+
+		return NewListNestedNestedObjectAttributeCustomTypeValueUnknown(), diags
+	}
+
+	stringAttributeVal, ok := stringAttributeAttribute.(my_string_value)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute expected to be my_string_value, was: %T`, stringAttributeAttribute))
+	}
+
+	stringAttributeAssocExtTypeAttribute, ok := attributes["string_attribute_assoc_ext_type"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute_assoc_ext_type is missing from object`)
+
+		return NewListNestedNestedObjectAttributeCustomTypeValueUnknown(), diags
+	}
+
+	stringAttributeAssocExtTypeVal, ok := stringAttributeAssocExtTypeAttribute.(StringAttributeAssocExtTypeValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute_assoc_ext_type expected to be StringAttributeAssocExtTypeValue, was: %T`, stringAttributeAssocExtTypeAttribute))
+	}
+
+	stringAttributeCustomTypeAssocExtTypeAttribute, ok := attributes["string_attribute_custom_type_assoc_ext_type"]
+
+	if !ok {
+		diags.AddError(
+			"Attribute Missing",
+			`string_attribute_custom_type_assoc_ext_type is missing from object`)
+
+		return NewListNestedNestedObjectAttributeCustomTypeValueUnknown(), diags
+	}
+
+	stringAttributeCustomTypeAssocExtTypeVal, ok := stringAttributeCustomTypeAssocExtTypeAttribute.(StringAttributeCustomTypeAssocExtTypeValue)
+
+	if !ok {
+		diags.AddError(
+			"Attribute Wrong Type",
+			fmt.Sprintf(`string_attribute_custom_type_assoc_ext_type expected to be StringAttributeCustomTypeAssocExtTypeValue, was: %T`, stringAttributeCustomTypeAssocExtTypeAttribute))
+	}
+
+	if diags.HasError() {
+		return NewListNestedNestedObjectAttributeCustomTypeValueUnknown(), diags
+	}
+
+	return ListNestedNestedObjectAttributeCustomTypeValue{
+		StringAttribute:                       stringAttributeVal,
+		StringAttributeAssocExtType:           stringAttributeAssocExtTypeVal,
+		StringAttributeCustomTypeAssocExtType: stringAttributeCustomTypeAssocExtTypeVal,
+		state:                                 attr.ValueStateKnown,
+	}, diags
+}
+
+func NewListNestedNestedObjectAttributeCustomTypeValueMust(attributeTypes map[string]attr.Type, attributes map[string]attr.Value) ListNestedNestedObjectAttributeCustomTypeValue {
+	object, diags := NewListNestedNestedObjectAttributeCustomTypeValue(attributeTypes, attributes)
+
+	if diags.HasError() {
+		// This could potentially be added to the diag package.
+		diagsStrings := make([]string, 0, len(diags))
+
+		for _, diagnostic := range diags {
+			diagsStrings = append(diagsStrings, fmt.Sprintf(
+				"%s | %s | %s",
+				diagnostic.Severity(),
+				diagnostic.Summary(),
+				diagnostic.Detail()))
+		}
+
+		panic("NewListNestedNestedObjectAttributeCustomTypeValueMust received error(s): " + strings.Join(diagsStrings, "\n"))
+	}
+
+	return object
+}
+
+func (t ListNestedNestedObjectAttributeCustomTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	if in.Type() == nil {
+		return NewListNestedNestedObjectAttributeCustomTypeValueNull(), nil
+	}
+
+	if !in.Type().Equal(t.TerraformType(ctx)) {
+		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
+	}
+
+	if !in.IsKnown() {
+		return NewListNestedNestedObjectAttributeCustomTypeValueUnknown(), nil
+	}
+
+	if in.IsNull() {
+		return NewListNestedNestedObjectAttributeCustomTypeValueNull(), nil
+	}
+
+	attributes := map[string]attr.Value{}
+
+	val := map[string]tftypes.Value{}
+
+	err := in.As(&val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range val {
+		a, err := t.AttrTypes[k].ValueFromTerraform(ctx, v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		attributes[k] = a
+	}
+
+	return NewListNestedNestedObjectAttributeCustomTypeValueMust(ListNestedNestedObjectAttributeCustomTypeValue{}.AttributeTypes(ctx), attributes), nil
+}
+
+func (t ListNestedNestedObjectAttributeCustomTypeType) ValueType(ctx context.Context) attr.Value {
+	return ListNestedNestedObjectAttributeCustomTypeValue{}
+}
+
+var _ basetypes.ObjectValuable = ListNestedNestedObjectAttributeCustomTypeValue{}
+
+type ListNestedNestedObjectAttributeCustomTypeValue struct {
+	StringAttribute                       my_string_value                            `tfsdk:"string_attribute"`
+	StringAttributeAssocExtType           StringAttributeAssocExtTypeValue           `tfsdk:"string_attribute_assoc_ext_type"`
+	StringAttributeCustomTypeAssocExtType StringAttributeCustomTypeAssocExtTypeValue `tfsdk:"string_attribute_custom_type_assoc_ext_type"`
+	state                                 attr.ValueState
+}
+
+func (v ListNestedNestedObjectAttributeCustomTypeValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
+	attrTypes := make(map[string]tftypes.Type, 3)
+
+	var val tftypes.Value
+	var err error
+
+	attrTypes["string_attribute"] = my_string_type.TerraformType(ctx)
+	attrTypes["string_attribute_assoc_ext_type"] = StringAttributeAssocExtTypeType{}.TerraformType(ctx)
+	attrTypes["string_attribute_custom_type_assoc_ext_type"] = StringAttributeCustomTypeAssocExtTypeType{}.TerraformType(ctx)
+
+	objectType := tftypes.Object{AttributeTypes: attrTypes}
+
+	switch v.state {
+	case attr.ValueStateKnown:
+		vals := make(map[string]tftypes.Value, 3)
+
+		val, err = v.StringAttribute.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute"] = val
+
+		val, err = v.StringAttributeAssocExtType.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute_assoc_ext_type"] = val
+
+		val, err = v.StringAttributeCustomTypeAssocExtType.ToTerraformValue(ctx)
+
+		if err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		vals["string_attribute_custom_type_assoc_ext_type"] = val
+
+		if err := tftypes.ValidateValue(objectType, vals); err != nil {
+			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
+		}
+
+		return tftypes.NewValue(objectType, vals), nil
+	case attr.ValueStateNull:
+		return tftypes.NewValue(objectType, nil), nil
+	case attr.ValueStateUnknown:
+		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
+	default:
+		panic(fmt.Sprintf("unhandled Object state in ToTerraformValue: %s", v.state))
+	}
+}
+
+func (v ListNestedNestedObjectAttributeCustomTypeValue) IsNull() bool {
+	return v.state == attr.ValueStateNull
+}
+
+func (v ListNestedNestedObjectAttributeCustomTypeValue) IsUnknown() bool {
+	return v.state == attr.ValueStateUnknown
+}
+
+func (v ListNestedNestedObjectAttributeCustomTypeValue) String() string {
+	return "ListNestedNestedObjectAttributeCustomTypeValue"
+}
+
+func (v ListNestedNestedObjectAttributeCustomTypeValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	attributeTypes := map[string]attr.Type{
+		"string_attribute":                            my_string_type,
+		"string_attribute_assoc_ext_type":             StringAttributeAssocExtTypeType{},
+		"string_attribute_custom_type_assoc_ext_type": StringAttributeCustomTypeAssocExtTypeType{},
+	}
+
+	if v.IsNull() {
+		return types.ObjectNull(attributeTypes), diags
+	}
+
+	if v.IsUnknown() {
+		return types.ObjectUnknown(attributeTypes), diags
+	}
+
+	objVal, diags := types.ObjectValue(
+		attributeTypes,
+		map[string]attr.Value{
+			"string_attribute":                            v.StringAttribute,
+			"string_attribute_assoc_ext_type":             v.StringAttributeAssocExtType,
+			"string_attribute_custom_type_assoc_ext_type": v.StringAttributeCustomTypeAssocExtType,
+		})
+
+	return objVal, diags
+}
+
+func (v ListNestedNestedObjectAttributeCustomTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(ListNestedNestedObjectAttributeCustomTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	if v.state != other.state {
+		return false
+	}
+
+	if v.state != attr.ValueStateKnown {
+		return true
+	}
+
+	if !v.StringAttribute.Equal(other.StringAttribute) {
+		return false
+	}
+
+	if !v.StringAttributeAssocExtType.Equal(other.StringAttributeAssocExtType) {
+		return false
+	}
+
+	if !v.StringAttributeCustomTypeAssocExtType.Equal(other.StringAttributeCustomTypeAssocExtType) {
+		return false
+	}
+
+	return true
+}
+
+func (v ListNestedNestedObjectAttributeCustomTypeValue) Type(ctx context.Context) attr.Type {
+	return ListNestedNestedObjectAttributeCustomTypeType{
+		basetypes.ObjectType{
+			AttrTypes: v.AttributeTypes(ctx),
+		},
+	}
+}
+
+func (v ListNestedNestedObjectAttributeCustomTypeValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
+	return map[string]attr.Type{
+		"string_attribute":                            my_string_type,
+		"string_attribute_assoc_ext_type":             StringAttributeAssocExtTypeType{},
+		"string_attribute_custom_type_assoc_ext_type": StringAttributeCustomTypeAssocExtTypeType{},
+	}
+}
+
+var _ basetypes.StringTypable = StringAttributeAssocExtTypeType{}
+
+type StringAttributeAssocExtTypeType struct {
+	basetypes.StringType
+}
+
+func (t StringAttributeAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(StringAttributeAssocExtTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.StringType.Equal(other.StringType)
+}
+
+func (t StringAttributeAssocExtTypeType) String() string {
+	return "StringAttributeAssocExtTypeType"
+}
+
+func (t StringAttributeAssocExtTypeType) ValueFromString(ctx context.Context, in basetypes.StringValue) (basetypes.StringValuable, diag.Diagnostics) {
+	return StringAttributeAssocExtTypeValue{
+		StringValue: in,
+	}, nil
+}
+
+func (t StringAttributeAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	attrValue, err := t.StringType.ValueFromTerraform(ctx, in)
+
+	if err != nil {
+		return nil, err
+	}
+
+	boolValue, ok := attrValue.(basetypes.StringValue)
+
+	if !ok {
+		return nil, fmt.Errorf("unexpected value type of %T", attrValue)
+	}
+
+	boolValuable, diags := t.ValueFromString(ctx, boolValue)
+
+	if diags.HasError() {
+		return nil, fmt.Errorf("unexpected error converting StringValue to StringValuable: %v", diags)
+	}
+
+	return boolValuable, nil
+}
+
+func (t StringAttributeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return StringAttributeAssocExtTypeValue{}
+}
+
+var _ basetypes.StringValuable = StringAttributeAssocExtTypeValue{}
+
+type StringAttributeAssocExtTypeValue struct {
+	basetypes.StringValue
+}
+
+func (v StringAttributeAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(StringAttributeAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	return v.StringValue.Equal(other.StringValue)
+}
+
+func (v StringAttributeAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return StringAttributeAssocExtTypeType{}
+}
+
+var _ basetypes.StringTypable = StringAttributeCustomTypeAssocExtTypeType{}
+
+type StringAttributeCustomTypeAssocExtTypeType struct {
+	basetypes.StringType
+}
+
+func (t StringAttributeCustomTypeAssocExtTypeType) Equal(o attr.Type) bool {
+	other, ok := o.(StringAttributeCustomTypeAssocExtTypeType)
+
+	if !ok {
+		return false
+	}
+
+	return t.StringType.Equal(other.StringType)
+}
+
+func (t StringAttributeCustomTypeAssocExtTypeType) String() string {
+	return "StringAttributeCustomTypeAssocExtTypeType"
+}
+
+func (t StringAttributeCustomTypeAssocExtTypeType) ValueFromString(ctx context.Context, in basetypes.StringValue) (basetypes.StringValuable, diag.Diagnostics) {
+	return StringAttributeCustomTypeAssocExtTypeValue{
+		StringValue: in,
+	}, nil
+}
+
+func (t StringAttributeCustomTypeAssocExtTypeType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+	attrValue, err := t.StringType.ValueFromTerraform(ctx, in)
+
+	if err != nil {
+		return nil, err
+	}
+
+	boolValue, ok := attrValue.(basetypes.StringValue)
+
+	if !ok {
+		return nil, fmt.Errorf("unexpected value type of %T", attrValue)
+	}
+
+	boolValuable, diags := t.ValueFromString(ctx, boolValue)
+
+	if diags.HasError() {
+		return nil, fmt.Errorf("unexpected error converting StringValue to StringValuable: %v", diags)
+	}
+
+	return boolValuable, nil
+}
+
+func (t StringAttributeCustomTypeAssocExtTypeType) ValueType(ctx context.Context) attr.Value {
+	return StringAttributeCustomTypeAssocExtTypeValue{}
+}
+
+var _ basetypes.StringValuable = StringAttributeCustomTypeAssocExtTypeValue{}
+
+type StringAttributeCustomTypeAssocExtTypeValue struct {
+	basetypes.StringValue
+}
+
+func (v StringAttributeCustomTypeAssocExtTypeValue) Equal(o attr.Value) bool {
+	other, ok := o.(StringAttributeCustomTypeAssocExtTypeValue)
+
+	if !ok {
+		return false
+	}
+
+	return v.StringValue.Equal(other.StringValue)
+}
+
+func (v StringAttributeCustomTypeAssocExtTypeValue) Type(ctx context.Context) attr.Type {
+	return StringAttributeCustomTypeAssocExtTypeType{}
 }
 
 var _ basetypes.ObjectTypable = MapNestedAttributeAssocExtTypeType{}
