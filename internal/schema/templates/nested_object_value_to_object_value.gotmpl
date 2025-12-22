@@ -40,25 +40,10 @@ AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 }
 {{else if eq $value "SingleNested"}}
 
-var {{$key.ToCamelCase}} basetypes.ObjectValue
+var {{$key.ToCamelCase}} attr.Value
 
-if v.{{$key.ToPascalCase}}.IsNull() {
-{{$key.ToCamelCase}} = types.ObjectNull(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-)
-}
-
-if v.{{$key.ToPascalCase}}.IsUnknown() {
-{{$key.ToCamelCase}} = types.ObjectUnknown(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-)
-}
-
-if !v.{{$key.ToPascalCase}}.IsNull() && !v.{{$key.ToPascalCase}}.IsUnknown() {
-{{$key.ToCamelCase}} = types.ObjectValueMust(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-v.{{$key.ToPascalCase}}.Attributes(),
-)
+{
+	{{$key.ToCamelCase}} = v.{{$key.ToPascalCase}}
 }
 {{end}}
 {{- end}}

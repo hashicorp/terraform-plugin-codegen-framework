@@ -444,11 +444,12 @@ func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 		case v.Number != nil:
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.NumberType", v.Name))
 		case v.Object != nil:
-			objAttrTypesStr, err := AttrTypesString(v.Object.AttributeTypes)
-			if err != nil {
-				return "", err
+			if v.Object.CustomType != nil {
+				attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: %s", v.Name, v.Object.CustomType.Type))
+			} else {
+				typeName := FrameworkIdentifier(v.Name).ToPascalCase()
+				attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: %sType{\nbasetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n},\n}", v.Name, typeName, typeName))
 			}
-			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n}\n}", v.Name, objAttrTypesStr))
 		case v.Set != nil:
 			elemType, err := ElementTypeString(v.Set.ElementType)
 			if err != nil {
