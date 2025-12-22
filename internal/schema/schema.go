@@ -247,6 +247,8 @@ func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
+	generated := make(map[string]struct{})
+
 	attributeKeys := g.Attributes.SortedKeys()
 
 	for _, k := range attributeKeys {
@@ -255,7 +257,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 		}
 
 		if c, ok := g.Attributes[k].(CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, generated)
 
 			if err != nil {
 				return nil, err
@@ -273,7 +275,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 		}
 
 		if c, ok := g.Blocks[k].(CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, generated)
 
 			if err != nil {
 				return nil, err
@@ -282,7 +284,6 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 			buf.Write(b)
 		}
 	}
-
 	if buf.Len() > 0 {
 		buf.WriteString("\n")
 	}

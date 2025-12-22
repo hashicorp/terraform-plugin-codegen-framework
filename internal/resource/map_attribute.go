@@ -187,7 +187,13 @@ func (g GeneratorMapAttribute) ModelField(name generatorschema.FrameworkIdentifi
 	return field, nil
 }
 
-func (g GeneratorMapAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+func (g GeneratorMapAttribute) CustomTypeAndValue(name string, generated map[string]struct{}) ([]byte, error) {
+	if _, ok := generated[name]; ok {
+		return nil, nil
+	}
+
+	generated[name] = struct{}{}
+
 	if g.AssociatedExternalType == nil {
 		return nil, nil
 	}

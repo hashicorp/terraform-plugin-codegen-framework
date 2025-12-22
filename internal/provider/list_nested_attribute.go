@@ -170,7 +170,13 @@ func (g GeneratorListNestedAttribute) GetAttributes() schema.GeneratorAttributes
 	return g.NestedObject.Attributes
 }
 
-func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string, generated map[string]struct{}) ([]byte, error) {
+	if _, ok := generated[name]; ok {
+		return nil, nil
+	}
+
+	generated[name] = struct{}{}
+
 	var buf bytes.Buffer
 
 	attributeAttrValues, err := g.NestedObject.Attributes.AttrValues()
@@ -223,7 +229,7 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 	// CustomTypeAndValue interface.
 	for _, k := range attributeKeys {
 		if c, ok := g.NestedObject.Attributes[k].(schema.CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, generated)
 
 			if err != nil {
 				return nil, err
