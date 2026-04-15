@@ -3,62 +3,18 @@ func (v {{.Name}}Value) ToObjectValue(ctx context.Context) (basetypes.ObjectValu
 var diags diag.Diagnostics
 {{- range $key, $value := .AttributeTypes }}
 {{- if eq $value "ListNested" "MapNested" "SetNested"}}
-{{- $typesType := "List"}}
-{{- if eq $value "MapNested"}}
-{{- $typesType = "Map"}}
-{{- else if eq $value "SetNested"}}
-{{- $typesType = "Set"}}
-{{- end}}
 
-{{$key.ToPrefixCamelCase $.Name}} := types.{{$typesType}}ValueMust(
-{{$key.ToPascalCase}}Type{
-basetypes.ObjectType{
-AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-},
-},
-v.{{$key.ToPrefixPascalCase $.Name}}.Elements(),
-)
+var {{$key.ToPrefixCamelCase $.Name}} attr.Value
 
-if v.{{$key.ToPrefixPascalCase $.Name}}.IsNull() {
-{{$key.ToPrefixCamelCase $.Name}} = types.{{$typesType}}Null(
-{{$key.ToPascalCase}}Type{
-basetypes.ObjectType{
-AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-},
-},
-)
-}
-
-if v.{{$key.ToPrefixPascalCase $.Name}}.IsUnknown() {
-{{$key.ToPrefixCamelCase $.Name}} = types.{{$typesType}}Unknown(
-{{$key.ToPascalCase}}Type{
-basetypes.ObjectType{
-AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-},
-},
-)
+{
+	{{$key.ToPrefixCamelCase $.Name}} = v.{{$key.ToPrefixPascalCase $.Name}}
 }
 {{else if eq $value "SingleNested"}}
 
-var {{$key.ToCamelCase}} basetypes.ObjectValue
+var {{$key.ToCamelCase}} attr.Value
 
-if v.{{$key.ToPascalCase}}.IsNull() {
-{{$key.ToCamelCase}} = types.ObjectNull(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-)
-}
-
-if v.{{$key.ToPascalCase}}.IsUnknown() {
-{{$key.ToCamelCase}} = types.ObjectUnknown(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-)
-}
-
-if !v.{{$key.ToPascalCase}}.IsNull() && !v.{{$key.ToPascalCase}}.IsUnknown() {
-{{$key.ToCamelCase}} = types.ObjectValueMust(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
-v.{{$key.ToPascalCase}}.Attributes(),
-)
+{
+	{{$key.ToCamelCase}} = v.{{$key.ToPascalCase}}
 }
 {{end}}
 {{- end}}

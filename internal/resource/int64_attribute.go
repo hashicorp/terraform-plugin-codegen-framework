@@ -159,7 +159,13 @@ func (g GeneratorInt64Attribute) ModelField(name generatorschema.FrameworkIdenti
 	return field, nil
 }
 
-func (g GeneratorInt64Attribute) CustomTypeAndValue(name string) ([]byte, error) {
+func (g GeneratorInt64Attribute) CustomTypeAndValue(name string, generated map[string]struct{}) ([]byte, error) {
+	if _, ok := generated[name]; ok {
+		return nil, nil
+	}
+
+	generated[name] = struct{}{}
+
 	if g.AssociatedExternalType == nil {
 		return nil, nil
 	}

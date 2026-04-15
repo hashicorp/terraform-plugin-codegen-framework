@@ -23,7 +23,7 @@ type Blocks interface {
 }
 
 type CustomTypeAndValue interface {
-	CustomTypeAndValue(name string) ([]byte, error)
+	CustomTypeAndValue(name string, generated map[string]struct{}) ([]byte, error)
 }
 
 type Elements interface {

@@ -1032,37 +1032,15 @@ return objVal, diags
 			attrTypes: map[string]string{
 				"list_nested_attribute": "basetypes.ListType{}",
 			},
+
 			expected: []byte(`
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-listNestedAttribute := types.ListValueMust(
-ListNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-v.ListNestedAttribute.Elements(),
-)
+var listNestedAttribute attr.Value
 
-if v.ListNestedAttribute.IsNull() {
-listNestedAttribute = types.ListNull(
-ListNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-)
-}
-
-if v.ListNestedAttribute.IsUnknown() {
-listNestedAttribute = types.ListUnknown(
-ListNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: ListNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-)
+{
+	listNestedAttribute = v.ListNestedAttribute
 }
 
 
@@ -1099,33 +1077,10 @@ return objVal, diags
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-mapNestedAttribute := types.MapValueMust(
-MapNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-v.MapNestedAttribute.Elements(),
-)
+var mapNestedAttribute attr.Value
 
-if v.MapNestedAttribute.IsNull() {
-mapNestedAttribute = types.MapNull(
-MapNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-)
-}
-
-if v.MapNestedAttribute.IsUnknown() {
-mapNestedAttribute = types.MapUnknown(
-MapNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: MapNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-)
+{
+	mapNestedAttribute = v.MapNestedAttribute
 }
 
 
@@ -1162,33 +1117,10 @@ return objVal, diags
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-setNestedAttribute := types.SetValueMust(
-SetNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-v.SetNestedAttribute.Elements(),
-)
+var setNestedAttribute attr.Value
 
-if v.SetNestedAttribute.IsNull() {
-setNestedAttribute = types.SetNull(
-SetNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-)
-}
-
-if v.SetNestedAttribute.IsUnknown() {
-setNestedAttribute = types.SetUnknown(
-SetNestedAttributeType{
-basetypes.ObjectType{
-AttrTypes: SetNestedAttributeValue{}.AttributeTypes(ctx),
-},
-},
-)
+{
+	setNestedAttribute = v.SetNestedAttribute
 }
 
 
@@ -1258,33 +1190,10 @@ return objVal, diags
 func (v ExampleValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
 var diags diag.Diagnostics
 
-exampleType := types.ListValueMust(
-TypeType{
-basetypes.ObjectType{
-AttrTypes: TypeValue{}.AttributeTypes(ctx),
-},
-},
-v.ExampleType.Elements(),
-)
+var exampleType attr.Value
 
-if v.ExampleType.IsNull() {
-exampleType = types.ListNull(
-TypeType{
-basetypes.ObjectType{
-AttrTypes: TypeValue{}.AttributeTypes(ctx),
-},
-},
-)
-}
-
-if v.ExampleType.IsUnknown() {
-exampleType = types.ListUnknown(
-TypeType{
-basetypes.ObjectType{
-AttrTypes: TypeValue{}.AttributeTypes(ctx),
-},
-},
-)
+{
+	exampleType = v.ExampleType
 }
 
 

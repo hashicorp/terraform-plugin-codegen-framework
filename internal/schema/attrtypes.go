@@ -64,7 +64,8 @@ func GetAttrTypes(attrTypes specschema.ObjectAttributeTypes) string {
 			if v.Object.CustomType != nil {
 				aTypes.WriteString(fmt.Sprintf("%s{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", v.Object.CustomType.Type, GetAttrTypes(v.Object.AttributeTypes)))
 			} else {
-				aTypes.WriteString(fmt.Sprintf("types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s\n},\n}", GetAttrTypes(v.Object.AttributeTypes)))
+				typeName := FrameworkIdentifier(v.Name).ToPascalCase()
+				aTypes.WriteString(fmt.Sprintf("%sType{\nbasetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n},\n}", typeName, typeName))
 			}
 		case v.Set != nil:
 			if v.Set.CustomType != nil {
