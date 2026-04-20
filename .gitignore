@@ -22,4 +22,4 @@
 .vscode/
 
 # Ignore any manual testing output from running codegen tool at root
-output/
+/output/
