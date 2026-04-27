@@ -78,7 +78,7 @@ func (cmd *GenerateResourcesCommand) Help() string {
 	return strBuilder.String()
 }
 
-func (a *GenerateResourcesCommand) Synopsis() string {
+func (cmd *GenerateResourcesCommand) Synopsis() string {
 	return "Generate code for resources from an Intermediate Representation (IR) JSON file."
 }
 

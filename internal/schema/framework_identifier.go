@@ -91,6 +91,13 @@ func (identifier FrameworkIdentifier) ToPrefixPascalCase(prefix string) string {
 	return pascalCase
 }
 
+// ToKebabCase will return kebab case formatted string of the identifier.
+// Example:
+//   - example_resource_thing -> example-resource-thing
+func (identifier FrameworkIdentifier) ToKebabCase() string {
+	return strings.ReplaceAll(identifier.ToString(), "_", "-")
+}
+
 // ToString returns the FrameworkIdentifier as a string without any formatting.
 // Example:
 //   - example_resource_thing -> example_resource_thing
