@@ -187,7 +187,13 @@ func (g GeneratorListAttribute) ModelField(name generatorschema.FrameworkIdentif
 	return field, nil
 }
 
-func (g GeneratorListAttribute) CustomTypeAndValue(name string) ([]byte, error) {
+func (g GeneratorListAttribute) CustomTypeAndValue(name string, generated map[string]struct{}) ([]byte, error) {
+	if _, ok := generated[name]; ok {
+		return nil, nil
+	}
+
+	generated[name] = struct{}{}
+
 	if g.AssociatedExternalType == nil {
 		return nil, nil
 	}

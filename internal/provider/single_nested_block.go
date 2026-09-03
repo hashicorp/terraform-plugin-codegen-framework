@@ -194,7 +194,13 @@ func (g GeneratorSingleNestedBlock) GetBlocks() schema.GeneratorBlocks {
 	return g.Blocks
 }
 
-func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, error) {
+func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string, generated map[string]struct{}) ([]byte, error) {
+	if _, ok := generated[name]; ok {
+		return nil, nil
+	}
+
+	generated[name] = struct{}{}
+
 	var buf bytes.Buffer
 
 	attributeAttrValues, err := g.Attributes.AttrValues()
@@ -298,7 +304,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 	// CustomTypeAndValue interface (i.e, nested attributes).
 	for _, k := range attributeKeys {
 		if c, ok := g.Attributes[k].(schema.CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, generated)
 
 			if err != nil {
 				return nil, err
@@ -310,7 +316,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 
 	for _, k := range blockKeys {
 		if c, ok := g.Blocks[k].(schema.CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, generated)
 
 			if err != nil {
 				return nil, err

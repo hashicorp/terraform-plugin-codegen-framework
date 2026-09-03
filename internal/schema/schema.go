@@ -247,6 +247,8 @@ func (g GeneratorSchema) Models(name string) ([]model.Model, error) {
 func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 	var buf bytes.Buffer
 
+	generated := make(map[string]struct{})
+
 	attributeKeys := g.Attributes.SortedKeys()
 
 	for _, k := range attributeKeys {
@@ -255,7 +257,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 		}
 
 		if c, ok := g.Attributes[k].(CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, generated)
 
 			if err != nil {
 				return nil, err
@@ -273,7 +275,7 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 		}
 
 		if c, ok := g.Blocks[k].(CustomTypeAndValue); ok {
-			b, err := c.CustomTypeAndValue(k)
+			b, err := c.CustomTypeAndValue(k, generated)
 
 			if err != nil {
 				return nil, err
@@ -282,7 +284,6 @@ func (g GeneratorSchema) CustomTypeValueBytes() ([]byte, error) {
 			buf.Write(b)
 		}
 	}
-
 	if buf.Len() > 0 {
 		buf.WriteString("\n")
 	}
@@ -443,11 +444,12 @@ func AttrTypesString(attrTypes specschema.ObjectAttributeTypes) (string, error) 
 		case v.Number != nil:
 			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.NumberType", v.Name))
 		case v.Object != nil:
-			objAttrTypesStr, err := AttrTypesString(v.Object.AttributeTypes)
-			if err != nil {
-				return "", err
+			if v.Object.CustomType != nil {
+				attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: %s", v.Name, v.Object.CustomType.Type))
+			} else {
+				typeName := FrameworkIdentifier(v.Name).ToPascalCase()
+				attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: %sType{\nbasetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n},\n}", v.Name, typeName, typeName))
 			}
-			attrTypesStr = append(attrTypesStr, fmt.Sprintf("%q: types.ObjectType{\nAttrTypes: map[string]attr.Type{\n%s,\n}\n}", v.Name, objAttrTypesStr))
 		case v.Set != nil:
 			elemType, err := ElementTypeString(v.Set.ElementType)
 			if err != nil {

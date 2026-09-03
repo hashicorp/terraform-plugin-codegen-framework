@@ -83,7 +83,7 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 		case GeneratorSetNestedAttribute:
 			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
 		case GeneratorSingleNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", name.ToPascalCase())
+			attrTypes[k] = fmt.Sprintf("%sType{\nbasetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n},\n}", name.ToPascalCase(), name.ToPascalCase())
 		}
 	}
 
@@ -111,7 +111,7 @@ func (g GeneratorAttributes) AttrValues() (map[string]string, error) {
 		case GeneratorSetNestedAttribute:
 			attrValues[k] = "basetypes.SetValue"
 		case GeneratorSingleNestedAttribute:
-			attrValues[k] = "basetypes.ObjectValue"
+			attrValues[k] = fmt.Sprintf("%sValue", FrameworkIdentifier(k).ToPascalCase())
 		}
 	}
 
