@@ -27,6 +27,12 @@ func NewNestedAttributeObject(a schema.GeneratorAttributes, c *specschema.Custom
 	}
 }
 
+func (n NestedAttributeObject) WithTypeName(name string) NestedAttributeObject {
+	n.customType = n.customType.WithName(name)
+
+	return n
+}
+
 func (n NestedAttributeObject) Equal(other NestedAttributeObject) bool {
 	if !n.attributes.Equal(other.attributes) {
 		return false

@@ -16,6 +16,8 @@ import (
 )
 
 type GeneratorSetNestedBlock struct {
+	schema.NestedTypeName
+
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomType               convert.CustomTypeNestedCollection
 	DeprecationMessage       convert.DeprecationMessage
@@ -194,8 +196,17 @@ func (g GeneratorSetNestedBlock) GetBlocks() schema.GeneratorBlocks {
 	return g.NestedObject.Blocks
 }
 
+func (g GeneratorSetNestedBlock) WithTypeName(typeName schema.FrameworkIdentifier) schema.GeneratorBlock {
+	g.TypeName = typeName
+	g.NestedBlockObject = g.NestedBlockObject.WithTypeName(typeName.ToString())
+
+	return g
+}
+
 func (g GeneratorSetNestedBlock) CustomTypeAndValue(name string) ([]byte, error) {
 	var buf bytes.Buffer
+
+	name = g.GoTypeName(name).ToString()
 
 	attributeAttrValues, err := g.NestedObject.Attributes.AttrValues()
 
@@ -281,6 +292,7 @@ func (g GeneratorSetNestedBlock) CustomTypeAndValue(name string) ([]byte, error)
 	}
 
 	objectValue := schema.NewCustomNestedObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues, attributeCollectionTypes)
+	objectValue.TypeNames = schema.TypeNames(g.NestedObject.Attributes, g.NestedObject.Blocks)
 
 	b, err = objectValue.Render()
 
@@ -342,7 +354,7 @@ func (g GeneratorSetNestedBlock) ToFromFunctions(name string) ([]byte, error) {
 		return nil, err
 	}
 
-	toFrom := schema.NewToFromNestedObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := schema.NewToFromNestedObject(g.GoTypeName(name).ToString(), g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 

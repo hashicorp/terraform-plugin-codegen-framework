@@ -25,6 +25,10 @@ func TestGenerateProviderCommand(t *testing.T) {
 			irInputPath:   "testdata/provider_no_attributes/ir.json",
 			goldenFileDir: "testdata/provider_no_attributes/provider_output",
 		},
+		"nested_collision": {
+			irInputPath:   "testdata/nested_collision/ir.json",
+			goldenFileDir: "testdata/nested_collision/provider_output",
+		},
 	}
 	for name, testCase := range testCases {
 

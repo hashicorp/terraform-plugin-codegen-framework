@@ -11,9 +11,9 @@ var diags diag.Diagnostics
 {{- end}}
 
 {{$key.ToPrefixCamelCase $.Name}} := types.{{$typesType}}ValueMust(
-{{$key.ToPascalCase}}Type{
+{{index $.TypeNames $key}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{index $.TypeNames $key}}Value{}.AttributeTypes(ctx),
 },
 },
 v.{{$key.ToPrefixPascalCase $.Name}}.Elements(),
@@ -21,9 +21,9 @@ v.{{$key.ToPrefixPascalCase $.Name}}.Elements(),
 
 if v.{{$key.ToPrefixPascalCase $.Name}}.IsNull() {
 {{$key.ToPrefixCamelCase $.Name}} = types.{{$typesType}}Null(
-{{$key.ToPascalCase}}Type{
+{{index $.TypeNames $key}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{index $.TypeNames $key}}Value{}.AttributeTypes(ctx),
 },
 },
 )
@@ -31,9 +31,9 @@ AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
 
 if v.{{$key.ToPrefixPascalCase $.Name}}.IsUnknown() {
 {{$key.ToPrefixCamelCase $.Name}} = types.{{$typesType}}Unknown(
-{{$key.ToPascalCase}}Type{
+{{index $.TypeNames $key}}Type{
 basetypes.ObjectType{
-AttrTypes: {{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+AttrTypes: {{index $.TypeNames $key}}Value{}.AttributeTypes(ctx),
 },
 },
 )
@@ -44,19 +44,19 @@ var {{$key.ToCamelCase}} basetypes.ObjectValue
 
 if v.{{$key.ToPascalCase}}.IsNull() {
 {{$key.ToCamelCase}} = types.ObjectNull(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+{{index $.TypeNames $key}}Value{}.AttributeTypes(ctx),
 )
 }
 
 if v.{{$key.ToPascalCase}}.IsUnknown() {
 {{$key.ToCamelCase}} = types.ObjectUnknown(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+{{index $.TypeNames $key}}Value{}.AttributeTypes(ctx),
 )
 }
 
 if !v.{{$key.ToPascalCase}}.IsNull() && !v.{{$key.ToPascalCase}}.IsUnknown() {
 {{$key.ToCamelCase}} = types.ObjectValueMust(
-{{$key.ToPascalCase}}Value{}.AttributeTypes(ctx),
+{{index $.TypeNames $key}}Value{}.AttributeTypes(ctx),
 v.{{$key.ToPascalCase}}.Attributes(),
 )
 }

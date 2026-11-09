@@ -1,0 +1,5 @@
+kind: BUG FIXES
+body: 'generate: Prefix generated custom Type and Value type names with their parent''s type name when nested attributes or blocks at different paths share a name, fixing redeclared types'
+time: 2026-11-09T12:00:00.000000+00:00
+custom:
+  Issue: "20"

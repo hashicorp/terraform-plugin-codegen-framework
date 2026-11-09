@@ -21,6 +21,10 @@ func TestGenerateDataSourcesCommand(t *testing.T) {
 			irInputPath:   "testdata/custom_and_external/ir.json",
 			goldenFileDir: "testdata/custom_and_external/data_sources_output",
 		},
+		"nested_collision": {
+			irInputPath:   "testdata/nested_collision/ir.json",
+			goldenFileDir: "testdata/nested_collision/data_sources_output",
+		},
 	}
 	for name, testCase := range testCases {
 

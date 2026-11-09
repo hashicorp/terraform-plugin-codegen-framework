@@ -16,6 +16,8 @@ import (
 )
 
 type GeneratorListNestedAttribute struct {
+	schema.NestedTypeName
+
 	ComputedOptionalRequired convert.ComputedOptionalRequired
 	CustomType               convert.CustomTypeNestedCollection
 	DeprecationMessage       convert.DeprecationMessage
@@ -170,8 +172,17 @@ func (g GeneratorListNestedAttribute) GetAttributes() schema.GeneratorAttributes
 	return g.NestedObject.Attributes
 }
 
+func (g GeneratorListNestedAttribute) WithTypeName(typeName schema.FrameworkIdentifier) schema.GeneratorAttribute {
+	g.TypeName = typeName
+	g.NestedAttributeObject = g.NestedAttributeObject.WithTypeName(typeName.ToString())
+
+	return g
+}
+
 func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, error) {
 	var buf bytes.Buffer
+
+	name = g.GoTypeName(name).ToString()
 
 	attributeAttrValues, err := g.NestedObject.Attributes.AttrValues()
 
@@ -208,6 +219,7 @@ func (g GeneratorListNestedAttribute) CustomTypeAndValue(name string) ([]byte, e
 	}
 
 	objectValue := schema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues, attributeCollectionTypes)
+	objectValue.TypeNames = schema.TypeNames(g.NestedObject.Attributes, nil)
 
 	b, err = objectValue.Render()
 
@@ -255,7 +267,7 @@ func (g GeneratorListNestedAttribute) ToFromFunctions(name string) ([]byte, erro
 		return nil, err
 	}
 
-	toFrom := schema.NewToFromNestedObject(name, g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := schema.NewToFromNestedObject(g.GoTypeName(name).ToString(), g.NestedObject.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 
