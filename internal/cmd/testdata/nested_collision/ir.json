@@ -1,0 +1,239 @@
+{
+  "version": "0.1",
+  "provider": {
+    "name": "example",
+    "schema": {
+      "attributes": [
+        {
+          "name": "tags",
+          "list_nested": {
+            "optional_required": "optional",
+            "nested_object": {
+              "attributes": [
+                {
+                  "name": "key",
+                  "string": {
+                    "optional_required": "optional"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "processors",
+          "list_nested": {
+            "optional_required": "optional",
+            "nested_object": {
+              "attributes": [
+                {
+                  "name": "tags",
+                  "list_nested": {
+                    "optional_required": "optional",
+                    "nested_object": {
+                      "attributes": [
+                        {
+                          "name": "value",
+                          "int64": {
+                            "optional_required": "optional"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "datasources": [
+    {
+      "name": "example",
+      "schema": {
+        "attributes": [
+          {
+            "name": "tags",
+            "list_nested": {
+              "computed_optional_required": "computed",
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "key",
+                    "string": {
+                      "computed_optional_required": "computed"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "processors",
+            "list_nested": {
+              "computed_optional_required": "computed",
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "tags",
+                    "list_nested": {
+                      "computed_optional_required": "computed",
+                      "nested_object": {
+                        "attributes": [
+                          {
+                            "name": "value",
+                            "int64": {
+                              "computed_optional_required": "computed"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "name": "example",
+      "schema": {
+        "attributes": [
+          {
+            "name": "tags",
+            "list_nested": {
+              "computed_optional_required": "optional",
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "key",
+                    "string": {
+                      "computed_optional_required": "required"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "processors",
+            "list_nested": {
+              "computed_optional_required": "optional",
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "tags",
+                    "list_nested": {
+                      "computed_optional_required": "optional",
+                      "nested_object": {
+                        "attributes": [
+                          {
+                            "name": "value",
+                            "int64": {
+                              "computed_optional_required": "optional"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "name": "settings",
+                    "single_nested": {
+                      "computed_optional_required": "optional",
+                      "attributes": [
+                        {
+                          "name": "labels",
+                          "map_nested": {
+                            "computed_optional_required": "optional",
+                            "nested_object": {
+                              "attributes": [
+                                {
+                                  "name": "text",
+                                  "string": {
+                                    "computed_optional_required": "optional"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "outputs",
+            "set_nested": {
+              "computed_optional_required": "optional",
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "settings",
+                    "single_nested": {
+                      "computed_optional_required": "optional",
+                      "attributes": [
+                        {
+                          "name": "labels",
+                          "map_nested": {
+                            "computed_optional_required": "optional",
+                            "nested_object": {
+                              "attributes": [
+                                {
+                                  "name": "enabled",
+                                  "bool": {
+                                    "computed_optional_required": "optional"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "blocks": [
+          {
+            "name": "rules",
+            "list_nested": {
+              "nested_object": {
+                "attributes": [
+                  {
+                    "name": "tags",
+                    "set_nested": {
+                      "computed_optional_required": "optional",
+                      "nested_object": {
+                        "attributes": [
+                          {
+                            "name": "pattern",
+                            "string": {
+                              "computed_optional_required": "optional"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

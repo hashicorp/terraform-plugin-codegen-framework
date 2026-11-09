@@ -16,6 +16,8 @@ import (
 )
 
 type GeneratorSingleNestedAttribute struct {
+	schema.NestedTypeName
+
 	AssociatedExternalType *schema.AssocExtType
 	Attributes             schema.GeneratorAttributes
 	OptionalRequired       convert.OptionalRequired
@@ -147,7 +149,7 @@ func (g GeneratorSingleNestedAttribute) ModelField(name schema.FrameworkIdentifi
 	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
-		ValueType: name.ToPascalCase() + "Value",
+		ValueType: g.GoTypeName(name.ToString()).ToPascalCase() + "Value",
 	}
 
 	customValueType := g.CustomType.ValueType()
@@ -163,8 +165,17 @@ func (g GeneratorSingleNestedAttribute) GetAttributes() schema.GeneratorAttribut
 	return g.Attributes
 }
 
+func (g GeneratorSingleNestedAttribute) WithTypeName(typeName schema.FrameworkIdentifier) schema.GeneratorAttribute {
+	g.TypeName = typeName
+	g.CustomType = g.CustomType.WithName(typeName.ToString())
+
+	return g
+}
+
 func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte, error) {
 	var buf bytes.Buffer
+
+	name = g.GoTypeName(name).ToString()
 
 	attributeAttrValues, err := g.Attributes.AttrValues()
 
@@ -201,6 +212,7 @@ func (g GeneratorSingleNestedAttribute) CustomTypeAndValue(name string) ([]byte,
 	}
 
 	objectValue := schema.NewCustomNestedObjectValue(name, attributeTypes, attributeAttrTypes, attributeAttrValues, attributeCollectionTypes)
+	objectValue.TypeNames = schema.TypeNames(g.Attributes, nil)
 
 	b, err = objectValue.Render()
 
@@ -244,7 +256,7 @@ func (g GeneratorSingleNestedAttribute) ToFromFunctions(name string) ([]byte, er
 
 	fromFuncs, _ := g.Attributes.FromFuncs()
 
-	toFrom := schema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := schema.NewToFromNestedObject(g.GoTypeName(name).ToString(), g.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 

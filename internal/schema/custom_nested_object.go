@@ -326,6 +326,7 @@ type CustomNestedObjectValue struct {
 	AttrTypes       map[FrameworkIdentifier]string
 	AttrValues      map[FrameworkIdentifier]string
 	CollectionTypes map[FrameworkIdentifier]map[string]string
+	TypeNames       map[FrameworkIdentifier]FrameworkIdentifier
 	templates       map[string]string
 }
 
@@ -531,16 +532,28 @@ func (c CustomNestedObjectValue) renderToObjectValue() ([]byte, error) {
 		return nil, err
 	}
 
+	typeNames := make(map[FrameworkIdentifier]string, len(c.AttributeTypes))
+
+	for k := range c.AttributeTypes {
+		typeNames[k] = k.ToPascalCase()
+
+		if n, ok := c.TypeNames[k]; ok {
+			typeNames[k] = n.ToPascalCase()
+		}
+	}
+
 	err = t.Execute(&buf, struct {
 		Name            string
 		AttributeTypes  map[FrameworkIdentifier]string
 		AttrTypes       map[FrameworkIdentifier]string
 		CollectionTypes map[FrameworkIdentifier]map[string]string
+		TypeNames       map[FrameworkIdentifier]string
 	}{
 		Name:            c.Name.ToPascalCase(),
 		AttributeTypes:  c.AttributeTypes,
 		AttrTypes:       c.AttrTypes,
 		CollectionTypes: c.CollectionTypes,
+		TypeNames:       typeNames,
 	})
 
 	if err != nil {

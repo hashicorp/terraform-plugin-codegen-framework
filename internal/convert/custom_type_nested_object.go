@@ -33,6 +33,12 @@ func NewCustomTypeNestedObject(c *specschema.CustomType, name string) CustomType
 	}
 }
 
+func (c CustomTypeNestedObject) WithName(name string) CustomTypeNestedObject {
+	c.name = name
+
+	return c
+}
+
 func (c CustomTypeNestedObject) Equal(other CustomTypeNestedObject) bool {
 	if !c.customType.Equal(other.customType) {
 		return false

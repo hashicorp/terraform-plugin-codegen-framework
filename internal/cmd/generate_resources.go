@@ -141,6 +141,11 @@ func generateResourceCode(ctx context.Context, spec spec.Specification, outputPa
 		return fmt.Errorf("error converting IR to Plugin Framework schema: %w", err)
 	}
 
+	err = schema.ResolveTypeNames(s)
+	if err != nil {
+		return fmt.Errorf("error resolving generated type names: %w", err)
+	}
+
 	// convert framework schema to []byte
 	g := schema.NewGeneratorSchemas(s)
 	schemas, err := g.Schemas(packageName, generatorType)

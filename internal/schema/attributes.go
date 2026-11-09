@@ -75,15 +75,17 @@ func (g GeneratorAttributes) AttrTypes() (map[string]string, error) {
 			continue
 		}
 
+		typeName := goTypeName(g[k], k).ToPascalCase()
+
 		switch g[k].GeneratorSchemaType() {
 		case GeneratorListNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
+			attrTypes[k] = fmt.Sprintf("basetypes.ListType{\nElemType: %sValue{}.Type(ctx),\n}", typeName)
 		case GeneratorMapNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
+			attrTypes[k] = fmt.Sprintf("basetypes.MapType{\nElemType: %sValue{}.Type(ctx),\n}", typeName)
 		case GeneratorSetNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", name.ToPascalCase())
+			attrTypes[k] = fmt.Sprintf("basetypes.SetType{\nElemType: %sValue{}.Type(ctx),\n}", typeName)
 		case GeneratorSingleNestedAttribute:
-			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", name.ToPascalCase())
+			attrTypes[k] = fmt.Sprintf("basetypes.ObjectType{\nAttrTypes: %sValue{}.AttributeTypes(ctx),\n}", typeName)
 		}
 	}
 

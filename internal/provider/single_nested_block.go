@@ -16,6 +16,8 @@ import (
 )
 
 type GeneratorSingleNestedBlock struct {
+	schema.NestedTypeName
+
 	AssociatedExternalType *schema.AssocExtType
 	Attributes             schema.GeneratorAttributes
 	Blocks                 schema.GeneratorBlocks
@@ -174,7 +176,7 @@ func (g GeneratorSingleNestedBlock) ModelField(name schema.FrameworkIdentifier) 
 	f := model.Field{
 		Name:      name.ToPascalCase(),
 		TfsdkName: name.ToString(),
-		ValueType: name.ToPascalCase() + "Value",
+		ValueType: g.GoTypeName(name.ToString()).ToPascalCase() + "Value",
 	}
 
 	customValueType := g.CustomType.ValueType()
@@ -194,8 +196,17 @@ func (g GeneratorSingleNestedBlock) GetBlocks() schema.GeneratorBlocks {
 	return g.Blocks
 }
 
+func (g GeneratorSingleNestedBlock) WithTypeName(typeName schema.FrameworkIdentifier) schema.GeneratorBlock {
+	g.TypeName = typeName
+	g.CustomType = g.CustomType.WithName(typeName.ToString())
+
+	return g
+}
+
 func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, error) {
 	var buf bytes.Buffer
+
+	name = g.GoTypeName(name).ToString()
 
 	attributeAttrValues, err := g.Attributes.AttrValues()
 
@@ -281,6 +292,7 @@ func (g GeneratorSingleNestedBlock) CustomTypeAndValue(name string) ([]byte, err
 	}
 
 	objectValue := schema.NewCustomNestedObjectValue(name, attributesBlocksTypes, attributesBlocksAttrTypes, attributesBlocksAttrValues, attributeCollectionTypes)
+	objectValue.TypeNames = schema.TypeNames(g.Attributes, g.Blocks)
 
 	b, err = objectValue.Render()
 
@@ -338,7 +350,7 @@ func (g GeneratorSingleNestedBlock) ToFromFunctions(name string) ([]byte, error)
 
 	fromFuncs, _ := g.Attributes.FromFuncs()
 
-	toFrom := schema.NewToFromNestedObject(name, g.AssociatedExternalType, toFuncs, fromFuncs)
+	toFrom := schema.NewToFromNestedObject(g.GoTypeName(name).ToString(), g.AssociatedExternalType, toFuncs, fromFuncs)
 
 	b, err := toFrom.Render()
 
